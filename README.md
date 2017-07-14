@@ -27,7 +27,7 @@ Michael Milette - Lead Developer
 Description
 -----------
 FilterCodes filter for Moodle enables content creators to easily customize
-and personalize course and site content using tags.
+and personalize site and course content using plain text tags.
 
 In addition, it also enables you to:
 * Inserting non-breaking spaces;
@@ -36,7 +36,7 @@ In addition, it also enables you to:
 Usage of the {FilterCodes} tags requires no knowledge of HTML but might be
 important for sites wishing to comply with accessibility requirements.
 
-IMPORANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
+IMPORTANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 Requirements
 ------------
@@ -44,7 +44,7 @@ This plugin requires Moodle 3.1+ from http://moodle.org/
 
 Changes
 -------
-The first public ALPHA version was released on 2017-07-06.
+The first public ALPHA version was released on 2017-07-07.
 
 For more information on releases since then, see CHANGELOG.md.
 
