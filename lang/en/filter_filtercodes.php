@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['filtername'] = 'Filter Codes';
-$string['loggedoutfirstname'] = '';
-$string['loggedoutsurname'] = '';
-$string['loggedoutusername'] = '';
-$string['loggedoutemail'] = '';
+$string['defaultfirstname'] = '';
+$string['defaultsurname'] = '';
+$string['defaultusername'] = '';
+$string['defaultemail'] = '';
