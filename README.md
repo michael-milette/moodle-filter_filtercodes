@@ -260,9 +260,9 @@ Answer: You can do this using the language editor built into Moodle. There is cu
 
 Answer: Technically for sure! But only of the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters.
 
-**Question: Why is the IP Address listed as ::1? **
+**Question: Why is the IP Address listed as 0:0:0:0:0:0:0:1? **
 
-Answer: ::1 is the same as localhost and it means that your web browser is probably on the same computer as your web server. This shouldn't happen with users accessing Moodle from their own desktop or mobile device.
+Answer: 0:0:0:0:0:0:0:1 is the same as localhost and it means that your web browser is probably on the same computer as your web server. This shouldn't happen with users accessing your Moodle site from their own desktop or mobile device.
 
 **Question: I have a question that is not listed here**
 

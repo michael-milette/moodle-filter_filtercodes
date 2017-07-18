@@ -448,7 +448,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{ifadmin\}(.*)\{\/ifadmin\}/i'] = '';
                 }
             }
-        
+
         }
 
         // Apply all of the filtercodes.
