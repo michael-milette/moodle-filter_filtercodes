@@ -52,7 +52,7 @@ class filter_filtercodes extends moodle_text_filter {
         global $PAGE;
         $coursecontext = $PAGE->context->get_course_context(false);
         if ($coursecontext) {
-            $isrole = has_any_capability(array(
+            $isrole = has_all_capabilities(array(
                     'moodle/course:view',
                     'gradereport/user:view',
             ), $coursecontext);
@@ -77,7 +77,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         global $PAGE;
         if ($coursecontext = $PAGE->context->get_course_context(false)) {
-            $isrole = has_any_capability(array(
+            $isrole = has_all_capabilities(array(
                 'gradereport/grader:view',
                 'gradereport/outcomes:view',
                 'moodle/badges:awardbadge',
@@ -107,7 +107,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         global $PAGE;
         if ($coursecontext = $PAGE->context->get_course_context(false)) {
-            $isrole = has_any_capability(array(
+            $isrole = has_all_capabilities(array(
                 'moodle/course:manageactivities',
                 'moodle/backup:backupcourse',
                 'moodle/course:managefiles',
@@ -118,7 +118,7 @@ class filter_filtercodes extends moodle_text_filter {
                 'moodle/restore:restorecourse',
                 'moodle/restore:restoretargetimport',
                 'moodle/role:switchroles',
-                'moodle/site:viewreports',
+                'moodle/site:viewreports'
                 ), $coursecontext);
         }
         return $isrole;
@@ -141,11 +141,11 @@ class filter_filtercodes extends moodle_text_filter {
         $isrole = false;
 
         global $PAGE;
-        $isrole = has_any_capability(array(
+        $isrole = has_all_capabilities(array(
                 'moodle/course:create',
                 'moodle/course:delete',
                 'moodle/role:assign',
-                'moodle/role:manage',
+                'moodle/role:manage'
                 ), $PAGE->context);
         return $isrole;
     }
@@ -167,7 +167,7 @@ class filter_filtercodes extends moodle_text_filter {
         $isrole = false;
 
         global $PAGE;
-        $isrole = has_any_capability(array(
+        $isrole = has_all_capabilities(array(
             'moodle/backup:backupactivity',
             'moodle/filter:manage',
             'moodle/grade:managegradingforms',
@@ -378,7 +378,7 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifstudent}.
             if (stripos($text, '{ifstudent}') !== false) {
-                if ($this->isstudent()) { // If an administrator.
+                if ($this->isstudent()) { // If a student.
                     // Just remove the tags.
                     $replace['/\{ifstudent\}/i'] = '';
                     $replace['/\{\/ifstudent\}/i'] = '';

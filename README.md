@@ -246,7 +246,7 @@ Answer: Create a Page on your Moodle site and include the following code:
 * LoggedOut: {ifloggedout}You are logged-out{/ifloggedout}
 * Guest: {ifguest}You are a guest{/ifguest}
 * Student: {ifstudent}You are a student{/ifstudent}
-* Non-editing Teacher: {ifassistant}You are a assistant teacher{/ifassistant}
+* Non-editing Teacher: {ifassistant}You are an assistant teacher{/ifassistant}
 * Teacher: {ifteacher}You are a teacher{/ifteacher}
 * Course Creator: {ifcreator}You are a course creator{/ifcreator}
 * Manager: {ifmanager}You are a manager{/ifmanager}
