@@ -99,7 +99,8 @@ Moodle metadata filters
 
 Conditionally display content filters
 
-* {ifenrolled}{/ifenrolled} : Will display the enclosed content only if the user is enrolled in the current course.
+* {ifenrolled}{/ifenrolled} : Will display the enclosed content only if the user **is** enrolled in the current course.
+* {ifnotenrolled}{/ifnotenrolled} : Will display the enclosed content only if the user is **not** enrolled in the current course.
 * {ifloggedin}{/ifloggedin} : Will display the enclosed content only if the user is logged in as non-guest.
 * {ifloggedout}{/ifloggedout} : Will display the enclosed content only if the user is logged out or is loggedin as guest.
 * {ifguest}{/ifguest} : Will display the enclosed content only if the user is logged-in as guest.
@@ -240,6 +241,7 @@ Answer: Create a Page on your Moodle site and include the following code:
 * Non-breaking space: This{nbsp}: Is it!
 * English: {langx en}Content{/langx}
 * Enrolled: {ifenrolled}You are enrolled in this course!{/ifenrolled}
+* Not Enrolled: {ifnotenrolled}You are not enrolled in this course!{/ifnotenrolled}
 * LoggedIn: {ifloggedin}You are logged-in{/ifloggedin}
 * LoggedOut: {ifloggedout}You are logged-out{/ifloggedout}
 * Guest: {ifguest}You are a guest{/ifguest}
