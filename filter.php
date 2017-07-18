@@ -296,155 +296,159 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{langx\s+(\w+)\}(.*)\{\/langx\}/i'] = '<span lang="$1">$2</span>';
         }
 
-        // Conditional blocks.
+        // Conditional block tags.
 
-        // Tags: {ifenrolled} and {ifnotenrolled}.
-        if ($PAGE->course->id == $SITE->id) { // If enrolled in the course.
-            // Everyone is automatically enrolled in the Front Page course.
-            // Remove the ifenrolled tags.
-            if (stripos($text, '{ifenrolled}') !== false) {
-                $replace['/\{ifenrolled\}/i'] = '';
-                $replace['/\{\/ifenrolled\}/i'] = '';
-            }
-            // Remove the ifnotenrolled strings.
-            if (stripos($text, '{ifnotenrolled}') !== false) {
-                $replace['/\{ifnotenrolled\}(.*)\{\/ifnotenrolled\}/i'] = '';
-            }
-        } else {
-            if ($CFG->version >= 2013051400) { // Moodle 2.5+.
-                $coursecontext = context_course::instance($PAGE->course->id);
-            } else {
-                $coursecontext = get_context_instance(CONTEXT_COURSE, $PAGE->course->id);
-            }
-            if (is_enrolled($coursecontext, $USER, '', true)) { // If user is enrolled in the course.
-                // If enrolled, remove the ifenrolled tags.
+        if (strpos($text, '{if') !== false) { // If there are conditional tags.
+
+            // Tags: {ifenrolled} and {ifnotenrolled}.
+            if ($PAGE->course->id == $SITE->id) { // If enrolled in the course.
+                // Everyone is automatically enrolled in the Front Page course.
+                // Remove the ifenrolled tags.
                 if (stripos($text, '{ifenrolled}') !== false) {
                     $replace['/\{ifenrolled\}/i'] = '';
                     $replace['/\{\/ifenrolled\}/i'] = '';
                 }
                 // Remove the ifnotenrolled strings.
                 if (stripos($text, '{ifnotenrolled}') !== false) {
-                    $replace['/\{ifnotenrolled)\}(.*)\{\/ifnotenrolled\}/i'] = '';
+                    $replace['/\{ifnotenrolled\}(.*)\{\/ifnotenrolled\}/i'] = '';
                 }
             } else {
-                // Otherwise, remove the ifenrolled strings.
-                if (stripos($text, '{ifenrolled}') !== false) {
-                    $replace['/\{ifenrolled)\}(.*)\{\/ifenrolled\}/i'] = '';
+                if ($CFG->version >= 2013051400) { // Moodle 2.5+.
+                    $coursecontext = context_course::instance($PAGE->course->id);
+                } else {
+                    $coursecontext = get_context_instance(CONTEXT_COURSE, $PAGE->course->id);
                 }
-                // And remove the ifnotenrolled tags.
-                if (stripos($text, '{ifnotenrolled}') !== false) {
-                    $replace['/\{ifnotenrolled\}/i'] = '';
-                    $replace['/\{\/ifnotenrolled\}/i'] = '';
+                if (is_enrolled($coursecontext, $USER, '', true)) { // If user is enrolled in the course.
+                    // If enrolled, remove the ifenrolled tags.
+                    if (stripos($text, '{ifenrolled}') !== false) {
+                        $replace['/\{ifenrolled\}/i'] = '';
+                        $replace['/\{\/ifenrolled\}/i'] = '';
+                    }
+                    // Remove the ifnotenrolled strings.
+                    if (stripos($text, '{ifnotenrolled}') !== false) {
+                        $replace['/\{ifnotenrolled)\}(.*)\{\/ifnotenrolled\}/i'] = '';
+                    }
+                } else {
+                    // Otherwise, remove the ifenrolled strings.
+                    if (stripos($text, '{ifenrolled}') !== false) {
+                        $replace['/\{ifenrolled)\}(.*)\{\/ifenrolled\}/i'] = '';
+                    }
+                    // And remove the ifnotenrolled tags.
+                    if (stripos($text, '{ifnotenrolled}') !== false) {
+                        $replace['/\{ifnotenrolled\}/i'] = '';
+                        $replace['/\{\/ifnotenrolled\}/i'] = '';
+                    }
                 }
             }
-        }
 
-        // Tags: {ifloggedin} and {ifloggedout}.
-        if (isloggedin() && !isguestuser()) { // If logged-in but not just as guest.
-            // Just remove ifloggedin tags.
-            if (stripos($text, '{ifloggedin}') !== false) {
-                $replace['/\{ifloggedin\}/i'] = '';
-                $replace['/\{\/ifloggedin\}/i'] = '';
+            // Tags: {ifloggedin} and {ifloggedout}.
+            if (isloggedin() && !isguestuser()) { // If logged-in but not just as guest.
+                // Just remove ifloggedin tags.
+                if (stripos($text, '{ifloggedin}') !== false) {
+                    $replace['/\{ifloggedin\}/i'] = '';
+                    $replace['/\{\/ifloggedin\}/i'] = '';
+                }
+                // Remove the ifloggedout strings.
+                if (stripos($text, '{ifloggedout}') !== false) {
+                    $replace['/\{ifloggedout\}(.*)\{\/ifloggedout\}/i'] = '';
+                }
+            } else { // If logged-out.
+                // Remove the ifloggedout tags.
+                if (stripos($text, '{ifloggedout}') !== false) {
+                    $replace['/\{ifloggedout\}/i'] = '';
+                    $replace['/\{\/ifloggedout\}/i'] = '';
+                }
+                // Remove ifloggedin strings.
+                if (stripos($text, '{ifloggedin}') !== false) {
+                    $replace['/\{ifloggedin\}(.*)\{\/ifloggedin\}/i'] = '';
+                }
             }
-            // Remove the ifloggedout strings.
-            if (stripos($text, '{ifloggedout}') !== false) {
-                $replace['/\{ifloggedout\}(.*)\{\/ifloggedout\}/i'] = '';
-            }
-        } else { // If logged-out.
-            // Remove the ifloggedout tags.
-            if (stripos($text, '{ifloggedout}') !== false) {
-                $replace['/\{ifloggedout\}/i'] = '';
-                $replace['/\{\/ifloggedout\}/i'] = '';
-            }
-            // Remove ifloggedin strings.
-            if (stripos($text, '{ifloggedin}') !== false) {
-                $replace['/\{ifloggedin\}(.*)\{\/ifloggedin\}/i'] = '';
-            }
-        }
 
-        // Tag: {ifguest}.
-        if(stripos($text, '{ifguest}') !== false) {
-            if (isguestuser()) { // If logged-in as guest.
-                // Just remove the tags.
-                $replace['/\{ifguest\}/i'] = '';
-                $replace['/\{\/ifguest\}/i'] = '';
-            } else {
-                // If not logged-in as guest, remove the ifguest text.
-                $replace['/\{ifguest}(.*)\{\/ifguest\}/i'] = '';
+            // Tag: {ifguest}.
+            if(stripos($text, '{ifguest}') !== false) {
+                if (isguestuser()) { // If logged-in as guest.
+                    // Just remove the tags.
+                    $replace['/\{ifguest\}/i'] = '';
+                    $replace['/\{\/ifguest\}/i'] = '';
+                } else {
+                    // If not logged-in as guest, remove the ifguest text.
+                    $replace['/\{ifguest}(.*)\{\/ifguest\}/i'] = '';
+                }
             }
-        }
 
-        // Tag: {ifstudent}.
-        if(stripos($text, '{ifstudent}') !== false) {
-            if ($this->isstudent()) { // If an administrator.
-                // Just remove the tags.
-                $replace['/\{ifstudent\}/i'] = '';
-                $replace['/\{\/ifstudent\}/i'] = '';
-            } else {
-                // Remove the ifstudent strings.
-                $replace['/\{ifstudent\}(.*)\{\/ifstudent\}/i'] = '';
+            // Tag: {ifstudent}.
+            if(stripos($text, '{ifstudent}') !== false) {
+                if ($this->isstudent()) { // If an administrator.
+                    // Just remove the tags.
+                    $replace['/\{ifstudent\}/i'] = '';
+                    $replace['/\{\/ifstudent\}/i'] = '';
+                } else {
+                    // Remove the ifstudent strings.
+                    $replace['/\{ifstudent\}(.*)\{\/ifstudent\}/i'] = '';
+                }
             }
-        }
 
-        // Tag: {ifassistant}.
-        if (stripos($text, '{ifassistant}') !== false) {
-            // If an assistant (non-editing teacher).
-            if ($this->isassistant() && stripos($text, '{ifassistant}') !== false) {
-                // Just remove the tags.
-                $replace['/\{ifassistant\}/i'] = '';
-                $replace['/\{\/ifassistant\}/i'] = '';
-            } else {
-                // Remove the ifassistant strings.
-                $replace['/\{ifassistant\}(.*)\{\/ifassistant\}/i'] = '';
+            // Tag: {ifassistant}.
+            if (stripos($text, '{ifassistant}') !== false) {
+                // If an assistant (non-editing teacher).
+                if ($this->isassistant() && stripos($text, '{ifassistant}') !== false) {
+                    // Just remove the tags.
+                    $replace['/\{ifassistant\}/i'] = '';
+                    $replace['/\{\/ifassistant\}/i'] = '';
+                } else {
+                    // Remove the ifassistant strings.
+                    $replace['/\{ifassistant\}(.*)\{\/ifassistant\}/i'] = '';
+                }
             }
-        }
 
-        // Tag: {ifteacher}.
-        if (stripos($text, '{ifteacher}') !== false) {
-            if ($this->isteacher()) { // If a teacher.
-                // Just remove the tags.
-                $replace['/\{ifteacher\}/i'] = '';
-                $replace['/\{\/ifteacher\}/i'] = '';
-            } else {
-                // Remove the ifteacher strings.
-                $replace['/\{ifteacher\}(.*)\{\/ifteacher\}/i'] = '';
+            // Tag: {ifteacher}.
+            if (stripos($text, '{ifteacher}') !== false) {
+                if ($this->isteacher()) { // If a teacher.
+                    // Just remove the tags.
+                    $replace['/\{ifteacher\}/i'] = '';
+                    $replace['/\{\/ifteacher\}/i'] = '';
+                } else {
+                    // Remove the ifteacher strings.
+                    $replace['/\{ifteacher\}(.*)\{\/ifteacher\}/i'] = '';
+                }
             }
-        }
 
-        // Tag: {ifcreator}.
-        if (stripos($text, '{ifcreator}') !== false) {
-            if ($this->iscreator()) { // If a course creator.
-                // Just remove the tags.
-                $replace['/\{ifcreator\}/i'] = '';
-                $replace['/\{\/ifcreator\}/i'] = '';
-            } else {
-                // Remove the iscreator strings.
-                $replace['/\{ifcreator\}(.*)\{\/ifcreator\}/i'] = '';
+            // Tag: {ifcreator}.
+            if (stripos($text, '{ifcreator}') !== false) {
+                if ($this->iscreator()) { // If a course creator.
+                    // Just remove the tags.
+                    $replace['/\{ifcreator\}/i'] = '';
+                    $replace['/\{\/ifcreator\}/i'] = '';
+                } else {
+                    // Remove the iscreator strings.
+                    $replace['/\{ifcreator\}(.*)\{\/ifcreator\}/i'] = '';
+                }
             }
-        }
 
-        // Tag: {ifmanager}.
-        if (stripos($text, '{ifmanager}') !== false) {
-            if ($this->ismanager()) { // If a manager.
-                // Just remove the tags.
-                $replace['/\{ifmanager\}/i'] = '';
-                $replace['/\{\/ifmanager\}/i'] = '';
-            } else {
-                // Remove the ifmanager strings.
-                $replace['/\{ifmanager\}(.*)\{\/ifmanager\}/i'] = '';
+            // Tag: {ifmanager}.
+            if (stripos($text, '{ifmanager}') !== false) {
+                if ($this->ismanager()) { // If a manager.
+                    // Just remove the tags.
+                    $replace['/\{ifmanager\}/i'] = '';
+                    $replace['/\{\/ifmanager\}/i'] = '';
+                } else {
+                    // Remove the ifmanager strings.
+                    $replace['/\{ifmanager\}(.*)\{\/ifmanager\}/i'] = '';
+                }
             }
-        }
 
-        // Tag: {ifadmin}.
-        if (stripos($text, '{ifadmin}') !== false) {
-            if (is_siteadmin()) { // If an administrator.
-                // Just remove the tags.
-                $replace['/\{ifadmin\}/i'] = '';
-                $replace['/\{\/ifadmin\}/i'] = '';
-            } else {
-                // Remove the ifadmin strings.
-                $replace['/\{ifadmin\}(.*)\{\/ifadmin\}/i'] = '';
+            // Tag: {ifadmin}.
+            if (stripos($text, '{ifadmin}') !== false) {
+                if (is_siteadmin()) { // If an administrator.
+                    // Just remove the tags.
+                    $replace['/\{ifadmin\}/i'] = '';
+                    $replace['/\{\/ifadmin\}/i'] = '';
+                } else {
+                    // Remove the ifadmin strings.
+                    $replace['/\{ifadmin\}(.*)\{\/ifadmin\}/i'] = '';
+                }
             }
+        
         }
 
         // Apply all of the filtercodes.
