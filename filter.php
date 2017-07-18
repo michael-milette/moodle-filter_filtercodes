@@ -226,73 +226,73 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tag: {firstname}.
-        if(stripos($text,'{firstname}') !== false) {
+        if (stripos($text, '{firstname}') !== false) {
             $replace['/\{firstname\}/i'] = $firstname;
         }
 
         // Tag: {surname}.
-        if(stripos($text,'{surname}') !== false) {
+        if (stripos($text, '{surname}') !== false) {
             $replace['/\{surname\}/i'] = $lastname;
         }
 
         // Tag: {fullname}.
-        if(stripos($text,'{fullname}') !== false) {
+        if (stripos($text, '{fullname}') !== false) {
             $replace['/\{fullname\}/i'] = trim($firstname . ' ' . $lastname);
         }
 
         // Tag: {username}.
-        if(stripos($text,'{username}') !== false) {
+        if (stripos($text, '{username}') !== false) {
             $replace['/\{username\}/i'] = isloggedin() ? $USER->username : get_string('defaultusername', 'filter_filtercodes');
         }
 
         // Tag: {email}.
-        if(stripos($text,'{email}') !== false) {
+        if (stripos($text, '{email}') !== false) {
             $replace['/\{email\}/i'] = isloggedin() ? $USER->email : '';
         }
 
         // Tag: {userid}.
-        if(stripos($text,'{userid}') !== false) {
+        if (stripos($text, '{userid}') !== false) {
             $replace['/\{userid\}/i'] = $USER->id;
         }
 
         // Tag: {courseid}.
-        if(stripos($text,'{courseid}') !== false) {
+        if (stripos($text, '{courseid}') !== false) {
             $replace['/\{courseid\}/i'] = $PAGE->course->id;
         }
 
         // Tag: {referer}.
-        if(stripos($text,'{referer}') !== false) {
+        if (stripos($text, '{referer}') !== false) {
             $replace['/\{referer\}/i'] = get_local_referer(false);
         }
 
         // Tag: {wwwroot}.
-        if(stripos($text,'{wwwroot}') !== false) {
+        if (stripos($text, '{wwwroot}') !== false) {
             $replace['/\{wwwroot\}/i'] = $CFG->wwwroot;
         }
 
         // Tag: {protocol}.
-        if(stripos($text,'{protocol}') !== false) {
+        if (stripos($text, '{protocol}') !== false) {
             $replace['/\{protocol\}/i'] = 'http'.(is_https() ? 's' : '');
         }
 
         // Tag: {ipaddress}.
-        if(stripos($text,'{ipaddress}') !== false) {
+        if (stripos($text, '{ipaddress}') !== false) {
             $replace['/\{ipaddress\}/i'] = getremoteaddr();
         }
 
         // Tag: {recaptcha}.
-        if(stripos($text,'{recaptcha}') !== false) {
+        if (stripos($text, '{recaptcha}') !== false) {
             $replace['/\{recaptcha\}/i'] = $this->getrecaptcha();
         }
 
         // HTML tagging.
 
         // Tag: {nbsp}.
-        if(stripos($text,'{nbsp}') !== false) {
+        if (stripos($text, '{nbsp}') !== false) {
             $replace['/\{nbsp\}/i'] = '&nbsp;';
         }
         // Tag: {langx xx}.
-        if(stripos($text,'{langx ') !== false) {
+        if (stripos($text, '{langx ') !== false) {
             $replace['/\{langx\s+(\w+)\}(.*)\{\/langx\}/i'] = '<span lang="$1">$2</span>';
         }
 
@@ -365,7 +365,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {ifguest}.
-            if(stripos($text, '{ifguest}') !== false) {
+            if (stripos($text, '{ifguest}') !== false) {
                 if (isguestuser()) { // If logged-in as guest.
                     // Just remove the tags.
                     $replace['/\{ifguest\}/i'] = '';
@@ -377,7 +377,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {ifstudent}.
-            if(stripos($text, '{ifstudent}') !== false) {
+            if (stripos($text, '{ifstudent}') !== false) {
                 if ($this->isstudent()) { // If an administrator.
                     // Just remove the tags.
                     $replace['/\{ifstudent\}/i'] = '';
@@ -452,7 +452,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Apply all of the filtercodes.
-        if (sizeof($replace) > 0) {
+        if (count($replace) > 0) {
             $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
         } else {
             $newtext = null;
