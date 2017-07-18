@@ -34,52 +34,6 @@ defined('MOODLE_INTERNAL') || die();
 class filter_filtercodes extends moodle_text_filter {
 
     /**
-     * Get the user's public or private IP address.
-     *
-     * @return     string  Public IP address or the private IP address if the public address cannot be identified.
-     */
-    private function getuserip() {
-        $fieldlist = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED',
-                'REMOTE_ADDR', 'HTTP_CF_CONNECTING_IP', 'HTTP_X_CLUSTER_CLIENT_IP');
-
-        // Public range first.
-        $filterlist = array(
-            FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE,
-            FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
-        );
-
-        foreach ($filterlist as $filter) {
-            foreach ($fieldlist as $field) {
-
-                if (!array_key_exists($field, $_SERVER) || empty($_SERVER[$field])) {
-                    continue;
-                }
-
-                $iplist = explode(',', $_SERVER[$field]);
-                foreach ($iplist as $ip) {
-
-                    // Strips off port number if it exists.
-                    if (substr_count($ip, ':') == 1) {
-                        // IPv4 with a port.
-                        list($ip) = explode(':', $ip);
-                    } else if ($start = (substr($ip, 0, 1) == '[') && $end = strpos($ip, ']:') !== false) {
-                        // IPv6 with a port.
-                        $ip = substr($ip, $start + 1, $end - 2);
-                    }
-                    // Sanitize so that we only get public addresses.
-                    $lastip = $ip; // But save other address just in case.
-                    $ip = filter_var(trim($ip), FILTER_VALIDATE_IP, $filter);
-                    if ($ip !== false) {
-                        return $ip;
-                    }
-                }
-            }
-        }
-        // Private or restricted range.
-        return $lastip;
-    }
-
-    /**
      * Determine if the user is a student.
      *
      * @return boolean  Is: true, Not: false.
@@ -323,8 +277,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {ipaddress}.
         if(stripos($text,'{ipaddress}') !== false) {
-            //$replace['/\{ipaddress\}/i'] = $this->getuserip();
-            $replace['/\{ipaddress\}/i'] = $this->getuserip();
+            $replace['/\{ipaddress\}/i'] = getremoteaddr();
         }
 
         // Tag: {recaptcha}.
