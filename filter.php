@@ -326,12 +326,12 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Remove the ifnotenrolled strings.
                     if (stripos($text, '{ifnotenrolled}') !== false) {
-                        $replace['/\{ifnotenrolled)\}(.*)\{\/ifnotenrolled\}/i'] = '';
+                        $replace['/\{ifnotenrolled\}(.*)\{\/ifnotenrolled\}/i'] = '';
                     }
                 } else {
                     // Otherwise, remove the ifenrolled strings.
                     if (stripos($text, '{ifenrolled}') !== false) {
-                        $replace['/\{ifenrolled)\}(.*)\{\/ifenrolled\}/i'] = '';
+                        $replace['/\{ifenrolled\}(.*)\{\/ifenrolled\}/i'] = '';
                     }
                     // And remove the ifnotenrolled tags.
                     if (stripos($text, '{ifnotenrolled}') !== false) {
