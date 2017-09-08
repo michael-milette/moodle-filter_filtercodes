@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2017-09-08
+### Added
+- Conditional role tags are now aware of switching roles.
+### Updated
+- {ifrolename} type tags will now only display content if you have been assigned that particular role.
+- Identification of roles no longer depends on the verification of unique capabilities but by role assignment.
+- Bug fix: {ifstudent}{/ifstudent} set of tags now work. (thanks @gemguardian !)
+- Bug fix: Using {ifenrolled} and {ifnotenrolled} no longer cause a PHP error when used in a course. (thanks @gemguardian !)
+
 ## [0.2.0] - 2017-07-18
 ### Added
 - New tag: {ifnotenrolled} - Exact logical opposite of {ifenrolled} tag.

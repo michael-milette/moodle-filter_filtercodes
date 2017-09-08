@@ -104,7 +104,7 @@ Conditionally display content filters
 * {ifloggedin}{/ifloggedin} : Will display the enclosed content only if the user is logged in as non-guest.
 * {ifloggedout}{/ifloggedout} : Will display the enclosed content only if the user is logged out or is loggedin as guest.
 * {ifguest}{/ifguest} : Will display the enclosed content only if the user is logged-in as guest.
-* {ifstudent}{/ifstudent} : Will display the enclosed content only if the user is a student (no higher permissions).
+* {ifstudent}{/ifstudent} : Will display the enclosed content only if the user is logged-in and enrolled in the course (no other roles).
 * {ifassistant}{/ifassistant} : Will display the enclosed content only if the user is logged-in as a non-editing teacher in the current course.
 * {ifteacher}{/ifteacher} : Will display the enclosed content only if the user is logged-in as a teacher in the current course.
 * {ifcreator}{/ifcreator} : Will display the enclosed content only if the user is logged-in as a course creator.
@@ -151,14 +151,16 @@ Future Releases
 ---------------
 Features that we are considering adding to future releases include:
 * Finish unit testing script.
-* Add ability to access additional information from profile fields
-* Add ability to access information in custom profile fields
+* Add ability to access additional information from profile fields.
+* Add ability to access information in custom profile fields.
+* Add ability to insert profile picture.
 * Add ability to access course meta information. Example, teacher's name.
 * Add ability to list courses in the current course's category.
 * Add ability to list subcategories of the current category.
 * Add ability to define custom code blocks - useful for creating global content blocks that can be centrally updated.
 * Add the ability for {langx xx}{/langx} tag to supports blocks of text (using DIV), not just inline text (using SPAN).
-* Option to disable unused filters in order to optimize performance.
+* Option to disable unused or unwanted filters in order to optimize performance.
+* Create an Atto add-on to make it easier to insert FilterCodes tags.
 
 Let us know what is important to you and if you have any other suggestions.
 
@@ -213,12 +215,6 @@ Pro Tip: You can pre-populate a field and make it non-editable for logged-in use
     <input id="email" name="email" type="email" required="required" {ifloggedin}readonly{/ifloggedin} value="{email}">
     <input id="name" name="name" type="text" required="required" {ifloggedin}readonly{/ifloggedin} value="{fullname}">
 
-**Question: Why do administrators see the text of all other roles when using {ifxxxx}Content{/ifxxxx} tags?**
-
-Answer: This is normal as the administrator has the permission of all other roles. Users with this role will therefore see the text of all other roles.
-
-The same goes for Managers and other roles. They will see the text of all roles below them.
-
 **Question: Is there a tag to display...?**
 
 Answer: Only the tags listed in the documentation are currently supported. We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll find a link for this on the plugin's page. The subject line should start with "Feature Request: ". Please provide as much detail as possible on what you are trying to accomplish and, if possible, where in Moodle the information would come from. Be sure to check back on your issue as we may have further questions for you.
@@ -237,20 +233,22 @@ Answer: Create a Page on your Moodle site and include the following code:
 * Protocol: {protocol}
 * IP Address: {ipaddress}
 * Referer: {referer}
-* Recaptcha: {recaptcha}
-* Non-breaking space: This{nbsp}: Is it!
+* Recaptcha: {recaptcha} (will be available in a future release)
+* Non-breaking space: This{nbsp}: Is it! (view source code to see the non-breaking space)
 * English: {langx en}Content{/langx}
-* Enrolled: {ifenrolled}You are enrolled in this course!{/ifenrolled}
-* Not Enrolled: {ifnotenrolled}You are not enrolled in this course!{/ifnotenrolled}
-* LoggedIn: {ifloggedin}You are logged-in{/ifloggedin}
-* LoggedOut: {ifloggedout}You are logged-out{/ifloggedout}
-* Guest: {ifguest}You are a guest{/ifguest}
-* Student: {ifstudent}You are a student{/ifstudent}
-* Non-editing Teacher: {ifassistant}You are an assistant teacher{/ifassistant}
-* Teacher: {ifteacher}You are a teacher{/ifteacher}
-* Course Creator: {ifcreator}You are a course creator{/ifcreator}
-* Manager: {ifmanager}You are a manager{/ifmanager}
-* Admin: {ifadmin}You are an administrator{/ifadmin}
+* Enrolled: {ifenrolled}You are enrolled in this course.{/ifenrolled}
+* Not Enrolled: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
+* LoggedIn: {ifloggedin}You are logged-in.{/ifloggedin}
+* LoggedOut: {ifloggedout}You are logged-out.{/ifloggedout}
+* Guest: {ifguest}You are a guest.{/ifguest}
+* Student: {ifstudent}You are student who is logged-in and enrolled in this course and have no other roles.{/ifstudent}
+* Non-editing Teacher: {ifassistant}You are an assistant teacher.{/ifassistant}
+* Teacher: {ifteacher}You are a teacher.{/ifteacher}
+* Course Creator: {ifcreator}You are a course creator.{/ifcreator}
+* Manager: {ifmanager}You are a manager.{/ifmanager}
+* Admin: {ifadmin}You are an administrator.{/ifadmin}
+
+You can also try switching to different roles to see how different each will affect the content being displayed.
 
 **Question: When a user is logged out, the First name, Surname, Full Name, Email address and Username are empty. How can I set default values for these tags?**
 
@@ -260,9 +258,21 @@ Answer: You can do this using the language editor built into Moodle. There is cu
 
 Answer: Technically for sure! But only of the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters.
 
-**Question: Why is the IP Address listed as 0:0:0:0:0:0:0:1? **
+**Question: Why is the IP Address listed as 0:0:0:0:0:0:0:1?**
 
 Answer: 0:0:0:0:0:0:0:1 is the same as localhost and it means that your web browser is probably on the same computer as your web server. This shouldn't happen with users accessing your Moodle site from their own desktop or mobile device.
+
+**Question: Can I combine conditional tags?**
+
+Answer: Yes. However you can only combine (AND) them so that two or more tags must be true in order for the content to be displayed. For example:
+
+{ifloggedin}{ifenrolled}You are logged-in and enrolled in this course.{/ifenrolled}{/ifloggedin}
+
+This plugin does not support {if this OR that} type conditions at this time.
+
+**Question: Why does it show me as enrolled on the front page?**
+
+Answer: The Front Page is a course in Moodle. All users are enrolled by default in this course.
 
 **Question: I have a question that is not listed here**
 

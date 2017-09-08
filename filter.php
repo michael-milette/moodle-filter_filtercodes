@@ -32,153 +32,65 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_filtercodes extends moodle_text_filter {
+    // Moodle roles.
+    /** Manager role id. */
+    const MANAGER  = 1;
+    /** Manager role id. */
+    const COURSECREATOR  = 2;
+    /** Course creator role id. */
+    const EDITINGTEACHER  = 3;
+    /** Editing teacher role id. */
+    const NONEDITINGTEACHER  = 4;
+    /** Non-editing teacher role id. */
+    const STUDENT = 5;
 
     /**
-     * Determine if the user is a student.
+     * Determine if the user has a specific role.
      *
-     * @return boolean  Is: true, Not: false.
+     * @param integer $roleid   ID of role (1 to 5).
+     * @return boolean  Does: true, Does not: false.
      */
-    private function isstudent() {
+    private function hasrole($roleid) {
+        // If not logged in or is just a guestuser, definitely doesn't have a role.
         if (!isloggedin() || isguestuser()) {
             return false;
         }
 
-        static $isrole = null;
-        if ($isrole != null) {
-            return $isrole;
+        static $isrole = array();
+        // If result is not cached.
+        if (!isset($isrole[$roleid])) {
+            global $DB, $USER, $PAGE;
+            if (is_role_switched($PAGE->course->id)) { // Has switched roles.
+                $context = context_course::instance($PAGE->course->id);
+                if ($role = $DB->get_record('role', array('id' => $USER->access['rsw'][$context->path]))) {
+                    $isrole[$roleid] = ($role->sortorder == $roleid);
+                } else {
+                    $isrole[$roleid] = false;
+                }
+            } else {
+                $isrole[$roleid] = user_has_role_assignment($USER->id, $roleid, $PAGE->context->id);
+            }
         }
-        $isrole = false;
-
-        global $PAGE;
-        $coursecontext = $PAGE->context->get_course_context(false);
-        if ($coursecontext) {
-            $isrole = has_all_capabilities(array(
-                    'moodle/course:view',
-                    'gradereport/user:view',
-            ), $coursecontext);
-        }
+        return $isrole[$roleid];
     }
 
     /**
-     * Determine if the user is a Non-editing teacher in the current course.
+     * Determine if the user only has a specified role and no others.
+     * Example: Can be a student but not also be a teacher or manager.
      *
-     * @return boolean  Is: true, Not: false.
+     * @param integer $roleid   ID of role (1 to 5).
+     * @return boolean  Does: true, Does not: false.
      */
-    private function isassistant() {
-        if (!isloggedin() || isguestuser()) {
-            return false;
+    private function hasonlyrole($roleid) {
+        if ($this->hasrole($roleid)) {
+            for ($role = $this::MANAGER; $role <= $this::STUDENT; $role++) {
+                if ($role != $roleid && $this->hasrole($role)) {
+                    return false;
+                }
+            }
+            return !is_siteadmin();
         }
-
-        static $isrole = null;
-        if ($isrole != null) {
-            return $isrole;
-        }
-        $isrole = false;
-
-        global $PAGE;
-        if ($coursecontext = $PAGE->context->get_course_context(false)) {
-            $isrole = has_all_capabilities(array(
-                'gradereport/grader:view',
-                'gradereport/outcomes:view',
-                'moodle/badges:awardbadge',
-                'moodle/badges:viewawarded',
-                'moodle/course:markcomplete',
-                'moodle/course:viewhiddencourses',
-            ), $coursecontext);
-        }
-        return $isrole;
-    }
-
-    /**
-     * Determine if the user is a Editing teacher in the current course.
-     *
-     * @return boolean  Is: true, Not: false.
-     */
-    private function isteacher() {
-        if (!isloggedin() || isguestuser()) {
-            return false;
-        }
-
-        static $isrole = null;
-        if ($isrole != null) {
-            return $isrole;
-        }
-        $isrole = false;
-
-        global $PAGE;
-        if ($coursecontext = $PAGE->context->get_course_context(false)) {
-            $isrole = has_all_capabilities(array(
-                'moodle/course:manageactivities',
-                'moodle/backup:backupcourse',
-                'moodle/course:managefiles',
-                'moodle/course:reset',
-                'moodle/course:update',
-                'moodle/filter:manage',
-                'moodle/grade:viewall',
-                'moodle/restore:restorecourse',
-                'moodle/restore:restoretargetimport',
-                'moodle/role:switchroles',
-                'moodle/site:viewreports'
-                ), $coursecontext);
-        }
-        return $isrole;
-    }
-
-    /**
-     * Determine if the user is a Course creator.
-     *
-     * @return boolean  Is: true, Not: false.
-     */
-    private function iscreator() {
-        if (!isloggedin() || isguestuser()) {
-            return false;
-        }
-
-        static $isrole = null;
-        if ($isrole != null) {
-            return $isrole;
-        }
-        $isrole = false;
-
-        global $PAGE;
-        $isrole = has_all_capabilities(array(
-                'moodle/course:create',
-                'moodle/course:delete',
-                'moodle/role:assign',
-                'moodle/role:manage'
-                ), $PAGE->context);
-        return $isrole;
-    }
-
-    /**
-     * Determine if the user is a Manager.
-     *
-     * @return boolean  Is: true, Not: false.
-     */
-    private function ismanager() {
-        if (!isloggedin() || isguestuser()) {
-            return false;
-        }
-
-        static $isrole = null;
-        if ($isrole != null) {
-            return $isrole;
-        }
-        $isrole = false;
-
-        global $PAGE;
-        $isrole = has_all_capabilities(array(
-            'moodle/backup:backupactivity',
-            'moodle/filter:manage',
-            'moodle/grade:managegradingforms',
-            'moodle/restore:restoreactivity',
-            'moodle/role:override',
-            'moodle/role:review',
-            'moodle/role:safeoverride',
-            'moodle/user:create',
-            'moodle/user:delete'
-            ), $PAGE->context);
-        return $isrole;
+        return false;
     }
 
     /**
@@ -301,7 +213,7 @@ class filter_filtercodes extends moodle_text_filter {
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
             // Tags: {ifenrolled} and {ifnotenrolled}.
-            if ($PAGE->course->id == $SITE->id) { // If enrolled in the course.
+            if ($PAGE->course->id == $SITE->id) { // If frontpage course.
                 // Everyone is automatically enrolled in the Front Page course.
                 // Remove the ifenrolled tags.
                 if (stripos($text, '{ifenrolled}') !== false) {
@@ -313,12 +225,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{ifnotenrolled\}(.*)\{\/ifnotenrolled\}/i'] = '';
                 }
             } else {
-                if ($CFG->version >= 2013051400) { // Moodle 2.5+.
-                    $coursecontext = context_course::instance($PAGE->course->id);
-                } else {
-                    $coursecontext = get_context_instance(CONTEXT_COURSE, $PAGE->course->id);
-                }
-                if (is_enrolled($coursecontext, $USER, '', true)) { // If user is enrolled in the course.
+                if ($this->hasrole($this::STUDENT)) { // If user is enrolled in the course.
                     // If enrolled, remove the ifenrolled tags.
                     if (stripos($text, '{ifenrolled}') !== false) {
                         $replace['/\{ifenrolled\}/i'] = '';
@@ -340,7 +247,22 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 }
             }
-
+            // Tag: {ifstudent}. This is similar to {ifenrolled} but only displays if user is enrolled
+            // but must be logged-in and must not have no additional higher level roles as well.
+            // Example: Student but not Administrator, or Student but not Teacher.
+            if ($this->hasonlyrole($this::STUDENT)) {
+                // Tag: {ifstudent}. This is synonymous with {ifenrolled}.
+                if (stripos($text, '{ifstudent}') !== false) {
+                    // Just remove the tags.
+                    $replace['/\{ifstudent\}/i'] = '';
+                    $replace['/\{\/ifstudent\}/i'] = '';
+                }
+            } else {
+                // And remove the ifstudent strings.
+                if (stripos($text, '{ifstudent}') !== false) {
+                    $replace['/\{ifstudent\}(.*)\{\/ifstudent\}/i'] = '';
+                }
+            }
             // Tags: {ifloggedin} and {ifloggedout}.
             if (isloggedin() && !isguestuser()) { // If logged-in but not just as guest.
                 // Just remove ifloggedin tags.
@@ -376,22 +298,10 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {ifstudent}.
-            if (stripos($text, '{ifstudent}') !== false) {
-                if ($this->isstudent()) { // If a student.
-                    // Just remove the tags.
-                    $replace['/\{ifstudent\}/i'] = '';
-                    $replace['/\{\/ifstudent\}/i'] = '';
-                } else {
-                    // Remove the ifstudent strings.
-                    $replace['/\{ifstudent\}(.*)\{\/ifstudent\}/i'] = '';
-                }
-            }
-
             // Tag: {ifassistant}.
             if (stripos($text, '{ifassistant}') !== false) {
                 // If an assistant (non-editing teacher).
-                if ($this->isassistant() && stripos($text, '{ifassistant}') !== false) {
+                if ($this->hasrole($this::NONEDITINGTEACHER) && stripos($text, '{ifassistant}') !== false) {
                     // Just remove the tags.
                     $replace['/\{ifassistant\}/i'] = '';
                     $replace['/\{\/ifassistant\}/i'] = '';
@@ -403,7 +313,7 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifteacher}.
             if (stripos($text, '{ifteacher}') !== false) {
-                if ($this->isteacher()) { // If a teacher.
+                if ($this->hasrole($this::EDITINGTEACHER)) { // If a teacher.
                     // Just remove the tags.
                     $replace['/\{ifteacher\}/i'] = '';
                     $replace['/\{\/ifteacher\}/i'] = '';
@@ -415,7 +325,7 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifcreator}.
             if (stripos($text, '{ifcreator}') !== false) {
-                if ($this->iscreator()) { // If a course creator.
+                if ($this->hasrole($this::COURSECREATOR)) { // If a course creator.
                     // Just remove the tags.
                     $replace['/\{ifcreator\}/i'] = '';
                     $replace['/\{\/ifcreator\}/i'] = '';
@@ -427,7 +337,7 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifmanager}.
             if (stripos($text, '{ifmanager}') !== false) {
-                if ($this->ismanager()) { // If a manager.
+                if ($this->hasrole($this::MANAGER)) { // If a manager.
                     // Just remove the tags.
                     $replace['/\{ifmanager\}/i'] = '';
                     $replace['/\{\/ifmanager\}/i'] = '';
