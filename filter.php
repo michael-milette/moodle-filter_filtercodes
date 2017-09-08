@@ -88,7 +88,13 @@ class filter_filtercodes extends moodle_text_filter {
                     return false;
                 }
             }
-            return !is_siteadmin();
+            global $PAGE;
+            if (is_role_switched($PAGE->course->id)) {
+                // Ignore site admin status if we have switched roles.
+                return true;
+            } else {
+                return is_siteadmin();
+            }
         }
         return false;
     }
@@ -106,7 +112,8 @@ class filter_filtercodes extends moodle_text_filter {
                 return true;
             }
         }
-        return is_siteadmin();
+        global $PAGE;
+        return (!is_role_switched($PAGE->course->id) && is_siteadmin());
     }
 
     /**
@@ -267,7 +274,6 @@ class filter_filtercodes extends moodle_text_filter {
             // but must be logged-in and must not have no additional higher level roles as well.
             // Example: Student but not Administrator, or Student but not Teacher.
             if ($this->hasonlyrole($this::STUDENT)) {
-                // Tag: {ifstudent}. This is synonymous with {ifenrolled}.
                 if (stripos($text, '{ifstudent}') !== false) {
                     // Just remove the tags.
                     $replace['/\{ifstudent\}/i'] = '';
@@ -364,8 +370,9 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {ifadmin}.
+            global $PAGE;
             if (stripos($text, '{ifadmin}') !== false) {
-                if (is_siteadmin()) { // If an administrator.
+                if (is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If an administrator.
                     // Just remove the tags.
                     $replace['/\{ifadmin\}/i'] = '';
                     $replace['/\{\/ifadmin\}/i'] = '';

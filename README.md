@@ -260,7 +260,7 @@ Answer: Create a Page on your Moodle site and include the following code:
 * Manager (minimum): {ifminmanager}You are a manager or administrator.{/ifminmanager}
 * Admin: {ifadmin}You are an administrator.{/ifadmin}
 
-You can switch to different roles to see how different each will affect the content being displayed.
+You can switch to different roles to see how each will affect the content being displayed.
 
 **Question: When a user is logged out, the First name, Surname, Full Name, Email address and Username are empty. How can I set default values for these tags?**
 
