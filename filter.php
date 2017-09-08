@@ -45,7 +45,7 @@ class filter_filtercodes extends moodle_text_filter {
     const STUDENT = 5;
 
     /**
-     * Determine if the user has a specific role.
+     * Determine if the user has a role.
      *
      * @param integer $roleid   ID of role (1 to 5).
      * @return boolean  Does: true, Does not: false.
@@ -91,6 +91,22 @@ class filter_filtercodes extends moodle_text_filter {
             return !is_siteadmin();
         }
         return false;
+    }
+
+    /**
+     * Determine if the user has the specified role or one with elevated capabilities.
+     * Example: Can be a teacher, course creator, manager or Administrator but not a student.
+     *
+     * @param integer $roleid   ID of role (1 to 5).
+     * @return boolean  Does: true, Does not: false.
+     */
+    private function hasminimumrole($roleid) {
+        for ($role = $roleid; $role >= $this::MANAGER; $role--) {
+            if ($this->hasrole($role)) {
+                return true;
+            }
+        }
+        return is_siteadmin();
     }
 
     /**
@@ -357,6 +373,59 @@ class filter_filtercodes extends moodle_text_filter {
                     // Remove the ifadmin strings.
                     $replace['/\{ifadmin\}(.*)\{\/ifadmin\}/i'] = '';
                 }
+            }
+
+            if (strpos($text, '{ifmin') !== false) { // If there are conditional ifmin tags.
+
+                // Tag: {ifminassistant}.
+                if (stripos($text, '{ifminassistant}') !== false) {
+                    // If an assistant (non-editing teacher) or above.
+                    if ($this->hasminimumrole($this::NONEDITINGTEACHER) && stripos($text, '{ifminassistant}') !== false) {
+                        // Just remove the tags.
+                        $replace['/\{ifminassistant\}/i'] = '';
+                        $replace['/\{\/ifminassistant\}/i'] = '';
+                    } else {
+                        // Remove the ifminassistant strings.
+                        $replace['/\{ifminassistant\}(.*)\{\/ifminassistant\}/i'] = '';
+                    }
+                }
+
+                // Tag: {ifminteacher}.
+                if (stripos($text, '{ifminteacher}') !== false) {
+                    if ($this->hasminimumrole($this::EDITINGTEACHER)) { // If a teacher or above.
+                        // Just remove the tags.
+                        $replace['/\{ifminteacher\}/i'] = '';
+                        $replace['/\{\/ifminteacher\}/i'] = '';
+                    } else {
+                        // Remove the ifminteacher strings.
+                        $replace['/\{ifminteacher\}(.*)\{\/ifminteacher\}/i'] = '';
+                    }
+                }
+
+                // Tag: {ifmincreator}.
+                if (stripos($text, '{ifmincreator}') !== false) {
+                    if ($this->hasminimumrole($this::COURSECREATOR)) { // If a course creator or above.
+                        // Just remove the tags.
+                        $replace['/\{ifmincreator\}/i'] = '';
+                        $replace['/\{\/ifmincreator\}/i'] = '';
+                    } else {
+                        // Remove the iscreator strings.
+                        $replace['/\{ifmincreator\}(.*)\{\/ifmincreator\}/i'] = '';
+                    }
+                }
+
+                // Tag: {ifminmanager}.
+                if (stripos($text, '{ifminmanager}') !== false) {
+                    if ($this->hasminimumrole($this::MANAGER)) { // If a manager or above.
+                        // Just remove the tags.
+                        $replace['/\{ifminmanager\}/i'] = '';
+                        $replace['/\{\/ifminmanager\}/i'] = '';
+                    } else {
+                        // Remove the ifminmanager strings.
+                        $replace['/\{ifminmanager\}(.*)\{\/ifminmanager\}/i'] = '';
+                    }
+                }
+
             }
 
         }

@@ -106,9 +106,13 @@ Conditionally display content filters
 * {ifguest}{/ifguest} : Will display the enclosed content only if the user is logged-in as guest.
 * {ifstudent}{/ifstudent} : Will display the enclosed content only if the user is logged-in and enrolled in the course (no other roles).
 * {ifassistant}{/ifassistant} : Will display the enclosed content only if the user is logged-in as a non-editing teacher in the current course.
+* {ifminassistant}{/ifminassistant} : Will display the enclosed content only if the user is logged-in as a non-editing teacher or above in the current course.
 * {ifteacher}{/ifteacher} : Will display the enclosed content only if the user is logged-in as a teacher in the current course.
+* {ifminteacher}{/ifminteacher} : Will display the enclosed content only if the user is logged-in as a teacher or above in the current course.
 * {ifcreator}{/ifcreator} : Will display the enclosed content only if the user is logged-in as a course creator.
+* {ifmincreator}{/ifmincreator} : Will display the enclosed content only if the user is logged-in as a course creator or above.
 * {ifmanager}{/ifmanager} : Will display the enclosed content only if the user is logged-in as a manager.
+* {ifminmanager}{/ifminmanager} : Will display the enclosed content only if the user is logged-in as a manager or above.
 * {ifadmin}{/ifadmin} : Will display the enclosed content only if the user is logged-in as an administrator.
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
@@ -215,6 +219,10 @@ Pro Tip: You can pre-populate a field and make it non-editable for logged-in use
     <input id="email" name="email" type="email" required="required" {ifloggedin}readonly{/ifloggedin} value="{email}">
     <input id="name" name="name" type="text" required="required" {ifloggedin}readonly{/ifloggedin} value="{fullname}">
 
+**Question: Why do administrators see the text of all other roles when using {ifminxxxx}Content{/ifminxxxx} tags?**
+
+Answer: This is normal as the administrator has the permission of all other roles. the {ifmin...} tags will display content if the user has a minimum of the specified role or above. For example, {ifminteacher}Content here!{/ifminteacher} will display "Content here!" whether the user is a teacher, course creator, manager or administrator even if they are not a teacher.
+
 **Question: Is there a tag to display...?**
 
 Answer: Only the tags listed in the documentation are currently supported. We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll find a link for this on the plugin's page. The subject line should start with "Feature Request: ". Please provide as much detail as possible on what you are trying to accomplish and, if possible, where in Moodle the information would come from. Be sure to check back on your issue as we may have further questions for you.
@@ -243,12 +251,16 @@ Answer: Create a Page on your Moodle site and include the following code:
 * Guest: {ifguest}You are a guest.{/ifguest}
 * Student: {ifstudent}You are student who is logged-in and enrolled in this course and have no other roles.{/ifstudent}
 * Non-editing Teacher: {ifassistant}You are an assistant teacher.{/ifassistant}
+* Non-editing Teacher (minimum): {ifminassistant}You are an assistant teacher or above.{/ifminassistant}
 * Teacher: {ifteacher}You are a teacher.{/ifteacher}
+* Teacher (minimum): {ifminteacher}You are a teacher or above.{/ifminteacher}
 * Course Creator: {ifcreator}You are a course creator.{/ifcreator}
+* Course Creator (minimum): {ifmincreator}You are a course creator or above.{/ifmincreator}
 * Manager: {ifmanager}You are a manager.{/ifmanager}
+* Manager (minimum): {ifminmanager}You are a manager or administrator.{/ifminmanager}
 * Admin: {ifadmin}You are an administrator.{/ifadmin}
 
-You can also try switching to different roles to see how different each will affect the content being displayed.
+You can switch to different roles to see how different each will affect the content being displayed.
 
 **Question: When a user is logged out, the First name, Surname, Full Name, Email address and Username are empty. How can I set default values for these tags?**
 
@@ -268,7 +280,7 @@ Answer: Yes. However you can only combine (AND) them so that two or more tags mu
 
 {ifloggedin}{ifenrolled}You are logged-in and enrolled in this course.{/ifenrolled}{/ifloggedin}
 
-This plugin does not support {if this OR that} type conditions at this time.
+This plugin does not support {if this OR that} type conditions at this time. Depending on your requirement, the {ifmin...} tags might help you achieve this. These tags enable you to display content to users with a minimum role level. This could be useful if you wanted to only display a message to faculty such as (teacher or above).
 
 **Question: Why does it show me as enrolled on the front page?**
 
