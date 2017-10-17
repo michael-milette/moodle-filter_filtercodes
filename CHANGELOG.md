@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - New {ifmincreator}{/ifmincreator} set of tags.
 - New {ifminmanager}{/ifminmanager} set of tags.
 - New {alternatename} tag.
+- New {city} tag.
 ### Updated
 - {ifrolename} type tags will now only display content if you have been assigned that particular role.
 - Identification of roles no longer depends on the verification of unique capabilities but by role assignment.
