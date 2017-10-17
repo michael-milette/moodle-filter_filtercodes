@@ -175,6 +175,16 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{fullname\}/i'] = trim($firstname . ' ' . $lastname);
         }
 
+        // Tag: {alternatename}.
+        if (stripos($text, '{alternatename}') !== false) {
+            // If alternate name is empty, use firstname instead.
+            if (empty(trim($USER->alternatename))) {
+                $replace['/\{alternatename\}/i'] = $firstname;
+            } else {
+                $replace['/\{alternatename\}/i'] = $USER->alternatename;
+            }
+        }
+
         // Tag: {username}.
         if (stripos($text, '{username}') !== false) {
             $replace['/\{username\}/i'] = isloggedin() ? $USER->username : get_string('defaultusername', 'filter_filtercodes');
