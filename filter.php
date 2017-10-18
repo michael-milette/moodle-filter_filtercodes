@@ -117,6 +117,24 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Retrieves the URL for the user's profile picture, if one is available.
+     *
+     * @param object $user.
+     * @return intger $size: 1 (default - medium),2 (small), or 3 (large).
+     */
+    private function getprofilepictureurl($user) {
+        if (isloggedin() && $user->picture > 0) {
+            $usercontext = context_user::instance($user->id, IGNORE_MISSING);
+            $url = moodle_url::make_pluginfile_url($usercontext->id, 'user', 'icon', NULL, '/', "f$1") . '?rev=' . $user->picture;
+        } else {
+            global $PAGE;
+            $renderer = $PAGE->get_renderer('core');
+            $url = $renderer->pix_url('u/f$1'); // Default image.
+        }
+        return str_replace('/f%24', '/f$', $url);
+    }
+
+    /**
      * Generates HTML code for a recaptcha.
      *
      * @return string  HTML Code for recaptcha.
@@ -178,10 +196,10 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {alternatename}.
         if (stripos($text, '{alternatename}') !== false) {
             // If alternate name is empty, use firstname instead.
-            if (empty(trim($USER->alternatename))) {
-                $replace['/\{alternatename\}/i'] = $firstname;
-            } else {
+            if (isloggedin() && !empty(trim($USER->alternatename))) {
                 $replace['/\{alternatename\}/i'] = $USER->alternatename;
+            } else {
+                $replace['/\{alternatename\}/i'] = $firstname;
             }
         }
 
@@ -218,6 +236,23 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {userid}.
         if (stripos($text, '{userid}') !== false) {
             $replace['/\{userid\}/i'] = $USER->id;
+        }
+
+        if (stripos($text, '{userpicture') !== false) {
+            // Tag: {userpictureurl size}. User photo URL.
+            // Sizes: 1 (medium), 2 (small), 3 (large).
+            if (stripos($text, '{userpictureurl ') !== false) {
+                $url = $this->getprofilepictureurl($USER);
+                $replace['/\{userpictureurl\s+(\w+)\}/i'] = $url;
+            }
+            
+            // Tag: {userpictureimg size}. User photo URL wrapped in HTML image tag.
+            // Sizes: 1 (medium), 2 (small), 3 (large).
+            if (stripos($text, '{userpictureimg ') !== false) {
+                $url = $this->getprofilepictureurl($USER);
+                $tag = '<img src="' . $url . '" alt="' . $firstname . ' ' . $lastname . '" class="userpicture">';
+                $replace['/\{userpictureimg\s+(\w+)\}/i'] = $tag;
+            }
         }
 
         // Tag: {courseid}.
