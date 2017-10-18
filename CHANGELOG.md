@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - New {country} tag.
 - New {coursename} tag.
 - New {institution} tag.
+- New {department} tag.
 ### Updated
 - {ifrolename} type tags will now only display content if you have been assigned that particular role.
 - Identification of roles no longer depends on the verification of unique capabilities but by role assignment.
