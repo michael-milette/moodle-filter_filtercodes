@@ -87,6 +87,7 @@ Moodle metadata filters
 * {firstname} : Display the user's first name.
 * {surname} : Display the user's surname (family/last name).
 * {fullname} : Display the user's first name and surname.
+* {alternatename} : Display the user's alternate name. If blank, will display user's first name instead.
 * {email} : Display the user's email address.
 * {username} : Display the user's username.
 * {userid} : Display the user's ID.
@@ -234,6 +235,7 @@ Answer: Create a Page on your Moodle site and include the following code:
 * Surname: {surname}
 * Fullname: {fullname}
 * Email: {email}
+* Alternate name: {alternatename}
 * Username: {username}
 * User ID: {userid}
 * Course ID: {courseid}
