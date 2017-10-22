@@ -202,7 +202,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {country}.
         if (stripos($text, '{country}') !== false) {
-            $replace['/\{country\}/i'] = isloggedin() ? $USER->country : '';
+            $replace['/\{country\}/i'] = isloggedin() ? get_string($USER->country, 'countries') : '';
         }
 
         // Tag: {userid}.
@@ -213,6 +213,17 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {courseid}.
         if (stripos($text, '{courseid}') !== false) {
             $replace['/\{courseid\}/i'] = $PAGE->course->id;
+        }
+
+        // Tag: {coursename}. The name of this course.
+        if (stripos($text, '{coursename}') !== false) {
+            $course = $PAGE->course;
+            if ($course->id == $SITE->id) { // Front page - use site name.
+                $replace['/\{coursename\}/i'] = format_string($SITE->fullname);
+            } else { // In a course - use course full name.
+                $coursecontext = context_course::instance($course->id);
+                $replace['/\{coursename\}/i'] = format_string($course->fullname, true, array('context' => $coursecontext));
+            }
         }
 
         // Tag: {referer}.

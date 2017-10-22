@@ -92,6 +92,7 @@ Moodle metadata filters
 * {country} : Display the user's country.
 * {email} : Display the user's email address.
 * {username} : Display the user's username.
+* {coursename} : Display the name of the current course or the site name if not in a course.
 * {userid} : Display the user's ID.
 * {courseid} : Display a course's ID.
 * {wwwroot} : Display the root URL of the Moodle site.
@@ -241,6 +242,7 @@ Answer: Create a Page on your Moodle site and include the following code:
 * Country: {country}
 * Email: {email}
 * Username: {username}
+* Course or Site name: {coursename}
 * User ID: {userid}
 * Course ID: {courseid}
 * WWWroot: {wwwroot}
