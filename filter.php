@@ -200,6 +200,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{city\}/i'] = isloggedin() ? $USER->city : '';
         }
 
+        // Tag: {country}.
+        if (stripos($text, '{country}') !== false) {
+            $replace['/\{country\}/i'] = isloggedin() ? $USER->country : '';
+        }
+
         // Tag: {userid}.
         if (stripos($text, '{userid}') !== false) {
             $replace['/\{userid\}/i'] = $USER->id;
