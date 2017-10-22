@@ -210,6 +210,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{institution\}/i'] = isloggedin() ? $USER->institution : '';
         }
 
+        // Tag: {department}.
+        if (stripos($text, '{department}') !== false) {
+            $replace['/\{department\}/i'] = isloggedin() ? $USER->department : '';
+        }
+
         // Tag: {userid}.
         if (stripos($text, '{userid}') !== false) {
             $replace['/\{userid\}/i'] = $USER->id;
