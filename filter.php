@@ -245,7 +245,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $url = $this->getprofilepictureurl($USER);
                 $replace['/\{userpictureurl\s+(\w+)\}/i'] = $url;
             }
-            
+
             // Tag: {userpictureimg size}. User photo URL wrapped in HTML image tag.
             // Sizes: 1 (medium), 2 (small), 3 (large).
             if (stripos($text, '{userpictureimg ') !== false) {
@@ -269,6 +269,31 @@ class filter_filtercodes extends moodle_text_filter {
                 $coursecontext = context_course::instance($course->id);
                 $replace['/\{coursename\}/i'] = format_string($course->fullname, true, array('context' => $coursecontext));
             }
+        }
+
+        // Tag: {mycourses}. Just an unordered list of links to enrolled course.
+        if (stripos($text, '{mycourses}') !== false) {
+            $list = '';
+            if (isloggedin() && !isguestuser()) {
+                $sortorder = 'visible DESC';
+                // Prevent undefined $CFG->navsortmycoursessort errors.
+                if (empty($CFG->navsortmycoursessort)) {
+                    $CFG->navsortmycoursessort = 'sortorder';
+                }
+                // Append the chosen sortorder.
+                $sortorder = $sortorder . ',' . $CFG->navsortmycoursessort . ' ASC';
+                $mycourses = enrol_get_my_courses('fullname,id', $sortorder);
+                if (count($mycourses)) {
+                    foreach ($mycourses as $mycourse) {
+                        $list .= '<li><a href="' . (new moodle_url('/course/view.php', array('id'=>$mycourse->id))) . '">' .
+                                $mycourse->fullname . '</a></li>';
+                    }
+                }
+            }
+            if (empty($list)) {
+                $list .= '<li>' . get_string('notenrolled', 'grades') . '</li>';
+            }
+            $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist">' . $list . '</ul>';
         }
 
         // Tag: {referer}.

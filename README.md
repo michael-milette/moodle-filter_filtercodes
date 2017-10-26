@@ -96,6 +96,7 @@ Moodle metadata filters
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be 1 (medium), 2 (small) or 3 (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be 1 (medium), 2 (small) or 3 (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
 * {coursename} : Display the name of the current course or the site name if not in a course.
+* {mycourse} : Display an unordered list of links to all my enrolled courses.
 * {institution} : Display the name of the institution from the user's profile.
 * {department} : Display the name of the department from the user's profile.
 * {courseid} : Display a course's ID.
@@ -256,6 +257,7 @@ Answer: Create a Page on your Moodle site and include the following code:
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}
+* Enrolled Courses: {mycourses}
 * WWWroot: {wwwroot}
 * Protocol: {protocol}
 * IP Address: {ipaddress}
