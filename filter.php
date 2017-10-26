@@ -240,17 +240,35 @@ class filter_filtercodes extends moodle_text_filter {
 
         if (stripos($text, '{userpicture') !== false) {
             // Tag: {userpictureurl size}. User photo URL.
-            // Sizes: 2 (small), 1 (medium), 3 (large).
+            // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
             if (stripos($text, '{userpictureurl ') !== false) {
                 $url = $this->getprofilepictureurl($USER);
+                // Substitute the $1 in URL with value of (\w+), making sure to substitute text versions into numbers.
+                $newtext = preg_replace_callback('/\{userpictureurl\s+(\w+)\}/i',
+                    function ($matches) {
+                        $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
+                        return '{userpictureurl ' . $sublist[$matches[1]] . '}';
+                    }, $text);
+                if ($newtext !== false) {
+                    $text = $newtext;
+                }
                 $replace['/\{userpictureurl\s+(\w+)\}/i'] = $url;
             }
 
             // Tag: {userpictureimg size}. User photo URL wrapped in HTML image tag.
-            // Sizes: 2 (small), 1 (medium), 3 (large).
+            // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
             if (stripos($text, '{userpictureimg ') !== false) {
                 $url = $this->getprofilepictureurl($USER);
                 $tag = '<img src="' . $url . '" alt="' . $firstname . ' ' . $lastname . '" class="userpicture">';
+                // Will substitute the $1 in URL with value of (\w+).
+                $newtext = preg_replace_callback('/\{userpictureimg\s+(\w+)\}/i',
+                    function ($matches) {
+                        $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
+                        return '{userpictureimg ' . $sublist[$matches[1]] . '}';
+                    }, $text);
+                if ($newtext !== false) {
+                    $text = $newtext;
+                }
                 $replace['/\{userpictureimg\s+(\w+)\}/i'] = $tag;
             }
         }
