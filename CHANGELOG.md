@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 - New {department} tag.
 - New {userpictureurl X} tag.
 - New {userpictureimg X} tag.
+- New {mycourses} tag.
+- New {mycoursesmenu} tag.
 ### Updated
 - {ifrolename} type tags will now only display content if you have been assigned that particular role.
 - Identification of roles no longer depends on the verification of unique capabilities but by role assignment.

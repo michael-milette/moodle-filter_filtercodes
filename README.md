@@ -93,9 +93,11 @@ Moodle metadata filters
 * {email} : Display the user's email address.
 * {userid} : Display the user's ID.
 * {username} : Display the user's username.
-* {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be 1 (medium), 2 (small) or 3 (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
-* {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be 1 (medium), 2 (small) or 3 (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
+* {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
+* {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
 * {coursename} : Display the name of the current course or the site name if not in a course.
+* {mycourses} : Display an unordered list of links to all my enrolled courses.
+* {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 * {institution} : Display the name of the institution from the user's profile.
 * {department} : Display the name of the department from the user's profile.
 * {courseid} : Display a course's ID.
@@ -246,16 +248,18 @@ Answer: Create a Page on your Moodle site and include the following code:
 * Email: {email}
 * User ID: {userid}
 * Username: {username}
-* User profile picture URL (small): {userpictureurl 2}
-* User profile picture URL (medium): {userpictureurl 1}
-* User profile picture URL (large): {userpictureurl 3}
-* User profile picture URL (small): {userpictureimg 2}
-* User profile picture URL (medium): {userpictureimg 1}
-* User profile picture URL (large): {userpictureimg 3}
+* User profile picture URL (small): {userpictureurl sm}
+* User profile picture URL (medium): {userpictureurl md}
+* User profile picture URL (large): {userpictureurl lg}
+* User profile picture URL (small): {userpictureimg sm}
+* User profile picture URL (medium): {userpictureimg md}
+* User profile picture URL (large): {userpictureimg lg}
 * Course or Site name: {coursename}
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}
+* My Enrolled Courses: {mycourses}
+* My Enrolled Courses menu: {mycoursesmenu}
 * WWWroot: {wwwroot}
 * Protocol: {protocol}
 * IP Address: {ipaddress}

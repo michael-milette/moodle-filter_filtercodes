@@ -120,7 +120,7 @@ class filter_filtercodes extends moodle_text_filter {
      * Retrieves the URL for the user's profile picture, if one is available.
      *
      * @param object $user.
-     * @return intger $size: 1 (default - medium),2 (small), or 3 (large).
+     * @return string $url This is the url to the photo image file but with $1 for the size.
      */
     private function getprofilepictureurl($user) {
         if (isloggedin() && $user->picture > 0) {
@@ -240,17 +240,35 @@ class filter_filtercodes extends moodle_text_filter {
 
         if (stripos($text, '{userpicture') !== false) {
             // Tag: {userpictureurl size}. User photo URL.
-            // Sizes: 1 (medium), 2 (small), 3 (large).
+            // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
             if (stripos($text, '{userpictureurl ') !== false) {
                 $url = $this->getprofilepictureurl($USER);
+                // Substitute the $1 in URL with value of (\w+), making sure to substitute text versions into numbers.
+                $newtext = preg_replace_callback('/\{userpictureurl\s+(\w+)\}/i',
+                    function ($matches) {
+                        $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
+                        return '{userpictureurl ' . $sublist[$matches[1]] . '}';
+                    }, $text);
+                if ($newtext !== false) {
+                    $text = $newtext;
+                }
                 $replace['/\{userpictureurl\s+(\w+)\}/i'] = $url;
             }
-            
+
             // Tag: {userpictureimg size}. User photo URL wrapped in HTML image tag.
-            // Sizes: 1 (medium), 2 (small), 3 (large).
+            // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
             if (stripos($text, '{userpictureimg ') !== false) {
                 $url = $this->getprofilepictureurl($USER);
                 $tag = '<img src="' . $url . '" alt="' . $firstname . ' ' . $lastname . '" class="userpicture">';
+                // Will substitute the $1 in URL with value of (\w+).
+                $newtext = preg_replace_callback('/\{userpictureimg\s+(\w+)\}/i',
+                    function ($matches) {
+                        $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
+                        return '{userpictureimg ' . $sublist[$matches[1]] . '}';
+                    }, $text);
+                if ($newtext !== false) {
+                    $text = $newtext;
+                }
                 $replace['/\{userpictureimg\s+(\w+)\}/i'] = $tag;
             }
         }
@@ -269,6 +287,50 @@ class filter_filtercodes extends moodle_text_filter {
                 $coursecontext = context_course::instance($course->id);
                 $replace['/\{coursename\}/i'] = format_string($course->fullname, true, array('context' => $coursecontext));
             }
+        }
+
+        // Tag: {mycourses} and {mycoursesmenu}.
+        if (stripos($text, '{mycourses') !== false) {
+            if (isloggedin() && !isguestuser()) {
+                // Retrieve list of user's enrolled courses.
+                $sortorder = 'visible DESC';
+                // Prevent undefined $CFG->navsortmycoursessort errors.
+                if (empty($CFG->navsortmycoursessort)) {
+                    $CFG->navsortmycoursessort = 'sortorder';
+                }
+                // Append the chosen sortorder.
+                $sortorder = $sortorder . ',' . $CFG->navsortmycoursessort . ' ASC';
+                $mycourses = enrol_get_my_courses('fullname,id', $sortorder);
+
+                // Tag: {mycourses}. An unordered list of links to enrolled course.
+                if (stripos($text, '{mycourses}') !== false) {
+                    $list = '';
+                    foreach ($mycourses as $mycourse) {
+                        $list .= '<li><a href="' . (new moodle_url('/course/view.php', array('id'=>$mycourse->id))) . '">' .
+                                $mycourse->fullname . '</a></li>';
+                    }
+                    if (empty($list)) {
+                        $list .= '<li>' . get_string('notenrolled', 'grades') . '</li>';
+                    }
+                    $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist">' . $list . '</ul>';
+                }
+                // Tag: {mycoursesmenu}. A custom menu list of enrolled course names with links.
+                if (stripos($text, '{mycoursesmenu}') !== false) {
+                    $list = '';
+                    foreach ($mycourses as $mycourse) {
+                        $list .= '-' . $mycourse->fullname . '|' . 
+                            (new moodle_url('/course/view.php', array('id'=>$mycourse->id))) . PHP_EOL;
+                    }
+                    if (empty($list)) {
+                        $list .= '-' . get_string('notenrolled', 'grades') . PHP_EOL;
+                    }
+                    $replace['/\{mycoursesmenu\}/i'] = $list;
+                }
+                unset($list);
+                unset($mycourses);
+            }
+            $replace['/\{mycourses\}/i'] = '';
+            $replace['/\{mycoursesmenu\}/i'] = '';
         }
 
         // Tag: {referer}.
