@@ -1,31 +1,32 @@
+<img src="pix/logo.png" align="right" />
+
 FilterCodes filter plugin for Moodle
 ====================================
+![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1-blue.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v3.0%20%2F%20v3.1%20%2F%20v3.2%20%2F%20v3.3%20%2F%20v3.4-orange.svg)
+[![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
+[![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
 
-Copyright
----------
-Copyright © 2017 TNG Consulting Inc. - http://www.tngconsulting.ca/
+# Table of Contents
 
-This file is part of FilterCodes for Moodle - http://moodle.org/
+- [Basic Overview](#basic-overview)
+- [Requirements](#requirements)
+- [Download FilterCodes for Moodle](#download-filtercodes-for-moodle)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Updating](#updating)
+- [Uninstallation](#uninstallation)
+- [Limitations](#limitations)
+- [Language Support](#language-support)
+- [Frequently Asked Questions (FAQ)](#faq)
+- [Contributing](#contributing)
+- [Motivation for this plugin](#motivation-for-this-plugin)
+- [Further information](#further-information)
+- [License](#license)
 
-FilterCodes is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+# Basic Overview
 
-FilterCodes is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with FilterCodes.  If not, see <http://www.gnu.org/licenses/>.
-
-Authors
--------
-Michael Milette - Lead Developer
-
-Description
------------
 FilterCodes filter for Moodle enables content creators to easily customize
 and personalize site and course content using plain text tags.
 
@@ -38,44 +39,40 @@ important for sites wishing to comply with accessibility requirements.
 
 IMPORTANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
-Requirements
-------------
+[(Back to top)](#table-of-contents)
+
+# Requirements
+
 This plugin requires Moodle 3.1+ from http://moodle.org/
 
-Changes
--------
-The first public ALPHA version was released on 2017-07-07.
+[(Back to top)](#table-of-contents)
 
-For more information on releases since then, see CHANGELOG.md.
+# Download FilterCodes for Moodle
 
-Installation and Update
------------------------
+The most recent STABLE release of FilterCodes for Moodle is available from:
+https://moodle.org/plugins/filter_filtercodes
+
+The most recent DEVELOPMENT release can be found at:
+https://github.com/michael-milette/moodle-filter_filtercodes
+
+[(Back to top)](#table-of-contents)
+
+# Installation
+
 Install the plugin, like any other plugin, to the following folder:
 
     /filter/filtercodes
 
-See http://docs.moodle.org/33/en/Installing_plugins for details on installing Moodle plugins.
+See http://docs.moodle.org/34/en/Installing_plugins for details on installing Moodle plugins.
 
 In order for the filters to work, the plugin must be installed and activated.
 
 To activate, go to Site Administration > Plugins > Filters > Manage filters" and set the FilterCodes plugin to "On". Make sure it is set to Apply To: Content or optionally "Content and headings" if you also want the tags to affect headings.
 
-There are no special considerations required for updating the plugin.
+[(Back to top)](#table-of-contents)
 
-Uninstallation
---------------
-Uninstalling the plugin by going into the following:
+# Usage
 
-Home > Administration > Site Administration > Plugins > Manage plugins > Lang X
-
-...and click Uninstall. You may also need to manually delete the following folder:
-
-    /filter/filtercodes
-
-Note that, once uninstalled, any tags and content normally handled by this plugin will become visible to all users.
-
-Usage & Settings
-----------------
 IMPORANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 There are no configurable settings for this plugin at this time.
@@ -140,16 +137,33 @@ The {langx fr}{/langx} filter will convert this into the following HTML
 
     <span lang="fr">Contenu</span>
 
-Security considerations
------------------------
-There are no known security issues at this time.
+[(Back to top)](#table-of-contents)
 
-Motivation for this plugin
---------------------------
-The development of this plugin was motivated through our own experience in Moodle development and topics discussed in the Moodle forums. The project is sponsored and supported by TNG Consulting Inc.
+# Updating
 
-Limitations
------------
+There are no special considerations required for updating the plugin.
+
+The first public ALPHA version was released on 2017-07-07.
+
+For more information on releases since then, see
+[CHANGELOG.md](https://github.com/michael-milette/moodle-filter_filtercodes/blob/master/CHANGELOG.md).
+
+[(Back to top)](#table-of-contents)
+
+# Uninstallation
+
+Uninstalling the plugin by going into the following:
+
+Home > Administration > Site Administration > Plugins > Manage plugins > Lang X
+
+...and click Uninstall. You may also need to manually delete the following folder:
+
+    /filter/filtercodes
+
+Note that, once uninstalled, any tags and content normally handled by this plugin will become visible to all users.
+
+# Limitations
+
 * The {langx xx}{/langx} tag only supports inline text, not blocks of text.
 * Unpredictable results may occur if you interweave HTML code with {FilterCodes} tags.
 
@@ -161,31 +175,8 @@ Correct example:
 
     {FilterCode}<strong>Content</strong>{/FilterCode}
 
-Future Releases
----------------
-Features that we are considering adding to future releases include:
-* Finish unit testing script.
-* Add ability to access additional information from profile fields.
-* Add ability to access information in custom profile fields.
-* Add ability to access course meta information. Example, teacher's name.
-* Add ability to list courses in the current course's category.
-* Add ability to list subcategories of the current category.
-* Add ability to define custom code blocks - useful for creating global content blocks that can be centrally updated.
-* Add the ability for {langx xx}{/langx} tag to supports blocks of text (using DIV), not just inline text (using SPAN).
-* Option to disable unused or unwanted filters in order to optimize performance.
-* Create an Atto add-on to make it easier to insert FilterCodes tags.
+# Language Support
 
-Let us know what is important to you and if you have any other suggestions.
-
-Further Information
--------------------
-For further information regarding the filter_filtercodes plugin, support or to
-report a bug, please visit the project page at:
-
-http://github.com/michael-milette/moodle-filter_filtercodes
-
-Language Support
-----------------
 This plugin includes support for the English language.
 
 If you need a different language that is not yet supported, please feel free
@@ -199,26 +190,28 @@ feel free to prepare a pull request and submit it to the project page at:
 
 http://github.com/michael-milette/moodle-filter_filtercodes
 
-Frequently Asked Questions (FAQ)
---------------------------------
+# FAQ
+
+## Frequently Asked Questions
+
 IMPORANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
-**Question: {FilterCodes} Tags are displayed as entered**
+### {FilterCodes} Why are tags displayed as entered instead of being converted to data?
 
-Answer: Here are a few things you can check:
+Here are a few things you can check:
 * Make sure the plugin is enabled. See installation instructions.
 * If the tag is in a heading, make sure you have enabled the plugin for both content and headings.
 * For the {langx} tag, make sure you included the 2 letter language code in the opening tag. The closing tag must not contain any language code.
 * If the tags required a closing tag, make sure that it includes a forward slash. Example: {/ifenrolled}.
 * Try a different tag like {protocol}. If it still doesn't get replaced with http or https either, chances are that this part of Moodle doesn't support filters yet. Please report the part of Moodle that doesn't support filters in the Moodle Tracker. If the problem is with a 3rd party plugin, please report the issue to the developer of that plugin using the Bug Tracker link on the plugin's page on moodle.org/plugins.
 
-**Question: Can I nest tags? For example, {ifloggedin}{ifenrolled}Message to appear if enrolled and loggedin.{/ifenrolled}{/ifloggedin}**
+### Can I nest tags? For example, {ifloggedin}{ifenrolled}Message to appear if enrolled and loggedin.{/ifenrolled}{/ifloggedin}
 
-Answer: Yes. In this case, both conditions must be met for the message to appear.
+Yes. In this case, both conditions must be met for the message to appear.
 
-**Question: How can I use this to pre-populate one or more fields in a Contact Form for Moodle?**
+### How can I use this to pre-populate one or more fields in a Contact Form for Moodle?
 
-Answer: Just put the tag in the input's value parameter. Here are a couple of examples:
+Just put the tag in the input's value parameter. Here are a couple of examples:
 
     <input id="email" name="email" type="email" required="required" value="{email}">
     <input id="name" name="name" type="text" required="required" value="{fullname}">
@@ -228,17 +221,17 @@ Pro Tip: You can pre-populate a field and make it non-editable for logged-in use
     <input id="email" name="email" type="email" required="required" {ifloggedin}readonly{/ifloggedin} value="{email}">
     <input id="name" name="name" type="text" required="required" {ifloggedin}readonly{/ifloggedin} value="{fullname}">
 
-**Question: Why do administrators see the text of all other roles when using {ifminxxxx}Content{/ifminxxxx} tags?**
+### Why do administrators see the text of all other roles when using {ifminxxxx}Content{/ifminxxxx} tags?
 
-Answer: This is normal as the administrator has the permission of all other roles. the {ifmin...} tags will display content if the user has a minimum of the specified role or above. For example, {ifminteacher}Content here!{/ifminteacher} will display "Content here!" whether the user is a teacher, course creator, manager or administrator even if they are not a teacher.
+This is normal as the administrator has the permission of all other roles. the {ifmin...} tags will display content if the user has a minimum of the specified role or above. For example, {ifminteacher}Content here!{/ifminteacher} will display "Content here!" whether the user is a teacher, course creator, manager or administrator even if they are not a teacher.
 
-**Question: Is there a tag to display...?**
+### Is there a tag to display...?
 
-Answer: Only the tags listed in the documentation are currently supported. We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll find a link for this on the plugin's page. The subject line should start with "Feature Request: ". Please provide as much detail as possible on what you are trying to accomplish and, if possible, where in Moodle the information would come from. Be sure to check back on your issue as we may have further questions for you.
+Only the tags listed in the documentation are currently supported. We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll find a link for this on the plugin's page. The subject line should start with "Feature Request: ". Please provide as much detail as possible on what you are trying to accomplish and, if possible, where in Moodle the information would come from. Be sure to check back on your issue as we may have further questions for you.
 
-**Question: How can I test to see if all of the tags are working?**
+### How can I test to see if all of the tags are working?
 
-Answer: Create a Page on your Moodle site and include the following code:
+Create a Page on your Moodle site and include the following code:
 * First name: {firstname}
 * Surname: {surname}
 * Fullname: {fullname}
@@ -285,32 +278,101 @@ Answer: Create a Page on your Moodle site and include the following code:
 
 You can switch to different roles to see how each will affect the content being displayed.
 
-**Question: When a user is logged out, the First name, Surname, Full Name, Email address and Username are empty. How can I set default values for these tags?**
+### When a user is logged out, the First name, Surname, Full Name, Email address and Username are empty. How can I set default values for these tags?
 
-Answer: You can do this using the language editor built into Moodle. There is currently support for the following defaults: defaultfirstname, defaultsurname, defaultusername, defaultemail. By default, these are blank. As for the Full Name, it is made up of the firstname and surname separated by a space and is therefore not settable.
+You can do this using the language editor built into Moodle. There is currently support for the following defaults: defaultfirstname, defaultsurname, defaultusername, defaultemail. By default, these are blank. As for the Full Name, it is made up of the firstname and surname separated by a space and is therefore not settable.
 
-**Question: Can I use FilterCodes in custom menus?**
+### Can I use FilterCodes in custom menus?
 
-Answer: Technically for sure! But only of the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters.
+Technically for sure! But only of the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters.
 
-**Question: Why is the IP Address listed as 0:0:0:0:0:0:0:1?**
+### Why is the IP Address listed as 0:0:0:0:0:0:0:1?
 
-Answer: 0:0:0:0:0:0:0:1 is the same as localhost and it means that your web browser is probably on the same computer as your web server. This shouldn't happen with users accessing your Moodle site from their own desktop or mobile device.
+0:0:0:0:0:0:0:1 is the same as localhost and it means that your web browser is probably on the same computer as your web server. This shouldn't happen with users accessing your Moodle site from their own desktop or mobile device.
 
-**Question: Can I combine conditional tags?**
+### Can I combine conditional tags?
 
-Answer: Yes. However you can only combine (AND) them so that two or more tags must be true in order for the content to be displayed. For example:
+Yes. However you can only combine (AND) them so that two or more tags must be true in order for the content to be displayed. For example:
 
 {ifloggedin}{ifenrolled}You are logged-in and enrolled in this course.{/ifenrolled}{/ifloggedin}
 
 This plugin does not support {if this OR that} type conditions at this time. Depending on your requirement, the {ifmin...} tags might help you achieve this. These tags enable you to display content to users with a minimum role level. This could be useful if you wanted to only display a message to faculty such as (teacher or above).
 
-**Question: Why does it show me as enrolled on the front page?**
+### Why does it show me as enrolled on the front page?
 
-Answer: The Front Page is a course in Moodle. All users are enrolled by default in this course.
+The Front Page is a course in Moodle. All users are enrolled by default in this course.
 
-**Question: I have a question that is not listed here**
+### Are there any security considerations?
 
-Answer: Submit your question to the issue tracker:
+There are no known security considerations at this time.
+
+## Other questions
+
+Got a burning question that is not covered here? If you can't find your answer, submit your question in the Moodle forums or open a new issue on Github at:
 
 http://github.com/michael-milette/moodle-filter_filtercodes/issues
+
+[(Back to top)](#table-of-contents)
+
+# Contributing
+
+If you are interested in helping, please take a look at our [contributing](https://github.com/michael-milette/moodle-filter_filtercodes/blob/master/CONTRIBUTING.md) guidelines for details on our code of conduct and the process for submitting pull requests to us.
+
+## Contributors
+
+Michael Milette - Author and Lead Developer
+
+## Pending Features
+
+Some of the features we are considering for future releases include:
+
+* Finish unit testing script.
+* Add ability to access additional information from profile fields.
+* Add ability to access information in custom profile fields.
+* Add ability to access course meta information. Example, teacher's name.
+* Add ability to list courses in the current course's category.
+* Add ability to list subcategories of the current category.
+* Add ability to define custom code blocks - useful for creating global content blocks that can be centrally updated.
+* Add the ability for {langx xx}{/langx} tag to supports blocks of text (using DIV), not just inline text (using SPAN).
+* Option to disable unused or unwanted filters in order to optimize performance.
+* Create an Atto add-on to make it easier to insert FilterCodes tags.
+
+If you could use any of these features, or have other requirements, consider contributing or hiring us to accelerate development.
+
+[(Back to top)](#table-of-contents)
+
+# Motivation for this plugin
+
+The development of this plugin was motivated through our own experience in Moodle development and topics discussed in the Moodle forums. The project is sponsored and supported by TNG Consulting Inc.
+
+[(Back to top)](#table-of-contents)
+
+# Further Information
+
+For further information regarding the filter_filtercodes plugin, support or to
+report a bug, please visit the project page at:
+
+http://github.com/michael-milette/moodle-filter_filtercodes
+
+[(Back to top)](#table-of-contents)
+
+# License
+
+Copyright © 2017 TNG Consulting Inc. - http://www.tngconsulting.ca/
+
+This file is part of FilterCodes for Moodle - http://moodle.org/
+
+FilterCodes is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+FilterCodes is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with FilterCodes.  If not, see <http://www.gnu.org/licenses/>.
+
+[(Back to top)](#table-of-contents)
