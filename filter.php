@@ -127,9 +127,13 @@ class filter_filtercodes extends moodle_text_filter {
             $usercontext = context_user::instance($user->id, IGNORE_MISSING);
             $url = moodle_url::make_pluginfile_url($usercontext->id, 'user', 'icon', NULL, '/', "f$1") . '?rev=' . $user->picture;
         } else {
-            global $PAGE;
+            global $PAGE, $CFG;
             $renderer = $PAGE->get_renderer('core');
-            $url = $renderer->pix_url('u/f$1'); // Default image.
+            if ($CFG->branch >= 33) {
+                $url = $renderer->image_url('u/f$1'); // Default image.
+            } else {
+                $url = $renderer->pix_url('u/f$1'); // Default image. Deprecated as of Moodle 3.3.
+            }
         }
         return str_replace('/f%24', '/f$', $url);
     }
