@@ -318,7 +318,7 @@ class filter_filtercodes extends moodle_text_filter {
                 if (stripos($text, '{mycoursesmenu}') !== false) {
                     $list = '';
                     foreach ($mycourses as $mycourse) {
-                        $list .= '-' . $mycourse->fullname . '|' . 
+                        $list .= '-' . $mycourse->fullname . '|' .
                             (new moodle_url('/course/view.php', array('id'=>$mycourse->id))) . PHP_EOL;
                     }
                     if (empty($list)) {
