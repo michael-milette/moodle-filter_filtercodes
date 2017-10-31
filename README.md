@@ -3,7 +3,7 @@
 FilterCodes filter plugin for Moodle
 ====================================
 ![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v3.0%20%2F%20v3.1%20%2F%20v3.2%20%2F%20v3.3%20%2F%20v3.4-orange.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.4-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -37,13 +37,13 @@ In addition, it also enables you to:
 Usage of the {FilterCodes} tags requires no knowledge of HTML but might be
 important for sites wishing to comply with accessibility requirements.
 
-IMPORTANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
+IMPORTANT: Although we expect everything to work, this BETA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 [(Back to top)](#table-of-contents)
 
 # Requirements
 
-This plugin requires Moodle 3.1+ from http://moodle.org/
+This plugin requires Moodle 2.7+ from http://moodle.org/
 
 [(Back to top)](#table-of-contents)
 
@@ -73,7 +73,7 @@ To activate, go to Site Administration > Plugins > Filters > Manage filters" and
 
 # Usage
 
-IMPORANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
+IMPORANT: Although we expect everything to work, this BETA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 There are no configurable settings for this plugin at this time.
 

@@ -93,8 +93,8 @@ class filter_filtercodes extends moodle_text_filter {
      */
     private function hasonlyrole($roleid) {
         if ($this->hasrole($roleid)) {
-            for ($role = $this->roles['manager']->id; $role <= $this->student; $role++) {
-                if ($role != $roleid && $this->hasrole($role)) {
+            foreach ($this->roles as $role) {
+                if (isset($role->level) && $role->id != $roleid && $this->hasrole($role->id)) {
                     return false;
                 }
             }
@@ -255,7 +255,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {country}.
         if (stripos($text, '{country}') !== false) {
-            $replace['/\{country\}/i'] = isloggedin() ? get_string($USER->country, 'countries') : '';
+            $replace['/\{country\}/i'] = isloggedin() && !empty($USER->country) ? get_string($USER->country, 'countries') : '';
         }
 
         // Tag: {institution}.
@@ -345,7 +345,11 @@ class filter_filtercodes extends moodle_text_filter {
                                 $mycourse->fullname . '</a></li>';
                     }
                     if (empty($list)) {
-                        $list .= '<li>' . get_string('notenrolled', 'grades') . '</li>';
+                        if ($CFG->branch >= 29) {
+                            $list .= '<li>' . get_string('notenrolled', 'grades') . '</li>';
+                        } else {
+                            $list .= '<li>' . get_string('nocourses', 'grades') . '</li>';
+                        }
                     }
                     $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist">' . $list . '</ul>';
                 }
@@ -357,7 +361,12 @@ class filter_filtercodes extends moodle_text_filter {
                             (new moodle_url('/course/view.php', array('id' => $mycourse->id))) . PHP_EOL;
                     }
                     if (empty($list)) {
-                        $list .= '-' . get_string('notenrolled', 'grades') . PHP_EOL;
+
+                        if ($CFG->branch >= 29) {
+                            $list .= '-' . get_string('notenrolled', 'grades') . PHP_EOL;
+                        } else {
+                            $list .= '-' . get_string('nocourses', 'grades') . PHP_EOL;
+                        }
                     }
                     $replace['/\{mycoursesmenu\}/i'] = $list;
                 }
@@ -370,7 +379,11 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {referer}.
         if (stripos($text, '{referer}') !== false) {
-            $replace['/\{referer\}/i'] = get_local_referer(false);
+            if ($CFG->branch >= 28) {
+                $replace['/\{referer\}/i'] = get_local_referer(false);
+            } else {
+                $replace['/\{referer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+            }
         }
 
         // Tag: {wwwroot}.
@@ -380,7 +393,15 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {protocol}.
         if (stripos($text, '{protocol}') !== false) {
-            $replace['/\{protocol\}/i'] = 'http'.(is_https() ? 's' : '');
+            if ($CFG->branch >= 28) {
+                $replace['/\{protocol\}/i'] = 'http'.(is_https() ? 's' : '');
+            } else {
+                if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) {
+                    $replace['/\{protocol\}/i'] = 'https';
+                } else {
+                    $replace['/\{protocol\}/i'] = 'http';
+                }
+            }
         }
 
         // Tag: {ipaddress}.

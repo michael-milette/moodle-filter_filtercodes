@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [0.3.0] - 2017-10-30
+## [0.3.0] - 2017-10-31
 ### Added
 - Conditional role tags are now aware of switching roles.
 - New {ifminassistant}{/ifminassistant} set of tags.
@@ -19,6 +19,11 @@ All notable changes to this project will be documented in this file.
 - New {mycourses} tag.
 - New {mycoursesmenu} tag.
 - Added CONTRIBUTE.md.
+- Is now compatible with Moodle 3.4.
+- Is now compatible with Moodle 3.0.
+- Is now compatible with Moodle 2.9.
+- Is now compatible with Moodle 2.8.
+- Is now compatible with Moodle 2.7.
 ### Updated
 - {ifrolename} type tags will now only display content if you have been assigned that particular role.
 - Identification of roles no longer depends on the verification of unique capabilities but by role assignment.
@@ -27,7 +32,8 @@ All notable changes to this project will be documented in this file.
 - Updated documentation and FAQ.
 - Reorganized README.md (New: logo, status badges, table of contents, contributing, etc).
 - Default Moodle role IDs are no longer hard coded but must exist including: 'manager', 'coursecreator', 'editingteacher', 'teacher', 'student'.
-- Has been tested with Moodle 3.4.
+- Fixed bug where no country was selected in user's profile.
+- Project status is now BETA.
 
 ## [0.2.0] - 2017-07-18
 ### Added
