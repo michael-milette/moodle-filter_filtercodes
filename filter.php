@@ -32,17 +32,27 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_filtercodes extends moodle_text_filter {
-    // Moodle roles.
-    /** Manager role id. */
-    const MANAGER  = 1;
-    /** Manager role id. */
-    const COURSECREATOR  = 2;
-    /** Course creator role id. */
-    const EDITINGTEACHER  = 3;
-    /** Editing teacher role id. */
-    const NONEDITINGTEACHER  = 4;
-    /** Non-editing teacher role id. */
-    const STUDENT = 5;
+    /** @var object $roles Array Moodle role objects. */
+    public $roles = array();
+
+    /**
+     * Constructor: Get the role ID's.
+     */
+    public function __construct() {
+        global $DB;
+        // Retrieve all of the available roles and save some of their IDs.
+        // Default Moodle roles IDs MANAGER = 1...STUDENT = 5.
+        $this->roles = $DB->get_records('role', null, null, 'shortname,id');
+        $level = 1;
+        foreach (array('manager', 'coursecreator', 'editingteacher', 'teacher', 'student') as $role) {
+            if (!array_key_exists($role, $this->roles)) {
+                // Just in case somone deleted one of the default moodle roles.
+                $this->roles[$role] = new StdClass;
+                $this->roles[$role]->id = -1;
+            }
+            $this->roles[$role]->level = $level++; // Seniority, 1 being the highest.
+        }
+    }
 
     /**
      * Determine if the user has a role.
@@ -83,7 +93,7 @@ class filter_filtercodes extends moodle_text_filter {
      */
     private function hasonlyrole($roleid) {
         if ($this->hasrole($roleid)) {
-            for ($role = $this::MANAGER; $role <= $this::STUDENT; $role++) {
+            for ($role = $this->roles['manager']->id; $role <= $this->student; $role++) {
                 if ($role != $roleid && $this->hasrole($role)) {
                     return false;
                 }
@@ -100,32 +110,53 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Searches the list of roles for a level number and returns
+     * the associated role shortname.
+     *
+     * @param integer $level Level number.
+     * @return string Shortname of role associated with the level.
+     */
+    private function getrolebylevel($level) {
+        // Setup lookup caching using a static associative array.
+        static $rolearr;
+        if (empty($rolearr)) {
+            foreach ($this->roles as $role) {
+                if (isset($role->level)) {
+                    $rolearr[$role->level] = $role->shortname;
+                }
+            }
+        }
+        return $rolearr[$level];
+    }
+
+    /**
      * Determine if the user has the specified role or one with elevated capabilities.
      * Example: Can be a teacher, course creator, manager or Administrator but not a student.
      *
-     * @param integer $roleid   ID of role (1 to 5).
-     * @return boolean  Does: true, Does not: false.
+     * @param integer $minrole   ID of role (1 to 5).
+     * @return boolean  User meets minimum role: true, does not: false.
      */
-    private function hasminimumrole($roleid) {
-        for ($role = $roleid; $role >= $this::MANAGER; $role--) {
-            if ($this->hasrole($role)) {
+    private function hasminimumrole($minrole) {
+        for ($level = $minrole->level; $level >= $this->roles['manager']->level; $level--) {
+            $role = $this->getrolebylevel($level);
+            if ($this->hasrole($this->roles[$role]->id)) {
                 return true;
             }
         }
         global $PAGE;
-        return (!is_role_switched($PAGE->course->id) && is_siteadmin());
+        return !is_role_switched($PAGE->course->id) && is_siteadmin();
     }
 
     /**
      * Retrieves the URL for the user's profile picture, if one is available.
      *
-     * @param object $user.
+     * @param object $user The user object.
      * @return string $url This is the url to the photo image file but with $1 for the size.
      */
     private function getprofilepictureurl($user) {
         if (isloggedin() && $user->picture > 0) {
             $usercontext = context_user::instance($user->id, IGNORE_MISSING);
-            $url = moodle_url::make_pluginfile_url($usercontext->id, 'user', 'icon', NULL, '/', "f$1") . '?rev=' . $user->picture;
+            $url = moodle_url::make_pluginfile_url($usercontext->id, 'user', 'icon', null, '/', "f$1") . '?rev=' . $user->picture;
         } else {
             global $PAGE, $CFG;
             $renderer = $PAGE->get_renderer('core');
@@ -310,7 +341,7 @@ class filter_filtercodes extends moodle_text_filter {
                 if (stripos($text, '{mycourses}') !== false) {
                     $list = '';
                     foreach ($mycourses as $mycourse) {
-                        $list .= '<li><a href="' . (new moodle_url('/course/view.php', array('id'=>$mycourse->id))) . '">' .
+                        $list .= '<li><a href="' . (new moodle_url('/course/view.php', array('id' => $mycourse->id))) . '">' .
                                 $mycourse->fullname . '</a></li>';
                     }
                     if (empty($list)) {
@@ -323,7 +354,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $list = '';
                     foreach ($mycourses as $mycourse) {
                         $list .= '-' . $mycourse->fullname . '|' .
-                            (new moodle_url('/course/view.php', array('id'=>$mycourse->id))) . PHP_EOL;
+                            (new moodle_url('/course/view.php', array('id' => $mycourse->id))) . PHP_EOL;
                     }
                     if (empty($list)) {
                         $list .= '-' . get_string('notenrolled', 'grades') . PHP_EOL;
@@ -390,7 +421,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{ifnotenrolled\}(.*)\{\/ifnotenrolled\}/i'] = '';
                 }
             } else {
-                if ($this->hasrole($this::STUDENT)) { // If user is enrolled in the course.
+                if ($this->hasrole($this->student)) { // If user is enrolled in the course.
                     // If enrolled, remove the ifenrolled tags.
                     if (stripos($text, '{ifenrolled}') !== false) {
                         $replace['/\{ifenrolled\}/i'] = '';
@@ -415,7 +446,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {ifstudent}. This is similar to {ifenrolled} but only displays if user is enrolled
             // but must be logged-in and must not have no additional higher level roles as well.
             // Example: Student but not Administrator, or Student but not Teacher.
-            if ($this->hasonlyrole($this::STUDENT)) {
+            if ($this->hasonlyrole($this->roles['student']->id)) {
                 if (stripos($text, '{ifstudent}') !== false) {
                     // Just remove the tags.
                     $replace['/\{ifstudent\}/i'] = '';
@@ -465,7 +496,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {ifassistant}.
             if (stripos($text, '{ifassistant}') !== false) {
                 // If an assistant (non-editing teacher).
-                if ($this->hasrole($this::NONEDITINGTEACHER) && stripos($text, '{ifassistant}') !== false) {
+                if ($this->hasrole($this->roles['teacher']->id) && stripos($text, '{ifassistant}') !== false) {
                     // Just remove the tags.
                     $replace['/\{ifassistant\}/i'] = '';
                     $replace['/\{\/ifassistant\}/i'] = '';
@@ -477,7 +508,7 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifteacher}.
             if (stripos($text, '{ifteacher}') !== false) {
-                if ($this->hasrole($this::EDITINGTEACHER)) { // If a teacher.
+                if ($this->hasrole($this->roles['editingteacher']->id)) { // If a teacher.
                     // Just remove the tags.
                     $replace['/\{ifteacher\}/i'] = '';
                     $replace['/\{\/ifteacher\}/i'] = '';
@@ -489,7 +520,7 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifcreator}.
             if (stripos($text, '{ifcreator}') !== false) {
-                if ($this->hasrole($this::COURSECREATOR)) { // If a course creator.
+                if ($this->hasrole($this->roles['coursecreator']->id)) { // If a course creator.
                     // Just remove the tags.
                     $replace['/\{ifcreator\}/i'] = '';
                     $replace['/\{\/ifcreator\}/i'] = '';
@@ -501,7 +532,7 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifmanager}.
             if (stripos($text, '{ifmanager}') !== false) {
-                if ($this->hasrole($this::MANAGER)) { // If a manager.
+                if ($this->hasrole($this->roles['manager']->id)) { // If a manager.
                     // Just remove the tags.
                     $replace['/\{ifmanager\}/i'] = '';
                     $replace['/\{\/ifmanager\}/i'] = '';
@@ -529,7 +560,7 @@ class filter_filtercodes extends moodle_text_filter {
                 // Tag: {ifminassistant}.
                 if (stripos($text, '{ifminassistant}') !== false) {
                     // If an assistant (non-editing teacher) or above.
-                    if ($this->hasminimumrole($this::NONEDITINGTEACHER) && stripos($text, '{ifminassistant}') !== false) {
+                    if ($this->hasminimumrole($this->roles['teacher']) && stripos($text, '{ifminassistant}') !== false) {
                         // Just remove the tags.
                         $replace['/\{ifminassistant\}/i'] = '';
                         $replace['/\{\/ifminassistant\}/i'] = '';
@@ -541,7 +572,7 @@ class filter_filtercodes extends moodle_text_filter {
 
                 // Tag: {ifminteacher}.
                 if (stripos($text, '{ifminteacher}') !== false) {
-                    if ($this->hasminimumrole($this::EDITINGTEACHER)) { // If a teacher or above.
+                    if ($this->hasminimumrole($this->roles['editingteacher'])) { // If a teacher or above.
                         // Just remove the tags.
                         $replace['/\{ifminteacher\}/i'] = '';
                         $replace['/\{\/ifminteacher\}/i'] = '';
@@ -553,7 +584,7 @@ class filter_filtercodes extends moodle_text_filter {
 
                 // Tag: {ifmincreator}.
                 if (stripos($text, '{ifmincreator}') !== false) {
-                    if ($this->hasminimumrole($this::COURSECREATOR)) { // If a course creator or above.
+                    if ($this->hasminimumrole($this->roles['coursecreator'])) { // If a course creator or above.
                         // Just remove the tags.
                         $replace['/\{ifmincreator\}/i'] = '';
                         $replace['/\{\/ifmincreator\}/i'] = '';
@@ -565,7 +596,7 @@ class filter_filtercodes extends moodle_text_filter {
 
                 // Tag: {ifminmanager}.
                 if (stripos($text, '{ifminmanager}') !== false) {
-                    if ($this->hasminimumrole($this::MANAGER)) { // If a manager or above.
+                    if ($this->hasminimumrole($this->roles['manager'])) { // If a manager or above.
                         // Just remove the tags.
                         $replace['/\{ifminmanager\}/i'] = '';
                         $replace['/\{\/ifminmanager\}/i'] = '';

@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [0.3.0] - 2017-10-29
+## [0.3.0] - 2017-10-30
 ### Added
 - Conditional role tags are now aware of switching roles.
 - New {ifminassistant}{/ifminassistant} set of tags.
@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Bug fix: Using {ifenrolled} and {ifnotenrolled} no longer cause a PHP error when used in a course. (thanks @gemguardian !)
 - Updated documentation and FAQ.
 - Reorganized README.md (New: logo, status badges, table of contents, contributing, etc).
+- Default Moodle role IDs are no longer hard coded but must exist including: 'manager', 'coursecreator', 'editingteacher', 'teacher', 'student'.
 - Has been tested with Moodle 3.4.
 
 ## [0.2.0] - 2017-07-18
