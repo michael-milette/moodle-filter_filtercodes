@@ -106,6 +106,8 @@ Moodle metadata filters
 
 Conditionally display content filters
 
+Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetypes, not role shortnames. For example, you could have a role called `students` but, if the archetype for the role is `teacher`, the role will be identified as a `teacher`. Roles not based on archetypes will not with these tags.
+
 * {ifenrolled}{/ifenrolled} : Will display the enclosed content only if the user **is** enrolled in the current course.
 * {ifnotenrolled}{/ifnotenrolled} : Will display the enclosed content only if the user is **not** enrolled in the current course.
 * {ifloggedin}{/ifloggedin} : Will display the enclosed content only if the user is logged in as non-guest.

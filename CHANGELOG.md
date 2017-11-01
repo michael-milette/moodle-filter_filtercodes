@@ -31,7 +31,7 @@ All notable changes to this project will be documented in this file.
 - Bug fix: Using {ifenrolled} and {ifnotenrolled} no longer cause a PHP error when used in a course. (thanks @gemguardian !)
 - Updated documentation and FAQ.
 - Reorganized README.md (New: logo, status badges, table of contents, contributing, etc).
-- Default Moodle role IDs are no longer hard coded but must exist including: 'manager', 'coursecreator', 'editingteacher', 'teacher', 'student'.
+- Default Moodle role IDs are no longer hard coded. {ifrolename} and {ifminrolename} type tags now use archetypes instead of role shortnames. (thanks @FMCorz !)
 - Fixed bug where no country was selected in user's profile.
 - Project status is now BETA.
 
