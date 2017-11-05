@@ -361,9 +361,10 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 unset($list);
                 unset($mycourses);
+            } else {
+                $replace['/\{mycourses\}/i'] = '';
+                $replace['/\{mycoursesmenu\}/i'] = '';
             }
-            $replace['/\{mycourses\}/i'] = '';
-            $replace['/\{mycoursesmenu\}/i'] = '';
         }
 
         // Tag: {referer}.
