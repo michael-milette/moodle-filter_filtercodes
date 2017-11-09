@@ -95,6 +95,8 @@ Moodle metadata filters
 * {coursename} : Display the name of the current course or the site name if not in a course.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
+* {categories} : Display an unordered list of links to all course categores.
+* {categoriesmenu} : A second level list of categories with links for use in custom menus (filtering must be supported by the theme).
 * {institution} : Display the name of the institution from the user's profile.
 * {department} : Display the name of the department from the user's profile.
 * {courseid} : Display a course's ID.
@@ -150,9 +152,11 @@ Feel free to customize these for your own needs and to make more of these for ot
 
 ### General menu
 
-This will add a Home link, a my courses menu listing the courses in which you are currently enrolled, and a Logout link, but only if you are currently logged in.
+This will add a Home link, a listing of categories, a listing of courses in which you are currently enrolled, and a Logout link, but only if you are currently logged in.
 
     Home|\
+    Course catalogue
+    {categoriesmenu}
     {ifloggedin}
     My Courses
     {mycoursesmenu}
@@ -341,6 +345,8 @@ Create a Page on your Moodle site and include the following code:
 * Course ID: {courseid}
 * My Enrolled Courses: {mycourses}
 * My Enrolled Courses menu: {mycoursesmenu}
+* Course categories: {categories}
+* Course categories menu: {categoriesmenu}
 * WWWroot: {wwwroot}
 * Protocol: {protocol}
 * IP Address: {ipaddress}
