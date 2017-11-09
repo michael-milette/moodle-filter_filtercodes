@@ -316,6 +316,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {mycourses} and {mycoursesmenu}.
         if (stripos($text, '{mycourses') !== false) {
             if (isloggedin() && !isguestuser()) {
+
                 // Retrieve list of user's enrolled courses.
                 $sortorder = 'visible DESC';
                 // Prevent undefined $CFG->navsortmycoursessort errors.
@@ -334,14 +335,11 @@ class filter_filtercodes extends moodle_text_filter {
                                 $mycourse->fullname . '</a></li>';
                     }
                     if (empty($list)) {
-                        if ($CFG->branch >= 29) {
-                            $list .= '<li>' . get_string('notenrolled', 'grades') . '</li>';
-                        } else {
-                            $list .= '<li>' . get_string('nocourses', 'grades') . '</li>';
-                        }
+                        $list .= '<li>' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . '</li>';
                     }
                     $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist">' . $list . '</ul>';
                 }
+
                 // Tag: {mycoursesmenu}. A custom menu list of enrolled course names with links.
                 if (stripos($text, '{mycoursesmenu}') !== false) {
                     $list = '';
@@ -350,20 +348,17 @@ class filter_filtercodes extends moodle_text_filter {
                             (new moodle_url('/course/view.php', array('id' => $mycourse->id))) . PHP_EOL;
                     }
                     if (empty($list)) {
-
-                        if ($CFG->branch >= 29) {
-                            $list .= '-' . get_string('notenrolled', 'grades') . PHP_EOL;
-                        } else {
-                            $list .= '-' . get_string('nocourses', 'grades') . PHP_EOL;
-                        }
+                        $list .= '-' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . PHP_EOL;
                     }
                     $replace['/\{mycoursesmenu\}/i'] = $list;
                 }
                 unset($list);
                 unset($mycourses);
-            } else {
-                $replace['/\{mycourses\}/i'] = '';
-                $replace['/\{mycoursesmenu\}/i'] = '';
+
+            } else { // Not logged in.
+                // Replace tags with message indicating that you need to be logged in.
+                $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';
+                $replace['/\{mycoursesmenu\}/i'] = '-' . get_string(get_string('loggedinnot')) . PHP_EOL;
             }
         }
 
