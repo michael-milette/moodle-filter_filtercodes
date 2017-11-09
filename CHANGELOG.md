@@ -35,6 +35,8 @@ All notable changes to this project will be documented in this file.
 - Fixed bug where no country was selected in user's profile.
 - Project status is now BETA.
 - {mycourses} and {mycoursesmenu} tags are no longer always empty.
+- {if...}{/if...} tags can now span multiple lines. Note: Make sure it doesn't mess up your HTML by deleting required opening or closing tags.
+- You can now have multiple occurences of the same {if...}{/if...} tags in the content (was restricted to first occurence only).
 
 ## [0.2.0] - 2017-07-18
 ### Added
