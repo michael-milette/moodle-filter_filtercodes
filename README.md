@@ -102,6 +102,7 @@ Moodle metadata filters
 * {protocol} : http or https
 * {referrer} : Referring URL
 * {ipaddress} : User's IP Address.
+* {sesskey} : Moodle session key.
 * {recaptcha} : Display the recaptcha field - for use with Contact Form for Moodle. (UNTESTED)
 
 Conditionally display content filters
@@ -258,6 +259,7 @@ Create a Page on your Moodle site and include the following code:
 * WWWroot: {wwwroot}
 * Protocol: {protocol}
 * IP Address: {ipaddress}
+* Moodle session key: {sesskey}
 * Referer: {referer}
 * Recaptcha: {recaptcha} (will be available in a future release)
 * Non-breaking space: This{nbsp}: Is it! (view source code to see the non-breaking space)

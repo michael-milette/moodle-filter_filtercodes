@@ -394,6 +394,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{ipaddress\}/i'] = getremoteaddr();
         }
 
+        // Tag: {sesskey}.
+        if (stripos($text, '{sesskey}') !== false) {
+            $replace['/\{sesskey\}/i'] = sesskey();
+        }
+
         // Tag: {recaptcha}.
         if (stripos($text, '{recaptcha}') !== false) {
             $replace['/\{recaptcha\}/i'] = $this->getrecaptcha();
