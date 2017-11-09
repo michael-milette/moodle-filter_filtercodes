@@ -102,6 +102,7 @@ Moodle metadata filters
 * {protocol} : http or https
 * {referrer} : Referring URL
 * {ipaddress} : User's IP Address.
+* {sesskey} : Moodle session key.
 * {recaptcha} : Display the recaptcha field - for use with Contact Form for Moodle. (UNTESTED)
 
 Conditionally display content filters
@@ -139,6 +140,91 @@ The {langx fr}{/langx} filter will convert this into the following HTML
 
     <span lang="fr">Contenu</span>
 
+## FilterCodes in a custom menu
+
+Here are a couple of examples of how to create really useful custom menus using FilterCodes. Just copy and paste the code into the **Custom menu items** field (Site administration > Appearance > Theme settings)
+
+Feel free to customize these for your own needs and to make more of these for other roles like Course creators, Teachers, Teacher assistants and even Students.
+
+**Doesn't work?** If FilterCodes doesn't work with your theme, contact the developer / maintainer of the theme and refer them to the [FAQ](#faq) section of this documentation to provide them with an easy way for them to enable support for Moodle filters.
+
+### General menu
+
+This will add a Home link, a my courses menu listing the courses in which you are currently enrolled, and a Logout link, but only if you are currently logged in.
+
+    Home|\
+    {ifloggedin}
+    My Courses
+    {mycoursesmenu}
+    Logout|/login/logout.php?sesskey={sesskey}
+    {/ifloggedin}
+
+### Admin menu
+
+This menu can be handy for Moodle administrators and managers.
+
+    {ifminmanager}
+    Admin
+    {ifadmin}
+    -Moodle Settings
+    --Additional HTML|/admin/settings.php?section=additionalhtml
+    --Advanced features|/admin/settings.php?section=optionalsubsystems
+    --Frontpage|/admin/settings.php?section=frontpagesettings
+    --Notifications|/admin/index.php
+    --Plugin overview|/admin/plugins.php
+    --Profile fields|/user/profile/index.php
+    --Support contact|/admin/settings.php?section=supportcontact
+    --Theme settings|/admin/settings.php?section=themesettings
+    -Install
+    --Plugin|https://moodle.org/plugins
+    --Theme|https://moodle.org/plugins/browse.php?list=category&id=3
+    {/ifadmin}
+    -This course
+    --Turn editing on|/course/view.php?id={courseid}&sesskey={sesskey}&edit=on
+    --Course Backup|/backup/backup.php?id={courseid}
+    --Enrolled users|/enrol/users.php?id={courseid}
+    --Manage badges|/badges/index.php?type={courseid}
+    --Reset course|/course/reset.php?id={courseid}
+    -Add new course|/course/edit.php?category=1&returnto=topcat
+    -Course management|/course/management.php
+    -Restore Course|/backup/restorefile.php?contextid=1
+    -System reports|/admin/category.php?category=reports
+    -User management|/admin/user.php
+    -###
+    -Moodle support|https://moodle.org/course/view.php?id=5
+    {/ifminmanager}
+
+In this extensive example, part of the custom menu will appear only to users with a manager role while everything will appear to administrators. Nothing will appear for everyone else.
+
+### Developer menu
+
+If you are a developer, this little menu is worth installing FilterCodes alone.
+
+Together with the Administration menu above, these can be a real productivity boost for developers who are tired of always digging through the **Site administration** block to find the options they are looking for. Tailor it to your particular projects with links to any page you need regularly:
+
+    {ifadmin}
+    Dev tools
+    -Configure debugging|/admin/settings.php?section=debugging
+    -Code checker|/local/codechecker
+    -Moodle PHPdoc check|/local/moodlecheck
+    -Purge cache|/admin/purgecaches.php?confirm=1&sesskey={sesskey}
+    -###
+    -Adminer|/local/local/adminer
+    -PHP Info|/admin/phpinfo.php
+    -###
+    -Developer docs|https://moodle.org/development
+    -Developer forum|https://moodle.org/mod/forum/view.php?id=55
+    -Tracker|https://tracker.moodle.org/
+    -AMOS|https://lang.moodle.org/
+    {/ifadmin}
+
+Tip: Are you a theme developers? Add a direct link to your theme's settings page.
+    
+Notes:
+
+- **Enrolled users**, in the **This course** submenu, will only work in a course.
+- **[Code checker](https://moodle.org/plugins/local_codechecker)**, **[Moodle PHPdoc check](https://moodle.org/plugins/local_moodlecheck)** and [Moodle Adminer](https://moodle.org/plugins/local_adminer) are add-on plugins that need to be installed in order for the links to work.
+    
 [(Back to top)](#table-of-contents)
 
 # Updating
@@ -229,7 +315,7 @@ This is normal as the administrator has the permission of all other roles. the {
 
 ### Is there a tag to display...?
 
-Only the tags listed in the documentation are currently supported. We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll find a link for this on the plugin's page. The subject line should start with "Feature Request: ". Please provide as much detail as possible on what you are trying to accomplish and, if possible, where in Moodle the information would come from. Be sure to check back on your issue as we may have further questions for you.
+Only the tags listed in this [documentation](#usage) are currently supported. We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll find a link for this on the plugin's page. The subject line should start with "Feature Request: ". Please provide as much detail as possible on what you are trying to accomplish and, if possible, where in Moodle the information would come from. Be sure to check back on your issue as we may have further questions for you.
 
 ### How can I test to see if all of the tags are working?
 
@@ -258,6 +344,7 @@ Create a Page on your Moodle site and include the following code:
 * WWWroot: {wwwroot}
 * Protocol: {protocol}
 * IP Address: {ipaddress}
+* Moodle session key: {sesskey}
 * Referer: {referer}
 * Recaptcha: {recaptcha} (will be available in a future release)
 * Non-breaking space: This{nbsp}: Is it! (view source code to see the non-breaking space)
@@ -284,9 +371,62 @@ You can switch to different roles to see how each will affect the content being 
 
 You can do this using the language editor built into Moodle. There is currently support for the following defaults: defaultfirstname, defaultsurname, defaultusername, defaultemail. By default, these are blank. As for the Full Name, it is made up of the firstname and surname separated by a space and is therefore not settable.
 
+### I added the "{mycoursesmenu}" to my custom menu. How can I hide it if the user is not logged in?
+
+You can use the {ifloggedin}{/ifloggedin} tags to conditionally hide it when users are not logged in. Example:
+
+{ifloggedin}My Courses
+{mycoursesmenu}{/ifloggedin}
+
+### How can I add a "Logout" link in my custom menu?
+
+Just add the following line to your custom menu (under Appearance > Theme settings)
+
+{ifloggedin}Logout|/login/logout.php?sesskey={sesskey}{/ifloggedin}
+
+Bonus: This is also how you would hide it for users who are not logged-in.
+
+### How can I create a menu that is just for administrators or some other roles?
+
+Building on the previous two questions, see the [usage](#usage) section for some examples. Feel free to share your own ideas in the discussion forum.
+
 ### Can I use FilterCodes in custom menus?
 
-Technically for sure! But only of the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters.
+Technically for sure! But only if the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters.
+
+### I am a Moodle theme developer. How do I add support for Moodle filters, including this FilterCodes plugin, to my theme?
+
+Just add the following code to renderer code section of your theme. Be sure to replace "themename" with the name of the theme's directory. Your theme may even already have such a class (they often do):
+
+
+    class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
+        /**
+         * Applies Moodle filters to custom menu.
+         *
+         * Copyright: 2017 TNG Consulting Inc.
+         * License:   GNU GPL v3+.
+         *
+         * @param string $custommenuitems Current custom menu object.
+         * @return Rendered custom_menu that has been filtered.
+         */
+        public function custom_menu($custommenuitems = '') {
+            global $CFG;
+
+            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
+                $custommenuitems = format_text($CFG->custommenuitems, FORMAT_MOODLE, array(
+                        'noclean' => true,
+                        'para' => false,
+                        'newlines' => false,
+                        'context' => context_course::instance(SITEID)
+                    ));
+                // Hack: This will remove any HTML injected by other filters (like auto-linking).
+                // To do: Find a better way to avoid some filters.
+                $custommenuitems = strip_tags($custommenuitems);
+            }
+            $custommenu = new custom_menu($custommenuitems, current_language());
+            return $this->render_custom_menu($custommenu);
+        }
+    }
 
 ### Why is the IP Address listed as 0:0:0:0:0:0:0:1?
 
@@ -329,15 +469,15 @@ Michael Milette - Author and Lead Developer
 Some of the features we are considering for future releases include:
 
 * Finish unit testing script.
+* Finish the implementation/testing of the {recaptcha} tag.
 * Add ability to access additional information from profile fields.
 * Add ability to access information in custom profile fields.
 * Add ability to access course meta information. Example, teacher's name.
 * Add ability to list courses in the current course's category.
 * Add ability to list subcategories of the current category.
 * Add ability to define custom code blocks - useful for creating global content blocks that can be centrally updated.
-* Add the ability for {langx xx}{/langx} tag to supports blocks of text (using DIV), not just inline text (using SPAN).
-* Option to disable unused or unwanted filters in order to optimize performance.
-* Create an Atto add-on to make it easier to insert FilterCodes tags.
+* Add settings page with option to disable unused or unwanted filters in order to optimize performance or simply disable features.
+* Create an Atto add-on (separate plugin) to make it easier to insert FilterCodes tags.
 
 If you could use any of these features, or have other requirements, consider contributing or hiring us to accelerate development.
 

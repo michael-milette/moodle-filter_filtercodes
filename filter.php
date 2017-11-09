@@ -316,6 +316,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {mycourses} and {mycoursesmenu}.
         if (stripos($text, '{mycourses') !== false) {
             if (isloggedin() && !isguestuser()) {
+
                 // Retrieve list of user's enrolled courses.
                 $sortorder = 'visible DESC';
                 // Prevent undefined $CFG->navsortmycoursessort errors.
@@ -334,14 +335,11 @@ class filter_filtercodes extends moodle_text_filter {
                                 $mycourse->fullname . '</a></li>';
                     }
                     if (empty($list)) {
-                        if ($CFG->branch >= 29) {
-                            $list .= '<li>' . get_string('notenrolled', 'grades') . '</li>';
-                        } else {
-                            $list .= '<li>' . get_string('nocourses', 'grades') . '</li>';
-                        }
+                        $list .= '<li>' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . '</li>';
                     }
                     $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist">' . $list . '</ul>';
                 }
+
                 // Tag: {mycoursesmenu}. A custom menu list of enrolled course names with links.
                 if (stripos($text, '{mycoursesmenu}') !== false) {
                     $list = '';
@@ -350,20 +348,17 @@ class filter_filtercodes extends moodle_text_filter {
                             (new moodle_url('/course/view.php', array('id' => $mycourse->id))) . PHP_EOL;
                     }
                     if (empty($list)) {
-
-                        if ($CFG->branch >= 29) {
-                            $list .= '-' . get_string('notenrolled', 'grades') . PHP_EOL;
-                        } else {
-                            $list .= '-' . get_string('nocourses', 'grades') . PHP_EOL;
-                        }
+                        $list .= '-' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . PHP_EOL;
                     }
                     $replace['/\{mycoursesmenu\}/i'] = $list;
                 }
                 unset($list);
                 unset($mycourses);
-            } else {
-                $replace['/\{mycourses\}/i'] = '';
-                $replace['/\{mycoursesmenu\}/i'] = '';
+
+            } else { // Not logged in.
+                // Replace tags with message indicating that you need to be logged in.
+                $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';
+                $replace['/\{mycoursesmenu\}/i'] = '-' . get_string(get_string('loggedinnot')) . PHP_EOL;
             }
         }
 
@@ -399,6 +394,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{ipaddress\}/i'] = getremoteaddr();
         }
 
+        // Tag: {sesskey}.
+        if (stripos($text, '{sesskey}') !== false) {
+            $replace['/\{sesskey\}/i'] = sesskey();
+        }
+
         // Tag: {recaptcha}.
         if (stripos($text, '{recaptcha}') !== false) {
             $replace['/\{recaptcha\}/i'] = $this->getrecaptcha();
@@ -412,7 +412,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
         // Tag: {langx xx}.
         if (stripos($text, '{langx ') !== false) {
-            $replace['/\{langx\s+(\w+)\}(.*)\{\/langx\}/i'] = '<span lang="$1">$2</span>';
+            $replace['/\{langx\s+(\w+)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';
         }
 
         // Conditional block tags.
@@ -429,7 +429,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Remove the ifnotenrolled strings.
                 if (stripos($text, '{ifnotenrolled}') !== false) {
-                    $replace['/\{ifnotenrolled\}(.*)\{\/ifnotenrolled\}/i'] = '';
+                    $replace['/\{ifnotenrolled\}(.*?)\{\/ifnotenrolled\}/ims'] = '';
                 }
             } else {
                 if ($this->hasarchetype('student')) { // If user is enrolled in the course.
@@ -440,12 +440,12 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Remove the ifnotenrolled strings.
                     if (stripos($text, '{ifnotenrolled}') !== false) {
-                        $replace['/\{ifnotenrolled\}(.*)\{\/ifnotenrolled\}/i'] = '';
+                        $replace['/\{ifnotenrolled\}(.*?)\{\/ifnotenrolled\}/ims'] = '';
                     }
                 } else {
                     // Otherwise, remove the ifenrolled strings.
                     if (stripos($text, '{ifenrolled}') !== false) {
-                        $replace['/\{ifenrolled\}(.*)\{\/ifenrolled\}/i'] = '';
+                        $replace['/\{ifenrolled\}(.*?)\{\/ifenrolled\}/ims'] = '';
                     }
                     // And remove the ifnotenrolled tags.
                     if (stripos($text, '{ifnotenrolled}') !== false) {
@@ -466,7 +466,7 @@ class filter_filtercodes extends moodle_text_filter {
             } else {
                 // And remove the ifstudent strings.
                 if (stripos($text, '{ifstudent}') !== false) {
-                    $replace['/\{ifstudent\}(.*)\{\/ifstudent\}/i'] = '';
+                    $replace['/\{ifstudent\}(.*?)\{\/ifstudent\}/ims'] = '';
                 }
             }
             // Tags: {ifloggedin} and {ifloggedout}.
@@ -478,7 +478,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Remove the ifloggedout strings.
                 if (stripos($text, '{ifloggedout}') !== false) {
-                    $replace['/\{ifloggedout\}(.*)\{\/ifloggedout\}/i'] = '';
+                    $replace['/\{ifloggedout\}(.*?)\{\/ifloggedout\}/ims'] = '';
                 }
             } else { // If logged-out.
                 // Remove the ifloggedout tags.
@@ -488,7 +488,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Remove ifloggedin strings.
                 if (stripos($text, '{ifloggedin}') !== false) {
-                    $replace['/\{ifloggedin\}(.*)\{\/ifloggedin\}/i'] = '';
+                    $replace['/\{ifloggedin\}(.*?)\{\/ifloggedin\}/ims'] = '';
                 }
             }
 
@@ -500,7 +500,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifguest\}/i'] = '';
                 } else {
                     // If not logged-in as guest, remove the ifguest text.
-                    $replace['/\{ifguest}(.*)\{\/ifguest\}/i'] = '';
+                    $replace['/\{ifguest}(.*?)\{\/ifguest\}/ims'] = '';
                 }
             }
 
@@ -513,7 +513,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifassistant\}/i'] = '';
                 } else {
                     // Remove the ifassistant strings.
-                    $replace['/\{ifassistant\}(.*)\{\/ifassistant\}/i'] = '';
+                    $replace['/\{ifassistant\}(.*?)\{\/ifassistant\}/ims'] = '';
                 }
             }
 
@@ -525,7 +525,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifteacher\}/i'] = '';
                 } else {
                     // Remove the ifteacher strings.
-                    $replace['/\{ifteacher\}(.*)\{\/ifteacher\}/i'] = '';
+                    $replace['/\{ifteacher\}(.*?)\{\/ifteacher\}/ims'] = '';
                 }
             }
 
@@ -537,7 +537,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifcreator\}/i'] = '';
                 } else {
                     // Remove the iscreator strings.
-                    $replace['/\{ifcreator\}(.*)\{\/ifcreator\}/i'] = '';
+                    $replace['/\{ifcreator\}(.*?)\{\/ifcreator\}/ims'] = '';
                 }
             }
 
@@ -549,7 +549,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifmanager\}/i'] = '';
                 } else {
                     // Remove the ifmanager strings.
-                    $replace['/\{ifmanager\}(.*)\{\/ifmanager\}/i'] = '';
+                    $replace['/\{ifmanager\}(.*?)\{\/ifmanager\}/ims'] = '';
                 }
             }
 
@@ -562,7 +562,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifadmin\}/i'] = '';
                 } else {
                     // Remove the ifadmin strings.
-                    $replace['/\{ifadmin\}(.*)\{\/ifadmin\}/i'] = '';
+                    $replace['/\{ifadmin\}(.*?)\{\/ifadmin\}/ims'] = '';
                 }
             }
 
@@ -577,7 +577,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifminassistant\}/i'] = '';
                     } else {
                         // Remove the ifminassistant strings.
-                        $replace['/\{ifminassistant\}(.*)\{\/ifminassistant\}/i'] = '';
+                        $replace['/\{ifminassistant\}(.*?)\{\/ifminassistant\}/ims'] = '';
                     }
                 }
 
@@ -589,7 +589,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifminteacher\}/i'] = '';
                     } else {
                         // Remove the ifminteacher strings.
-                        $replace['/\{ifminteacher\}(.*)\{\/ifminteacher\}/i'] = '';
+                        $replace['/\{ifminteacher\}(.*?)\{\/ifminteacher\}/ims'] = '';
                     }
                 }
 
@@ -601,7 +601,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifmincreator\}/i'] = '';
                     } else {
                         // Remove the iscreator strings.
-                        $replace['/\{ifmincreator\}(.*)\{\/ifmincreator\}/i'] = '';
+                        $replace['/\{ifmincreator\}(.*?)\{\/ifmincreator\}/ims'] = '';
                     }
                 }
 
@@ -613,7 +613,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifminmanager\}/i'] = '';
                     } else {
                         // Remove the ifminmanager strings.
-                        $replace['/\{ifminmanager\}(.*)\{\/ifminmanager\}/i'] = '';
+                        $replace['/\{ifminmanager\}(.*?)\{\/ifminmanager\}/ims'] = '';
                     }
                 }
 

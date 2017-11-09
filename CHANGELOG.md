@@ -18,12 +18,16 @@ All notable changes to this project will be documented in this file.
 - New {userpictureimg X} tag.
 - New {mycourses} tag.
 - New {mycoursesmenu} tag.
+- New {sesskey} tag.
 - Added CONTRIBUTE.md.
 - Is now compatible with Moodle 3.4.
 - Is now compatible with Moodle 3.0.
 - Is now compatible with Moodle 2.9.
 - Is now compatible with Moodle 2.8.
 - Is now compatible with Moodle 2.7.
+- Support for Multiple occurences of same {if...}{/if...} tags.
+- Multiline spanning of {if...}{/if...} tags.
+- Useful examples of using FilterCodes in custom menus (see Usage section).
 ### Updated
 - {ifrolename} type tags will now only display content if you have been assigned that particular role.
 - Identification of roles no longer depends on the verification of unique capabilities but by role assignment.
@@ -34,7 +38,7 @@ All notable changes to this project will be documented in this file.
 - Default Moodle role IDs are no longer hard coded. {ifrolename} and {ifminrolename} type tags now use role archetypes instead of role shortnames. (thanks @FMCorz !)
 - Fixed bug where no country was selected in user's profile.
 - Project status is now BETA.
-- {mycourses} and {mycoursesmenu} tags are no longer always empty.
+- {mycourses} and {mycoursesmenu} tags are no longer ever empty.
 
 ## [0.2.0] - 2017-07-18
 ### Added
