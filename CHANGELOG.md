@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Is now compatible with Moodle 2.7.
 - Support for Multiple occurences of same {if...}{/if...} tags.
 - Multiline spanning of {if...}{/if...} tags.
+- Useful examples of using FilterCodes in custom menus (see Usage section).
 ### Updated
 - {ifrolename} type tags will now only display content if you have been assigned that particular role.
 - Identification of roles no longer depends on the verification of unique capabilities but by role assignment.
