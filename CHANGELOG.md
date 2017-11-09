@@ -19,6 +19,8 @@ All notable changes to this project will be documented in this file.
 - New {mycourses} tag.
 - New {mycoursesmenu} tag.
 - New {sesskey} tag.
+- New {categories} tag.
+- New {categoriesmenu} tag.
 - Added CONTRIBUTE.md.
 - Is now compatible with Moodle 3.4.
 - Is now compatible with Moodle 3.0.

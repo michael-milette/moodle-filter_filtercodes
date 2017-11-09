@@ -358,8 +358,36 @@ class filter_filtercodes extends moodle_text_filter {
             } else { // Not logged in.
                 // Replace tags with message indicating that you need to be logged in.
                 $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';
-                $replace['/\{mycoursesmenu\}/i'] = '-' . get_string(get_string('loggedinnot')) . PHP_EOL;
+                $replace['/\{mycoursesmenu\}/i'] = '-' . get_string('loggedinnot') . PHP_EOL;
             }
+        }
+
+        // Tag: {categories} and {categoriesmenu}.
+        if (stripos($text, '{categories') !== false) {
+
+            // Retrieve list of top categories.
+            require_once($CFG->libdir. '/coursecatlib.php');
+            $categories = coursecat::make_categories_list();
+
+            // Tag: {categories}. An unordered list of links to enrolled course.
+            if (stripos($text, '{categories}') !== false) {
+                $list = '';
+                foreach ($categories as $id => $name) {
+                    $list .= '<li><a href="' . (new moodle_url('/course/index.php', array('categoryid' => $id))) . '">' . $name . '</a></li>';
+                }
+                $replace['/\{categories\}/i'] = '<ul class="categorylist">' . $list . '</ul>';
+            }
+
+            // Tag: {categoriesmenu}. A custom menu list course categories with links.
+            if (stripos($text, '{categoriesmenu}') !== false) {
+                $list = '';
+                foreach ($categories as $id => $name) {
+                    $list .= '-' . $name . '|/course/index.php?categoryid=' . $id . PHP_EOL;
+                }
+                $replace['/\{categoriesmenu\}/i'] = $list;
+            }
+
+            unset($list);
         }
 
         // Tag: {referer}.
