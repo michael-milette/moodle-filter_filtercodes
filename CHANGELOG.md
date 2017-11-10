@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [0.3.0] - 2017-10-31
+## [0.3.0] - 2017-11-11
 ### Added
 - Conditional role tags are now aware of switching roles.
 - New {ifminassistant}{/ifminassistant} set of tags.
@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - New {sesskey} tag.
 - New {categories} tag.
 - New {categoriesmenu} tag.
+- New {readonly} tag.
 - Added CONTRIBUTE.md.
 - Is now compatible with Moodle 3.4.
 - Is now compatible with Moodle 3.0.
@@ -41,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - Fixed bug where no country was selected in user's profile.
 - Project status is now BETA.
 - {mycourses} and {mycoursesmenu} tags are no longer ever empty.
+- {recaptcha} tag now officially supported. For use with Contact Form for Moodle.
 
 ## [0.2.0] - 2017-07-18
 ### Added

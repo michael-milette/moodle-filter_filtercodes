@@ -105,7 +105,8 @@ Moodle metadata filters
 * {referrer} : Referring URL
 * {ipaddress} : User's IP Address.
 * {sesskey} : Moodle session key.
-* {recaptcha} : Display the recaptcha field - for use with Contact Form for Moodle. (UNTESTED)
+* {recaptcha} : Display the ReCAPTCHA field - for use with Contact Form for Moodle. Note: Will be blank if user is logged-in using a non-guest account.
+* {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
 
 Conditionally display content filters
 
@@ -223,12 +224,12 @@ Together with the Administration menu above, these can be a real productivity bo
     {/ifadmin}
 
 Tip: Are you a theme developers? Add a direct link to your theme's settings page.
-    
+
 Notes:
 
 - **Enrolled users**, in the **This course** submenu, will only work in a course.
 - **[Code checker](https://moodle.org/plugins/local_codechecker)**, **[Moodle PHPdoc check](https://moodle.org/plugins/local_moodlecheck)** and [Moodle Adminer](https://moodle.org/plugins/local_adminer) are add-on plugins that need to be installed in order for the links to work.
-    
+
 [(Back to top)](#table-of-contents)
 
 # Updating
@@ -352,7 +353,8 @@ Create a Page on your Moodle site and include the following code:
 * IP Address: {ipaddress}
 * Moodle session key: {sesskey}
 * Referer: {referer}
-* Recaptcha: {recaptcha} (will be available in a future release)
+* ReCAPTCHA: {recaptcha}
+* Readonly (for form fields when logged-in): {readonly}
 * Non-breaking space: This{nbsp}: Is it! (view source code to see the non-breaking space)
 * English: {langx en}Content{/langx}
 * Enrolled: {ifenrolled}You are enrolled in this course.{/ifenrolled}
@@ -475,7 +477,6 @@ Michael Milette - Author and Lead Developer
 Some of the features we are considering for future releases include:
 
 * Finish unit testing script.
-* Finish the implementation/testing of the {recaptcha} tag.
 * Add ability to access additional information from profile fields.
 * Add ability to access information in custom profile fields.
 * Add ability to access course meta information. Example, teacher's name.

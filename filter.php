@@ -117,7 +117,7 @@ class filter_filtercodes extends moodle_text_filter {
      * Determine if the user has the specified archetype or one with elevated capabilities.
      * Example: Can be a teacher, course creator, manager or Administrator but not a student.
      *
-     * @param string $archetype Name of archetype.
+     * @param string $minarchetype Name of archetype.
      * @return boolean User meets minimum archetype requirement: true, does not: false.
      */
     private function hasminarchetype($minarchetype) {
@@ -159,21 +159,27 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
-     * Generates HTML code for a recaptcha.
+     * Generates HTML code for a ReCAPTCHA.
      *
-     * @return string HTML Code for recaptcha.
+     * @return string HTML Code for ReCAPTCHA or blank if logged-in or Moodle ReCAPTCHA is not configured.
      */
     private function getrecaptcha() {
-        // Is recaptcha configured in moodle?
         global $CFG;
-        if (empty($CFG->recaptchaprivatekey) XOR empty($CFG->recaptchapublickey)) {
-            echo get_string('missingrecaptchachallengefield');
-            return null;
+        // Is user not logged-in or logged-in as guest?
+        if (!isloggedin() || isguestuser()) {
+            // Is Moodle ReCAPTCHA configured?
+            if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
+                // Yes? Generate ReCAPTCHA.
+                require_once($CFG->libdir . '/recaptchalib.php');
+                return recaptcha_get_html($CFG->recaptchapublickey);
+            } else if ($CFG->debugdisplay == 1) { // If debugging is set to DEVELOPER...
+                // Show indicator that {recaptcha} tag is not required.
+                return 'Warning: The recaptcha tag is not required here.';
+            }
         }
-        if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
-            require_once($CFG->libdir . '/recaptchalib.php');
-            return recaptcha_get_html($CFG->recaptchapublickey);
-        }
+        // Logged-in as non-guest user (ReCAPTCHA is not required) or Moodle ReCAPTCHA not configured.
+        // Don't generate ReCAPTCHA.
+        return '';
     }
 
     /**
@@ -373,7 +379,8 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{categories}') !== false) {
                 $list = '';
                 foreach ($categories as $id => $name) {
-                    $list .= '<li><a href="' . (new moodle_url('/course/index.php', array('categoryid' => $id))) . '">' . $name . '</a></li>';
+                    $list .= '<li><a href="' .
+                            (new moodle_url('/course/index.php', array('categoryid' => $id))) . '">' . $name . '</a></li>';
                 }
                 $replace['/\{categories\}/i'] = '<ul class="categorylist">' . $list . '</ul>';
             }
@@ -430,6 +437,16 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {recaptcha}.
         if (stripos($text, '{recaptcha}') !== false) {
             $replace['/\{recaptcha\}/i'] = $this->getrecaptcha();
+        }
+
+        // Tag: {readonly}.
+        // This is to be used in forms to make some fields read-only when user is logged-in as non-guest.
+        if (stripos($text, '{readonly}') !== false) {
+            if (isloggedin() && !isguestuser()) {
+                $replace['/\{readonly\}/i'] = 'readonly="readonly"';
+            } else {
+                $replace['/\{readonly\}/i'] = '';
+            }
         }
 
         // HTML tagging.
