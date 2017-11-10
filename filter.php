@@ -165,7 +165,7 @@ class filter_filtercodes extends moodle_text_filter {
      */
     private function getrecaptcha() {
         global $CFG;
-        // Is user logged-in as a non-guest user?
+        // Is user not logged-in or logged-in as guest?
         if (!isloggedin() || isguestuser()) {
             // Is Moodle ReCAPTCHA configured?
             if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
@@ -436,6 +436,16 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {recaptcha}.
         if (stripos($text, '{recaptcha}') !== false) {
             $replace['/\{recaptcha\}/i'] = $this->getrecaptcha();
+        }
+
+        // Tag: {readonly}.
+        // This is to be used in forms to make some fields read-only when user is logged-in as non-guest.
+        if (stripos($text, '{readonly}') !== false) {
+            if (isloggedin() && !isguestuser()) {
+                $replace['/\{readonly\}/i'] = 'readonly="readonly"';
+            } else {
+                $replace['/\{readonly\}/i'] = '';
+            }
         }
 
         // HTML tagging.
