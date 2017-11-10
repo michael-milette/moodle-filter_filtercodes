@@ -159,21 +159,27 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
-     * Generates HTML code for a recaptcha.
+     * Generates HTML code for a ReCAPTCHA.
      *
-     * @return string HTML Code for recaptcha.
+     * @return string HTML Code for ReCAPTCHA or blank if logged-in or Moodle ReCAPTCHA is not configured.
      */
     private function getrecaptcha() {
-        // Is recaptcha configured in moodle?
         global $CFG;
-        if (empty($CFG->recaptchaprivatekey) XOR empty($CFG->recaptchapublickey)) {
-            echo get_string('missingrecaptchachallengefield');
-            return null;
+        // Is user logged-in as a non-guest user?
+        if (!isloggedin() || isguestuser()) {
+            // Is Moodle ReCAPTCHA configured?
+            if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
+                // Yes? Generate ReCAPTCHA.
+                require_once($CFG->libdir . '/recaptchalib.php');
+                return recaptcha_get_html($CFG->recaptchapublickey);
+            } elseif ($CFG->debugdisplay == 1) { // If debugging is set to DEVELOPER...
+                // Show indicator that {recaptcha} tag is not required.
+                return 'Warning: The recaptcha tag is not required here.';
+            }
         }
-        if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
-            require_once($CFG->libdir . '/recaptchalib.php');
-            return recaptcha_get_html($CFG->recaptchapublickey);
-        }
+        // Logged-in as non-guest user (ReCAPTCHA is not required) or Moodle ReCAPTCHA not configured.
+        // Don't generate ReCAPTCHA.
+        return '';
     }
 
     /**
