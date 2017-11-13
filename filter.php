@@ -159,6 +159,20 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Determine if running on http or https. Same as Moodle's is_https() except that it is backwards compatible to Moodle 2.7.
+     *
+     * @return boolean true if protocol is https, false if http.
+     */
+    private function ishttps() {
+        global $CFG;
+        if ($CFG->branch >= 28) {
+            $ishttps = is_https();
+        } else {
+            $ishttps = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443);
+        }
+    }
+
+    /**
      * Generates HTML code for a ReCAPTCHA.
      *
      * @return string HTML Code for ReCAPTCHA or blank if logged-in or Moodle ReCAPTCHA is not configured.
@@ -171,7 +185,7 @@ class filter_filtercodes extends moodle_text_filter {
             if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
                 // Yes? Generate ReCAPTCHA.
                 require_once($CFG->libdir . '/recaptchalib.php');
-                return recaptcha_get_html($CFG->recaptchapublickey);
+                return recaptcha_get_html($CFG->recaptchapublickey, null, $this->ishttps());
             } else if ($CFG->debugdisplay == 1) { // If debugging is set to DEVELOPER...
                 // Show indicator that {recaptcha} tag is not required.
                 return 'Warning: The recaptcha tag is not required here.';
@@ -268,6 +282,7 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{userid\}/i'] = $USER->id;
         }
 
+        // Tags: {userpictureurl} and {userpictureimg}.
         if (stripos($text, '{userpicture') !== false) {
             // Tag: {userpictureurl size}. User photo URL.
             // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
@@ -413,15 +428,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {protocol}.
         if (stripos($text, '{protocol}') !== false) {
-            if ($CFG->branch >= 28) {
-                $replace['/\{protocol\}/i'] = 'http'.(is_https() ? 's' : '');
-            } else {
-                if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) {
-                    $replace['/\{protocol\}/i'] = 'https';
-                } else {
-                    $replace['/\{protocol\}/i'] = 'http';
-                }
-            }
+            $replace['/\{protocol\}/i'] = 'http'.($this->ishttps() ? 's' : '');
         }
 
         // Tag: {ipaddress}.

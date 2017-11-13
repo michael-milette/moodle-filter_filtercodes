@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2017-11-13
+### Updated
+- ReCAPTCHA will now work on https.
+
 ## [0.4.0] - 2017-11-11
 ### Added
 Over a dozen new FilterCodes added including:
