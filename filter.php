@@ -171,7 +171,7 @@ class filter_filtercodes extends moodle_text_filter {
             if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
                 // Yes? Generate ReCAPTCHA.
                 require_once($CFG->libdir . '/recaptchalib.php');
-                return recaptcha_get_html($CFG->recaptchapublickey);
+                return recaptcha_get_html($CFG->recaptchapublickey, null, is_https());
             } else if ($CFG->debugdisplay == 1) { // If debugging is set to DEVELOPER...
                 // Show indicator that {recaptcha} tag is not required.
                 return 'Warning: The recaptcha tag is not required here.';
