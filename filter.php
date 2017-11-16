@@ -138,7 +138,7 @@ class filter_filtercodes extends moodle_text_filter {
     /**
      * Retrieves the URL for the user's profile picture, if one is available.
      *
-     * @param object $user The Moodle user object for whcih we want a photo.
+     * @param object $user The Moodle user object for which we want a photo.
      * @return string URL to the photo image file but with $1 for the size.
      */
     private function getprofilepictureurl($user) {
@@ -152,7 +152,7 @@ class filter_filtercodes extends moodle_text_filter {
             if ($CFG->branch >= 33) {
                 $url = $renderer->image_url('u/f$1');
             } else {
-                $url = $renderer->pix_url('u/f$1'); // Deprecated as of Moodle 3.4.
+                $url = $renderer->pix_url('u/f$1'); // Deprecated as of Moodle 3.3.
             }
         }
         return str_replace('/f%24', '/f$', $url);
@@ -166,7 +166,7 @@ class filter_filtercodes extends moodle_text_filter {
     private function ishttps() {
         global $CFG;
         if ($CFG->branch >= 28) {
-            $ishttps = is_https();
+            $ishttps = is_https(); // Available as of Moodle 2.8.
         } else {
             $ishttps = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443);
         }

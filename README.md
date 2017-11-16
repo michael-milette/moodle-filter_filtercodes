@@ -421,16 +421,17 @@ Just add the following code to renderer code section of your theme. Be sure to r
             global $CFG;
 
             if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
-                $custommenuitems = format_text($CFG->custommenuitems, FORMAT_MOODLE, array(
-                        'noclean' => true,
-                        'para' => false,
-                        'newlines' => false,
-                        'context' => context_course::instance(SITEID)
-                    ));
-                // Hack: This will remove any HTML injected by other filters (like auto-linking).
-                // To do: Find a better way to avoid some filters.
-                $custommenuitems = strip_tags($custommenuitems);
+                $custommenuitems = $CFG->custommenuitems;
             }
+            $custommenuitems = format_text($custommenuitems, FORMAT_MOODLE, array(
+                    'noclean' => true,
+                    'para' => false,
+                    'newlines' => false,
+                    'context' => context_course::instance(SITEID)
+                ));
+            // Hack: This will remove any HTML injected by other filters (like auto-linking).
+            // To do: Find a better way to avoid some filters.
+            $custommenuitems = strip_tags($custommenuitems);
             $custommenu = new custom_menu($custommenuitems, current_language());
             return $this->render_custom_menu($custommenu);
         }
