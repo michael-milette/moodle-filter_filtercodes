@@ -122,6 +122,10 @@ class filter_filtercodes_testcase extends advanced_testcase {
                 'before' => 'Before {langx en-ca}Some content{langx} After',
                 'after'  => 'Before <span lang="en-ca"}Some content</span> After',
             ),
+            array (
+                'before' => 'Before{nbsp}: Some content After',
+                'after'  => 'Before&nbsp;: Some content After',
+            ),
         );
 
         foreach ($tests as $test) {

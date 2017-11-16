@@ -409,7 +409,7 @@ Just add the following code to renderer code section of your theme. Be sure to r
 
     class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
         /**
-         * Applies Moodle filters to custom menu.
+         * Applies Moodle filters to custom menu and custom user menu.
          *
          * Copyright: 2017 TNG Consulting Inc.
          * License:   GNU GPL v3+.
@@ -418,17 +418,31 @@ Just add the following code to renderer code section of your theme. Be sure to r
          * @return Rendered custom_menu that has been filtered.
          */
         public function custom_menu($custommenuitems = '') {
-            global $CFG;
+            global $CFG, $PAGE;
 
-            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
-                $custommenuitems = format_text($CFG->custommenuitems, FORMAT_MOODLE, array(
-                        'noclean' => true,
-                        'para' => false,
-                        'newlines' => false,
-                        'context' => context_course::instance(SITEID)
-                    ));
+            // Don't filter custom user menu if we are editing the page. Otherwise it
+            // ends up filtering the edit field itself resulting in a loss of the tag.
+            if (isset($PAGE) && $PAGE->pagetype != 'admin-setting-themesettings' &&
+                    stripos($CFG->customusermenuitems, '{') !== false) {
+                // Handle custom user menu
+                $CFG->customusermenuitems = format_text($CFG->customusermenuitems, FORMAT_MOODLE, array(
+                        'noclean' => true, 'para' => false, 'newlines' => false, 'context' => context_course::instance(SITEID)
+                ));
                 // Hack: This will remove any HTML injected by other filters (like auto-linking).
-                // To do: Find a better way to avoid some filters.
+                // TODO: Find a better way to avoid some filters.
+                $CFG->customusermenuitems = strip_tags($CFG->customusermenuitems);
+            }
+
+            // Handle custom nav menu
+            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
+                $custommenuitems = $CFG->custommenuitems;
+            }
+            if (stripos($custommenuitems, '{') !== false) {
+                $custommenuitems = format_text($custommenuitems, FORMAT_MOODLE, array(
+                        'noclean' => true, 'para' => false, 'newlines' => false, 'context' => context_course::instance(SITEID)
+                ));
+                // Hack: This will remove any HTML injected by other filters (like auto-linking).
+                // TODO: Find a better way to avoid some filters.
                 $custommenuitems = strip_tags($custommenuitems);
             }
             $custommenu = new custom_menu($custommenuitems, current_language());
