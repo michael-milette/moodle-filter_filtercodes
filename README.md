@@ -404,7 +404,9 @@ Technically for sure! But only if the theme supports it. If it doesn't, contact 
 
 ### I am a Moodle theme developer. How do I add support for Moodle filters, including this FilterCodes plugin, to my theme?
 
-Just add the following code to renderer code section of your theme. Be sure to replace "themename" with the name of the theme's directory. Your theme may even already have such a class (they often do):
+#### For themes based on **bootstrapbase**
+
+Add the following code to core_renderer code section of your theme. Be sure to replace "themename" with the name of the theme's directory. Note: Your theme may even already have such a class (they often do):
 
     class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
         /**
@@ -444,6 +446,87 @@ Just add the following code to renderer code section of your theme. Be sure to r
         }
     }
 
+#### For themes based on **boost**
+
+Add the following code to core_renderer code section of your theme. Note: Your theme may even already have such a class (they often do):
+
+    use filter_manager;
+
+    class core_renderer extends \theme_boost\output\core_renderer {
+        /**
+         * Applies Moodle filters to custom menu and custom user menu.
+         *
+         * @param string $custommenuitems Current custom menu object.
+         * @return Rendered custom_menu that has been filtered.
+         */
+        public function custom_menu($custommenuitems = '') {
+            global $CFG, $PAGE;
+
+            // Don't apply auto-linking filters.
+            $filtermanager = filter_manager::instance();
+            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
+            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
+
+            // Filter custom user menu.
+            // Don't filter custom user menu on the settings page. Otherwise it ends up
+            // filtering the edit field itself resulting in a loss of the tag.
+            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
+                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
+                        $filteroptions, $skipfilters);
+            }
+
+            // Filter custom menu.
+            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
+                $custommenuitems = $CFG->custommenuitems;
+            }
+            if (stripos($custommenuitems, '{') !== false) {
+                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
+            }
+            $custommenu = new custom_menu($custommenuitems, current_language());
+            return $this->render_custom_menu($custommenu);
+        }
+
+        /**
+         * We want to show the custom menus as a list of links in the footer on small screens.
+         * Just return the menu object exported so we can render it differently.
+         */
+        public function custom_menu_flat() {
+            global $CFG, $PAGE;
+            $custommenuitems = '';
+
+            // Don't apply auto-linking filters.
+            $filtermanager = filter_manager::instance();
+            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
+            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
+
+            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
+                $custommenuitems = $CFG->custommenuitems;
+            }
+            if (stripos($custommenuitems, '{') !== false) {
+                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
+            }
+            $custommenu = new custom_menu($custommenuitems, current_language());
+            $langs = get_string_manager()->get_list_of_translations();
+            $haslangmenu = $this->lang_menu() != '';
+
+            if ($haslangmenu) {
+                $strlang = get_string('language');
+                $currentlang = current_language();
+                if (isset($langs[$currentlang])) {
+                    $currentlang = $langs[$currentlang];
+                } else {
+                    $currentlang = $strlang;
+                }
+                $this->language = $custommenu->add($currentlang, new moodle_url('#'), $strlang, 10000);
+                foreach ($langs as $langtype => $langname) {
+                    $this->language->add($langname, new moodle_url($this->page->url, array('lang' => $langtype)), $langname);
+                }
+            }
+
+            return $custommenu->export_for_template($this);
+        }
+    }
+    
 ### Why is the IP Address listed as 0:0:0:0:0:0:0:1?
 
 0:0:0:0:0:0:0:1 is the same as localhost and it means that your web browser is probably on the same computer as your web server. This shouldn't happen with users accessing your Moodle site from their own desktop or mobile device.

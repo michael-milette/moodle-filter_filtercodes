@@ -2,9 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.4.2] - 2017-11-17
+### Added
+- Example of enabling filters in custom menu and custom user menu in boost based themes.
 ### Updated
 - ReCAPTCHA will now work on https.
-- Fixed examples of enabling filters in custom menu and custom user menu in themes.
+- Fixed example of enabling filters in custom menu and custom user menu in bootstrapbase based themes.
 
 ## [0.4.0] - 2017-11-11
 ### Added
