@@ -406,7 +406,6 @@ Technically for sure! But only if the theme supports it. If it doesn't, contact 
 
 Just add the following code to renderer code section of your theme. Be sure to replace "themename" with the name of the theme's directory. Your theme may even already have such a class (they often do):
 
-
     class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
         /**
          * Applies Moodle filters to custom menu and custom user menu.
@@ -420,30 +419,25 @@ Just add the following code to renderer code section of your theme. Be sure to r
         public function custom_menu($custommenuitems = '') {
             global $CFG, $PAGE;
 
-            // Don't filter custom user menu if we are editing the page. Otherwise it
-            // ends up filtering the edit field itself resulting in a loss of the tag.
-            if (isset($PAGE) && $PAGE->pagetype != 'admin-setting-themesettings' &&
-                    stripos($CFG->customusermenuitems, '{') !== false) {
-                // Handle custom user menu
-                $CFG->customusermenuitems = format_text($CFG->customusermenuitems, FORMAT_MOODLE, array(
-                        'noclean' => true, 'para' => false, 'newlines' => false, 'context' => context_course::instance(SITEID)
-                ));
-                // Hack: This will remove any HTML injected by other filters (like auto-linking).
-                // TODO: Find a better way to avoid some filters.
-                $CFG->customusermenuitems = strip_tags($CFG->customusermenuitems);
+            // Don't apply auto-linking filters.
+            $filtermanager = filter_manager::instance();
+            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
+            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
+
+            // Filter custom user menu.
+            // Don't filter custom user menu on the theme settings page. Otherwise it ends up
+            // filtering the edit field itself resulting in a loss of tags.
+            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
+                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
+                        $filteroptions, $skipfilters);
             }
 
-            // Handle custom nav menu
+            // Filter custom menu.
             if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
                 $custommenuitems = $CFG->custommenuitems;
             }
             if (stripos($custommenuitems, '{') !== false) {
-                $custommenuitems = format_text($custommenuitems, FORMAT_MOODLE, array(
-                        'noclean' => true, 'para' => false, 'newlines' => false, 'context' => context_course::instance(SITEID)
-                ));
-                // Hack: This will remove any HTML injected by other filters (like auto-linking).
-                // TODO: Find a better way to avoid some filters.
-                $custommenuitems = strip_tags($custommenuitems);
+                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
             }
             $custommenu = new custom_menu($custommenuitems, current_language());
             return $this->render_custom_menu($custommenu);
