@@ -18,7 +18,7 @@
  * Main filter code for FilterCodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017 TNG Consulting Inc. - www.tngcosulting.ca
+ * @copyright  2017-2018 TNG Consulting Inc. - www.tngcosulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *
- * @copyright  2017 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2018 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_filtercodes extends moodle_text_filter {
@@ -174,29 +174,35 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
-     * Generates HTML code for a ReCAPTCHA.
+     * Generates HTML code for a reCAPTCHA.
      *
-     * @return string HTML Code for ReCAPTCHA or blank if logged-in or Moodle ReCAPTCHA is not configured.
+     * @return string HTML Code for reCAPTCHA or blank if logged-in or Moodle reCAPTCHA is not configured.
      */
     private function getrecaptcha() {
         global $CFG;
         // Is user not logged-in or logged-in as guest?
         if (!isloggedin() || isguestuser()) {
-            // Is Moodle ReCAPTCHA configured?
+            // Is Moodle reCAPTCHA configured?
             if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
-                // Yes? Generate ReCAPTCHA.
-                require_once($CFG->libdir . '/recaptchalib.php');
-                return recaptcha_get_html($CFG->recaptchapublickey, null, $this->ishttps());
+                // Yes? Generate reCAPTCHA.
+                if (file_exists($CFG->libdir . '/recaptchalib_v2.php')) {
+                    // For reCAPTCHA 2.0.
+                    require_once($CFG->libdir . '/recaptchalib_v2.php');
+                    return recaptcha_get_challenge_html(RECAPTCHA_API_URL, $CFG->recaptchapublickey);
+                } else {
+                    // For reCAPTCHA 1.0.
+                    require_once($CFG->libdir . '/recaptchalib.php');
+                    return recaptcha_get_html($CFG->recaptchapublickey, null, $this->ishttps());
+                }
             } else if ($CFG->debugdisplay == 1) { // If debugging is set to DEVELOPER...
-                // Show indicator that {recaptcha} tag is not required.
-                return 'Warning: The recaptcha tag is not required here.';
+                // Show indicator that {reCAPTCHA} tag is not required.
+                return 'Warning: The reCAPTCHA tag is not required here.';
             }
         }
-        // Logged-in as non-guest user (ReCAPTCHA is not required) or Moodle ReCAPTCHA not configured.
-        // Don't generate ReCAPTCHA.
+        // Logged-in as non-guest user (reCAPTCHA is not required) or Moodle reCAPTCHA not configured.
+        // Don't generate reCAPTCHA.
         return '';
     }
-
     /**
      * Main filter function called by Moodle.
      *
@@ -248,11 +254,6 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {username}.
-        if (stripos($text, '{username}') !== false) {
-            $replace['/\{username\}/i'] = isloggedin() ? $USER->username : get_string('defaultusername', 'filter_filtercodes');
-        }
-
         // Tag: {email}.
         if (stripos($text, '{email}') !== false) {
             $replace['/\{email\}/i'] = isloggedin() ? $USER->email : '';
@@ -278,44 +279,53 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{department\}/i'] = isloggedin() ? $USER->department : '';
         }
 
-        // Tag: {userid}.
-        if (stripos($text, '{userid}') !== false) {
-            $replace['/\{userid\}/i'] = $USER->id;
-        }
+        // Any {user*} tags.
+        if (stripos($text, '{user') !== false) {
 
-        // Tags: {userpictureurl} and {userpictureimg}.
-        if (stripos($text, '{userpicture') !== false) {
-            // Tag: {userpictureurl size}. User photo URL.
-            // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
-            if (stripos($text, '{userpictureurl ') !== false) {
-                $url = $this->getprofilepictureurl($USER);
-                // Substitute the $1 in URL with value of (\w+), making sure to substitute text versions into numbers.
-                $newtext = preg_replace_callback('/\{userpictureurl\s+(\w+)\}/i',
-                    function ($matches) {
-                        $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
-                        return '{userpictureurl ' . $sublist[$matches[1]] . '}';
-                    }, $text);
-                if ($newtext !== false) {
-                    $text = $newtext;
-                }
-                $replace['/\{userpictureurl\s+(\w+)\}/i'] = $url;
+            // Tag: {username}.
+            if (stripos($text, '{username}') !== false) {
+                $replace['/\{username\}/i'] = isloggedin() ? $USER->username : get_string('defaultusername', 'filter_filtercodes');
             }
 
-            // Tag: {userpictureimg size}. User photo URL wrapped in HTML image tag.
-            // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
-            if (stripos($text, '{userpictureimg ') !== false) {
-                $url = $this->getprofilepictureurl($USER);
-                $tag = '<img src="' . $url . '" alt="' . $firstname . ' ' . $lastname . '" class="userpicture">';
-                // Will substitute the $1 in URL with value of (\w+).
-                $newtext = preg_replace_callback('/\{userpictureimg\s+(\w+)\}/i',
-                    function ($matches) {
-                        $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
-                        return '{userpictureimg ' . $sublist[$matches[1]] . '}';
-                    }, $text);
-                if ($newtext !== false) {
-                    $text = $newtext;
+            // Tag: {userid}.
+            if (stripos($text, '{userid}') !== false) {
+                $replace['/\{userid\}/i'] = $USER->id;
+            }
+
+            // Tags: {userpictureurl} and {userpictureimg}.
+            if (stripos($text, '{userpicture') !== false) {
+                // Tag: {userpictureurl size}. User photo URL.
+                // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
+                if (stripos($text, '{userpictureurl ') !== false) {
+                    $url = $this->getprofilepictureurl($USER);
+                    // Substitute the $1 in URL with value of (\w+), making sure to substitute text versions into numbers.
+                    $newtext = preg_replace_callback('/\{userpictureurl\s+(\w+)\}/i',
+                        function ($matches) {
+                            $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
+                            return '{userpictureurl ' . $sublist[$matches[1]] . '}';
+                        }, $text);
+                    if ($newtext !== false) {
+                        $text = $newtext;
+                    }
+                    $replace['/\{userpictureurl\s+(\w+)\}/i'] = $url;
                 }
-                $replace['/\{userpictureimg\s+(\w+)\}/i'] = $tag;
+
+                // Tag: {userpictureimg size}. User photo URL wrapped in HTML image tag.
+                // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
+                if (stripos($text, '{userpictureimg ') !== false) {
+                    $url = $this->getprofilepictureurl($USER);
+                    $tag = '<img src="' . $url . '" alt="' . $firstname . ' ' . $lastname . '" class="userpicture">';
+                    // Will substitute the $1 in URL with value of (\w+).
+                    $newtext = preg_replace_callback('/\{userpictureimg\s+(\w+)\}/i',
+                        function ($matches) {
+                            $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
+                            return '{userpictureimg ' . $sublist[$matches[1]] . '}';
+                        }, $text);
+                    if ($newtext !== false) {
+                        $text = $newtext;
+                    }
+                    $replace['/\{userpictureimg\s+(\w+)\}/i'] = $tag;
+                }
             }
         }
 
@@ -507,6 +517,7 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 }
             }
+
             // Tag: {ifstudent}. This is similar to {ifenrolled} but only displays if user is enrolled
             // but must be logged-in and must not have no additional higher level roles as well.
             // Example: Student but not Administrator, or Student but not Teacher.
@@ -522,6 +533,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{ifstudent\}(.*?)\{\/ifstudent\}/ims'] = '';
                 }
             }
+
             // Tags: {ifloggedin} and {ifloggedout}.
             if (isloggedin() && !isguestuser()) { // If logged-in but not just as guest.
                 // Just remove ifloggedin tags.

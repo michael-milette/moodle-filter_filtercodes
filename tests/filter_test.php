@@ -18,7 +18,7 @@
  * Unit tests for FilterCodes filter.
  *
  * @package    filter_filtercodes
- * @copyright  2017 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2018 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/filter/filtercodes/filter.php');
  * Test that the filter produces the right content. Note that this currently
  * only tests some of the filter logic. Future releases will test more of the tags.
  *
- * @copyright  2017 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2018 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_filtercodes_testcase extends advanced_testcase {

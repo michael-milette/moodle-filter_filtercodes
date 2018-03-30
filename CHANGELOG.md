@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.4.3] - 2018-03-30
+### Added
+- Support for reCAPTCHA v2 in Moodle 3.1.11+, 3.2.8+, 3.3.5+, 3.4.5+ and 3.5+.
+### Updated
+- Documentation - fixed errors and added FAQ for reCAPTCHA.
+- Copyright notice to include 2018.
+- Minor performance optimization.
+
 ## [0.4.2] - 2017-11-17
 ### Added
 - Example of enabling filters in custom menu and custom user menu in boost based themes.

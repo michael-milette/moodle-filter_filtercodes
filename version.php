@@ -18,15 +18,15 @@
  * Version information for FilterCodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2018 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017111400;            // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2018033000;            // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2014051200;            // Requires Moodle version 2.7.
 $plugin->component = 'filter_filtercodes';  // Full name of the plugin (used for diagnostics).
-$plugin->release   = '0.4.2';
+$plugin->release   = '0.4.3';
 $plugin->maturity = MATURITY_BETA;
