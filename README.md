@@ -88,7 +88,7 @@ Moodle metadata filters
 * {city} : Display the user's city.
 * {country} : Display the user's country.
 * {email} : Display the user's email address.
-* {userid} : Display the user's ID.
+* {userid} or %7Buserid%7D: Display the user's ID.
 * {username} : Display the user's username.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
@@ -99,7 +99,7 @@ Moodle metadata filters
 * {categoriesmenu} : A second level list of categories with links for use in custom menus (filtering must be supported by the theme).
 * {institution} : Display the name of the institution from the user's profile.
 * {department} : Display the name of the department from the user's profile.
-* {courseid} : Display a course's ID.
+* {courseid} or %7Bcourseid%7D: Display a course's ID.
 * {wwwroot} : Display the root URL of the Moodle site.
 * {protocol} : http or https
 * {referrer} : Referring URL
@@ -333,6 +333,7 @@ Create a Page on your Moodle site and include the following code:
 * Country: {country}
 * Email: {email}
 * User ID: {userid}
+* User ID (encoded): %7Buserid%7D
 * Username: {username}
 * User profile picture URL (small): {userpictureurl sm}
 * User profile picture URL (medium): {userpictureurl md}
@@ -344,6 +345,7 @@ Create a Page on your Moodle site and include the following code:
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}
+* Course ID (encoded): %7Bcourseid%7D
 * My Enrolled Courses: {mycourses}
 * My Enrolled Courses menu: {mycoursesmenu}
 * Course categories: {categories}

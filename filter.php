@@ -291,6 +291,10 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{userid}') !== false) {
                 $replace['/\{userid\}/i'] = $USER->id;
             }
+            // Alternative Tag: %7Buserid%7D (for encoded URLs).
+            if (stripos($text, '%7Buserid%7D') !== false) {
+                $replace['/%7Buserid%7D/i'] = $USER->id;
+            }
 
             // Tags: {userpictureurl} and {userpictureimg}.
             if (stripos($text, '{userpicture') !== false) {
@@ -332,6 +336,10 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {courseid}.
         if (stripos($text, '{courseid}') !== false) {
             $replace['/\{courseid\}/i'] = $PAGE->course->id;
+        }
+        // Alternative Tag: %7Bcourseid%7D (for encoded URLs).
+        if (stripos($text, '%7Bcourseid%7D') !== false) {
+            $replace['/%7Bcourseid%7D/i'] = $PAGE->course->id;
         }
 
         // Tag: {coursename}. The name of this course.

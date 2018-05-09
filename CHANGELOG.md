@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.4.4] - 2018-05-08
+### Added
+- %7Bcourseid%7D as an alternative to {courseid} for use with encoded URLs.
+- %7Buserid%7D as an alternative to {userid} for use with encoded URLs.
+
 ## [0.4.3] - 2018-03-30
 ### Added
 - Support for reCAPTCHA v2 in Moodle 3.1.11+, 3.2.8+, 3.3.5+, 3.4.5+ and 3.5+.
