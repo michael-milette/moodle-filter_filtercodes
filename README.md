@@ -99,7 +99,7 @@ Moodle metadata filters
 * {categoriesmenu} : A second level list of categories with links for use in custom menus (filtering must be supported by the theme).
 * {institution} : Display the name of the institution from the user's profile.
 * {department} : Display the name of the department from the user's profile.
-* {courseid} : Display a course's ID.
+* {courseid} or %7Bcourseid%7D: Display a course's ID.
 * {wwwroot} : Display the root URL of the Moodle site.
 * {protocol} : http or https
 * {referrer} : Referring URL
@@ -344,6 +344,7 @@ Create a Page on your Moodle site and include the following code:
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}
+* Course ID: %7Bcourseid%7D
 * My Enrolled Courses: {mycourses}
 * My Enrolled Courses menu: {mycoursesmenu}
 * Course categories: {categories}

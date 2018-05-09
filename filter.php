@@ -333,6 +333,10 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{courseid}') !== false) {
             $replace['/\{courseid\}/i'] = $PAGE->course->id;
         }
+        // Alternative Tag: %7Bcourseid%7D (for encoded URLs).
+        if (stripos($text, '%7Bcourseid%7D') !== false) {
+            $replace['/%7Bcourseid%7D/i'] = $PAGE->course->id;
+        }
 
         // Tag: {coursename}. The name of this course.
         if (stripos($text, '{coursename}') !== false) {
