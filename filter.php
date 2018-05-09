@@ -291,6 +291,10 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{userid}') !== false) {
                 $replace['/\{userid\}/i'] = $USER->id;
             }
+            // Alternative Tag: %7Buserid%7D (for encoded URLs).
+            if (stripos($text, '%7Buserid%7D') !== false) {
+                $replace['/%7Buserid%7D/i'] = $USER->id;
+            }
 
             // Tags: {userpictureurl} and {userpictureimg}.
             if (stripos($text, '{userpicture') !== false) {

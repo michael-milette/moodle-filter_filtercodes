@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.4.4] - 2018-05-08
 ### Added
 - %7Bcourseid%7D as an alternative to {courseid} for use with encoded URLs.
+- %7Buserid%7D as an alternative to {userid} for use with encoded URLs.
 
 ## [0.4.3] - 2018-03-30
 ### Added
