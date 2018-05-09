@@ -94,6 +94,7 @@ Moodle metadata filters
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
 * {coursename} : Display the name of the current course or the site name if not in a course.
 * {coursestartdate} : Course start date. Will display "Open event" if there is no start date.
+* {courseenddate} : Course end date. Will display "Open event" if there is no end date.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 * {categories} : Display an unordered list of links to all course categores.
@@ -344,6 +345,7 @@ Create a Page on your Moodle site and include the following code:
 * User profile picture URL (large): {userpictureimg lg}
 * Course or Site name: {coursename}
 * Course start date: {coursestartdate}
+* Course start date: {courseenddate}
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}

@@ -363,7 +363,18 @@ class filter_filtercodes extends moodle_text_filter {
                 if ($PAGE->course->startdate > 0) {
                     $replace['/\{coursestartdate\}/i'] = userdate($PAGE->course->startdate, get_string('strftimedatefullshort'));
                 } else {
-                    $replace['/\{coursestartdate\}/i'] = get_string('typeopen', 'calendar');
+                    $replace['/\{coursestartdate\}/i'] = get_string('none');
+                }
+            }
+            // Tag: {courseenddate}. The name of this course.
+            if (stripos($text, '{courseenddate}') !== false) {
+                if (empty($PAGE->course->enddate)) {
+                    $PAGE->course->enddate = $DB->get_field_select('course', 'enddate', 'id = :id', array('id' => $course->id));
+                }
+                if ($PAGE->course->enddate > 0) {
+                    $replace['/\{courseenddate\}/i'] = userdate($PAGE->course->enddate, get_string('strftimedatefullshort'));
+                } else {
+                    $replace['/\{courseenddate\}/i'] = get_string('none');
                 }
             }
         }
