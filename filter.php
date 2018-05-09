@@ -366,6 +366,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{coursestartdate\}/i'] = get_string('none');
                 }
             }
+
             // Tag: {courseenddate}. The name of this course.
             if (stripos($text, '{courseenddate}') !== false) {
                 if (empty($PAGE->course->enddate)) {
@@ -375,6 +376,23 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{courseenddate\}/i'] = userdate($PAGE->course->enddate, get_string('strftimedatefullshort'));
                 } else {
                     $replace['/\{courseenddate\}/i'] = get_string('none');
+                }
+            }
+
+            // Tag: {coursecompletiondate}. The name of this course.
+            if (stripos($text, '{coursecompletiondate}') !== false) {
+                if ($PAGE->course
+                        && isset($CFG->enablecompletion)
+                        && $CFG->enablecompletion == COMPLETION_ENABLED
+                        && $PAGE->course->enablecompletion) {
+                    $ccompletion = new completion_completion(array('userid' => $USER->id, 'course' => $PAGE->course->id));
+                    if ($ccompletion->timecompleted) {
+                        $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted, get_string('strftimedatefullshort'));
+                    } else {
+                        $replace['/\{coursecompletiondate\}/i'] = get_string('notcompleted', 'completion');
+                    }
+                } else {
+                    $replace['/\{coursecompletiondate\}/i'] = get_string('completionnotenabled', 'completion');
                 }
             }
         }
