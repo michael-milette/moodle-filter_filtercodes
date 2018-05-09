@@ -3,13 +3,16 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.4] - 2018-05-08
 ### Added
-- %7Bcourseid%7D as an alternative to {courseid} for use with encoded URLs.
-- %7Buserid%7D as an alternative to {userid} for use with encoded URLs.
-
+- New %7Bcourseid%7D as an alternative to {courseid} for use with encoded URLs.
+- New %7Buserid%7D as an alternative to {userid} for use with encoded URLs.
+- New {coursestartdate} tag.
+- New {courseenddate} tag.
+- New {coursecompletiondate} tag.
 ## [0.4.3] - 2018-03-30
 ### Added
 - Support for reCAPTCHA v2 in Moodle 3.1.11+, 3.2.8+, 3.3.5+, 3.4.5+ and 3.5+.
 - FilterCodes upgrade notifications now works properly when a updates are available on Moodle.org.
+- Expanded compatibility - now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4 and 3.5.
 ### Updated
 - Documentation - fixed errors and added FAQ for reCAPTCHA.
 - Copyright notice to include 2018.
@@ -39,7 +42,7 @@ Over a dozen new FilterCodes added including:
 - New {sesskey} tag.
 - New {userpictureimg X} tag.
 - New {userpictureurl X} tag.
-- Expanded compability now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3 and 3.4.
+- Expanded compatibility now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3 and 3.4.
 - Added new useful examples of using FilterCodes in custom menus (see Usage section).
 - Added CONTRIBUTE.md.
 ### Updated
