@@ -3,7 +3,7 @@
 FilterCodes filter plugin for Moodle
 ====================================
 ![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.4-orange.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.5-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -93,6 +93,7 @@ Moodle metadata filters
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
 * {coursename} : Display the name of the current course or the site name if not in a course.
+* {coursestartdate} : Course start date. Will display "Open event" if there is no start date.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 * {categories} : Display an unordered list of links to all course categores.
@@ -342,6 +343,7 @@ Create a Page on your Moodle site and include the following code:
 * User profile picture URL (medium): {userpictureimg md}
 * User profile picture URL (large): {userpictureimg lg}
 * Course or Site name: {coursename}
+* Course start date: {coursestartdate}
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}
