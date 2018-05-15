@@ -95,6 +95,7 @@ Moodle metadata filters
 * {coursename} : Display the name of the current course or the site name if not in a course.
 * {coursestartdate} : Course start date. Will display "Open event" if there is no start date.
 * {courseenddate} : Course end date. Will display "Open event" if there is no end date.
+* {coursecompletiondate} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 * {categories} : Display an unordered list of links to all course categores.
@@ -346,6 +347,7 @@ Create a Page on your Moodle site and include the following code:
 * Course or Site name: {coursename}
 * Course start date: {coursestartdate}
 * Course start date: {courseenddate}
+* Completion date: {coursecompletiondate}
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}
@@ -532,7 +534,7 @@ Add the following code to core_renderer code section of your theme. Note: Your t
             return $custommenu->export_for_template($this);
         }
     }
-    
+
 ### Why is the IP Address listed as 0:0:0:0:0:0:0:1?
 
 0:0:0:0:0:0:0:1 is the same as localhost and it means that your web browser is probably on the same computer as your web server. This shouldn't happen with users accessing your Moodle site from their own desktop or mobile device.
