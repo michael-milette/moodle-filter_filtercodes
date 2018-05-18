@@ -387,7 +387,8 @@ class filter_filtercodes extends moodle_text_filter {
                         && $PAGE->course->enablecompletion) {
                     $ccompletion = new completion_completion(array('userid' => $USER->id, 'course' => $PAGE->course->id));
                     if ($ccompletion->timecompleted) {
-                        $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted, get_string('strftimedatefullshort'));
+                        $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted,
+                                get_string('strftimedatefullshort'));
                     } else {
                         $replace['/\{coursecompletiondate\}/i'] = get_string('notcompleted', 'completion');
                     }
@@ -499,9 +500,14 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{ipaddress\}/i'] = getremoteaddr();
         }
 
+        // Any {sesskey} or %7Bsesskey%7D tags.
         // Tag: {sesskey}.
         if (stripos($text, '{sesskey}') !== false) {
             $replace['/\{sesskey\}/i'] = sesskey();
+        }
+        // Alternative Tag: %7Bsesskey%7D (for encoded URLs).
+        if (stripos($text, '%7Bsesskey%7D') !== false) {
+            $replace['/%7Bsesskey%7D/i'] = sesskey();
         }
 
         // Tag: {recaptcha}.

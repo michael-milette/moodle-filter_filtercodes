@@ -88,7 +88,7 @@ Moodle metadata filters
 * {city} : Display the user's city.
 * {country} : Display the user's country.
 * {email} : Display the user's email address.
-* {userid} or %7Buserid%7D: Display the user's ID.
+* {userid} or %7Buserid%7D : Display the user's ID.
 * {username} : Display the user's username.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
@@ -102,12 +102,12 @@ Moodle metadata filters
 * {categoriesmenu} : A second level list of categories with links for use in custom menus (filtering must be supported by the theme).
 * {institution} : Display the name of the institution from the user's profile.
 * {department} : Display the name of the department from the user's profile.
-* {courseid} or %7Bcourseid%7D: Display a course's ID.
+* {courseid} or %7Bcourseid%7D : Display a course's ID.
 * {wwwroot} : Display the root URL of the Moodle site.
 * {protocol} : http or https
 * {referrer} : Referring URL
 * {ipaddress} : User's IP Address.
-* {sesskey} : Moodle session key.
+* {sesskey} or %7Bsesskey%7D : Moodle session key.
 * {recaptcha} : Display the ReCAPTCHA field - for use with Contact Form for Moodle. Note: Will be blank if user is logged-in using a non-guest account.
 * {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
 
@@ -360,6 +360,7 @@ Create a Page on your Moodle site and include the following code:
 * Protocol: {protocol}
 * IP Address: {ipaddress}
 * Moodle session key: {sesskey}
+* Moodle session key: %7Bsesskey%7D
 * Referer: {referer}
 * ReCAPTCHA: {recaptcha}
 * Readonly (for form fields when logged-in): {readonly}
