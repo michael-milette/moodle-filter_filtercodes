@@ -26,6 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['filtername'] = 'Filter Codes';
+$string['privacy:metadata'] = 'The Filter Codes plugin does not store any personal data about any user.';
 $string['defaultfirstname'] = '';
 $string['defaultsurname'] = '';
 $string['defaultusername'] = '';
