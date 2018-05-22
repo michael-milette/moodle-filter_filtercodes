@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.4.6] - 2018-05-22
+### Added
+- Added support for Privacy API.
+
 ## [0.4.5] - 2018-05-18
 ### Added
 - New %7Bsesskey%7D tag as an alternative to {sesskey} for use with encoded URLs.
