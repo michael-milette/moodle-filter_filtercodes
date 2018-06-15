@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.4.7] - 2018-06-14
+### Added
+- New {lastname} tag (synonym of {surname}).
+- New {courseshortname} tag.
+- New {scrape url="..." tag="..." class="..." id="..." code="..."} tag.
+
 ## [0.4.6] - 2018-05-22
 ### Added
 - Added support for Privacy API.
