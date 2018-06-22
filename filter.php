@@ -33,18 +33,17 @@ defined('MOODLE_INTERNAL') || die();
  */
 class filter_filtercodes extends moodle_text_filter {
     /** @var object $archetypes Object array of Moodle archetypes. */
-    public $archetypes = array();
+    public $archetypes = [];
 
     /**
      * Constructor: Get the role IDs associated with each of the archetypes.
      */
     public function __construct() {
-        global $DB;
 
         // Note: This array must correspond to the one in function hasminarchetype().
-        $archetypelist = array('manager' => 1, 'coursecreator' => 2, 'editingteacher' => 3, 'teacher' => 4, 'student' => 5);
+        $archetypelist = ['manager' => 1, 'coursecreator' => 2, 'editingteacher' => 3, 'teacher' => 4, 'student' => 5];
         foreach ($archetypelist as $archetype => $level) {
-            $roleids = array();
+            $roleids = [];
             // Build array of roles.
             foreach ($roles = get_archetype_roles($archetype) as $role) {
                 $roleids[] = $role->id;
@@ -66,7 +65,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Handle caching of results.
-        static $archetypes = array();
+        static $archetypes = [];
         if (isset($archetypes[$archetype])) {
             return $archetypes[$archetype];
         }
@@ -122,7 +121,7 @@ class filter_filtercodes extends moodle_text_filter {
      */
     private function hasminarchetype($minarchetype) {
         // Note: This array must start with one blank entry followed by the same list found in in __construct().
-        $archetypelist = array('', 'manager', 'coursecreator', 'editingteacher', 'teacher', 'student');
+        $archetypelist = ['', 'manager', 'coursecreator', 'editingteacher', 'teacher', 'student'];
         // For each archetype level between the one specified and 'manager'.
         for ($level = $this->archetypes[$minarchetype]->level; $level >= 1; $level--) {
             // Check to see if any of the user's roles correspond to the archetype.
@@ -203,6 +202,51 @@ class filter_filtercodes extends moodle_text_filter {
         // Don't generate reCAPTCHA.
         return '';
     }
+
+    /**
+     * Extract content from another web page.
+     * Example: Can be used to extract a shared privacy policy across your websites.
+     *
+     * @param string $url URL address of content source.
+     * @param string $tag HTML tag that contains the information we want to retrieve.
+     * @param string $class (optional) HTML tag class attribute we should match.
+     * @param string $id (optional) HTML tag id attribute we should match.
+     * @param string $code (optional) any URL encoded HTML code you want to insert after the retrieved content.
+     * @return string Extracted content+optional code. If content is unavailable, returns message to contact webmaster.
+     */
+    private function scrapehtml($url, $tag, $class='', $id='', $code = '') {
+        // Retrieve content. If the URL fails, return a message.
+        $content = @file_get_contents($url);
+        if (empty($content)) {
+            return get_string('contentmissing', 'filter_filtercodes');
+        }
+
+        // Disable warnings.
+        $libxmlpreviousstate = libxml_use_internal_errors(true);
+
+        // Load content into DOM object.
+        $dom = new DOMDocument();
+        $dom->loadHTML($content);
+
+        // Clear suppressed warnings.
+        libxml_clear_errors();
+        libxml_use_internal_errors($libxmlpreviousstate);
+
+        // Scrape out the content we want. If not found, return everything.
+        $xpath = new DOMXPath($dom);
+        $query = "//${tag}";
+        if (!empty($class)) {
+            $query .= "[@class=\"${class}\"]";
+        }
+        if (!empty($id)) {
+            $query .= "[@id=\"${id}\"]";
+        }
+        $tag = $xpath->query($query);
+        $tag = $tag->item(0);
+
+        return $dom->saveXML($tag) . urldecode($code);
+    }
+
     /**
      * Main filter function called by Moodle.
      *
@@ -210,7 +254,7 @@ class filter_filtercodes extends moodle_text_filter {
      * @param array $options Moodle filter options. None are implemented in this plugin.
      * @return string Content with filters applied.
      */
-    public function filter($text, array $options = array()) {
+    public function filter($text, array $options = []) {
         global $CFG, $SITE, $PAGE, $USER, $DB;
 
         if (strpos($text, '{') === false && strpos($text, '%7B') === false) {
@@ -237,6 +281,11 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {surname}.
         if (stripos($text, '{surname}') !== false) {
             $replace['/\{surname\}/i'] = $lastname;
+        }
+
+        // Tag: {lastname} (same as surname... just easier to remember).
+        if (stripos($text, '{lastname}') !== false) {
+            $replace['/\{lastname\}/i'] = $lastname;
         }
 
         // Tag: {fullname}.
@@ -279,6 +328,25 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{department\}/i'] = isloggedin() ? $USER->department : '';
         }
 
+        // Tag: {scrape url="" tag="" class="" id="" code=""}.
+        if (stripos($text, '{scrape ') !== false) {
+            // Replace {scrape} tag and parameters with retrieved content.
+            $newtext = preg_replace_callback('/\{scrape\s+(.*?)\}/i',
+                function ($matches) {
+                    $scrape = '<' . substr($matches[0], 1, -1) . '/>';
+                    $scrape = new SimpleXMLElement($scrape);
+                    $url = (string) $scrape->attributes()->url;
+                    $tag = (string) $scrape->attributes()->tag;
+                    $class = (string) $scrape->attributes()->class;
+                    $id = (string) $scrape->attributes()->id;
+                    $code = (string) $scrape->attributes()->code;
+                    return $this->scrapehtml($url, $tag, $class, $id, $code);
+                }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+            }
+        }
+
         // Any {user*} tags.
         if (stripos($text, '{user') !== false) {
 
@@ -305,7 +373,7 @@ class filter_filtercodes extends moodle_text_filter {
                     // Substitute the $1 in URL with value of (\w+), making sure to substitute text versions into numbers.
                     $newtext = preg_replace_callback('/\{userpictureurl\s+(\w+)\}/i',
                         function ($matches) {
-                            $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
+                            $sublist = ['sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3'];
                             return '{userpictureurl ' . $sublist[$matches[1]] . '}';
                         }, $text);
                     if ($newtext !== false) {
@@ -322,7 +390,7 @@ class filter_filtercodes extends moodle_text_filter {
                     // Will substitute the $1 in URL with value of (\w+).
                     $newtext = preg_replace_callback('/\{userpictureimg\s+(\w+)\}/i',
                         function ($matches) {
-                            $sublist = array('sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3');
+                            $sublist = ['sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3'];
                             return '{userpictureimg ' . $sublist[$matches[1]] . '}';
                         }, $text);
                     if ($newtext !== false) {
@@ -344,21 +412,32 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/%7Bcourseid%7D/i'] = $PAGE->course->id;
             }
 
-            // Tag: {coursename}. The name of this course.
+            // Tag: {coursename}. The full name of this course.
             if (stripos($text, '{coursename}') !== false) {
                 $course = $PAGE->course;
                 if ($course->id == $SITE->id) { // Front page - use site name.
                     $replace['/\{coursename\}/i'] = format_string($SITE->fullname);
                 } else { // In a course - use course full name.
                     $coursecontext = context_course::instance($course->id);
-                    $replace['/\{coursename\}/i'] = format_string($course->fullname, true, array('context' => $coursecontext));
+                    $replace['/\{coursename\}/i'] = format_string($course->fullname, true, ['context' => $coursecontext]);
+                }
+            }
+
+            // Tag: {courseshortname}. The short name of this course.
+            if (stripos($text, '{courseshortname}') !== false) {
+                $course = $PAGE->course;
+                if ($course->id == $SITE->id) { // Front page - use site name.
+                    $replace['/\{courseshortname\}/i'] = format_string($SITE->fullname);
+                } else { // In a course - use course full name.
+                    $coursecontext = context_course::instance($course->id);
+                    $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
                 }
             }
 
             // Tag: {coursestartdate}. The name of this course.
             if (stripos($text, '{coursestartdate}') !== false) {
                 if (empty($PAGE->course->startdate)) {
-                    $PAGE->course->startdate = $DB->get_field_select('course', 'startdate', 'id = :id', array('id' => $course->id));
+                    $PAGE->course->startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $course->id]);
                 }
                 if ($PAGE->course->startdate > 0) {
                     $replace['/\{coursestartdate\}/i'] = userdate($PAGE->course->startdate, get_string('strftimedatefullshort'));
@@ -370,7 +449,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {courseenddate}. The name of this course.
             if (stripos($text, '{courseenddate}') !== false) {
                 if (empty($PAGE->course->enddate)) {
-                    $PAGE->course->enddate = $DB->get_field_select('course', 'enddate', 'id = :id', array('id' => $course->id));
+                    $PAGE->course->enddate = $DB->get_field_select('course', 'enddate', 'id = :id', ['id' => $course->id]);
                 }
                 if ($PAGE->course->enddate > 0) {
                     $replace['/\{courseenddate\}/i'] = userdate($PAGE->course->enddate, get_string('strftimedatefullshort'));
@@ -385,7 +464,7 @@ class filter_filtercodes extends moodle_text_filter {
                         && isset($CFG->enablecompletion)
                         && $CFG->enablecompletion == COMPLETION_ENABLED
                         && $PAGE->course->enablecompletion) {
-                    $ccompletion = new completion_completion(array('userid' => $USER->id, 'course' => $PAGE->course->id));
+                    $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $PAGE->course->id]);
                     if ($ccompletion->timecompleted) {
                         $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted,
                                 get_string('strftimedatefullshort'));
@@ -416,7 +495,7 @@ class filter_filtercodes extends moodle_text_filter {
                 if (stripos($text, '{mycourses}') !== false) {
                     $list = '';
                     foreach ($mycourses as $mycourse) {
-                        $list .= '<li><a href="' . (new moodle_url('/course/view.php', array('id' => $mycourse->id))) . '">' .
+                        $list .= '<li><a href="' . (new moodle_url('/course/view.php', ['id' => $mycourse->id])) . '">' .
                                 $mycourse->fullname . '</a></li>';
                     }
                     if (empty($list)) {
@@ -430,7 +509,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $list = '';
                     foreach ($mycourses as $mycourse) {
                         $list .= '-' . $mycourse->fullname . '|' .
-                            (new moodle_url('/course/view.php', array('id' => $mycourse->id))) . PHP_EOL;
+                            (new moodle_url('/course/view.php', ['id' => $mycourse->id])) . PHP_EOL;
                     }
                     if (empty($list)) {
                         $list .= '-' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . PHP_EOL;
@@ -459,7 +538,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $list = '';
                 foreach ($categories as $id => $name) {
                     $list .= '<li><a href="' .
-                            (new moodle_url('/course/index.php', array('categoryid' => $id))) . '">' . $name . '</a></li>';
+                            (new moodle_url('/course/index.php', ['categoryid' => $id])) . '">' . $name . '</a></li>';
                 }
                 $replace['/\{categories\}/i'] = '<ul class="categorylist">' . $list . '</ul>';
             }

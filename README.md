@@ -82,7 +82,7 @@ There are no configurable settings for this plugin at this time.
 Moodle metadata filters
 
 * {firstname} : Display the user's first name.
-* {surname} : Display the user's surname (family/last name).
+* {surname} or {lastname} : Display the user's surname (family/last name).
 * {fullname} : Display the user's first name and surname.
 * {alternatename} : Display the user's alternate name. If blank, will display user's first name instead.
 * {city} : Display the user's city.
@@ -90,9 +90,11 @@ Moodle metadata filters
 * {email} : Display the user's email address.
 * {userid} or %7Buserid%7D : Display the user's ID.
 * {username} : Display the user's username.
+* {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
-* {coursename} : Display the name of the current course or the site name if not in a course.
+* {coursename} : Display the full name of the current course or the site name if not in a course.
+* {courseshortname} : Display the short name of the current course or the site short name if not in a course.
 * {coursestartdate} : Course start date. Will display "Open event" if there is no start date.
 * {courseenddate} : Course end date. Will display "Open event" if there is no end date.
 * {coursecompletiondate} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled.
@@ -233,6 +235,26 @@ Notes:
 - **Enrolled users**, in the **This course** submenu, will only work in a course.
 - **[Code checker](https://moodle.org/plugins/local_codechecker)**, **[Moodle PHPdoc check](https://moodle.org/plugins/local_moodlecheck)** and [Moodle Adminer](https://moodle.org/plugins/local_adminer) are add-on plugins that need to be installed in order for the links to work.
 
+## Scrape'ing content
+
+As of version 0.4.7, you can now use FileterCodes to scrape content from another web page. Your mileage may vary and depends a lot on your configuration, the website from which you are scraping content and more.
+
+{scrape url="..." tag="..." class="..." id="..." code="..."}
+
+Tip: When adding this tag in one of Moodle's WYSIWYG editors like Atto or TinyMCE, the tag may end up embedded in a set of HTML paragraph tags. If this happens, the content you are scraping may not result in valid HTML. To fix the problem, you will need to go into the source code view of the editor and replace the P (paragraph) tags with div and then save. Alternatively, if there is nothing else in the editor, you can remove everything before and after the tag and save.
+
+Parameters:
+
+* url = The URL of the webpage from which you want to grab its content.
+* tag = The HTML tag you want to capture.
+* class = Optional. Default is blank (class is irrelevant). Class attribute of the HTML tag you want to capture. Must be an exact match for everything between the quotation marks.
+* id = Optional. Default is blank (id is irrelevent). id tag of the HTML tag you want to capture.
+* code = Optional. Default is blank (no code). This is URL encoded code that you want to insert after the content. Will be decoded before being inserted into the page. Can be things like JavaScript for example. Be careful with this one. If not encoded, will result in error.
+
+If the URL fails to produce any content (broken link for example), a message will be displayed on the page encouraging the visitor to contact the webmaster. This message can be customized through the Moodle Language editor.
+
+If a matching tag, class and/or id can't be found, will return all of the page content without being filtered.
+
 [(Back to top)](#table-of-contents)
 
 # Updating
@@ -330,6 +352,7 @@ Only the tags listed in this [documentation](#usage) are currently supported. We
 Create a Page on your Moodle site and include the following code:
 * First name: {firstname}
 * Surname: {surname}
+* Last name: {lastname}
 * Fullname: {fullname}
 * Alternate name: {alternatename}
 * City: {city}
@@ -338,13 +361,15 @@ Create a Page on your Moodle site and include the following code:
 * User ID: {userid}
 * User ID (encoded): %7Buserid%7D
 * Username: {username}
+* Scrape h1 from example.com: {scrape url="http://example.com/" tag="h1"}
 * User profile picture URL (small): {userpictureurl sm}
 * User profile picture URL (medium): {userpictureurl md}
 * User profile picture URL (large): {userpictureurl lg}
 * User profile picture URL (small): {userpictureimg sm}
 * User profile picture URL (medium): {userpictureimg md}
 * User profile picture URL (large): {userpictureimg lg}
-* Course or Site name: {coursename}
+* Course or Site full name: {coursename}
+* Course or Site short name: {courseshortname}
 * Course start date: {coursestartdate}
 * Course start date: {courseenddate}
 * Completion date: {coursecompletiondate}
@@ -552,13 +577,21 @@ This plugin does not support {IF this OR that} type conditions at this time. Dep
 
 The Front Page is a course in Moodle. All users are enrolled by default in this course.
 
-### I added the {recaptcha} tag in my webform. Why doesn't the reCAPTCHA show up?
+### I added the {recaptcha} tag in my web form. Why doesn't the reCAPTCHA show up?
 
 First, the reCAPTCHA is only made to work with forms processed by the Contact Form for Moodle plugin. That said, it is 100% generated by Moodle API so, if you have some other purpose, it will probably work as well as long as the receiving form is made to process it.
 
 In order for reCAPTCHA to work, you need to configure the site and secret keys in Moodle. For more information, log into your Moodle site as an Administrator and the navigate to Home > Site Administration > Authentication > Manage Authentication and configure the ReCAPTCHA site key and ReCAPTCHA secret key. You will also need to enable ReCAPTCHA in the settings of the Contact Form plugin.
 
 If you are using older versions of Moodle before 3.1.11+, 3.2.8+, 3.3.5+, 3.4.5+ and 3.5+, ReCAPTCHA is no longer supported.
+
+### How can I scrape content from more than one web page or more than one website?
+
+Use multiple {scrape} tags.
+
+### How can I scrape content based on a pattern of HTML tags instead of just one HTML tag with a class or id? Example, an h1 tag inside the div class="content" tag.
+
+That is not possible at this time. This is a very simple scraper. With some funding or contributions, this feature can be enhanced.
 
 ### Are there any security considerations?
 
