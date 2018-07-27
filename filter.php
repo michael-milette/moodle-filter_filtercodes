@@ -525,6 +525,15 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{mycoursesmenu\}/i'] = '-' . get_string('loggedinnot') . PHP_EOL;
             }
         }
+        
+        // Any {site*} tags.
+        if (stripos($text, '{site') !== false) {
+
+            // Tag: {siteyear}. Current 4 digit year.
+            if (stripos($text, '{siteyear}') !== false) {
+                $replace['/\{siteyear\}/i'] = date('Y');
+            }
+        }
 
         // Tag: {categories} and {categoriesmenu}.
         if (stripos($text, '{categories') !== false) {
