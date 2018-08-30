@@ -399,6 +399,15 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{userpictureimg\s+(\w+)\}/i'] = $tag;
                 }
             }
+
+            // Tag: {usercount}.
+            if (stripos($text, '{usercount}') !== false) {
+                // Count total number of current users on the site.
+                $sql = "COUNT(id) AS FROM {user} WHERE deleted=0"; // Exclude deleted users.
+                $cnt = $DB->get_records_sql($sql) - 2; // Exclude admin and guest.
+                $replace['/\{usercount\}/i'] = $cnt;
+            }
+            
         }
 
         // Any {course*} or %7Bcourse*%7D tags.
