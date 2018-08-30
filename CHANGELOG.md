@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - New {scrape url="..." tag="..." class="..." id="..." code="..."} tag.
 - New {ifhome} tag.
 - New {ifdashboard} tag.
+- New {coursecount} tag.
 
 ## [0.4.6] - 2018-05-22
 ### Added

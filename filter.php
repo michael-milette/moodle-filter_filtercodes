@@ -477,6 +477,14 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {coursecount}. The total number of courses.
+            if (stripos($text, '{coursecount}') !== false) {
+                // Count courses.
+                $sql = "COUNT(id) AS FROM {course}";
+                $cnt = $DB->get_records_sql($sql) - 1; // Exclude front page.
+                $replace['/\{coursecount\}/i'] = $cnt;
+            }
+
         }
 
         // Tag: {mycourses} and {mycoursesmenu}.
