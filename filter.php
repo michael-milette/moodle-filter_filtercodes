@@ -331,6 +331,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {scrape url="" tag="" class="" id="" code=""}.
         if (stripos($text, '{scrape ') !== false) {
             // Replace {scrape} tag and parameters with retrieved content.
+            // Substitute the $1 in URL with value of (\w+), making sure to substitute text versions into numbers.
             $newtext = preg_replace_callback('/\{scrape\s+(.*?)\}/i',
                 function ($matches) {
                     $scrape = '<' . substr($matches[0], 1, -1) . '/>';
@@ -345,6 +346,7 @@ class filter_filtercodes extends moodle_text_filter {
             if ($newtext !== false) {
                 $text = $newtext;
             }
+            $replace['/\{scrape\s+(\w+)\}/i'] = $text;
         }
 
         // Any {user*} tags.
