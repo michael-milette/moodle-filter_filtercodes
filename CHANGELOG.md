@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - New {coursecount} tag.
 - New {usercount} tag.
 - New {usersactive} tag.
+- New {usersonline} tag.
 
 ## [0.4.6] - 2018-05-22
 ### Added

@@ -403,24 +403,33 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {usercount}.
             if (stripos($text, '{usercount}') !== false) {
                 // Count total number of current users on the site.
-                $sql = "COUNT(id) AS FROM {user} WHERE deleted=0"; // Exclude deleted users.
-                $cnt = $DB->get_records_sql($sql) - 2; // Exclude admin and guest.
+                // Exclude deleted users, admin and guest.
+                $cnt = $DB->count_records('user', array('deleted'=>0)) - 2;
                 $replace['/\{usercount\}/i'] = $cnt;
             }
-            
+
             // Tag: {usersactive}.
             if (stripos($text, '{usersactive}') !== false) {
                 // Count total number of current users on the site.
-                $sql = "COUNT(id) AS FROM {user} WHERE deleted=0 AND disabled=0"; // Exclude deleted and disabled users.
-                $cnt = $DB->get_records_sql($sql) - 2; // Exclude admin and guest.
+                // Exclude deleted, suspended and unconfirmed users, admin and guest.
+                $cnt = $DB->count_records('user', array('deleted' => 0, 'suspended' => 0, 'confirmed' => 1)) - 2;
                 $replace['/\{usersactive\}/i'] = $cnt;
             }
-            
+
+            // Tag: {usersonline}.
+            if (stripos($text, '{usersonline}') !== false) {
+                $timetoshowusers = 300; // Within last number of seconds (300 = 5 minutes).
+                // Count total number of online users on the site in the last 5 minutes.
+                $cnt = $DB->count_records_select('logstore_standard_log',
+                    'timecreated > UNIX_TIMESTAMP(date_sub(now(), interval 5 minute))', [], 'COUNT(DISTINCT userid)');
+                $replace['/\{usersonline\}/i'] = $cnt;
+            }
+
         }
 
         // Any {course*} or %7Bcourse*%7D tags.
         if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
-            
+
             // Tag: {courseid}.
             if (stripos($text, '{courseid}') !== false) {
                 $replace['/\{courseid\}/i'] = $PAGE->course->id;
@@ -496,10 +505,16 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {coursecount}. The total number of courses.
             if (stripos($text, '{coursecount}') !== false) {
-                // Count courses.
-                $sql = "COUNT(id) AS FROM {course}";
-                $cnt = $DB->get_records_sql($sql) - 1; // Exclude front page.
+                // Count courses excluding front page.
+                $cnt = $DB->count_records('course', array())- 1;
                 $replace['/\{coursecount\}/i'] = $cnt;
+            }
+
+            // Tag: {coursesactive}. The total visible courses.
+            if (stripos($text, '{coursesactive}') !== false) {
+                // Count visible courses excluding front page.
+                $cnt = $DB->count_records('course', array('visible' => 1))- 1;
+                $replace['/\{coursesactive\}/i'] = $cnt;
             }
 
         }
@@ -552,7 +567,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{mycoursesmenu\}/i'] = '-' . get_string('loggedinnot') . PHP_EOL;
             }
         }
-        
+
         // Any {site*} tags.
         if (stripos($text, '{site') !== false) {
 
