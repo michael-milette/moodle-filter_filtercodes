@@ -134,6 +134,7 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifminmanager}{/ifminmanager} : Will display the enclosed content only if the user is logged-in as a manager or above.
 * {ifadmin}{/ifadmin} : Will display the enclosed content only if the user is logged-in as an administrator.
 * {ifhome}{/ifhome} : Will display the enclosed content only if the user is on the Moodle Home Front Page.
+* {ifdashboard}{/ifdashboard} : Will display the enclosed content only if the user is on the Moodle Dashboard.
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
@@ -410,6 +411,7 @@ Create a Page on your Moodle site and include the following code:
 * Manager (minimum): {ifminmanager}You are a manager or administrator.{/ifminmanager}
 * Admin: {ifadmin}You are an administrator.{/ifadmin}
 * Home: {ifhome}You are on the Home Front page.{/ifhome}
+* Dashboard: {ifdashboard}You are on the Home Front page.{/ifdashboard}
 
 You can switch to different roles to see how each will affect the content being displayed.
 

@@ -403,6 +403,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Any {course*} or %7Bcourse*%7D tags.
         if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
+            
             // Tag: {courseid}.
             if (stripos($text, '{courseid}') !== false) {
                 $replace['/\{courseid\}/i'] = $PAGE->course->id;
@@ -475,6 +476,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{coursecompletiondate\}/i'] = get_string('completionnotenabled', 'completion');
                 }
             }
+
         }
 
         // Tag: {mycourses} and {mycoursesmenu}.
@@ -774,6 +776,18 @@ class filter_filtercodes extends moodle_text_filter {
                 } else {
                     // Remove the ifadmin strings.
                     $replace['/\{ifadmin\}(.*?)\{\/ifadmin\}/ims'] = '';
+                }
+            }
+
+            // Tag: {ifdashboard}.
+            if (stripos($text, '{ifdashboard}') !== false) {
+                if ($PAGE->pagetype == 'my-index') { // If dashboard.
+                    // Just remove the tags.
+                    $replace['/\{ifdashboard\}/i'] = '';
+                    $replace['/\{\/ifdashboard\}/i'] = '';
+                } else {
+                    // If not not on the front page, remove the ifdashboard text.
+                    $replace['/\{ifdashboard}(.*?)\{\/ifdashboard\}/ims'] = '';
                 }
             }
 
