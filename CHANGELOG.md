@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - New {ifdashboard} tag.
 - New {coursecount} tag.
 - New {usercount} tag.
+- New {usersactive} tag.
 
 ## [0.4.6] - 2018-05-22
 ### Added

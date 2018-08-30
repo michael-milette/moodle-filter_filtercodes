@@ -94,6 +94,7 @@ Moodle metadata filters
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
 * {usercount} : Count total number of registered users on the site. Does not included deleted users, primary admin or guest.
+* {usersactive} : Count total number of registered users on the site. Does not included deleted users, disabled users, primary admin or guest.
 * {siteyear} : 4-digit current year.
 * {coursename} : Display the full name of the current course or the site name if not in a course.
 * {courseshortname} : Display the short name of the current course or the site short name if not in a course.
@@ -374,6 +375,7 @@ Create a Page on your Moodle site and include the following code:
 * User profile picture URL (medium): {userpictureimg md}
 * User profile picture URL (large): {userpictureimg lg}
 * Total number of registered users : {usercount}
+* Total number of active users : {usersactive}
 * Current 4-digit year: {siteyear}
 * Course or Site full name: {coursename}
 * Course or Site short name: {courseshortname}

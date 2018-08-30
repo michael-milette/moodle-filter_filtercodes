@@ -408,6 +408,14 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{usercount\}/i'] = $cnt;
             }
             
+            // Tag: {usersactive}.
+            if (stripos($text, '{usersactive}') !== false) {
+                // Count total number of current users on the site.
+                $sql = "COUNT(id) AS FROM {user} WHERE deleted=0 AND disabled=0"; // Exclude deleted and disabled users.
+                $cnt = $DB->get_records_sql($sql) - 2; // Exclude admin and guest.
+                $replace['/\{usersactive\}/i'] = $cnt;
+            }
+            
         }
 
         // Any {course*} or %7Bcourse*%7D tags.
