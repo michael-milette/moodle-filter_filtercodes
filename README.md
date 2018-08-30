@@ -93,11 +93,16 @@ Moodle metadata filters
 * {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
+* {usercount} : Count total number of registered users on the site. Does not included deleted users, primary admin or guest.
+* {usersactive} : Count total number of registered users on the site. Does not included deleted users, disabled users, primary admin or guest.
+* {usersonline} : Total number of users who were online in the last 5 minutes.
+* {siteyear} : 4-digit current year.
 * {coursename} : Display the full name of the current course or the site name if not in a course.
 * {courseshortname} : Display the short name of the current course or the site short name if not in a course.
 * {coursestartdate} : Course start date. Will display "Open event" if there is no start date.
 * {courseenddate} : Course end date. Will display "Open event" if there is no end date.
 * {coursecompletiondate} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled.
+* {coursecount} : Total number of courses on this Moodle site (not including Front Page).
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 * {categories} : Display an unordered list of links to all course categores.
@@ -132,6 +137,8 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifmanager}{/ifmanager} : Will display the enclosed content only if the user is logged-in as a manager.
 * {ifminmanager}{/ifminmanager} : Will display the enclosed content only if the user is logged-in as a manager or above.
 * {ifadmin}{/ifadmin} : Will display the enclosed content only if the user is logged-in as an administrator.
+* {ifhome}{/ifhome} : Will display the enclosed content only if the user is on the Moodle Home Front Page.
+* {ifdashboard}{/ifdashboard} : Will display the enclosed content only if the user is on the Moodle Dashboard.
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
@@ -368,11 +375,16 @@ Create a Page on your Moodle site and include the following code:
 * User profile picture URL (small): {userpictureimg sm}
 * User profile picture URL (medium): {userpictureimg md}
 * User profile picture URL (large): {userpictureimg lg}
+* Total number of registered users : {usercount}
+* Total number of active users : {usersactive}
+* Total number of online users : {usersonline}
+* Current 4-digit year: {siteyear}
 * Course or Site full name: {coursename}
 * Course or Site short name: {courseshortname}
 * Course start date: {coursestartdate}
 * Course start date: {courseenddate}
 * Completion date: {coursecompletiondate}
+* Total coutses: {coursecount}
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}
@@ -406,6 +418,8 @@ Create a Page on your Moodle site and include the following code:
 * Manager: {ifmanager}You are a manager.{/ifmanager}
 * Manager (minimum): {ifminmanager}You are a manager or administrator.{/ifminmanager}
 * Admin: {ifadmin}You are an administrator.{/ifadmin}
+* Home: {ifhome}You are on the Home Front page.{/ifhome}
+* Dashboard: {ifdashboard}You are on the Home Front page.{/ifdashboard}
 
 You can switch to different roles to see how each will affect the content being displayed.
 

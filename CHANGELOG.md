@@ -1,11 +1,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [0.4.7] - 2018-06-14
+## [0.4.7] - 2018-06-14, 2018-07-27, 2918-08-30
 ### Added
+- New {year} tag - current 4 digit year - useful for copyright notices.
 - New {lastname} tag (synonym of {surname}).
 - New {courseshortname} tag.
 - New {scrape url="..." tag="..." class="..." id="..." code="..."} tag.
+- New {ifhome} tag.
+- New {ifdashboard} tag.
+- New {coursecount} tag.
+- New {usercount} tag.
+- New {usersactive} tag.
+- New {usersonline} tag.
 
 ## [0.4.6] - 2018-05-22
 ### Added

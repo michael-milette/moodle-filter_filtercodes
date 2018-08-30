@@ -330,6 +330,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {scrape url="" tag="" class="" id="" code=""}.
         if (stripos($text, '{scrape ') !== false) {
+            // Replace {scrape} tag and parameters with retrieved content.
             // Substitute the $1 in URL with value of (\w+), making sure to substitute text versions into numbers.
             $newtext = preg_replace_callback('/\{scrape\s+(.*?)\}/i',
                 function ($matches) {
@@ -400,10 +401,37 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{userpictureimg\s+(\w+)\}/i'] = $tag;
                 }
             }
+
+            // Tag: {usercount}.
+            if (stripos($text, '{usercount}') !== false) {
+                // Count total number of current users on the site.
+                // Exclude deleted users, admin and guest.
+                $cnt = $DB->count_records('user', array('deleted'=>0)) - 2;
+                $replace['/\{usercount\}/i'] = $cnt;
+            }
+
+            // Tag: {usersactive}.
+            if (stripos($text, '{usersactive}') !== false) {
+                // Count total number of current users on the site.
+                // Exclude deleted, suspended and unconfirmed users, admin and guest.
+                $cnt = $DB->count_records('user', array('deleted' => 0, 'suspended' => 0, 'confirmed' => 1)) - 2;
+                $replace['/\{usersactive\}/i'] = $cnt;
+            }
+
+            // Tag: {usersonline}.
+            if (stripos($text, '{usersonline}') !== false) {
+                $timetoshowusers = 300; // Within last number of seconds (300 = 5 minutes).
+                // Count total number of online users on the site in the last 5 minutes.
+                $cnt = $DB->count_records_select('logstore_standard_log',
+                    'timecreated > UNIX_TIMESTAMP(date_sub(now(), interval 5 minute))', [], 'COUNT(DISTINCT userid)');
+                $replace['/\{usersonline\}/i'] = $cnt;
+            }
+
         }
 
         // Any {course*} or %7Bcourse*%7D tags.
         if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
+
             // Tag: {courseid}.
             if (stripos($text, '{courseid}') !== false) {
                 $replace['/\{courseid\}/i'] = $PAGE->course->id;
@@ -476,6 +504,21 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{coursecompletiondate\}/i'] = get_string('completionnotenabled', 'completion');
                 }
             }
+
+            // Tag: {coursecount}. The total number of courses.
+            if (stripos($text, '{coursecount}') !== false) {
+                // Count courses excluding front page.
+                $cnt = $DB->count_records('course', array())- 1;
+                $replace['/\{coursecount\}/i'] = $cnt;
+            }
+
+            // Tag: {coursesactive}. The total visible courses.
+            if (stripos($text, '{coursesactive}') !== false) {
+                // Count visible courses excluding front page.
+                $cnt = $DB->count_records('course', array('visible' => 1))- 1;
+                $replace['/\{coursesactive\}/i'] = $cnt;
+            }
+
         }
 
         // Tag: {mycourses} and {mycoursesmenu}.
@@ -524,6 +567,15 @@ class filter_filtercodes extends moodle_text_filter {
                 // Replace tags with message indicating that you need to be logged in.
                 $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';
                 $replace['/\{mycoursesmenu\}/i'] = '-' . get_string('loggedinnot') . PHP_EOL;
+            }
+        }
+
+        // Any {site*} tags.
+        if (stripos($text, '{site') !== false) {
+
+            // Tag: {siteyear}. Current 4 digit year.
+            if (stripos($text, '{siteyear}') !== false) {
+                $replace['/\{siteyear\}/i'] = date('Y');
             }
         }
 
@@ -766,6 +818,30 @@ class filter_filtercodes extends moodle_text_filter {
                 } else {
                     // Remove the ifadmin strings.
                     $replace['/\{ifadmin\}(.*?)\{\/ifadmin\}/ims'] = '';
+                }
+            }
+
+            // Tag: {ifdashboard}.
+            if (stripos($text, '{ifdashboard}') !== false) {
+                if ($PAGE->pagetype == 'my-index') { // If dashboard.
+                    // Just remove the tags.
+                    $replace['/\{ifdashboard\}/i'] = '';
+                    $replace['/\{\/ifdashboard\}/i'] = '';
+                } else {
+                    // If not not on the front page, remove the ifdashboard text.
+                    $replace['/\{ifdashboard}(.*?)\{\/ifdashboard\}/ims'] = '';
+                }
+            }
+
+            // Tag: {ifhome}.
+            if (stripos($text, '{ifhome}') !== false) {
+                if ($PAGE->pagetype == 'site-index') { // If front page.
+                    // Just remove the tags.
+                    $replace['/\{ifhome\}/i'] = '';
+                    $replace['/\{\/ifhome\}/i'] = '';
+                } else {
+                    // If not not on the front page, remove the ifhome text.
+                    $replace['/\{ifhome}(.*?)\{\/ifhome\}/ims'] = '';
                 }
             }
 
