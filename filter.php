@@ -777,6 +777,18 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifhome}.
+            if (stripos($text, '{ifhome}') !== false) {
+                if ($PAGE->pagetype == 'site-index') { // If front page.
+                    // Just remove the tags.
+                    $replace['/\{ifhome\}/i'] = '';
+                    $replace['/\{\/ifhome\}/i'] = '';
+                } else {
+                    // If not not on the front page, remove the ifhome text.
+                    $replace['/\{ifhome}(.*?)\{\/ifhome\}/ims'] = '';
+                }
+            }
+
             if (strpos($text, '{ifmin') !== false) { // If there are conditional ifmin tags.
 
                 // Tag: {ifminassistant}.
