@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - New {usercount} tag.
 - New {usersactive} tag.
 - New {usersonline} tag.
+- Support for Custom Menu filtering in Boost and bootstrapbase (Clean) themes. (Moodle 3.2+)
 
 ## [0.4.6] - 2018-05-22
 ### Added
