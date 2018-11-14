@@ -26,6 +26,15 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * Translate string (callback)
+ *
+ * @return string 
+ */
+function filter_filtercodes_translatecallback($match) {
+    return get_string($match[2], $match[1]);
+}
+
+/**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *
  * @copyright  2017-2018 TNG Consulting Inc. - www.tngconsulting.ca
@@ -666,6 +675,10 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {langx xx}.
         if (stripos($text, '{langx ') !== false) {
             $replace['/\{langx\s+(\w+)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';
+        }
+        // Tag: {lang:plugin}string{/lang} or {lang}string{/lang}.
+        if (stripos($text, '{lang:') !== false) {
+            $text = preg_replace_callback('/\{lang:?(\w*)\}(\w+)\{\/lang\}/is', 'filter_filtercodes_translatecallback', $text);
         }
 
         // Conditional block tags.
