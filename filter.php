@@ -204,6 +204,8 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Scrape HTML (callback)
+     *
      * Extract content from another web page.
      * Example: Can be used to extract a shared privacy policy across your websites.
      *
@@ -328,22 +330,24 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{department\}/i'] = isloggedin() ? $USER->department : '';
         }
 
-        // Tag: {scrape url="" tag="" class="" id="" code=""}.
-        if (stripos($text, '{scrape ') !== false) {
-            // Replace {scrape} tag and parameters with retrieved content.
-            $newtext = preg_replace_callback('/\{scrape\s+(.*?)\}/i',
-                function ($matches) {
-                    $scrape = '<' . substr($matches[0], 1, -1) . '/>';
-                    $scrape = new SimpleXMLElement($scrape);
-                    $url = (string) $scrape->attributes()->url;
-                    $tag = (string) $scrape->attributes()->tag;
-                    $class = (string) $scrape->attributes()->class;
-                    $id = (string) $scrape->attributes()->id;
-                    $code = (string) $scrape->attributes()->code;
-                    return $this->scrapehtml($url, $tag, $class, $id, $code);
-                }, $text);
-            if ($newtext !== false) {
-                $text = $newtext;
+        if (get_config('filter_filtercodes', 'enable_scrape')) { // Must be enabled in FilterCodes settings.
+            // Tag: {scrape url="" tag="" class="" id="" code=""}.
+            if (stripos($text, '{scrape ') !== false) {
+                // Replace {scrape} tag and parameters with retrieved content.
+                $newtext = preg_replace_callback('/\{scrape\s+(.*?)\}/i',
+                    function ($matches) {
+                        $scrape = '<' . substr($matches[0], 1, -1) . '/>';
+                        $scrape = new SimpleXMLElement($scrape);
+                        $url = (string) $scrape->attributes()->url;
+                        $tag = (string) $scrape->attributes()->tag;
+                        $class = (string) $scrape->attributes()->class;
+                        $id = (string) $scrape->attributes()->id;
+                        $code = (string) $scrape->attributes()->code;
+                        return $this->scrapehtml($url, $tag, $class, $id, $code);
+                    }, $text);
+                if ($newtext !== false) {
+                    $text = $newtext;
+                }
             }
         }
 
@@ -404,7 +408,7 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{usercount}') !== false) {
                 // Count total number of current users on the site.
                 // Exclude deleted users, admin and guest.
-                $cnt = $DB->count_records('user', array('deleted'=>0)) - 2;
+                $cnt = $DB->count_records('user', array('deleted' => 0)) - 2;
                 $replace['/\{usercount\}/i'] = $cnt;
             }
 
@@ -506,14 +510,14 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {coursecount}. The total number of courses.
             if (stripos($text, '{coursecount}') !== false) {
                 // Count courses excluding front page.
-                $cnt = $DB->count_records('course', array())- 1;
+                $cnt = $DB->count_records('course', array()) - 1;
                 $replace['/\{coursecount\}/i'] = $cnt;
             }
 
             // Tag: {coursesactive}. The total visible courses.
             if (stripos($text, '{coursesactive}') !== false) {
                 // Count visible courses excluding front page.
-                $cnt = $DB->count_records('course', array('visible' => 1))- 1;
+                $cnt = $DB->count_records('course', array('visible' => 1)) - 1;
                 $replace['/\{coursesactive\}/i'] = $cnt;
             }
 
@@ -548,7 +552,7 @@ class filter_filtercodes extends moodle_text_filter {
 
                 // Tag: {mycoursesmenu}. A custom menu list of enrolled course names with links.
                 if (stripos($text, '{mycoursesmenu}') !== false) {
-                    $list = '';
+                        $list = '';
                     foreach ($mycourses as $mycourse) {
                         $list .= '-' . $mycourse->fullname . '|' .
                             (new moodle_url('/course/view.php', ['id' => $mycourse->id])) . PHP_EOL;
@@ -581,8 +585,12 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{categories') !== false) {
 
             // Retrieve list of top categories.
-            require_once($CFG->libdir. '/coursecatlib.php');
-            $categories = coursecat::make_categories_list();
+            if ($CFG->version >= 36) { // Moodle 3.6+.
+                $categories = core_course_category::make_categories_list();
+            } else {
+                require_once($CFG->libdir. '/coursecatlib.php');
+                $categories = coursecat::make_categories_list();
+            }
 
             // Tag: {categories}. An unordered list of links to enrolled course.
             if (stripos($text, '{categories}') !== false) {
@@ -655,12 +663,30 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {string:component_name}stringidentifier{/string} or {string}stringidentifier{/string}.
+        // If component_name (plugin) is not specified, will default to "moodle".
+        if (stripos($text, '{string:') !== false) {
+            // Replace {string:} tag and parameters with retrieved content.
+            $newtext = preg_replace_callback('/\{string:?(\w*)\}(\w+)\{\/string\}/is',
+                function($matches) {
+                    if (get_string_manager()->string_exists($matches[2], $matches[1])) {
+                        return get_string($matches[2], $matches[1]);
+                    } else {
+                        return "{string" . (!empty($matches[1]) ? ":$matches[1]" : '') . "}$matches[2]{/string}";
+                    }
+                }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+            }
+        }
+
         // HTML tagging.
 
         // Tag: {nbsp}.
         if (stripos($text, '{nbsp}') !== false) {
             $replace['/\{nbsp\}/i'] = '&nbsp;';
         }
+
         // Tag: {langx xx}.
         if (stripos($text, '{langx ') !== false) {
             $replace['/\{langx\s+(\w+)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';

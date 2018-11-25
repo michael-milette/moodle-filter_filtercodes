@@ -1,19 +1,24 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [0.4.7] - 2018-06-14, 2018-07-27, 2918-08-30
+## [1.0.0] - 2018-11-25
 ### Added
-- New {year} tag - current 4 digit year - useful for copyright notices.
+- New settings page.
+- New {string} tag.
+- New {siteyear} tag - current 4 digit year - useful for copyright notices.
 - New {lastname} tag (synonym of {surname}).
 - New {courseshortname} tag.
-- New {scrape url="..." tag="..." class="..." id="..." code="..."} tag.
+- New {scrape url="..." tag="..." class="..." id="..." code="..."} tag. Must be enabled in FilterCodes settings.
 - New {ifhome} tag.
 - New {ifdashboard} tag.
 - New {coursecount} tag.
 - New {usercount} tag.
 - New {usersactive} tag.
 - New {usersonline} tag.
-- Support for Custom Menu filtering in Boost and bootstrapbase (Clean) themes. (Moodle 3.2+)
+- New experimental support for Moodle Custom Menu filtering in Boost and Clean (bootstrapbase) themes. Must be enabled in FilterCodes settings and requires Moodle 3.2+.
+- Expanded compatibility - now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4, 3.5 and now 3.6.
+### Updated
+- No major issues in the last 12 months of BETA - Project status is now STABLE.
 
 ## [0.4.6] - 2018-05-22
 ### Added

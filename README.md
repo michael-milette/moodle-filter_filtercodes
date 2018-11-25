@@ -3,7 +3,7 @@
 FilterCodes filter plugin for Moodle
 ====================================
 ![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.5-orange.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.6-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -37,13 +37,13 @@ In addition, it also enables you to:
 Usage of the {FilterCodes} tags requires no knowledge of HTML but might be
 important for sites wishing to comply with accessibility requirements.
 
-IMPORTANT: Although we expect everything to work, this BETA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
+IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 [(Back to top)](#table-of-contents)
 
 # Requirements
 
-This plugin requires Moodle 2.7+ from http://moodle.org/
+This plugin requires Moodle 2.7+ from http://moodle.org/ . Note that some tags may require more recent versions of Moodle.
 
 [(Back to top)](#table-of-contents)
 
@@ -73,9 +73,7 @@ To activate, go to Site Administration > Plugins > Filters > Manage filters" and
 
 # Usage
 
-IMPORANT: Although we expect everything to work, this BETA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
-
-There are no configurable settings for this plugin at this time.
+IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 {FilterCodes} are meant to be entered as regular text in the Moodle WYSIWYG editor through they will work equally well if entered in the code view.
 
@@ -90,7 +88,7 @@ Moodle metadata filters
 * {email} : Display the user's email address.
 * {userid} or %7Buserid%7D : Display the user's ID.
 * {username} : Display the user's username.
-* {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page.
+* {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
 * {usercount} : Count total number of registered users on the site. Does not included deleted users, primary admin or guest.
@@ -117,6 +115,7 @@ Moodle metadata filters
 * {sesskey} or %7Bsesskey%7D : Moodle session key.
 * {recaptcha} : Display the ReCAPTCHA field - for use with Contact Form for Moodle. Note: Will be blank if user is logged-in using a non-guest account.
 * {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
+* {string:component_name}stringidentifier{/string} or {string}stringidentifier{/string}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
 
 Conditionally display content filters
 
@@ -244,6 +243,8 @@ Notes:
 
 ## Scrape'ing content
 
+Note: This feature must be enabled in FilterCodes settings.
+
 As of version 0.4.7, you can now use FileterCodes to scrape content from another web page. Your mileage may vary and depends a lot on your configuration, the website from which you are scraping content and more.
 
 {scrape url="..." tag="..." class="..." id="..." code="..."}
@@ -255,12 +256,28 @@ Parameters:
 * url = The URL of the webpage from which you want to grab its content.
 * tag = The HTML tag you want to capture.
 * class = Optional. Default is blank (class is irrelevant). Class attribute of the HTML tag you want to capture. Must be an exact match for everything between the quotation marks.
-* id = Optional. Default is blank (id is irrelevent). id tag of the HTML tag you want to capture.
+* id = Optional. Default is blank (id is irrelevant). id tag of the HTML tag you want to capture.
 * code = Optional. Default is blank (no code). This is URL encoded code that you want to insert after the content. Will be decoded before being inserted into the page. Can be things like JavaScript for example. Be careful with this one. If not encoded, will result in error.
 
 If the URL fails to produce any content (broken link for example), a message will be displayed on the page encouraging the visitor to contact the webmaster. This message can be customized through the Moodle Language editor.
 
 If a matching tag, class and/or id can't be found, will return all of the page content without being filtered.
+
+## Optional FilterCodes for Moodle settings
+
+FilterCodes for Moodle includes the following settings. These are available on the plugin's `Settings` page by going to:
+
+Site administration > Plugins > Filters > Filter Codes
+
+### Custom navigation support
+
+Experimental: Enable support for FilterCode tags in Moodle custom navigation menu. Note: Is known to be compatible with Clean and Boost based themes.
+
+NOTE: Does not filter tags on the Moodle Theme Settings page. This is not a bug. It is just the way it has to be for now.
+
+### Scrape tag support
+
+Enable or disable the {scrape} tag.
 
 [(Back to top)](#table-of-contents)
 
@@ -268,7 +285,7 @@ If a matching tag, class and/or id can't be found, will return all of the page c
 
 There are no special considerations required for updating the plugin.
 
-The first public ALPHA version was released on 2017-07-07.
+The first public ALPHA version was released on 2017-07-07, BETA on 2017-11-11 and STABLE as of 2018-11-25.
 
 For more information on releases since then, see
 [CHANGELOG.md](https://github.com/michael-milette/moodle-filter_filtercodes/blob/master/CHANGELOG.md).
@@ -360,14 +377,14 @@ Create a Page on your Moodle site and include the following code:
 * First name: {firstname}
 * Surname: {surname}
 * Last name: {lastname}
-* Fullname: {fullname}
+* Full name: {fullname}
 * Alternate name: {alternatename}
 * City: {city}
 * Country: {country}
 * Email: {email}
 * User ID: {userid}
 * User ID (encoded): %7Buserid%7D
-* Username: {username}
+* User name: {username}
 * Scrape h1 from example.com: {scrape url="http://example.com/" tag="h1"}
 * User profile picture URL (small): {userpictureurl sm}
 * User profile picture URL (medium): {userpictureurl md}
@@ -384,7 +401,7 @@ Create a Page on your Moodle site and include the following code:
 * Course start date: {coursestartdate}
 * Course start date: {courseenddate}
 * Completion date: {coursecompletiondate}
-* Total coutses: {coursecount}
+* Total courses: {coursecount}
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}
@@ -420,12 +437,14 @@ Create a Page on your Moodle site and include the following code:
 * Admin: {ifadmin}You are an administrator.{/ifadmin}
 * Home: {ifhome}You are on the Home Front page.{/ifhome}
 * Dashboard: {ifdashboard}You are on the Home Front page.{/ifdashboard}
+* String with component: {string:component_name}stringidentifier{/string}
+* String: {string}stringidentifier{/string}
 
 You can switch to different roles to see how each will affect the content being displayed.
 
 ### When a user is logged out, the First name, Surname, Full Name, Email address and Username are empty. How can I set default values for these tags?
 
-You can do this using the language editor built into Moodle. There is currently support for the following defaults: defaultfirstname, defaultsurname, defaultusername, defaultemail. By default, these are blank. As for the Full Name, it is made up of the firstname and surname separated by a space and is therefore not settable.
+You can do this using the language editor built into Moodle. There is currently support for the following defaults: defaultfirstname, defaultsurname, defaultusername, defaultemail. By default, these are blank. As for the Full Name, it is made up of the first name and surname separated by a space and is therefore not settable.
 
 ### I added the "{mycoursesmenu}" to my custom menu. How can I hide it if the user is not logged in?
 
@@ -446,9 +465,11 @@ Bonus: This is also how you would hide it for users who are not logged-in.
 
 Building on the previous two questions, see the [usage](#usage) section for some examples. Feel free to share your own ideas in the discussion forum.
 
-### Can I use FilterCodes in custom menus?
+### Can I use FilterCodes in Moodle's custom menus?
 
-Technically for sure! But only if the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters.
+Technically for sure, but only if the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters. See instructions in the next question.
+
+**Note:** As of version 1.0.0 of FilterCodes, experimental support has been added for themes based on Moodle 3.2+ Clean and Boost. In order to work, this feature must be enabled in FilterCodes settings. Filtering will not be applied to the Moodle Theme Settings page and has not been fully tested and tested on other themes. For more information, see https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 .
 
 ### I am a Moodle theme developer. How do I add support for Moodle filters, including this FilterCodes plugin, to my theme?
 
@@ -599,6 +620,10 @@ In order for reCAPTCHA to work, you need to configure the site and secret keys i
 
 If you are using older versions of Moodle before 3.1.11+, 3.2.8+, 3.3.5+, 3.4.5+ and 3.5+, ReCAPTCHA is no longer supported.
 
+### How can I get the {scrape} tag to work?
+
+You need to enable this feature in the FilterCodes settings in Moodle.
+
 ### How can I scrape content from more than one web page or more than one website?
 
 Use multiple {scrape} tags.
@@ -606,6 +631,10 @@ Use multiple {scrape} tags.
 ### How can I scrape content based on a pattern of HTML tags instead of just one HTML tag with a class or id? Example, an h1 tag inside the div class="content" tag.
 
 That is not possible at this time. This is a very simple scraper. With some funding or contributions, this feature can be enhanced.
+
+### How can I get the {string} tag to work? It doesn't seem to be getting replaced with the correct text.
+
+Verify that the component (plugin) name and/or the string key are correct. If a component name is not specified, it will default to "moodle". If you recently modified a language file manually in Moodle, you may need to refresh the Moodle cache.
 
 ### Are there any security considerations?
 
@@ -626,6 +655,8 @@ If you are interested in helping, please take a look at our [contributing](https
 ## Contributors
 
 Michael Milette - Author and Lead Developer
+
+comete-upn - {string} tag (2018-11-21 - Thanks!).
 
 ## Pending Features
 

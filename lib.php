@@ -23,8 +23,11 @@ defined('MOODLE_INTERNAL') || die();
  * @author    Michael Milette
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function filter_filtercodes_render_navbar_output() { // Supported as of Moodle 3.2+.
-    filtercodesmenu();
+function filter_filtercodes_render_navbar_output() {
+    // Supported as of Moodle 3.2+.
+    if (get_config('filter_filtercodes', 'enable_customnav')) {
+        filtercodesmenu();
+    }
     return '';
 }
 
