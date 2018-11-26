@@ -14,33 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with FilterCodes.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
- * Apply filters to Moodle custom menu.
+ * Library of functions for filtercodes.
+ *
  * @package   filter_filtercodes
  * @copyright 2016-2018 TNG Consulting Inc. (https://tngconsulting.ca)
  * @author    Michael Milette
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function filter_filtercodes_render_navbar_output() { // Supported as of Moodle 3.2+.
-    filtercodesmenu();
-    return '';
-}
 
-function filtercodesmenu() {
-    global $CFG, $PAGE;
+defined('MOODLE_INTERNAL') || die();
 
-    // Don't filter menus on Theme Settings page or it will filter the custommenuitems field in the page and loose the tags.
-    if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->custommenuitems, '{') !== false) {
+/**
+ * Function to apply Moodle filters to custom menu.
+ * @return string Empty string.
+ */
+function filter_filtercodes_render_navbar_output() {
+    // Note: This function is only supported as of Moodle 3.2+ in themes based on Bootstrapbase and Boost.
+    // If enabled in plugin settings.
+    if (get_config('filter_filtercodes', 'enable_customnav')) {
+        global $CFG, $PAGE;
 
-        // Don't apply auto-linking filters.
-        $filtermanager = filter_manager::instance();
-        $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
-        $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
+        // Don't filter menus on Theme Settings page or it will filter the custommenuitems field in the page and loose the tags.
+        if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->custommenuitems, '{') !== false) {
 
-        // Filter Custom Menu.
-        $CFG->custommenuitems = $filtermanager->filter_text($CFG->custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
+            // Don't apply auto-linking filters.
+            $filtermanager = filter_manager::instance();
+            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
+            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
 
+            // Filter Custom Menu.
+            $CFG->custommenuitems = $filtermanager->filter_text($CFG->custommenuitems,
+                    $PAGE->context, $filteroptions, $skipfilters);
+        }
     }
+    return '';
 }

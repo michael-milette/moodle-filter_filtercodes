@@ -32,3 +32,8 @@ $string['defaultfirstname'] = '';
 $string['defaultsurname'] = '';
 $string['defaultusername'] = '';
 $string['defaultemail'] = '';
+$string['enable_customnav'] = 'Custom navigation support';
+$string['enable_customnav_description'] = '<strong>Experimental</strong>: Enable support for FilterCode tags in Moodle custom navigation menu.
+Note: Is known to be compatible with Clean and Boost based themes. Does not filter tags on the Moodle Theme Settings page.';
+$string['enable_scrape'] = 'Scrape tag support';
+$string['enable_scrape_description'] = 'Enable the scrape tag.';
