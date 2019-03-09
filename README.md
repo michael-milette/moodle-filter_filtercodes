@@ -115,7 +115,7 @@ Moodle metadata filters
 * {sesskey} or %7Bsesskey%7D : Moodle session key.
 * {recaptcha} : Display the ReCAPTCHA field - for use with Contact Form for Moodle. Note: Will be blank if user is logged-in using a non-guest account.
 * {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
-* {string:component_name}stringidentifier{/string} or {string}stringidentifier{/string}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
+* {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
 
 Conditionally display content filters
 
@@ -285,7 +285,7 @@ Enable or disable the {scrape} tag.
 
 There are no special considerations required for updating the plugin.
 
-The first public ALPHA version was released on 2017-07-07, BETA on 2017-11-11 and STABLE as of 2018-11-25.
+The first public ALPHA version was released on 2017-07-07, BETA on 2017-11-11 and STABLE as of 2018-11-26.
 
 For more information on releases since then, see
 [CHANGELOG.md](https://github.com/michael-milette/moodle-filter_filtercodes/blob/master/CHANGELOG.md).
@@ -437,8 +437,8 @@ Create a Page on your Moodle site and include the following code:
 * Admin: {ifadmin}You are an administrator.{/ifadmin}
 * Home: {ifhome}You are on the Home Front page.{/ifhome}
 * Dashboard: {ifdashboard}You are on the Home Front page.{/ifdashboard}
-* String with component: {string:component_name}stringidentifier{/string}
-* String: {string}stringidentifier{/string}
+* String with component: {getstring:component_name}stringidentifier{/getstring}
+* String: {getstring}stringidentifier{/getstring}
 
 You can switch to different roles to see how each will affect the content being displayed.
 
@@ -632,7 +632,7 @@ Use multiple {scrape} tags.
 
 That is not possible at this time. This is a very simple scraper. With some funding or contributions, this feature can be enhanced.
 
-### How can I get the {string} tag to work? It doesn't seem to be getting replaced with the correct text.
+### How can I get the {getstring} tag to work? It doesn't seem to be getting replaced with the correct text.
 
 Verify that the component (plugin) name and/or the string key are correct. If a component name is not specified, it will default to "moodle". If you recently modified a language file manually in Moodle, you may need to refresh the Moodle cache.
 
@@ -656,7 +656,7 @@ If you are interested in helping, please take a look at our [contributing](https
 
 Michael Milette - Author and Lead Developer
 
-comete-upn - {string} tag (2018-11-21 - Thanks!).
+comete-upn - {getstring} tag (2018-11-21 - Thanks!).
 
 ## Pending Features
 

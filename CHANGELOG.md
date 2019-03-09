@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2018-11-26
 ### Added
 - New settings page.
-- New {string} tag.
+- New {getstring} tag.
 - New {siteyear} tag - current 4 digit year - useful for copyright notices.
 - New {lastname} tag (synonym of {surname}).
 - New {courseshortname} tag.

@@ -663,16 +663,16 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {string:component_name}stringidentifier{/string} or {string}stringidentifier{/string}.
+        // Tag: {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}.
         // If component_name (plugin) is not specified, will default to "moodle".
-        if (stripos($text, '{string:') !== false) {
-            // Replace {string:} tag and parameters with retrieved content.
-            $newtext = preg_replace_callback('/\{string:?(\w*)\}(\w+)\{\/string\}/is',
+        if (stripos($text, '{/getstring}') !== false) {
+            // Replace {getstring:} tag and parameters with retrieved content.
+            $newtext = preg_replace_callback('/\{getstring:?(\w*)\}(\w+)\{\/getstring\}/is',
                 function($matches) {
                     if (get_string_manager()->string_exists($matches[2], $matches[1])) {
                         return get_string($matches[2], $matches[1]);
                     } else {
-                        return "{string" . (!empty($matches[1]) ? ":$matches[1]" : '') . "}$matches[2]{/string}";
+                        return "{getstring" . (!empty($matches[1]) ? ":$matches[1]" : '') . "}$matches[2]{/getstring}";
                     }
                 }, $text);
             if ($newtext !== false) {
