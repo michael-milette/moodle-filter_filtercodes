@@ -330,6 +330,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{department\}/i'] = isloggedin() ? $USER->department : '';
         }
 
+        // Tag: {idnumber}.
+        if (stripos($text, '{idnumber}') !== false) {
+            $replace['/\{idnumber\}/i'] = isloggedin() ? $USER->idnumber : '';
+        }
+
         if (get_config('filter_filtercodes', 'enable_scrape')) { // Must be enabled in FilterCodes settings.
             // Tag: {scrape url="" tag="" class="" id="" code=""}.
             if (stripos($text, '{scrape ') !== false) {

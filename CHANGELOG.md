@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New {pagepath} tag.
 - New {editingtoggle} tag.
+- New {idnumber} tag.
 ### Updated
 - Fixed {categories} filter code compatibility with Moodle 2.7 to 3.5.
 

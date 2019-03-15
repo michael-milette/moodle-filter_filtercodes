@@ -86,7 +86,8 @@ Moodle metadata filters
 * {city} : Display the user's city.
 * {country} : Display the user's country.
 * {email} : Display the user's email address.
-* {userid} or %7Buserid%7D : Display the user's ID.
+* {userid} or %7Buserid%7D : Display the user's Moodle ID.
+* {idnumber} : Display the user's idnumber from their profile.
 * {username} : Display the user's username.
 * {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
@@ -386,6 +387,7 @@ Create a Page on your Moodle site and include the following code:
 * Email: {email}
 * User ID: {userid}
 * User ID (encoded): %7Buserid%7D
+* ID Number : {idnumber}
 * User name: {username}
 * Scrape h1 from example.com: {scrape url="http://example.com/" tag="h1"}
 * User profile picture URL (small): {userpictureurl sm}
