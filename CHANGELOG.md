@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2019-03-09
+### Updated
+- Fixed {categories} filter code compatibility with Moodle 2.7 to 3.5.
+
 ## [1.0.0] - 2018-11-26
 ### Added
 - New settings page.
@@ -85,6 +89,7 @@ Over a dozen new FilterCodes added including:
 - Updated documentation and FAQ.
 
 ## [0.3.0] - 2017-09-08
+### Added
 - Conditional role tags are now aware of switching roles.
 - New {ifminassistant}{/ifminassistant} set of tags.
 - New {ifminteacher}{/ifminteacher} set of tags.

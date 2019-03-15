@@ -18,7 +18,7 @@
  * Main filter code for FilterCodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2018 TNG Consulting Inc. - www.tngcosulting.ca
+ * @copyright  2017-2019 TNG Consulting Inc. - www.tngcosulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -585,7 +585,7 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{categories') !== false) {
 
             // Retrieve list of top categories.
-            if ($CFG->version >= 36) { // Moodle 3.6+.
+            if ($CFG->branch >= 36) { // Moodle 3.6+.
                 $categories = core_course_category::make_categories_list();
             } else {
                 require_once($CFG->libdir. '/coursecatlib.php');
