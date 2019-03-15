@@ -581,6 +581,11 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {editingmode}. Is "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
+        if (stripos($text, '{editingtoggle}') !== false) {
+            $replace['/\{editingtoggle\}/i'] = ($PAGE->user_is_editing() ? 'off' : 'on');
+        }
+
         // Tag: {categories} and {categoriesmenu}.
         if (stripos($text, '{categories') !== false) {
 

@@ -1,9 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.1] - 2019-03-09
+## [1.0.1] - 2019-03-15 {dev}
 ### Added
 - New {pagepath} tag.
+- New {editingtoggle} tag.
 ### Updated
 - Fixed {categories} filter code compatibility with Moodle 2.7 to 3.5.
 

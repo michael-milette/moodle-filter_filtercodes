@@ -117,7 +117,8 @@ Moodle metadata filters
 * {recaptcha} : Display the ReCAPTCHA field - for use with Contact Form for Moodle. Note: Will be blank if user is logged-in using a non-guest account.
 * {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
 * {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
-
+* {editingtoggle} : "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
+ 
 Conditionally display content filters
 
 Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetypes, not role shortnames. For example, you could have a role called `students` but, if the archetype for the role is `teacher`, the role will be identified as a `teacher`. Roles not based on archetypes will not with these tags.
@@ -441,6 +442,7 @@ Create a Page on your Moodle site and include the following code:
 * Dashboard: {ifdashboard}You are on the Home Front page.{/ifdashboard}
 * String with component: {getstring:component_name}stringidentifier{/getstring}
 * String: {getstring}stringidentifier{/getstring}
+* <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
 
 You can switch to different roles to see how each will affect the content being displayed.
 
