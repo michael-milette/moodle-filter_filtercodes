@@ -109,6 +109,7 @@ Moodle metadata filters
 * {department} : Display the name of the department from the user's profile.
 * {courseid} or %7Bcourseid%7D : Display a course's ID.
 * {wwwroot} : Display the root URL of the Moodle site.
+* {pagepath} : Path of the current page without wwwroot.
 * {protocol} : http or https
 * {referrer} : Referring URL
 * {ipaddress} : User's IP Address.
@@ -411,6 +412,7 @@ Create a Page on your Moodle site and include the following code:
 * Course categories: {categories}
 * Course categories menu: {categoriesmenu}
 * WWWroot: {wwwroot}
+* Page path: {pagepath}
 * Protocol: {protocol}
 * IP Address: {ipaddress}
 * Moodle session key: {sesskey}

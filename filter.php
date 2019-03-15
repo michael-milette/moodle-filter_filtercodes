@@ -628,6 +628,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{wwwroot\}/i'] = $CFG->wwwroot;
         }
 
+        // Tag: {pagepath}.
+        if (stripos($text, '{pagepath}') !== false) {
+            $replace['/\{pagepath\}/i'] = (is_object($PAGE->url) ? $PAGE->url->out_as_local_url() : '');
+        }
+
         // Tag: {protocol}.
         if (stripos($text, '{protocol}') !== false) {
             $replace['/\{protocol\}/i'] = 'http'.($this->ishttps() ? 's' : '');
