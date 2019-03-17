@@ -695,6 +695,18 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {fa fa-icon-name}.
+        if (stripos($text, '{fa') !== false) {
+            // Replace {fa...} tag and parameters with FontAwesome HTML.
+            $newtext = preg_replace_callback('/\{fa(s\s|r\s|l\s|b\s|\s)+(.*?)\}/i',
+                function ($matches) {
+                   return '<span class="' . substr($matches[0], 1, -1) . '" aria-hidden="true"></span>';
+                }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+            }
+        }
+
         // HTML tagging.
 
         // Tag: {nbsp}.

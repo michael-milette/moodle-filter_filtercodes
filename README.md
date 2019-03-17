@@ -119,6 +119,7 @@ Moodle metadata filters
 * {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
 * {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
 * {editingtoggle} : "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
+* {fa/fas/far/fal ...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
  
 Conditionally display content filters
 
@@ -445,6 +446,7 @@ Create a Page on your Moodle site and include the following code:
 * String with component: {getstring:component_name}stringidentifier{/getstring}
 * String: {getstring}stringidentifier{/getstring}
 * <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
+* FontAwesome globe: FontAwesome v4.x {fa fa-globe}, v5.x {fas fa-globe}. Must be supported by your theme.
 
 You can switch to different roles to see how each will affect the content being displayed.
 
