@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - New {editingtoggle} tag.
 - New {idnumber} tag.
 - New {fa...} tag (for FontAwesome).
+- New {glyphicon...} tag (for Glyphicons).
 ### Updated
 - Fixed {categories} filter code compatibility with Moodle 2.7 to 3.5.
 

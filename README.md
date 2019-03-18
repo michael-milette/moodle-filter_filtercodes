@@ -2,7 +2,7 @@
 
 FilterCodes filter plugin for Moodle
 ====================================
-![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1-blue.svg)
+![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1-blue.svg)`
 ![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.6-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
@@ -63,7 +63,7 @@ Install the plugin, like any other plugin, to the following folder:
 
     /filter/filtercodes
 
-See http://docs.moodle.org/34/en/Installing_plugins for details on installing Moodle plugins.
+See http://docs.moodle.org/36/en/Installing_plugins for details on installing Moodle plugins.
 
 In order for the filters to work, the plugin must be installed and activated.
 
@@ -119,7 +119,8 @@ Moodle metadata filters
 * {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
 * {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
 * {editingtoggle} : "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
-* {fa/fas/far/fal ...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
+* {fa/fas/far/fal fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
+* {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
  
 Conditionally display content filters
 
@@ -446,7 +447,8 @@ Create a Page on your Moodle site and include the following code:
 * String with component: {getstring:component_name}stringidentifier{/getstring}
 * String: {getstring}stringidentifier{/getstring}
 * <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
-* FontAwesome globe: FontAwesome v4.x {fa fa-globe}, v5.x {fas fa-globe}. Must be supported by your theme.
+* FontAwesome globe: v4.x {fa fa-globe}, v5.x {fas fa-globe}. Must be supported by your theme.
+* Glyphicons envelope: Glyphicons {glyphicon glyphicon-envelope}. Must be supported by your theme.
 
 You can switch to different roles to see how each will affect the content being displayed.
 
