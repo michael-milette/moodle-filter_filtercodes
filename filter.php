@@ -663,6 +663,16 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/%7Bsesskey%7D/i'] = sesskey();
         }
 
+        // Tag: {sectionid}.
+        if (stripos($text, '{sectionid}') !== false) {
+            $replace['/\{sectionid\}/i'] = @$PAGE->cm->sectionnum;
+        }
+
+        // Alternative Tag: %7Bsessionid%7D.
+        if (stripos($text, '%7Bsessionid%7D') !== false) {
+            $replace['/\%7Bsessionid%7D/i'] = @$PAGE->cm->sectionnum;
+        }
+
         // Tag: {recaptcha}.
         if (stripos($text, '{recaptcha}') !== false) {
             $replace['/\{recaptcha\}/i'] = $this->getrecaptcha();

@@ -109,6 +109,7 @@ Moodle metadata filters
 * {institution} : Display the name of the institution from the user's profile.
 * {department} : Display the name of the department from the user's profile.
 * {courseid} or %7Bcourseid%7D : Display a course's ID.
+* {sectionid} : Display the section ID (not to be confused with the section number).
 * {wwwroot} : Display the root URL of the Moodle site.
 * {pagepath} : Path of the current page without wwwroot.
 * {protocol} : http or https
@@ -268,6 +269,16 @@ If the URL fails to produce any content (broken link for example), a message wil
 
 If a matching tag, class and/or id can't be found, will return all of the page content without being filtered.
 
+## Back to section / Back to course
+
+Help students navigate your Moodle site by implementing this handy-dandy BACK button. Works at both the section and activity level.
+
+    <p style="float:right;"><a href="{wwwroot}/course/view.php?id={courseid}&amp;section={sectionid}" class="btn btn-outline" style="font-size:14px;">Go Back</a></p>
+    
+If you are in a section and want to go directly back to the main course outline but scroll down to the current section, try this:
+
+    <p style="float:right;"><a href="{wwwroot}/course/view.php?id={courseid}#section-{sectionid}" class="btn btn-outline" style="font-size:14px;">Back to course outline</a></p>
+
 ## Optional FilterCodes for Moodle settings
 
 FilterCodes for Moodle includes the following settings. These are available on the plugin's `Settings` page by going to:
@@ -412,6 +423,8 @@ Create a Page on your Moodle site and include the following code:
 * Department: {department}
 * Course ID: {courseid}
 * Course ID (encoded): %7Bcourseid%7D
+* Session ID: {sessionid}
+* Session ID (encoded): %7Bsessionid%7D
 * My Enrolled Courses: {mycourses}
 * My Enrolled Courses menu: {mycoursesmenu}
 * Course categories: {categories}
