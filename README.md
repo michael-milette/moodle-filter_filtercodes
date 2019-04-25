@@ -151,6 +151,7 @@ HTML and "lang" tagging
 
 * {nbsp} : Is substituted for a non-breaking space when displayed.
 * {langx xx}{/langx} : Tag specific text in a particular language by wrapping the text in a plain text pair of {langx xx} {/langx} tags. This makes no visible changes to the content but wraps the content in an HTML <span lang="xx"></span> inline tag. As a result, screen readers will make use of this information to use a particular kind of pronunciation if the text is in a different language than the language of the rest of the page. This is required for compliance with W3C Web Content Accessibility Guidelines (WCAG 2.0)
+* {details}{summary}{/summary}{/details} : An easy way to create an HTML 5 Details/Summary expandable section in your page.
 
 The opening {langx xx} tag should also include two [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code abbreviation letters in lowercase associated with language's name. French, for example, has the code **fr**:
 
@@ -462,6 +463,7 @@ Create a Page on your Moodle site and include the following code:
 * <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
 * FontAwesome globe: v4.x {fa fa-globe}, v5.x {fas fa-globe}. Must be supported by your theme.
 * Glyphicons envelope: Glyphicons {glyphicon glyphicon-envelope}. Must be supported by your theme.
+* Details/summary: {details}{summary}This is the summary{/summary} followed by the details.{/details}
 
 You can switch to different roles to see how each will affect the content being displayed.
 

@@ -741,6 +741,15 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{langx\s+(\w+)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';
         }
 
+        // Tag: {details}{summary}{/summary}{/details}.
+        if (stripos($text, '{/details}') !== false) {
+            $replace['/\{details\}/i'] = '<details>';
+            $replace['/\{details open\}/i'] = '<details open>';
+            $replace['/\{\/details\}/i'] = '</details>';
+            $replace['/\{summary\}/i'] = '<summary>';
+            $replace['/\{\/summary\}/i'] = '</summary>';
+        }
+
         // Conditional block tags.
 
         if (strpos($text, '{if') !== false) { // If there are conditional tags.

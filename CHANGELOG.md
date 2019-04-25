@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.1] - 2019-03-28 {dev}
+## [1.0.1] - 2019-04-25 {dev}
 ### Added
 - New {pagepath} tag.
 - New {editingtoggle} tag.
@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - New {fa...} tag (for FontAwesome).
 - New {glyphicon...} tag (for Glyphicons).
 - New {sessionid} and %7Bsessionid%7D tags.
+- New {details}, {summary}, {/summary}, {/details} tags.
 ### Updated
 - Fixed {categories} filter code compatibility with Moodle 2.7 to 3.5.
 
