@@ -45,7 +45,7 @@ class filter_filtercodes extends moodle_text_filter {
         foreach ($archetypelist as $archetype => $level) {
             $roleids = [];
             // Build array of roles.
-            foreach ($roles = get_archetype_roles($archetype) as $role) {
+            foreach (get_archetype_roles($archetype) as $role) {
                 $roleids[] = $role->id;
             }
             $this->archetypes[$archetype] = (object) ['level' => $level, 'roleids' => $roleids];
@@ -96,7 +96,8 @@ class filter_filtercodes extends moodle_text_filter {
      */
     private function hasonlyarchetype($archetype) {
         if ($this->hasarchetype($archetype)) {
-            foreach ($this->archetypes as $archetypename => $properties) {
+            $archetypes = array_keys($this->archetypes);
+            foreach ($archetypes as $archetypename) {
                 if ($archetypename != $archetype && $this->hasarchetype($archetypename)) {
                     return false;
                 }
@@ -425,7 +426,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{usersactive\}/i'] = $cnt;
             }
 
-            // Tag: {usersonline}.
+            // Tag: {usersonline} - MySQL/MariaDB only.
             if (stripos($text, '{usersonline}') !== false) {
                 $timetoshowusers = 300; // Within last number of seconds (300 = 5 minutes).
                 // Count total number of online users on the site in the last 5 minutes.
@@ -557,7 +558,7 @@ class filter_filtercodes extends moodle_text_filter {
 
                 // Tag: {mycoursesmenu}. A custom menu list of enrolled course names with links.
                 if (stripos($text, '{mycoursesmenu}') !== false) {
-                        $list = '';
+                    $list = '';
                     foreach ($mycourses as $mycourse) {
                         $list .= '-' . $mycourse->fullname . '|' .
                             (new moodle_url('/course/view.php', ['id' => $mycourse->id])) . PHP_EOL;
@@ -645,7 +646,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {protocol}.
         if (stripos($text, '{protocol}') !== false) {
-            $replace['/\{protocol\}/i'] = 'http'.($this->ishttps() ? 's' : '');
+            $replace['/\{protocol\}/i'] = 'http' . ($this->ishttps() ? 's' : '');
         }
 
         // Tag: {ipaddress}.
@@ -668,9 +669,9 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{sectionid\}/i'] = @$PAGE->cm->sectionnum;
         }
 
-        // Alternative Tag: %7Bsessionid%7D.
-        if (stripos($text, '%7Bsessionid%7D') !== false) {
-            $replace['/\%7Bsessionid%7D/i'] = @$PAGE->cm->sectionnum;
+        // Alternative Tag: %7Bsectionid%7D.
+        if (stripos($text, '%7Bsectionid%7D') !== false) {
+            $replace['/\%7Bsectionid%7D/i'] = @$PAGE->cm->sectionnum;
         }
 
         // Tag: {recaptcha}.
@@ -710,7 +711,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Replace {fa...} tag and parameters with FontAwesome HTML.
             $newtext = preg_replace_callback('/\{fa(s|r|l|b){0,1}\sfa-(.*?)\}/i',
                 function ($matches) {
-                   return '<span class="' . substr($matches[0], 1, -1) . '" aria-hidden="true"></span>';
+                    return '<span class="' . substr($matches[0], 1, -1) . '" aria-hidden="true"></span>';
                 }, $text);
             if ($newtext !== false) {
                 $text = $newtext;
@@ -719,10 +720,10 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {glyphicon glyphion-name}.
         if (stripos($text, '{glyphicon ') !== false) {
-            // Replace {glyphicon glyphicon-...} tag and parameters with FontAwesome HTML.
+            // Replace {glyphicon glyphicon-...} tag and parameters with Glyphicons HTML.
             $newtext = preg_replace_callback('/\{glyphicon\sglyphicon-(.*?)\}/i',
                 function ($matches) {
-                   return '<span class="' . substr($matches[0], 1, -1) . '" aria-hidden="true"></span>';
+                    return '<span class="' . substr($matches[0], 1, -1) . '" aria-hidden="true"></span>';
                 }, $text);
             if ($newtext !== false) {
                 $text = $newtext;

@@ -18,7 +18,7 @@
  * Unit tests for FilterCodes filter.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2018 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2019 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/filter/filtercodes/filter.php');
  * Test that the filter produces the right content. Note that this currently
  * only tests some of the filter logic. Future releases will test more of the tags.
  *
- * @copyright  2017-2018 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2019 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_filtercodes_testcase extends advanced_testcase {
@@ -61,7 +61,12 @@ class filter_filtercodes_testcase extends advanced_testcase {
      * @return void
      */
     public function test_filter_filtercodes() {
-        global $CFG;
+        global $CFG, $USER, $DB;
+
+        $this->setadminuser();
+        $course = $this->getDataGenerator()->create_course();
+        $context = context_course::instance($course->id);
+        filter_set_local_state('filtercodes', $context->id, TEXTFILTER_ON);
 
         $tests = array(
             array (
@@ -125,6 +130,142 @@ class filter_filtercodes_testcase extends advanced_testcase {
             array (
                 'before' => 'Before{nbsp}: Some content After',
                 'after'  => 'Before&nbsp;: Some content After',
+            ),
+            array (
+                'before' => '{firstname}',
+                'after'  => $USER->firstname,
+            ),
+            array (
+                'before' => '{lastname}',
+                'after'  => $USER->lastname,
+            ),
+            array (
+                'before' => '{{alternatename}}',
+                'after'  => $USER->alternatename,
+            ),
+            array (
+                'before' => '{fullname}',
+                'after'  => $USER->lastname . ' ' . $USER->lastname,
+            ),
+            array (
+                'before' => '{getstring}help{/getstring}',
+                'after'  => 'Help',
+            ),
+            array (
+                'before' => '{getstring}help{/getstring}',
+                'after'  => 'Help',
+            ),
+            array (
+                'before' => '{city}',
+                'after'  => $USER->city,
+            ),
+            array (
+                'before' => '{country}',
+                'after'  => get_string($USER->country, 'countries'),
+            ),
+            array (
+                'before' => '{email}',
+                'after'  => $USER->email,
+            ),
+            array (
+                'before' => '{userid}',
+                'after'  => $USER->id,
+            ),
+            array (
+                'before' => '%7Buserid%7D',
+                'after'  => $USER->id,
+            ),
+            array (
+                'before' => '{idnumber}',
+                'after'  => $USER->idnumber,
+            ),
+            array (
+                'before' => '{institution}',
+                'after'  => $USER->institution,
+            ),
+            array (
+                'before' => '{department}',
+                'after'  => $USER->department,
+            ),
+            array (
+                'before' => '{usercount}',
+                'after'  => $DB->count_records('user', array('deleted' => 0)) - 2,
+            ),
+            array (
+                'before' => '{usersactive}',
+                'after'  => $DB->count_records('user', array('deleted' => 0, 'suspended' => 0, 'confirmed' => 1)) - 2,
+            ),
+            array (
+                'before' => '{course}',
+                'after'  => $course->id,
+            ),
+            array (
+                'before' => '%7Bcourseid%7D',
+                'after'  => $course->id,
+            ),
+            array (
+                'before' => '{coursename}',
+                'after'  => $course->fullname,
+            ),
+            array (
+                'before' => '{courseshortname}',
+                'after'  => $course->shortname,
+            ),
+            array (
+                'before' => '{coursecount}',
+                'after'  => $DB->count_records('course', array()) - 1,
+            ),
+            array (
+                'before' => '{coursesactive}',
+                'after'  => $DB->count_records('course', array('visible' => 1)) - 1,
+            ),
+            array (
+                'before' => '{siteyear}',
+                'after'  => date('Y'),
+            ),
+            array (
+                'before' => '{wwwroot}',
+                'after'  => $CFG->wwwroot,
+            ),
+            array (
+                'before' => '{protocol}',
+                'after'  => 'http' . (is_https() ? 's' : ''),
+            ),
+            array (
+                'before' => '{pagepath}',
+                'after'  => $PAGE->url->out_as_local_url(),
+            ),
+            array (
+                'before' => '{ipaddress}',
+                'after'  => getremoteaddr(),
+            ),
+            array (
+                'before' => '{sesskey}',
+                'after'  => sesskey(),
+            ),
+            array (
+                'before' => '%7Bsesskey%7D',
+                'after'  => sesskey(),
+            ),
+            array (
+                'before' => '{sectionid}',
+                'after'  => @$PAGE->cm->sectionnum,
+            ),
+            array (
+                'before' => '%7Bsectionid%7D',
+                'after'  => @$PAGE->cm->sectionnum,
+            ),
+            array (
+                'before' => '{readonly}',
+                'after'  => 'readonly="readonly"',
+            ),
+            array (
+                'before' => '{fa fa-icon-name}',
+                'after'  => '<span class="fa-icon-name" aria-hidden="true"></span>',
+            ),
+            array (
+                'before' => '{glyphicon glyphion-name}',
+                'after'  => '<span class="glyphicon glyphion-nam" aria-hidden="true"></span>',
             ),
         );
 

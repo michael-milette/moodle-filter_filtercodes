@@ -412,7 +412,7 @@ Create a Page on your Moodle site and include the following code:
 * User profile picture URL (large): {userpictureimg lg}
 * Total number of registered users : {usercount}
 * Total number of active users : {usersactive}
-* Total number of online users : {usersonline}
+* Total number of online users (MySQL/MariaDB only): {usersonline}
 * Current 4-digit year: {siteyear}
 * Course or Site full name: {coursename}
 * Course or Site short name: {courseshortname}
@@ -424,8 +424,8 @@ Create a Page on your Moodle site and include the following code:
 * Department: {department}
 * Course ID: {courseid}
 * Course ID (encoded): %7Bcourseid%7D
-* Session ID: {sessionid}
-* Session ID (encoded): %7Bsessionid%7D
+* Section ID: {sectionid}
+* Section ID (encoded): %7Bsectionid%7D
 * My Enrolled Courses: {mycourses}
 * My Enrolled Courses menu: {mycoursesmenu}
 * Course categories: {categories}
@@ -441,28 +441,28 @@ Create a Page on your Moodle site and include the following code:
 * Readonly (for form fields when logged-in): {readonly}
 * Non-breaking space: This{nbsp}: Is it! (view source code to see the non-breaking space)
 * English: {langx en}Content{/langx}
-* Enrolled: {ifenrolled}You are enrolled in this course.{/ifenrolled}
-* Not Enrolled: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
-* LoggedIn: {ifloggedin}You are logged-in.{/ifloggedin}
-* LoggedOut: {ifloggedout}You are logged-out.{/ifloggedout}
-* Guest: {ifguest}You are a guest.{/ifguest}
-* Student: {ifstudent}You are student who is logged-in and enrolled in this course and have no other roles.{/ifstudent}
-* Non-editing Teacher: {ifassistant}You are an assistant teacher.{/ifassistant}
-* Non-editing Teacher (minimum): {ifminassistant}You are an assistant teacher or above.{/ifminassistant}
-* Teacher: {ifteacher}You are a teacher.{/ifteacher}
-* Teacher (minimum): {ifminteacher}You are a teacher or above.{/ifminteacher}
-* Course Creator: {ifcreator}You are a course creator.{/ifcreator}
-* Course Creator (minimum): {ifmincreator}You are a course creator or above.{/ifmincreator}
-* Manager: {ifmanager}You are a manager.{/ifmanager}
-* Manager (minimum): {ifminmanager}You are a manager or administrator.{/ifminmanager}
-* Admin: {ifadmin}You are an administrator.{/ifadmin}
-* Home: {ifhome}You are on the Home Front page.{/ifhome}
-* Dashboard: {ifdashboard}You are on the Home Front page.{/ifdashboard}
-* String with component: {getstring:component_name}stringidentifier{/getstring}
-* String: {getstring}stringidentifier{/getstring}
-* <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
-* FontAwesome globe: v4.x {fa fa-globe}, v5.x {fas fa-globe}. Must be supported by your theme.
-* Glyphicons envelope: Glyphicons {glyphicon glyphicon-envelope}. Must be supported by your theme.
+* If Enrolled: {ifenrolled}You are enrolled in this course.{/ifenrolled}
+* If Not Enrolled: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
+* If LoggedIn: {ifloggedin}You are logged-in.{/ifloggedin}
+* If LoggedOut: {ifloggedout}You are logged-out.{/ifloggedout}
+* If Guest: {ifguest}You are a guest.{/ifguest}
+* If Student: {ifstudent}You are student who is logged-in and enrolled in this course and have no other roles.{/ifstudent}
+* If Non-editing Teacher: {ifassistant}You are an assistant teacher.{/ifassistant}
+* If Non-editing Teacher (minimum): {ifminassistant}You are an assistant teacher or above.{/ifminassistant}
+* If Teacher: {ifteacher}You are a teacher.{/ifteacher}
+* If Teacher (minimum): {ifminteacher}You are a teacher or above.{/ifminteacher}
+* If Course Creator: {ifcreator}You are a course creator.{/ifcreator}
+* If Course Creator (minimum): {ifmincreator}You are a course creator or above.{/ifmincreator}
+* If Manager: {ifmanager}You are a manager.{/ifmanager}
+* If Manager (minimum): {ifminmanager}You are a manager or administrator.{/ifminmanager}
+* If Admin: {ifadmin}You are an administrator.{/ifadmin}
+* If on Home page: {ifhome}You are on the Home Front page.{/ifhome}
+* If on Dashboard: {ifdashboard}You are on the Home Front page.{/ifdashboard}
+* String with component: {getstring:filter_filtercodes}filtername{/getstring}
+* String: {getstring}Help{/getstring}
+*     <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
+* FontAwesome "fa-globe": v4.x {fa fa-globe}, v5.x {fas fa-globe}. Must be supported by your theme.
+* Glyphicons "lyphicon-envelope": Glyphicons {glyphicon glyphicon-envelope}. Must be supported by your theme.
 * Details/summary: {details}{summary}This is the summary{/summary} followed by the details.{/details}
 
 You can switch to different roles to see how each will affect the content being displayed.
