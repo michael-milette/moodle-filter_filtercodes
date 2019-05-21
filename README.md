@@ -2,8 +2,8 @@
 
 FilterCodes filter plugin for Moodle
 ====================================
-![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1-blue.svg)`
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.6-orange.svg)
+![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2-blue.svg)`
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.7-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -63,7 +63,7 @@ Install the plugin, like any other plugin, to the following folder:
 
     /filter/filtercodes
 
-See http://docs.moodle.org/36/en/Installing_plugins for details on installing Moodle plugins.
+See http://docs.moodle.org/en/Installing_plugins for details on installing Moodle plugins.
 
 In order for the filters to work, the plugin must be installed and activated.
 
@@ -151,7 +151,7 @@ HTML and "lang" tagging
 
 * {nbsp} : Is substituted for a non-breaking space when displayed.
 * {langx xx}{/langx} : Tag specific text in a particular language by wrapping the text in a plain text pair of {langx xx} {/langx} tags. This makes no visible changes to the content but wraps the content in an HTML <span lang="xx"></span> inline tag. As a result, screen readers will make use of this information to use a particular kind of pronunciation if the text is in a different language than the language of the rest of the page. This is required for compliance with W3C Web Content Accessibility Guidelines (WCAG 2.0)
-* {details}{summary}{/summary}{/details} : An easy way to create an HTML 5 Details/Summary expandable section in your page.
+* {details}{summary}{/summary}{/details} : An easy way to create an HTML 5 Details/Summary expandable section in your page. IMPORTANT: {details}{summary}{/summary} must all be on one line. The rest of the details can be on multiple lines followed by the {/details}. This is an experimental feature which may result in invalid HTML.
 
 The opening {langx xx} tag should also include two [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code abbreviation letters in lowercase associated with language's name. French, for example, has the code **fr**:
 
@@ -506,7 +506,7 @@ Add the following code to core_renderer code section of your theme. Be sure to r
         /**
          * Applies Moodle filters to custom menu and custom user menu.
          *
-         * Copyright: 2017 TNG Consulting Inc.
+         * Copyright: 2017-2019 TNG Consulting Inc.
          * License:   GNU GPL v3+.
          *
          * @param string $custommenuitems Current custom menu object.
@@ -718,7 +718,7 @@ http://github.com/michael-milette/moodle-filter_filtercodes
 
 # License
 
-Copyright © 2017-2018 TNG Consulting Inc. - http://www.tngconsulting.ca/
+Copyright © 2017-2019 TNG Consulting Inc. - http://www.tngconsulting.ca/
 
 This file is part of FilterCodes for Moodle - http://moodle.org/
 

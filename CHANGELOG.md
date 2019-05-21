@@ -1,15 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.1] - 2019-04-25 {dev}
+## [1.0.1] - 2019-05-20 {dev}
 ### Added
 - New {pagepath} tag.
 - New {editingtoggle} tag.
-- New {idnumber} tag.
+- New {idnumber} tag (from user profile).
 - New {fa...} tag (for FontAwesome).
 - New {glyphicon...} tag (for Glyphicons).
 - New {sectionid} and %7Bsectionid%7D tags.
-- New {details}, {summary}, {/summary}, {/details} tags.
+- New {details}, {summary}, {/summary}, {/details} tags (experimental).
+- Expanded compatibility - now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4, 3.5, 3.6 and now 3.7.
 ### Updated
 - Fixed {categories} filter code compatibility with Moodle 2.7 to 3.5.
 
