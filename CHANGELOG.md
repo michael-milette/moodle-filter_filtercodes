@@ -1,7 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.1] - 2019-05-20 {dev}
+## [1.0.2] - 2019-05-24 {dev}
+### Added
+- New {referrer} tag - alias of {referer} previously implemented.
+
+## [1.0.1] - 2019-05-20
 ### Added
 - New {pagepath} tag.
 - New {editingtoggle} tag.

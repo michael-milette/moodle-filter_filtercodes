@@ -626,11 +626,20 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tag: {referer}.
-        if (stripos($text, '{referer}') !== false) {
-            if ($CFG->branch >= 28) {
-                $replace['/\{referer\}/i'] = get_local_referer(false);
-            } else {
-                $replace['/\{referer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+        if (stripos($text, '{refer') !== false) {
+            if (stripos($text, '{referer}') !== false) {
+                if ($CFG->branch >= 28) {
+                    $replace['/\{referer\}/i'] = get_local_referer(false);
+                } else {
+                    $replace['/\{referer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+                }
+            }
+            if (stripos($text, '{referrer}') !== false) {
+                if ($CFG->branch >= 28) {
+                    $replace['/\{referrer\}/i'] = get_local_referer(false);
+                } else {
+                    $replace['/\{referrer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+                }
             }
         }
 
@@ -641,7 +650,11 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {pagepath}.
         if (stripos($text, '{pagepath}') !== false) {
-            $replace['/\{pagepath\}/i'] = (is_object($PAGE->url) ? $PAGE->url->out_as_local_url() : '');
+            $url = (is_object($PAGE->url) ? $PAGE->url->out_as_local_url() : '');
+            if (strpos($url, '?') === false && strpos($url, '#') === false) {
+                $url .= '?';
+            }
+            $replace['/\{pagepath\}/i'] = $url;
         }
 
         // Tag: {protocol}.

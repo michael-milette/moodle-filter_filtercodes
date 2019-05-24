@@ -113,7 +113,8 @@ Moodle metadata filters
 * {wwwroot} : Display the root URL of the Moodle site.
 * {pagepath} : Path of the current page without wwwroot.
 * {protocol} : http or https
-* {referrer} : Referring URL
+* {referer} : Referring URL
+* {referrer} : Alias of {referer}
 * {ipaddress} : User's IP Address.
 * {sesskey} or %7Bsesskey%7D : Moodle session key.
 * {recaptcha} : Display the ReCAPTCHA field - for use with Contact Form for Moodle. Note: Will be blank if user is logged-in using a non-guest account.
@@ -437,6 +438,7 @@ Create a Page on your Moodle site and include the following code:
 * Moodle session key: {sesskey}
 * Moodle session key: %7Bsesskey%7D
 * Referer: {referer}
+* Referrer: {referrer}
 * ReCAPTCHA: {recaptcha}
 * Readonly (for form fields when logged-in): {readonly}
 * Non-breaking space: This{nbsp}: Is it! (view source code to see the non-breaking space)
