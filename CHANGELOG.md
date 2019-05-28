@@ -1,9 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-05-24 {dev}
+## [1.0.2] - 2019-05-27 (dev)
 ### Added
 - New {referrer} tag - alias of {referer} previously implemented.
+- Missing $string['pluginname'] to language file.
 
 ## [1.0.1] - 2019-05-20
 ### Added

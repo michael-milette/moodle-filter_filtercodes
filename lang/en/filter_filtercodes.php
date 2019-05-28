@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['pluginname'] = 'Filter Codes';
 $string['filtername'] = 'Filter Codes';
 $string['privacy:metadata'] = 'The Filter Codes plugin does not store any personal data about any user.';
 $string['contentmissing'] = '<h1>Content is missing.</h1><p>Please notify the webmaster.</p>';
