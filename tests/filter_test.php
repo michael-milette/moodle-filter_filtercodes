@@ -74,31 +74,31 @@ class filter_filtercodes_testcase extends advanced_testcase {
                 'after'  => 'No langx tags',
             ),
             array (
-                'before' => '{langx es}Todo el texto está en español{langx}',
-                'after'  => '<span lang="es">Todo el texto está en español<span>',
+                'before' => '{langx es}Todo el texto está en español{/langx}',
+                'after'  => '<span lang="es">Todo el texto está en español</span>',
             ),
             array (
-                'before' => '{langx fr}Ceci est du texte en français{langx}',
-                'after'  => '<span lang="fr">Ceci est du texte en français<span>',
+                'before' => '{langx fr}Ceci est du texte en français{/langx}',
+                'after'  => '<span lang="fr">Ceci est du texte en français</span>',
             ),
             array (
                 'before' => 'Some non-filtered content plus some content in Spanish' .
-                        ' ({langx es}mejor dicho, en español{langx})',
+                        ' ({langx es}mejor dicho, en español{/langx})',
                 'after' => 'Some non-filtered content plus some content in Spanish' .
                         ' (<span lang="es">mejor dicho, en español</span>)',
             ),
             array (
                 'before' => 'Some non-filtered content plus some content in French' .
-                        ' ({langx fr}mieux en français){langx}',
+                        ' ({langx fr}mieux en français){/langx}',
                 'after'  => 'Some non-filtered content plus some content in French' .
                         ' (<span lang="fr">mieux en français</span>)',
             ),
             array (
-                'before' => '{langx es}Algo en español{langx}{langx fr}Quelque chose en français{langx}',
+                'before' => '{langx es}Algo en español{langx}{langx fr}Quelque chose en français{/langx}',
                 'after'  => '<span lang="es">Algo en español</span><span lang="fr">Quelque chose en français</span>',
             ),
             array (
-                'before' => 'Non-filtered {begin}{langx es}Algo en español{langx}{langx fr}Quelque chose en français{langx}'.
+                'before' => 'Non-filtered {begin}{langx es}Algo en español{langx}{langx fr}Quelque chose en français{/langx}'.
                         'Non-filtered{end}',
                 'after'  => 'Non-filtered {begin}<span lang="es">Algo en español</span><span lang="fr">Quelque chose en français'.
                         '</span> Non-filtered{end}',
@@ -108,23 +108,23 @@ class filter_filtercodes_testcase extends advanced_testcase {
                 'after'  => '{langx}Bad filter syntax{langx}',
             ),
             array (
-                'before' => '{langx}Bad filter syntax{langx}{langx es}Algo de español{langx}',
+                'before' => '{langx}Bad filter syntax{langx}{langx es}Algo de español{/langx}',
                 'after'  => '{langx}Bad filter syntax{langx}<span lang="es">Algo en español</span>',
             ),
             array (
-                'before' => 'Before {langx}Bad filter syntax{langx}{langx es}Algo de español{langx} After',
-                'after'  => 'Before {langx}Bad filter syntax{langx}<span lang="es">Algo en español</span> After',
+                'before' => 'Before {langx}Bad filter syntax{langx} {langx es}Algo de español{/langx} After',
+                'after'  => 'Before {langx}Bad filter syntax{langx} <span lang="es">Algo en español</span> After',
             ),
             array (
-                'before' => 'Before {langx non-existent-language}Some content{langx} After',
+                'before' => 'Before {langx non-existent-language}Some content{/langx} After',
                 'after'  => 'Before <span lang="non-existent-language">Some content</span> After',
             ),
             array (
-                'before' => 'Before {langx en_ca}Some content{langx} After',
+                'before' => 'Before {langx en_ca}Some content{/langx} After',
                 'after'  => 'Before <span lang="en_ca"}Some content</span> After',
             ),
             array (
-                'before' => 'Before {langx en-ca}Some content{langx} After',
+                'before' => 'Before {langx en-ca}Some content{/langx} After',
                 'after'  => 'Before <span lang="en-ca"}Some content</span> After',
             ),
             array (
@@ -152,8 +152,8 @@ class filter_filtercodes_testcase extends advanced_testcase {
                 'after'  => 'Help',
             ),
             array (
-                'before' => '{getstring}help{/getstring}',
-                'after'  => 'Help',
+                'before' => '{getstring:filter_filtercodes}pluginname{/getstring}',
+                'after'  => 'Filter Codes',
             ),
             array (
                 'before' => '{city}',
@@ -264,8 +264,8 @@ class filter_filtercodes_testcase extends advanced_testcase {
                 'after'  => '<span class="fa-icon-name" aria-hidden="true"></span>',
             ),
             array (
-                'before' => '{glyphicon glyphion-name}',
-                'after'  => '<span class="glyphicon glyphion-nam" aria-hidden="true"></span>',
+                'before' => '{glyphicon glyphicon-name}',
+                'after'  => '<span class="glyphicon glyphicon-name" aria-hidden="true"></span>',
             ),
         );
 

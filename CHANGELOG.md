@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New {referrer} tag - alias of {referer} previously implemented.
 - Missing $string['pluginname'] to language file.
+### Updated
+- Added and fixed some unit tests.
 
 ## [1.0.1] - 2019-05-20
 ### Added
