@@ -145,6 +145,7 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifadmin}{/ifadmin} : Will display the enclosed content only if the user is logged-in as an administrator.
 * {ifhome}{/ifhome} : Will display the enclosed content only if the user is on the Moodle Home Front Page.
 * {ifdashboard}{/ifdashboard} : Will display the enclosed content only if the user is on the Moodle Dashboard.
+* {ifincourse}{ifincourse} : Will display the enclosed content only if the user is in a course other than the Front page.
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
@@ -466,6 +467,7 @@ Create a Page on your Moodle site and include the following code:
 * FontAwesome "fa-globe": v4.x {fa fa-globe}, v5.x {fas fa-globe}. Must be supported by your theme.
 * Glyphicons "lyphicon-envelope": Glyphicons {glyphicon glyphicon-envelope}. Must be supported by your theme.
 * Details/summary: {details}{summary}This is the summary{/summary} followed by the details.{/details}
+* Are you in a course? {ifincourse}Yes{/ifincourse}
 
 You can switch to different roles to see how each will affect the content being displayed.
 
