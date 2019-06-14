@@ -768,7 +768,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
-            // Tags: {ifenrolled}, {ifnotenrolled} and {ifincourse}
+            // Tags: {ifenrolled}, {ifnotenrolled}, {ifincourse} and {ifinsection}
             if ($PAGE->course->id == $SITE->id) { // If frontpage course.
                 // Everyone is automatically enrolled in the Front Page course.
                 // Remove the ifenrolled tags.
@@ -784,15 +784,13 @@ class filter_filtercodes extends moodle_text_filter {
                 if (stripos($text, '{ifincourse}') !== false) {
                     $replace['/\{ifincourse\}(.*?)\{\/ifincourse\}/ims'] = '';
                 }
-            } else {
-                // Tag: {ifincourse}
-                // If in a course other than the Front Page.
-                if (stripos($text, '{ifincourse}') !== false) {
-                    $replace['/\{ifincourse\}/i'] = '';
-                    $replace['/\{\/ifincourse\}/i'] = '';
+                // Remove the {ifinsection} strings if not in a section of a course or are on the Front Page.
+                if (stripos($text, '{ifinsection}') !== false) {
+                    $replace['/\{ifinsection\}(.*?)\{\/ifincourse\}/ims'] = '';
                 }
+            } else {
                 if ($this->hasarchetype('student')) { // If user is enrolled in the course.
-                    // If enrolled, remove the ifenrolled tags.
+                    // If enrolled, remove the {ifenrolled} tags.
                     if (stripos($text, '{ifenrolled}') !== false) {
                         $replace['/\{ifenrolled\}/i'] = '';
                         $replace['/\{\/ifenrolled\}/i'] = '';
@@ -810,6 +808,23 @@ class filter_filtercodes extends moodle_text_filter {
                     if (stripos($text, '{ifnotenrolled}') !== false) {
                         $replace['/\{ifnotenrolled\}/i'] = '';
                         $replace['/\{\/ifnotenrolled\}/i'] = '';
+                    }
+                }
+                // Tag: {ifincourse}. If in a course other than the Front Page, remove the ifincourse tags.
+                if (stripos($text, '{ifincourse}') !== false) {
+                    $replace['/\{ifincourse\}/i'] = '';
+                    $replace['/\{\/ifincourse\}/i'] = '';
+                }
+                // Tag: {ifinsection}. If in a section of a course other than the Front Page, remove the ifinsection tags.
+                if (stripos($text, '{ifinsection}') !== false) {
+                    if (!empty(@$PAGE->cm->sectionnum)) {
+                        $replace['/\{ifinsection\}/i'] = '';
+                        $replace['/\{\/ifinsection\}/i'] = '';
+                    } else {
+                        // Remove the ifnotenrolled strings.
+                        if (stripos($text, '{ifinsection}') !== false) {
+                            $replace['/\{ifinsection\}(.*?)\{\/ifinsection\}/ims'] = '';
+                        }
                     }
                 }
             }
