@@ -123,7 +123,7 @@ Moodle metadata filters
 * {editingtoggle} : "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
 * {fa/fas/far/fal fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
- 
+
 Conditionally display content filters
 
 Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetypes, not role shortnames. For example, you could have a role called `students` but, if the archetype for the role is `teacher`, the role will be identified as a `teacher`. Roles not based on archetypes will not with these tags.
@@ -153,16 +153,24 @@ If the condition is not met in the particular context, the specified tag and it'
 HTML and "lang" tagging
 
 * {nbsp} : Is substituted for a non-breaking space when displayed.
-* {langx xx}{/langx} : Tag specific text in a particular language by wrapping the text in a plain text pair of {langx xx} {/langx} tags. This makes no visible changes to the content but wraps the content in an HTML <span lang="xx"></span> inline tag. As a result, screen readers will make use of this information to use a particular kind of pronunciation if the text is in a different language than the language of the rest of the page. This is required for compliance with W3C Web Content Accessibility Guidelines (WCAG 2.0)
+* {langx xx}{/langx} : Tag specific text in a particular language by wrapping the text in a plain text pair of {langx xx} {/langx} or {langx xx-XX} {/langx} tags. This makes no visible changes to the content but wraps the content in an HTML <span lang="xx"></span> inline tag. As a result, screen readers will make use of this localization information to apply a particular pronunciation if the text is in a different language than the language of the rest of the page. This is required for compliance with W3C Web Content Accessibility Guidelines (WCAG 2.0)
 * {details}{summary}{/summary}{/details} : An easy way to create an HTML 5 Details/Summary expandable section in your page. IMPORTANT: {details}{summary}{/summary} must all be on one line. The rest of the details can be on multiple lines followed by the {/details}. This is an experimental feature which may result in invalid HTML.
 
-The opening {langx xx} tag should also include two [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code abbreviation letters in lowercase associated with language's name. French, for example, has the code **fr**:
+The opening {langx xx} tag should include two [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code abbreviation letters in lowercase associated with language's name. French, for example, has the code **fr**:
 
     {langx fr}Contenu{/langx}
 
 The {langx fr}{/langx} filter will convert this into the following HTML
 
     <span lang="fr">Contenu</span>
+
+The opening {langx xx} may also include a [culture code](https://en.wikipedia.org/wiki/Language_localisation) used in countries and regions. This includes an additional dash and two uppercase letters associated with language's region or country. French Canadian, for example, has the code **fr-CA**:
+
+    {langx fr-CA}Contenu{/langx}
+
+The {langx fr-CA}{/langx} filter will convert this into the following HTML
+
+    <span lang="fr-CA">Contenu</span>
 
 ## FilterCodes in a custom menu
 
@@ -278,7 +286,7 @@ If a matching tag, class and/or id can't be found, will return all of the page c
 Help students navigate your Moodle site by implementing this handy-dandy BACK button. Works at both the section and activity level.
 
     <p style="float:right;"><a href="{wwwroot}/course/view.php?id={courseid}&amp;section={sectionid}" class="btn btn-outline" style="font-size:14px;">Go Back</a></p>
-    
+
 If you are in a section and want to go directly back to the main course outline but scroll down to the current section, try this:
 
     <p style="float:right;"><a href="{wwwroot}/course/view.php?id={courseid}#section-{sectionid}" class="btn btn-outline" style="font-size:14px;">Back to course outline</a></p>

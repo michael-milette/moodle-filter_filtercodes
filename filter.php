@@ -752,7 +752,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {langx xx}.
         if (stripos($text, '{langx ') !== false) {
-            $replace['/\{langx\s+(\w+)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';
+            $replace['/\{langx\s+(.*?)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';
         }
 
         // Tag: {details}{summary}{/summary}{/details}.

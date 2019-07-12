@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-06-13 (dev)
+## [1.0.2] - 2019-07-12 (dev)
 ### Added
 - New {ifinsection} tag.
 - New {ifincourse} tag.
@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Missing $string['pluginname'] to language file.
 ### Updated
 - Added and fixed some unit tests.
+- Fixed langx so that it works correctly with language and culture codes.
 
 ## [1.0.1] - 2019-05-20
 ### Added
