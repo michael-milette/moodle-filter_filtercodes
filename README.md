@@ -147,6 +147,7 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifdashboard}{/ifdashboard} : Will display the enclosed content only if the user is on the Moodle Dashboard.
 * {ifincourse}{/ifincourse} : Will display the enclosed content only if the user is in a course other than the Front page.
 * {ifinsection}{/ifinsection} : Will display the enclosed content only if the user is in a section of a course which is not the Front Page.
+* {ifnotinsection}{/ifnotinsection} : Will display the enclosed content only if the user is not in a section of a course.
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
@@ -477,7 +478,7 @@ Create a Page on your Moodle site and include the following code:
 * Glyphicons "lyphicon-envelope": Glyphicons {glyphicon glyphicon-envelope}. Must be supported by your theme.
 * Details/summary: {details}{summary}This is the summary{/summary} followed by the details.{/details}
 * Are you in a course? {ifincourse}Yes{/ifincourse}
-* Are you in a section of a course? {ifinsection}Yes{/ifinsection}
+* Are you in a section of a course? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 
 You can switch to different roles to see how each will affect the content being displayed.
 

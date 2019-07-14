@@ -821,10 +821,22 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{ifinsection\}/i'] = '';
                         $replace['/\{\/ifinsection\}/i'] = '';
                     } else {
-                        // Remove the ifnotenrolled strings.
+                        // Remove the ifinsection strings.
                         if (stripos($text, '{ifinsection}') !== false) {
                             $replace['/\{ifinsection\}(.*?)\{\/ifinsection\}/ims'] = '';
                         }
+                    }
+                }
+            }
+            // Tag: {ifnotinsection}. If not in a section of a course.
+            if (stripos($text, '{ifnotinsection}') !== false) {
+                if (empty(@$PAGE->cm->sectionnum)) {
+                    $replace['/\{ifnotinsection\}/i'] = '';
+                    $replace['/\{\/ifnotinsection\}/i'] = '';
+                } else {
+                    // Remove the ifnotinsection strings.
+                    if (stripos($text, '{ifnotinsection}') !== false) {
+                        $replace['/\{ifnotinsection\}(.*?)\{\/ifnotinsection\}/ims'] = '';
                     }
                 }
             }
