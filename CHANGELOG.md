@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - New {ifinsection} tag.
 - New {ifnotinsection} tag.
 - New {ifincourse} tag.
+- New {courseidnumber} tag.
 - New {referrer} tag - alias of {referer} previously implemented.
 - Missing $string['pluginname'] to language file.
 ### Updated
