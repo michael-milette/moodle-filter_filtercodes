@@ -444,13 +444,27 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{courseid}') !== false) {
                 $replace['/\{courseid\}/i'] = $PAGE->course->id;
             }
-            // Tag: {courseidnumber}.
-            if (stripos($text, '{courseidnumber}') !== false) {
-                $replace['/\{courseidnumber\}/i'] = $PAGE->course->idnumber;
-            }
             // Alternative Tag: %7Bcourseid%7D (for encoded URLs).
             if (stripos($text, '%7Bcourseid%7D') !== false) {
                 $replace['/%7Bcourseid%7D/i'] = $PAGE->course->id;
+            }
+
+            // Tag: {coursecontextid}.
+            if (stripos($text, '{coursecontextid}') !== false) {
+                $context = context_course::instance($PAGE->course->id);
+                $coursecontextid = isset($PAGE->course->id) ? $context->id : 1;
+                $replace['/\{coursecontextid\}/i'] = $coursecontextid;
+            }
+            // Alternative Tag: %coursecontextid%7D (for encoded URLs).
+            if (stripos($text, '%coursecontextid%7D') !== false) {
+                $context = context_course::instance($PAGE->course->id);
+                $coursecontextid = isset($PAGE->course->id) ? $context->id : 1;
+                $replace['/%coursecontextid%7D/i'] = $coursecontextid;
+            }
+
+            // Tag: {courseidnumber}.
+            if (stripos($text, '{courseidnumber}') !== false) {
+                $replace['/\{courseidnumber\}/i'] = $PAGE->course->idnumber;
             }
 
             // Tag: {coursename}. The full name of this course.

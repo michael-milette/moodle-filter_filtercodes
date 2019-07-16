@@ -109,6 +109,7 @@ Moodle metadata filters
 * {institution} : Display the name of the institution from the user's profile.
 * {department} : Display the name of the department from the user's profile.
 * {courseid} or %7Bcourseid%7D : Display a course's ID.
+* {coursecontextid} or %coursecontextid%7D : Display a course's context ID.
 * {courseidnumber} : Display a course's ID number.
 * {sectionid} : Display the section ID (not to be confused with the section number).
 * {wwwroot} : Display the root URL of the Moodle site.
@@ -223,7 +224,7 @@ This menu can be handy for Moodle administrators and managers.
     --Reset course|/course/reset.php?id={courseid}
     -Add new course|/course/edit.php?category=1&returnto=topcat
     -Course management|/course/management.php
-    -Restore Course|/backup/restorefile.php?contextid=1
+    -Restore Course|/backup/restorefile.php?contextid={coursecontextid}
     -System reports|/admin/category.php?category=reports
     -User management|/admin/user.php
     -###
@@ -436,8 +437,10 @@ Create a Page on your Moodle site and include the following code:
 * Institution: {institution}
 * Department: {department}
 * Course ID: {courseid}
-* Course ID: {courseidnumber}
 * Course ID (encoded): %7Bcourseid%7D
+* Course Context ID: {coursecontextid}
+* Course Context ID (encoded): %coursecontextid%7D
+* Course ID number: {courseidnumber}
 * Section ID: {sectionid}
 * Section ID (encoded): %7Bsectionid%7D
 * My Enrolled Courses: {mycourses}

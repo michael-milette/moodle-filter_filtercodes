@@ -1,12 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-07-13 (dev)
+## [1.0.2] - 2019-07-16 (dev)
 ### Added
 - New {ifinsection} tag.
 - New {ifnotinsection} tag.
 - New {ifincourse} tag.
 - New {courseidnumber} tag.
+- New {coursecontextid} and %coursecontextid%7D tags.
 - New {referrer} tag - alias of {referer} previously implemented.
 - Missing $string['pluginname'] to language file.
 ### Updated
