@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-07-16 (dev)
+## [1.0.2] - 2019-07-23 (dev)
 ### Added
+- New {note} tag.
 - New {ifinsection} tag.
 - New {ifnotinsection} tag.
 - New {ifincourse} tag.

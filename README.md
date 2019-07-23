@@ -125,6 +125,7 @@ Moodle metadata filters
 * {editingtoggle} : "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
 * {fa/fas/far/fal fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
+* {note}content{/note} : Enables you to include a note which will not be displayed.
 
 Conditionally display content filters
 
@@ -484,6 +485,7 @@ Create a Page on your Moodle site and include the following code:
 * Details/summary: {details}{summary}This is the summary{/summary} followed by the details.{/details}
 * Are you in a course? {ifincourse}Yes{/ifincourse}
 * Are you in a section of a course? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
+* You should not see the following note : {note}This could nbe a comment, todo or reminder.{/note}
 
 You can switch to different roles to see how each will affect the content being displayed.
 
