@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-07-23 (dev)
+## [1.0.2] - 2019-08-05 (dev)
 ### Added
+- New {highlight}{/highlight} tags.
 - New {note} tag.
 - New {ifinsection} tag.
 - New {ifnotinsection} tag.

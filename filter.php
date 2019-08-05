@@ -761,7 +761,15 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {/highlight}{/highlight}.
+        if (stripos($text, '{/highlight}') !== false) {
+            $replace['/\{highlight\}/i'] = '<span style="background-color:#FFFF00;">';
+            $replace['/\{\/highlight\}/i'] = '</span>';
+        }
+
+        //
         // HTML tagging.
+        //
 
         // Tag: {nbsp}.
         if (stripos($text, '{nbsp}') !== false) {
