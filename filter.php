@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use block_online_users\fetcher;
+
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *
@@ -426,13 +428,28 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{usersactive\}/i'] = $cnt;
             }
 
-            // Tag: {usersonline} - MySQL/MariaDB only.
+            // Tag: {usersonline}.
             if (stripos($text, '{usersonline}') !== false) {
-                $timetoshowusers = 300; // Within last number of seconds (300 = 5 minutes).
-                // Count total number of online users on the site in the last 5 minutes.
-                $cnt = $DB->count_records_select('logstore_standard_log',
-                    'timecreated > UNIX_TIMESTAMP(date_sub(now(), interval 5 minute))', [], 'COUNT(DISTINCT userid)');
-                $replace['/\{usersonline\}/i'] = $cnt;
+                $timetosee = 300; // Within last number of seconds (300 = 5 minutes).
+                if (isset($CFG->block_online_users_timetosee)) {
+                    $timetosee = $CFG->block_online_users_timetosee * 60;
+                }
+                $now = time();
+
+                // Calculate if we are in separate groups
+                $isseparategroups = ($PAGE->course->groupmode == SEPARATEGROUPS
+                        && $PAGE->course->groupmodeforce
+                        && !has_capability('moodle/site:accessallgroups', $PAGE->context));
+
+                // Get the user current group
+                $thisgroup = $isseparategroups ? groups_get_course_group($PAGE->course) : NULL;
+
+                $onlineusers = new fetcher($thisgroup, $now, $timetosee, $PAGE->context,
+                        $PAGE->context->contextlevel, $PAGE->course->id);
+
+                // Count online users.
+                $usersonline = $onlineusers->count_users();
+                $replace['/\{usersonline\}/i'] = $usersonline;
             }
 
         }

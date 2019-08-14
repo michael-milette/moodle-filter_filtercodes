@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-08-05 (dev)
+## [1.0.2] - 2019-08-14 (dev)
 ### Added
 - New {highlight}{/highlight} tags.
 - New {note} tag.
@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 ### Updated
 - Added and fixed some unit tests.
 - Fixed langx so that it works correctly with language and culture codes.
+- {usersonline} tag no longer compatible with just MySQL/MariaDB.
 
 ## [1.0.1] - 2019-05-20
 ### Added

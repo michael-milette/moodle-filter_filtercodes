@@ -428,7 +428,7 @@ Create a Page on your Moodle site and include the following code:
 * User profile picture URL (large): {userpictureimg lg}
 * Total number of registered users : {usercount}
 * Total number of active users : {usersactive}
-* Total number of online users (MySQL/MariaDB only): {usersonline}
+* Total number of online users: {usersonline}
 * Current 4-digit year: {siteyear}
 * Course or Site full name: {coursename}
 * Course or Site short name: {courseshortname}
@@ -487,7 +487,7 @@ Create a Page on your Moodle site and include the following code:
 * Are you in a course? {ifincourse}Yes{/ifincourse}
 * Are you in a section of a course? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * You should not see the following note : {note}This could nbe a comment, todo or reminder.{/note}
-* {highlight}This text is highlighted in yellow.{/highlight} 
+* {highlight}This text is highlighted in yellow.{/highlight}
 You can switch to different roles to see how each will affect the content being displayed.
 
 ### When a user is logged out, the First name, Surname, Full Name, Email address and Username are empty. How can I set default values for these tags?
