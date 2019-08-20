@@ -585,8 +585,14 @@ class filter_filtercodes extends moodle_text_filter {
                         $list .= '<li><a href="' . (new moodle_url('/course/view.php', ['id' => $mycourse->id])) . '">' .
                                 $mycourse->fullname . '</a></li>';
                     }
+                    // If not enrolled in any courses.
                     if (empty($list)) {
                         $list .= '<li>' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . '</li>';
+                    }
+                    // Add request a course link.
+                    if (!empty($CFG->enablecourserequests)) {
+                        $list .= '<li><a href="' . new moodle_url('/course/request.php') . '">' .
+                                get_string('requestcourse') . '</a></li>';
                     }
                     $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist">' . $list . '</ul>';
                 }
@@ -598,8 +604,13 @@ class filter_filtercodes extends moodle_text_filter {
                         $list .= '-' . $mycourse->fullname . '|' .
                             (new moodle_url('/course/view.php', ['id' => $mycourse->id])) . PHP_EOL;
                     }
+                    // If not enrolled in any courses.
                     if (empty($list)) {
                         $list .= '-' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . PHP_EOL;
+                    }
+                    // Add request a course link.
+                    if (!empty($CFG->enablecourserequests)) {
+                        $list .= '-' . get_string('requestcourse') . '|' . new moodle_url('/course/request.php');
                     }
                     $replace['/\{mycoursesmenu\}/i'] = $list;
                 }

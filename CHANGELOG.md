@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-08-14 (dev)
+## [1.0.2] - 2019-08-20 (dev)
 ### Added
+- If Request a Course is enabled, it will now be appended in {mycourses} and {mycoursesmenu}.
 - New {highlight}{/highlight} tags.
 - New {note} tag.
 - New {ifinsection} tag.
