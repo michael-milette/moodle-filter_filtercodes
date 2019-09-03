@@ -269,6 +269,21 @@ class filter_filtercodes extends moodle_text_filter {
         $replace = []; // Array of key/value filterobjects.
         $changed = false; // Will be true if there were any changes.
 
+        // Handle escaped tags.
+
+        // Ignore double bracketed tags.
+        $doublesescapes = (strpos($text, '{{') !== false && strpos($text, '}}') !== false);
+        if ($doublesescapes) {
+            $text = str_replace('{{', chr(2), $text);
+            $text = str_replace('}}', chr(3), $text);
+        }
+        // Ignore encoded tags.
+        $escapesencoded = (strpos($text, '{%7B') !== false && strpos($text, '%7D}') !== false);
+        if ($escapesencoded) {
+            $text = str_replace('{%7B', chr(4), $text);
+            $text = str_replace('%7D}', chr(5), $text);
+        }
+
         // Substitutions.
 
         if (isloggedin()) {
@@ -1133,6 +1148,19 @@ class filter_filtercodes extends moodle_text_filter {
                 $text = $newtext;
                 $changed = true;
             }
+        }
+
+        // Handle escaped tags.
+
+        // Replace double bracketed tags with single brackets.
+        if ($doublesescapes) {
+            $text = str_replace(chr(2), '{', $text);
+            $text = str_replace(chr(3), '}', $text);
+        }
+        // Replace bracketed encoded tags with encoded tags.
+        if ($escapesencoded) {
+            $text = str_replace(chr(4), '%7B', $text);
+            $text = str_replace(chr(5), '%7D', $text);
         }
 
         return $text;

@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-08-20 (dev)
+## [1.0.2] - 2019-09-03 (dev)
 ### Added
+- You can now escape tags so they are not processed by adding an { and } around them.
 - New {thisurl} tag.
 - New {thisurl_enc} tag.
 - New {urlencode}{/urlencode} set of tags.
