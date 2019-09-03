@@ -875,7 +875,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Remove the {ifinsection} strings if not in a section of a course or are on the Front Page.
                 if (stripos($text, '{ifinsection}') !== false) {
-                    $replace['/\{ifinsection\}(.*?)\{\/ifincourse\}/ims'] = '';
+                    $replace['/\{ifinsection\}(.*?)\{\/ifinsection\}/ims'] = '';
                 }
             } else {
                 if ($this->hasarchetype('student')) { // If user is enrolled in the course.
