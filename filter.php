@@ -267,6 +267,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         $replace = []; // Array of key/value filterobjects.
+        $changed = false; // Will be true if there were any changes.
 
         // Substitutions.
 
@@ -355,6 +356,7 @@ class filter_filtercodes extends moodle_text_filter {
                     }, $text);
                 if ($newtext !== false) {
                     $text = $newtext;
+                    $changed = true;
                 }
             }
         }
@@ -390,6 +392,7 @@ class filter_filtercodes extends moodle_text_filter {
                         }, $text);
                     if ($newtext !== false) {
                         $text = $newtext;
+                        $changed = true;
                     }
                     $replace['/\{userpictureurl\s+(\w+)\}/i'] = $url;
                 }
@@ -407,6 +410,7 @@ class filter_filtercodes extends moodle_text_filter {
                         }, $text);
                     if ($newtext !== false) {
                         $text = $newtext;
+                        $changed = true;
                     }
                     $replace['/\{userpictureimg\s+(\w+)\}/i'] = $tag;
                 }
@@ -703,6 +707,19 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{pagepath\}/i'] = $url;
         }
 
+        if (stripos($text, '{thisurl') !== false) {
+            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") .
+                    "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+            // Tag: {thisurl}.
+            if (stripos($text, '{thisurl}') !== false) {
+                $replace['/\{thisurl\}/i'] = $url;
+            }
+            // Tag: {thisurl_enc}.
+            if (stripos($text, '{thisurl_enc}') !== false) {
+                $replace['/\{thisurl_enc\}/i'] = urlencode($url);
+            }
+        }
+
         // Tag: {protocol}.
         if (stripos($text, '{protocol}') !== false) {
             $replace['/\{protocol\}/i'] = 'http' . ($this->ishttps() ? 's' : '');
@@ -762,6 +779,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }, $text);
             if ($newtext !== false) {
                 $text = $newtext;
+                $changed = true;
             }
         }
 
@@ -774,6 +792,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }, $text);
             if ($newtext !== false) {
                 $text = $newtext;
+                $changed = true;
             }
         }
 
@@ -786,6 +805,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }, $text);
             if ($newtext !== false) {
                 $text = $newtext;
+                $changed = true;
             }
         }
 
@@ -1093,18 +1113,28 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Apply all of the filtercodes at once.
+        $newtext = null;
         if (count($replace) > 0) {
             $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
-        } else {
-            $newtext = null;
+        }
+        if (!is_null($newtext)) {
+            $text = $newtext;
+            $changed = true;
         }
 
-        // Return original text if an error occurred during regex processing.
-        if (is_null($newtext)) {
-            return $text;
-        } else {
-            return $newtext;
+        // Tag: {urlencode}content{/urlencode}.
+        if (stripos($text, '{urlencode}') !== false) {
+            // Replace {urlencode} tags and content with encoded content.
+            $newtext = preg_replace_callback('/\{urlencode}(.*?)\{\/urlencode\}/is',
+                function($matches) {
+                    return urlencode($matches[1]);
+                }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+                $changed = true;
+            }
         }
 
+        return $text;
     }
 }

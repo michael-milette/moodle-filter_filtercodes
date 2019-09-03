@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.2] - 2019-08-20 (dev)
 ### Added
+- New {thisurl} tag.
+- New {thisurl_enc} tag.
+- New {urlencode}{/urlencode} set of tags.
 - If Request a Course is enabled, it will now be appended in {mycourses} and {mycoursesmenu}.
 - New {highlight}{/highlight} tags.
 - New {note} tag.

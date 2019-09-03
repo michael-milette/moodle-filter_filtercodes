@@ -114,8 +114,11 @@ Moodle metadata filters
 * {sectionid} : Display the section ID (not to be confused with the section number).
 * {wwwroot} : Display the root URL of the Moodle site.
 * {pagepath} : Path of the current page without wwwroot.
-* {protocol} : http or https
+* {thisurl} : The complete URL of the current page.
+* {thisurl_enc} : The complete encoded URL of the current page.
+* {urlencode}{/urlencode} : URL encodes any content between the tages.
 * {referer} : Referring URL
+* {protocol} : http or https
 * {referrer} : Alias of {referer}
 * {ipaddress} : User's IP Address.
 * {sesskey} or %7Bsesskey%7D : Moodle session key.
@@ -451,6 +454,9 @@ Create a Page on your Moodle site and include the following code:
 * Course categories menu: {categoriesmenu}
 * WWWroot: {wwwroot}
 * Page path: {pagepath}
+* This URL: {thisurl}
+* This URL encoded: {thisurl_enc}
+* Double encode this URL (useful for whatsurl parameters): {urlencode}{thisurl_enc}{/urlencode}
 * Protocol: {protocol}
 * IP Address: {ipaddress}
 * Moodle session key: {sesskey}
