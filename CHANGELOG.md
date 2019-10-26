@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-09-03 (dev)
+## [1.0.2] - 2019-10-25 (dev)
 ### Added
 - You can now escape tags so they are not processed by adding an { and } around them.
 - New {thisurl} tag.
@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - New {referrer} tag - alias of {referer} previously implemented.
 - Missing $string['pluginname'] to language file.
 ### Updated
+- Fix for {scrape} tag to better handle missing parameters.
 - Added and fixed some unit tests.
 - Fixed langx so that it works correctly with language and culture codes.
 - {usersonline} tag no longer compatible with just MySQL/MariaDB.

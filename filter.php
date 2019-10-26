@@ -219,7 +219,7 @@ class filter_filtercodes extends moodle_text_filter {
      * @param string $code (optional) any URL encoded HTML code you want to insert after the retrieved content.
      * @return string Extracted content+optional code. If content is unavailable, returns message to contact webmaster.
      */
-    private function scrapehtml($url, $tag, $class='', $id='', $code = '') {
+    private function scrapehtml($url, $tag = '', $class = '', $id = '', $code = '') {
         // Retrieve content. If the URL fails, return a message.
         $content = @file_get_contents($url);
         if (empty($content)) {
@@ -239,13 +239,23 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Scrape out the content we want. If not found, return everything.
         $xpath = new DOMXPath($dom);
+
+        // If a tag was not specified.
+        if (empty($tag)) {
+            $tag .= '*'; // Match any tag.
+        }
         $query = "//${tag}";
+        
+        // If a class was specified.
         if (!empty($class)) {
             $query .= "[@class=\"${class}\"]";
         }
+        
+        // If an id was specified.
         if (!empty($id)) {
             $query .= "[@id=\"${id}\"]";
         }
+        
         $tag = $xpath->query($query);
         $tag = $tag->item(0);
 
@@ -367,6 +377,9 @@ class filter_filtercodes extends moodle_text_filter {
                         $class = (string) $scrape->attributes()->class;
                         $id = (string) $scrape->attributes()->id;
                         $code = (string) $scrape->attributes()->code;
+                        if (empty($url)) {
+                            return "SCRAPE error: Missing required URL parameter.";
+                        }
                         return $this->scrapehtml($url, $tag, $class, $id, $code);
                     }, $text);
                 if ($newtext !== false) {
