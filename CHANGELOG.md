@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-10-25 (dev)
+## [1.0.2] - 2019-10-26 (dev)
 ### Added
+- New {formquickquestion} tag.
 - You can now escape tags so they are not processed by adding an { and } around them.
 - New {thisurl} tag.
 - New {thisurl_enc} tag.
