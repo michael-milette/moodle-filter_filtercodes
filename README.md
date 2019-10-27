@@ -136,6 +136,7 @@ Contact Form templates
 The following tags are replaced by Contact Form templates and therefore require that you have the Contact Form for Moodle plugin installed.
 
 * {formquickquestion} : Adds a "quick question" form to your course. Form includes subject and message fields. Note: User must be logged in or the form will not display.
+* {formcontactus} : Adds a "Contact Us" form to your site (example: in a page). Form includes Name, email address, subject and message fields. Note: User must be logged in or the form will not display.
 
 Conditionally display content filters
 

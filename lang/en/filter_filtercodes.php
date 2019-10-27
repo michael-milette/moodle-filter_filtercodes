@@ -58,3 +58,35 @@ $string['formquickquestion'] = '
     <input type="submit" name="submit" id="submit" value="Send">
 </div>
 ';
+$string['formcontactus'] = '
+<form action="{wwwroot}/local/contact/index.php" method="post" class="cf contact-us">
+    <fieldset>
+        <div class="form-group">
+            <label for="name" id="namelabel" class="d-block">Your name <strong class="required">(required)</strong></label>
+            <input id="name" name="name" type="text" size="57" maxlength="45" pattern="[A-zÀ-ž]([A-zÀ-ž\s]){2,}"
+                    title="Minimum 3 letters/spaces." required="required" {readonly} value="{fullname}">
+        </div>
+        <div class="form-group">
+            <label for="email" id="emaillabel" class="d-block">Email address <strong class="required">(required)</strong></label>
+            <input id="email" name="email" type="email" size="57" maxlength="60" 
+                    required="required" {readonly} value="{email}">
+        </div>
+        <div class="form-group">
+            <label for="subject" id="subjectlabel" class="d-block">Subject <strong class="required">(required)</strong></label>
+            <input id="subject" name="subject" type="text" size="57" maxlength="80" minlength="5"
+                    title="Minimum 5 characters." required="required">
+        </div>
+        <div class="form-group">
+            <label for="message" id="messagelabel" class="d-block">Message <strong class="required">(required)</strong></label>
+            <textarea id="message" name="message" rows="5" cols="58" minlength="5"
+                    title="Minimum 5 characters." required="required"></textarea>
+        </div>
+        <div class="form-group">
+        <input type="hidden" id="sesskey" name="sesskey" value="">
+        <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
+        {recaptcha}
+    </fieldset>
+    <div>
+        <input type="submit" name="submit" id="submit" value="Send">
+    </div>
+</form>';
