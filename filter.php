@@ -298,11 +298,13 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{form') !== false) {
             $pre = '<form action="{wwwroot}/local/contact/index.php" method="post" class="cf quick-question">';
             $post = '</form>';
-            if (stripos($text, '{formquickquestion}') !== false) {
-                if (isloggedin() && !isguestuser()) {
-                    $replace['/\{formquickquestion\}/i'] = $pre . get_string('formquickquestion', 'filter_filtercodes') . $post;
-                } else {
-                    $replace['/\{formquickquestion\}/i'] = '';
+            foreach(['formquickquestion', 'formcheckin'] as $form) {
+                if (stripos($text, '{' . $form . '}') !== false) {
+                    if (isloggedin() && !isguestuser()) {
+                        $replace['/\{' . $form . '\}/i'] = $pre . get_string($form, 'filter_filtercodes') . $post;
+                    } else {
+                        $replace['/\{' . $form . '\}/i'] = '';
+                    }
                 }
             }
             foreach(['formcontactus', 'formcourserequest', 'formcourserequest', 'formsupport'] as $form) {
