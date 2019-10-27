@@ -305,7 +305,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{formquickquestion\}/i'] = '';
                 }
             }
-            foreach(['formcontactus', 'formcourserequest', 'formcourserequest'] as $form) {
+            foreach(['formcontactus', 'formcourserequest', 'formcourserequest', 'formsupport'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
                     $replace['/\{' . $form . '\}/i'] = $pre . get_string($form, 'filter_filtercodes') . $post;
                 }
