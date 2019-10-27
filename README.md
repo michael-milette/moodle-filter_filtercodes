@@ -130,6 +130,7 @@ Moodle metadata filters
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {highlight}{/highlight} : Highlight text. NOTE: Must only be used within a paragraph.
+* {profile_field_[shortname]} : Display's custom profile field. Replace "[shortname]" with the shortname of a custom profile field. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
 
 Contact Form templates
 
@@ -367,14 +368,13 @@ Correct example:
 
 This plugin includes support for the English language.
 
-If you need a different language that is not yet supported, please feel free
-to contribute using the Moodle AMOS Translation Toolkit for Moodle at
+If you need a different language that is not yet supported, please feel free to contribute using the Moodle AMOS Translation Toolkit for Moodle at
 
 https://lang.moodle.org/
 
-This plugin has not been tested for right-to-left (RTL) language support.
-If you want to use this plugin with a RTL language and it doesn't work as-is,
-feel free to prepare a pull request and submit it to the project page at:
+If the content replacing the tag contains language filtering tags, be sure to have FilterCodes above the language filter in the Moodle filter settings.
+
+This plugin has not been tested for right-to-left (RTL) language support. If you want to use this plugin with a RTL language and it doesn't work as-is, feel free to prepare a pull request and submit it to the project page at:
 
 http://github.com/michael-milette/moodle-filter_filtercodes
 
