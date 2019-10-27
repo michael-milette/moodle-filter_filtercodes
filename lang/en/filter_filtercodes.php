@@ -38,3 +38,23 @@ $string['enable_customnav_description'] = '<strong>Experimental</strong>: Enable
 Note: Is known to be compatible with Clean and Boost based themes. Does not filter tags on the Moodle Theme Settings page.';
 $string['enable_scrape'] = 'Scrape tag support';
 $string['enable_scrape_description'] = 'Enable the scrape tag.';
+
+$string['formquickquestion'] = '
+<fieldset>
+    <div class="form-group">
+        <label for="subject" id="subjectlabel" class="d-block">Subject <strong class="required">(required)</strong></label>
+        <input class="block" id="subject" name="subject" type="text" size="57" maxlength="80" minlength="5"
+                title="Minimum 5 characters." required="required">
+    </div>
+    <div class="form-group">
+        <label for="message" id="messagelabel" class="d-block">Message <strong class="required">(required)</strong></label>
+        <textarea id="message" name="message" rows="5" cols="58" minlength="5"
+                title="Minimum 5 characters." required="required"></textarea>
+    </div>
+    <input type="hidden" id="sesskey" name="sesskey" value="">
+    <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
+</fieldset>
+<div>
+    <input type="submit" name="submit" id="submit" value="Send">
+</div>
+';

@@ -131,6 +131,12 @@ Moodle metadata filters
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {highlight}{/highlight} : Highlight text. NOTE: Must only be used within a paragraph.
 
+Contact Form templates
+
+The following tags are replaced by Contact Form templates and therefore require that you have the Contact Form for Moodle plugin installed.
+
+* {formquickquestion} : Adds a "quick question" form to your course. Form includes subject and message fields. Note: User must be logged in or the form will not display.
+
 Conditionally display content filters
 
 Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetypes, not role shortnames. For example, you could have a role called `students` but, if the archetype for the role is `teacher`, the role will be identified as a `teacher`. Roles not based on archetypes will not with these tags.

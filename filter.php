@@ -245,17 +245,17 @@ class filter_filtercodes extends moodle_text_filter {
             $tag .= '*'; // Match any tag.
         }
         $query = "//${tag}";
-        
+
         // If a class was specified.
         if (!empty($class)) {
             $query .= "[@class=\"${class}\"]";
         }
-        
+
         // If an id was specified.
         if (!empty($id)) {
             $query .= "[@id=\"${id}\"]";
         }
-        
+
         $tag = $xpath->query($query);
         $tag = $tag->item(0);
 
@@ -1138,6 +1138,17 @@ class filter_filtercodes extends moodle_text_filter {
 
             }
 
+        }
+
+        // Tag: {form...}
+        if (stripos($text, '{form') !== false) {
+            if (stripos($text, '{formquickquestion}') !== false) {
+                if (isloggedin() && !isguestuser()) {
+                    $replace['/\{formquickquestion\}/i'] = get_string($form, 'filter_filtercodes');
+                } else {
+                    $replace['/\{formquickquestion\}/i'] = '';
+                }
+            }
         }
 
         // Apply all of the filtercodes at once.
