@@ -167,3 +167,15 @@ $string['formsupport'] = '
         <input type="submit" name="submit" id="submit" value="Submit request for help">
     </div>
 </form>';
+
+$string['formcheckin'] = '
+<form action="{wwwroot}/local/contact/index.php" method="post" class="cf check-in">
+    <fieldset>
+        <input type="hidden" id="subject" name="subject" value="Present!">
+        <input type="hidden" id="sesskey" name="sesskey" value="">
+        <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
+    </fieldset>
+    <div>
+        <input type="submit" name="submit" id="submit" value="I\'m here!">
+    </div>
+</form>';
