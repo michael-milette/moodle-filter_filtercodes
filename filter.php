@@ -314,6 +314,27 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {profile_field_...}
+        // Custom Profile Fields.
+        if (stripos($text, '{profile_field') !== false) {
+            if (isloggedin() && !isguestuser()) {
+                // Cached the visibity status of all the defined custom profile fields.
+                static $fields;
+                if (!isset($fields)) {
+                    $fields = $DB->get_records('user_info_field', null, '', 'shortname, visible');
+                }
+                foreach($USER->profile as $field => $value) {
+                    $shortname = strtolower($field);
+                    // If the tag exists and it is not hidden in the custom profile field's settings.
+                    if (stripos($text, '{profile_field_' . $shortname . '}') !== false && $fields[$field]->visible != '0') {
+                        $replace['/\{profile_field_' . $shortname . '\}/i'] = $value;
+                    } else {
+                        $replace['/\{profile_field_' . $shortname . '\}/i'] = '';
+                    }
+                }
+            }
+        }
+
         // Substitutions.
 
         if (isloggedin()) {
