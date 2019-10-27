@@ -90,3 +90,34 @@ $string['formcontactus'] = '
         <input type="submit" name="submit" id="submit" value="Send">
     </div>
 </form>';
+
+$string['formcourserequest'] = '
+<form action="{wwwroot}/local/contact/index.php" method="post" class="cf new-course-request">
+    <fieldset>
+        <div class="form-group">
+            <label for="name" id="namelabel" class="d-block">Your name <strong class="required">(required)</strong></label>
+            <input id="name" name="name" type="text" size="57" maxlength="45" pattern="[A-zÀ-ž]([A-zÀ-ž\s]){2,}"
+                    title="Minimum 3 letters/spaces." required="required" {readonly} value="{fullname}">
+        </div>
+        <div class="form-group">
+            <label for="email" id="emaillabel" class="d-block">Email address <strong class="required">(required)</strong></label>
+            <input id="email" name="email" type="email" size="57" maxlength="60" required="required" {readonly} value="{email}">
+        </div>
+        <div class="form-group">
+            <label for="new_course_name" id="new_course_namelabel" class="d-block">Proposed name of the new course <strong class="required">(required)</strong></label>
+            <input id="new_course_name" name="new_course_name" type="text" size="57" maxlength="80" minlength="5"
+                    title="Minimum 5 characters." required="required">
+        </div>
+        <div class="form-group">
+            <label for="description" id="descriptionlabel" class="d-block">Course description <strong class="required">(required)</strong></label>
+            <textarea id="description" name="description" rows="5" cols="58" minlength="5"
+                    title="Minimum 5 characters." required="required"></textarea>
+        </div>
+        <input type="hidden" id="sesskey" name="sesskey" value="">
+        <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
+    </fieldset>
+    <div>
+        <input type="submit" name="submit" id="submit" value="Submit request for this course">
+    </div>
+</form>
+';
