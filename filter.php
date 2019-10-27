@@ -294,6 +294,24 @@ class filter_filtercodes extends moodle_text_filter {
             $text = str_replace('%7D}', chr(5), $text);
         }
 
+        // Tag: {form...}
+        if (stripos($text, '{form') !== false) {
+            $pre = '<form action="{wwwroot}/local/contact/index.php" method="post" class="cf quick-question">';
+            $post = '</form>';
+            if (stripos($text, '{formquickquestion}') !== false) {
+                if (isloggedin() && !isguestuser()) {
+                    $replace['/\{formquickquestion\}/i'] = $pre . get_string('formquickquestion', 'filter_filtercodes') . $post;
+                } else {
+                    $replace['/\{formquickquestion\}/i'] = '';
+                }
+            }
+            foreach(['formcontactus'] as $form) {
+                if (stripos($text, '{' . $form . '}') !== false) {
+                    $replace['/\{' . $form . '\}/i'] = $pre . get_string($form, 'filter_filtercodes') . $post;
+                }
+            }
+        }
+
         // Substitutions.
 
         if (isloggedin()) {
@@ -1138,17 +1156,6 @@ class filter_filtercodes extends moodle_text_filter {
 
             }
 
-        }
-
-        // Tag: {form...}
-        if (stripos($text, '{form') !== false) {
-            if (stripos($text, '{formquickquestion}') !== false) {
-                if (isloggedin() && !isguestuser()) {
-                    $replace['/\{formquickquestion\}/i'] = get_string($form, 'filter_filtercodes');
-                } else {
-                    $replace['/\{formquickquestion\}/i'] = '';
-                }
-            }
         }
 
         // Apply all of the filtercodes at once.
