@@ -296,20 +296,27 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {form...}
         if (stripos($text, '{form') !== false) {
-            $pre = '<form action="{wwwroot}/local/contact/index.php" method="post" class="cf quick-question">';
+            $pre = '<form action="{wwwroot}/local/contact/index.php" method="post" class="cf ';
             $post = '</form>';
+            $options = ['noclean' => true, 'para' => false, 'newlines' => false];
+            // These require that you already be logged-in.
             foreach(['formquickquestion', 'formcheckin'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
                     if (isloggedin() && !isguestuser()) {
-                        $replace['/\{' . $form . '\}/i'] = $pre . get_string($form, 'filter_filtercodes') . $post;
+                        $formcode = format_text(get_string($form, 'filter_filtercodes'), FORMAT_HTML, $options);
+                        $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . get_string($form, 'filter_filtercodes') . $post;
                     } else {
                         $replace['/\{' . $form . '\}/i'] = '';
                     }
                 }
             }
-            foreach(['formcontactus', 'formcourserequest', 'formcourserequest', 'formsupport'] as $form) {
+            // These work regardless of whether you are logged-in or not.
+            foreach(['formcontactus', 'formcourserequest', 'formsupport'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
-                    $replace['/\{' . $form . '\}/i'] = $pre . get_string($form, 'filter_filtercodes') . $post;
+                    $formcode = format_text(get_string($form, 'filter_filtercodes'), FORMAT_HTML, $options);
+                    $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . $formcode . $post;
+                } else {
+                    $replace['/\{' . $form . '\}/i'] = '';
                 }
             }
         }
