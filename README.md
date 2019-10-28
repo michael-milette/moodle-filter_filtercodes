@@ -130,7 +130,7 @@ Moodle metadata filters
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {highlight}{/highlight} : Highlight text. NOTE: Must only be used within a paragraph.
-* {profile_field_[shortname]} : Display's custom profile field. Replace "[shortname]" with the shortname of a custom profile field. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
+* {profile_field_shortname] : Display's custom profile field. Replace "shortname" with the shortname of a custom profile field all in lowercase. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
 
 Contact Form templates
 

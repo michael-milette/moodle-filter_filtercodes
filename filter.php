@@ -299,6 +299,7 @@ class filter_filtercodes extends moodle_text_filter {
             $pre = '<form action="{wwwroot}/local/contact/index.php" method="post" class="cf ';
             $post = '</form>';
             $options = ['noclean' => true, 'para' => false, 'newlines' => false];
+            // These require that you already be logged-in.
             foreach(['formquickquestion', 'formcheckin'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
                     if (isloggedin() && !isguestuser()) {
@@ -309,6 +310,7 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 }
             }
+            // These work regardless of whether you are logged-in or not.
             foreach(['formcontactus', 'formcourserequest', 'formsupport'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
                     $formcode = format_text(get_string($form, 'filter_filtercodes'), FORMAT_HTML, $options);
