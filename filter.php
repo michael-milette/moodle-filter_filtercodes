@@ -294,16 +294,18 @@ class filter_filtercodes extends moodle_text_filter {
             $text = str_replace('%7D}', chr(5), $text);
         }
 
+        // START: Process tags that may end up containing other tags first.
+
         // Tag: {form...}
         if (stripos($text, '{form') !== false) {
-            $pre = '<form action="{wwwroot}/local/contact/index.php" method="post" class="cf ';
+            $pre = '<form action="{wwwcontactform}" method="post" class="cf ';
             $post = '</form>';
             $options = ['noclean' => true, 'para' => false, 'newlines' => false];
             // These require that you already be logged-in.
             foreach(['formquickquestion', 'formcheckin'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
                     if (isloggedin() && !isguestuser()) {
-                        $formcode = format_text(get_string($form, 'filter_filtercodes'), FORMAT_HTML, $options);
+                        $formcode = get_string($form, 'filter_filtercodes');
                         $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . get_string($form, 'filter_filtercodes') . $post;
                     } else {
                         $replace['/\{' . $form . '\}/i'] = '';
@@ -313,13 +315,25 @@ class filter_filtercodes extends moodle_text_filter {
             // These work regardless of whether you are logged-in or not.
             foreach(['formcontactus', 'formcourserequest', 'formsupport'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
-                    $formcode = format_text(get_string($form, 'filter_filtercodes'), FORMAT_HTML, $options);
+                    $formcode = get_string($form, 'filter_filtercodes');
                     $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . $formcode . $post;
                 } else {
                     $replace['/\{' . $form . '\}/i'] = '';
                 }
             }
         }
+        // Apply all of the filtercodes so far.
+        $newtext = null;
+        if (count($replace) > 0) {
+            $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
+        }
+        if (!is_null($newtext)) {
+            $text = $newtext;
+            $changed = true;
+        }
+        $replace = [];
+
+        // END: Process tags that may end up containing other tags first.
 
         // Tag: {profile_field_...}
         // Custom Profile Fields.
@@ -769,9 +783,16 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {wwwroot}.
-        if (stripos($text, '{wwwroot}') !== false) {
-            $replace['/\{wwwroot\}/i'] = $CFG->wwwroot;
+        if (stripos($text, '{www') !== false) {
+            // Tag: {wwwroot}.
+            if (stripos($text, '{wwwroot}') !== false) {
+                $replace['/\{wwwroot\}/i'] = $CFG->wwwroot;
+            }
+
+            // Tag: {wwwcontactform}.
+            if (stripos($text, '{wwwcontactform') !== false) {
+                $replace['/\{wwwcontactform\}/i'] = $CFG->wwwroot . '/local/contact/index.php';
+            }
         }
 
         // Tag: {pagepath}.

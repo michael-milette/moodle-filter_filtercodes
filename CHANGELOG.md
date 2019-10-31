@@ -1,9 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-10-26 (dev)
+## [1.0.2] - 2019-10-31 (dev)
 ### Added
-- New {profile_field_[shortname]} tag.
+- New {wwwcontactform} tag.
+- New {profile_field_...} tags.
 - New {formcheckin} tag.
 - New {formsupport} tag.
 - New {formcourserequest} tag.

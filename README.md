@@ -112,7 +112,8 @@ Moodle metadata filters
 * {coursecontextid} or %coursecontextid%7D : Display a course's context ID.
 * {courseidnumber} : Display a course's ID number.
 * {sectionid} : Display the section ID (not to be confused with the section number).
-* {wwwroot} : Display the root URL of the Moodle site.
+* {wwwroot} : Root URL of the Moodle site.
+* {wwwcontactform} : Action URL for Contact Form forms. (requires Contact Form plugin).
 * {pagepath} : Path of the current page without wwwroot.
 * {thisurl} : The complete URL of the current page.
 * {thisurl_enc} : The complete encoded URL of the current page.
@@ -463,6 +464,7 @@ Create a Page on your Moodle site and include the following code:
 * Course categories {{categories}}: {categories}
 * Course categories menu {{categoriesmenu}}: {categoriesmenu}
 * WWWroot {{wwwroot}}: {wwwroot}
+* WWW for Contact Form {{wwwcontactform}}: {wwwcontactform}
 * Page path {{pagepath}}: {pagepath}
 * This URL {{thisurl}}: {thisurl}
 * This URL encoded {{thisurl_enc}}: {thisurl_enc}
