@@ -228,6 +228,10 @@ class filter_filtercodes_testcase extends advanced_testcase {
                 'after'  => $CFG->wwwroot,
             ),
             array (
+                'before' => '{wwwcontactform}',
+                'after'  => $CFG->wwwroot . '/local/contact/index.php',
+            ),
+            array (
                 'before' => '{protocol}',
                 'after'  => 'http' . (is_https() ? 's' : ''),
             ),
