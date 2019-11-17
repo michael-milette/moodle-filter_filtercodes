@@ -3,7 +3,7 @@
 FilterCodes filter plugin for Moodle
 ====================================
 ![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2-blue.svg)`
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.7-orange.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.8.x-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -37,13 +37,13 @@ In addition, it also enables you to:
 Usage of the {FilterCodes} tags requires no knowledge of HTML but might be
 important for sites wishing to comply with accessibility requirements.
 
-IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
+IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 [(Back to top)](#table-of-contents)
 
 # Requirements
 
-This plugin requires Moodle 2.7+ from http://moodle.org/ . Note that some tags may require more recent versions of Moodle.
+This plugin requires Moodle 2.7+ from https://moodle.org/ . Note that some tags may require more recent versions of Moodle.
 
 [(Back to top)](#table-of-contents)
 
@@ -63,7 +63,7 @@ Install the plugin, like any other plugin, to the following folder:
 
     /filter/filtercodes
 
-See http://docs.moodle.org/en/Installing_plugins for details on installing Moodle plugins.
+See https://docs.moodle.org/en/Installing_plugins for details on installing Moodle plugins.
 
 In order for the filters to work, the plugin must be installed and activated.
 
@@ -73,7 +73,7 @@ To activate, go to Site Administration > Plugins > Filters > Manage filters" and
 
 # Usage
 
-IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
+IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 {FilterCodes} are meant to be entered as regular text in the Moodle WYSIWYG editor through they will work equally well if entered in the code view.
 
@@ -377,13 +377,13 @@ If the content replacing the tag contains language filtering tags, be sure to ha
 
 This plugin has not been tested for right-to-left (RTL) language support. If you want to use this plugin with a RTL language and it doesn't work as-is, feel free to prepare a pull request and submit it to the project page at:
 
-http://github.com/michael-milette/moodle-filter_filtercodes
+https://github.com/michael-milette/moodle-filter_filtercodes
 
 # FAQ
 
 ## Frequently Asked Questions
 
-IMPORANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues).
+IMPORANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 ### {FilterCodes} Why are tags displayed as entered instead of being converted to data?
 
@@ -416,7 +416,7 @@ This is normal as the administrator has the permission of all other roles. the {
 
 ### Is there a tag to display...?
 
-Only the tags listed in this [documentation](#usage) are currently supported. We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](http://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll find a link for this on the plugin's page. The subject line should start with "Feature Request: ". Please provide as much detail as possible on what you are trying to accomplish and, if possible, where in Moodle the information would come from. Be sure to check back on your issue as we may have further questions for you.
+Only the tags listed in this [documentation](#usage) are currently supported. We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll find a link for this on the plugin's page. The subject line should start with "Feature Request: ". Please provide as much detail as possible on what you are trying to accomplish and, if possible, where in Moodle the information would come from. Be sure to check back on your issue as we may have further questions for you.
 
 ### How can I test to see if all of the tags are working?
 
@@ -433,7 +433,7 @@ Create a Page on your Moodle site and include the following code:
 * User ID (encoded) {%7Buserid%7D}: %7Buserid%7D
 * ID Number {{idnumber}}: {idnumber}
 * User name {{username}}: {username}
-* Scrape h1 from example.com: {scrape url="http://example.com/" tag="h1"}
+* Scrape h1 from example.com: {scrape url="https://example.com/" tag="h1"}
 * User profile picture URL (small) {{userpictureurl sm}}: {userpictureurl sm}
 * User profile picture URL (medium) {{userpictureurl md}}: {userpictureurl md}
 * User profile picture URL (large) {{userpictureurl lg}}: {userpictureurl lg}
@@ -711,7 +711,7 @@ There are no known security considerations at this time.
 
 Got a burning question that is not covered here? If you can't find your answer, submit your question in the Moodle forums or open a new issue on Github at:
 
-http://github.com/michael-milette/moodle-filter_filtercodes/issues
+https://github.com/michael-milette/moodle-filter_filtercodes/issues
 
 [(Back to top)](#table-of-contents)
 
@@ -754,15 +754,15 @@ The development of this plugin was motivated through our own experience in Moodl
 For further information regarding the filter_filtercodes plugin, support or to
 report a bug, please visit the project page at:
 
-http://github.com/michael-milette/moodle-filter_filtercodes
+https://github.com/michael-milette/moodle-filter_filtercodes
 
 [(Back to top)](#table-of-contents)
 
 # License
 
-Copyright © 2017-2019 TNG Consulting Inc. - http://www.tngconsulting.ca/
+Copyright © 2017-2019 TNG Consulting Inc. - https://www.tngconsulting.ca/
 
-This file is part of FilterCodes for Moodle - http://moodle.org/
+This file is part of FilterCodes for Moodle - https://moodle.org/
 
 FilterCodes is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -775,6 +775,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with FilterCodes.  If not, see <http://www.gnu.org/licenses/>.
+along with FilterCodes.  If not, see <https://www.gnu.org/licenses/>.
 
 [(Back to top)](#table-of-contents)

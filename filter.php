@@ -296,13 +296,13 @@ class filter_filtercodes extends moodle_text_filter {
 
         // START: Process tags that may end up containing other tags first.
 
-        // Tag: {form...}
+        // Tag: {form...}.
         if (stripos($text, '{form') !== false) {
             $pre = '<form action="{wwwcontactform}" method="post" class="cf ';
             $post = '</form>';
             $options = ['noclean' => true, 'para' => false, 'newlines' => false];
             // These require that you already be logged-in.
-            foreach(['formquickquestion', 'formcheckin'] as $form) {
+            foreach (['formquickquestion', 'formcheckin'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
                     if (isloggedin() && !isguestuser()) {
                         $formcode = get_string($form, 'filter_filtercodes');
@@ -313,7 +313,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
             // These work regardless of whether you are logged-in or not.
-            foreach(['formcontactus', 'formcourserequest', 'formsupport'] as $form) {
+            foreach (['formcontactus', 'formcourserequest', 'formsupport'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
                     $formcode = get_string($form, 'filter_filtercodes');
                     $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . $formcode . $post;
@@ -335,7 +335,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // END: Process tags that may end up containing other tags first.
 
-        // Tag: {profile_field_...}
+        // Tag: {profile_field_...}.
         // Custom Profile Fields.
         if (stripos($text, '{profile_field') !== false) {
             if (isloggedin() && !isguestuser()) {
@@ -344,7 +344,7 @@ class filter_filtercodes extends moodle_text_filter {
                 if (!isset($fields)) {
                     $fields = $DB->get_records('user_info_field', null, '', 'shortname, visible');
                 }
-                foreach($USER->profile as $field => $value) {
+                foreach ($USER->profile as $field => $value) {
                     $shortname = strtolower($field);
                     // If the tag exists and it is not hidden in the custom profile field's settings.
                     if (stripos($text, '{profile_field_' . $shortname . '}') !== false && $fields[$field]->visible != '0') {
@@ -530,13 +530,13 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 $now = time();
 
-                // Calculate if we are in separate groups
+                // Calculate if we are in separate groups.
                 $isseparategroups = ($PAGE->course->groupmode == SEPARATEGROUPS
                         && $PAGE->course->groupmodeforce
                         && !has_capability('moodle/site:accessallgroups', $PAGE->context));
 
-                // Get the user current group
-                $thisgroup = $isseparategroups ? groups_get_course_group($PAGE->course) : NULL;
+                // Get the user current group.
+                $thisgroup = $isseparategroups ? groups_get_course_group($PAGE->course) : null;
 
                 $onlineusers = new fetcher($thisgroup, $now, $timetosee, $PAGE->context,
                         $PAGE->context->contextlevel, $PAGE->course->id);
@@ -926,7 +926,8 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{langx\s+(.*?)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';
         }
 
-        // Tag: {details}{summary}{/summary}{/details}.
+        // Tag: {details}{/details}.
+        // Tag: {summary}{/summary}.
         if (stripos($text, '{/details}') !== false) {
             $replace['/\{details\}/i'] = '<details>';
             $replace['/\{details open\}/i'] = '<details open>';
@@ -939,7 +940,8 @@ class filter_filtercodes extends moodle_text_filter {
 
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
-            // Tags: {ifenrolled}, {ifnotenrolled}, {ifincourse} and {ifinsection}
+            // Tags: {ifenrolled}. and {ifnotenrolled}.
+            // Tags: {ifincourse} and {ifinsection}.
             if ($PAGE->course->id == $SITE->id) { // If frontpage course.
                 // Everyone is automatically enrolled in the Front Page course.
                 // Remove the ifenrolled tags.

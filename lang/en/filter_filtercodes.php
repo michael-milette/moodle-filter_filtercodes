@@ -35,7 +35,7 @@ $string['defaultusername'] = '';
 $string['defaultemail'] = '';
 $string['enable_customnav'] = 'Custom navigation support';
 $string['enable_customnav_description'] = '<strong>Experimental</strong>: Enable support for FilterCode tags in Moodle custom navigation menu.
-Note: Is known to be compatible with Clean and Boost based themes. Does not filter tags on the Moodle Theme Settings page.';
+Note: Is known to be compatible with Clean and Boost based themes in Moodle 3.2 to 3.4 only. Does not filter tags on the Moodle Theme Settings page.';
 $string['enable_scrape'] = 'Scrape tag support';
 $string['enable_scrape_description'] = 'Enable the scrape tag.';
 
@@ -68,7 +68,7 @@ $string['formcontactus'] = '
         </div>
         <div class="form-group">
             <label for="email" id="emaillabel" class="d-block">Email address <strong class="required">(required)</strong></label>
-            <input id="email" name="email" type="email" size="57" maxlength="60" 
+            <input id="email" name="email" type="email" size="57" maxlength="60"
                     required="required" {readonly} value="{email}">
         </div>
         <div class="form-group">

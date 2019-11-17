@@ -1,8 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2019-10-31 (dev)
+## [1.1.0] - 2019-11-17
 ### Added
+- You can now escape tags so they are not processed by adding an { and } around them.
+- If Request a Course is enabled, it will now be appended in {mycourses} and {mycoursesmenu}.
 - New {wwwcontactform} tag.
 - New {profile_field_...} tags.
 - New {formcheckin} tag.
@@ -10,11 +12,9 @@ All notable changes to this project will be documented in this file.
 - New {formcourserequest} tag.
 - New {formcontactus} tag.
 - New {formquickquestion} tag.
-- You can now escape tags so they are not processed by adding an { and } around them.
 - New {thisurl} tag.
 - New {thisurl_enc} tag.
 - New {urlencode}{/urlencode} set of tags.
-- If Request a Course is enabled, it will now be appended in {mycourses} and {mycoursesmenu}.
 - New {highlight}{/highlight} tags.
 - New {note} tag.
 - New {ifinsection} tag.
@@ -24,11 +24,14 @@ All notable changes to this project will be documented in this file.
 - New {coursecontextid} and %coursecontextid%7D tags.
 - New {referrer} tag - alias of {referer} previously implemented.
 - Missing $string['pluginname'] to language file.
+- Added some unit tests.
 ### Updated
+- Fixed some unit tests.
 - Fix for {scrape} tag to better handle missing parameters.
-- Added and fixed some unit tests.
-- Fixed langx so that it works correctly with language and culture codes.
-- {usersonline} tag no longer compatible with just MySQL/MariaDB.
+- Fixed {langx} tag so that it works correctly with language and culture codes.
+- {usersonline} tag now compatible with more than just MySQL/MariaDB.
+- Most tags are compatible with Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4, 3.5, 3.6 and now 3.7
+- Documentation to reflect new functionality.
 
 ## [1.0.1] - 2019-05-20
 ### Added
