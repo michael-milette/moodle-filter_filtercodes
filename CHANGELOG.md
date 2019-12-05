@@ -30,7 +30,7 @@ All notable changes to this project will be documented in this file.
 - Fix for {scrape} tag to better handle missing parameters.
 - Fixed {langx} tag so that it works correctly with language and culture codes.
 - {usersonline} tag now compatible with more than just MySQL/MariaDB.
-- Most tags are compatible with Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4, 3.5, 3.6 and now 3.7
+- Most tags are compatible with Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4, 3.5, 3.6, 3.7 and now 3.8.
 - Documentation to reflect new functionality.
 
 ## [1.0.1] - 2019-05-20
