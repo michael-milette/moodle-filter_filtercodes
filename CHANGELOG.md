@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] Dev - 2019-12-05
+### Added
+- New {ifdev} tag.
+- FAQ info on how to translate built-in contact forms.
+
 ## [1.1.0] - 2019-11-17
 ### Added
 - You can now escape tags so they are not processed by adding an { and } around them.

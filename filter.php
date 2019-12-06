@@ -1134,7 +1134,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{ifdashboard\}/i'] = '';
                     $replace['/\{\/ifdashboard\}/i'] = '';
                 } else {
-                    // If not not on the front page, remove the ifdashboard text.
+                    // If not on the dashboard page, remove the ifdashboard text.
                     $replace['/\{ifdashboard}(.*?)\{\/ifdashboard\}/ims'] = '';
                 }
             }
@@ -1146,8 +1146,21 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{ifhome\}/i'] = '';
                     $replace['/\{\/ifhome\}/i'] = '';
                 } else {
-                    // If not not on the front page, remove the ifhome text.
+                    // If not on the front page, remove the ifhome text.
                     $replace['/\{ifhome}(.*?)\{\/ifhome\}/ims'] = '';
+                }
+            }
+
+            // Tag: {ifdev}.
+            if (stripos($text, '{ifdev}') !== false) {
+                // If an administrator with debugging is set to DEVELOPER mode...
+                if ($CFG->debugdisplay == 1 && is_siteadmin() && !is_role_switched($PAGE->course->id)) { 
+                    // Just remove the tags.
+                    $replace['/\{ifdev\}/i'] = '';
+                    $replace['/\{\/ifdev\}/i'] = '';
+                } else {
+                    // If not a developer with debugging set to DEVELOPER mode, remove the ifdev tags and contained content.
+                    $replace['/\{ifdev}(.*?)\{\/ifdev\}/ims'] = '';
                 }
             }
 
