@@ -704,6 +704,7 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Add request a course link.
                     if (!empty($CFG->enablecourserequests)) {
+                        $list .= '-###' . PHP_EOL;
                         $list .= '-' . get_string('requestcourse') . '|' . new moodle_url('/course/request.php');
                     }
                     $replace['/\{mycoursesmenu\}/i'] = $list;
@@ -1154,7 +1155,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {ifdev}.
             if (stripos($text, '{ifdev}') !== false) {
                 // If an administrator with debugging is set to DEVELOPER mode...
-                if ($CFG->debugdisplay == 1 && is_siteadmin() && !is_role_switched($PAGE->course->id)) { 
+                if ($CFG->debugdisplay == 1 && is_siteadmin() && !is_role_switched($PAGE->course->id)) {
                     // Just remove the tags.
                     $replace['/\{ifdev\}/i'] = '';
                     $replace['/\{\/ifdev\}/i'] = '';

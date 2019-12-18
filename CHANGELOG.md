@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New {ifdev} tag.
 - FAQ info on how to translate built-in contact forms.
+- Separator in menu above Request a Course link (part of {mycoursesmenu} tag).
 
 ## [1.1.0] - 2019-11-17
 ### Added
