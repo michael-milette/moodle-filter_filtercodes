@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.1] Dev - 2019-12-18
 ### Added
+- New {lang} tag.
 - New {ifdev} tag.
 - New {ifcourserequests}{/ifcourserequests} tag.
 - Separator in menu above Request a Course link (part of {mycoursesmenu} tag).

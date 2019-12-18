@@ -922,6 +922,12 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{nbsp\}/i'] = '&nbsp;';
         }
 
+        // Tag: {lang}.
+        if (stripos($text, '{lang}') !== false) {
+            // Replace with 2-letter current primary language.
+            $replace['/\{lang\}/i'] = substr(current_language(), 0, 2);
+        }
+
         // Tag: {langx xx}.
         if (stripos($text, '{langx ') !== false) {
             $replace['/\{langx\s+(.*?)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';

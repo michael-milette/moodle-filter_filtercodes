@@ -123,6 +123,7 @@ Moodle metadata filters
 * {referrer} : Alias of {referer}
 * {ipaddress} : User's IP Address.
 * {sesskey} or %7Bsesskey%7D : Moodle session key.
+* {lang} : 2-letter language code of current Moodle language.
 * {recaptcha} : Display the ReCAPTCHA field - for use with Contact Form for Moodle. Note: Will be blank if user is logged-in using a non-guest account.
 * {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
 * {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
@@ -489,6 +490,7 @@ Create a Page on your Moodle site and include the following code:
 * Details/summary {{details}}{{summary}}This is the summary{{/summary}} followed by the details.{{/details}}: {details}{summary}This is the summary{/summary} followed by the details.{/details}
 * You should not see the following note {{note}}This could be a comment, todo or reminder.{{/note}}: {note}This could be a comment, todo or reminder.{/note}
 * {{highlight}}This text is highlighted in yellow.{{/highlight}} : {highlight}This text is highlighted in yellow.{/highlight}
+* Current language {{lang}} : {lang}
 * If Enrolled {{ifenrolled}}You are enrolled in this course.{{/ifenrolled}}: {ifenrolled}You are enrolled in this course.{/ifenrolled}
 * If Not Enrolled {{ifnotenrolled}}You are not enrolled in this course.{{/ifnotenrolled}}: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
 * If LoggedIn {{ifloggedin}}You are logged-in.{{/ifloggedin}}: {ifloggedin}You are logged-in.{/ifloggedin}
