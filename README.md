@@ -168,6 +168,7 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifincourse}{/ifincourse} : Will display the enclosed content only if the user is in a course other than the Front page.
 * {ifinsection}{/ifinsection} : Will display the enclosed content only if the user is in a section of a course which is not the Front Page.
 * {ifnotinsection}{/ifnotinsection} : Will display the enclosed content only if the user is not in a section of a course.
+* {ifcourserequests}{/ifcourserequests} : Will display enclosed contents only if the Request a Course feature is enabled.
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
@@ -508,6 +509,7 @@ Create a Page on your Moodle site and include the following code:
 * If on Dashboard {{ifdashboard}}You are on the Home Front page.{{/ifdashboard}}: {ifdashboard}You are on the Home Front page.{/ifdashboard}
 * If in a course {{ifincourse}}Yes{{/ifincourse}}? {ifincourse}Yes{/ifincourse}
 * If in a section of a course {{ifinsection}}Yes{{/ifinsection}}{{ifnotinsection}}No{{/ifnotinsection}}? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
+* If Request a course is enabled {{ifcourserequests}}Yes{{/ifcourserequests}}? {ifcourserequests}Yes{/ifcourserequests}
 
 You can switch to different roles to see how each will affect the content being displayed.
 

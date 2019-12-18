@@ -941,6 +941,19 @@ class filter_filtercodes extends moodle_text_filter {
 
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
+            // Tag: {ifcourserequests}.
+            if (stripos($text, '{ifcourserequests}') !== false) {
+                // If Request a course is enabled...
+                if (empty($CFG->enablecourserequests)) {
+                    // Just remove the tags.
+                    $replace['/\{ifcourserequests\}/i'] = '';
+                    $replace['/\{\/ifcourserequests\}/i'] = '';
+                } else {
+                    // If Request a Course is not enabled, remove the ifcourserequests tags and contained content.
+                    $replace['/\{ifcourserequests}(.*?)\{\/ifcourserequests\}/ims'] = '';
+                }
+            }
+
             // Tags: {ifenrolled}. and {ifnotenrolled}.
             // Tags: {ifincourse} and {ifinsection}.
             if ($PAGE->course->id == $SITE->id) { // If frontpage course.

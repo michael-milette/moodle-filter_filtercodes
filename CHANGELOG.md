@@ -1,11 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.1] Dev - 2019-12-05
+## [1.1.1] Dev - 2019-12-18
 ### Added
 - New {ifdev} tag.
-- FAQ info on how to translate built-in contact forms.
+- New {ifcourserequests}{/ifcourserequests} tag.
 - Separator in menu above Request a Course link (part of {mycoursesmenu} tag).
+### Updated
+- Documentation:FAQ info on how to translate built-in contact forms.
+- Documentation to reflect new functionality.
 
 ## [1.1.0] - 2019-11-17
 ### Added
