@@ -1,13 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.1] Dev - 2019-12-18
+## [1.1.2] Dev - 2019-12-18
 ### Added
 - New {lang} tag.
 - New {ifdev} tag.
 - New {ifcourserequests}{/ifcourserequests} tag.
 - Separator in menu above Request a Course link (part of {mycoursesmenu} tag).
 ### Updated
+- Now checks moodle/course:request capability before creating Course Request link in {ifcourserequests}, {mycourses} and {mycoursemenu}
 - Documentation:FAQ info on how to translate built-in contact forms.
 - Documentation to reflect new functionality.
 

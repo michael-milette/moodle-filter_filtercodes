@@ -684,7 +684,8 @@ class filter_filtercodes extends moodle_text_filter {
                         $list .= '<li>' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . '</li>';
                     }
                     // Add request a course link.
-                    if (!empty($CFG->enablecourserequests)) {
+                    $context = context_system::instance();
+                    if (!empty($CFG->enablecourserequests) && has_capability('moodle/course:request', $context)) {
                         $list .= '<li><a href="' . new moodle_url('/course/request.php') . '">' .
                                 get_string('requestcourse') . '</a></li>';
                     }
@@ -703,7 +704,8 @@ class filter_filtercodes extends moodle_text_filter {
                         $list .= '-' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . PHP_EOL;
                     }
                     // Add request a course link.
-                    if (!empty($CFG->enablecourserequests)) {
+                    $context = context_system::instance();
+                    if (!empty($CFG->enablecourserequests) && has_capability('moodle/course:request', $context)) {
                         $list .= '-###' . PHP_EOL;
                         $list .= '-' . get_string('requestcourse') . '|' . new moodle_url('/course/request.php');
                     }
@@ -950,7 +952,8 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {ifcourserequests}.
             if (stripos($text, '{ifcourserequests}') !== false) {
                 // If Request a course is enabled...
-                if (empty($CFG->enablecourserequests)) {
+                $context = context_system::instance();
+                if (empty($CFG->enablecourserequests) || !has_capability('moodle/course:request', $context)) {
                     // Just remove the tags.
                     $replace['/\{ifcourserequests\}/i'] = '';
                     $replace['/\{\/ifcourserequests\}/i'] = '';
