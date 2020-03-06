@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.3] Dev - 2020-03-06
 ### Added
+- Coming soon: {ifeditmode}{/ifeditmode} tag.
+- New {coursecategoryid} tag.
 - New {lang} tag.
 - New {ifdev} tag.
 - New {ifcourserequests}{/ifcourserequests} tag.
@@ -12,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Documentation:FAQ info on how to translate built-in contact forms.
 - Documentation to reflect new functionality.
 - Tested to be compatible with PHP 7.3.
+- Fixed example of Create Course menu item. Now creates a course in the current category.
 
 ## [1.1.0] - 2019-11-17
 ### Added

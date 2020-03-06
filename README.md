@@ -102,6 +102,7 @@ Moodle metadata filters
 * {courseenddate} : Course end date. Will display "Open event" if there is no end date.
 * {coursecompletiondate} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled.
 * {coursecount} : Total number of courses on this Moodle site (not including Front Page).
+* {coursecategoryid} : If in a course, the ID of the course's parent category, the category ID of a course cateogry page, otherwise 0.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 * {categories} : Display an unordered list of links to all course categores.
@@ -242,6 +243,7 @@ This menu can be handy for Moodle administrators and managers.
     --Enrolled users|/enrol/users.php?id={courseid}
     --Manage badges|/badges/index.php?type={courseid}
     --Reset course|/course/reset.php?id={courseid}
+    -Add new course|/course/edit.php?category={coursecategoryid}&returnto=topcat
     -Course management|/course/management.php
     -Restore Course|/backup/restorefile.php?contextid={coursecontextid}
     -System reports|/admin/category.php?category=reports
@@ -459,6 +461,7 @@ Create a Page on your Moodle site and include the following code:
 * Course Context ID {{coursecontextid}}: {coursecontextid}
 * Course Context ID (encoded) {%coursecontextid%7D}: %coursecontextid%7D
 * Course ID number {{courseidnumber}}: {courseidnumber}
+* Course Category ID {{coursecategoryid}}: {coursecategoryid}
 * Section ID {{sectionid}}: {sectionid}
 * Section ID (encoded) {%7Bsectionid%7D}: %7Bsectionid%7D
 * My Enrolled Courses {{mycourses}}: {mycourses}

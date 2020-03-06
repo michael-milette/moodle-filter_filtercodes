@@ -735,6 +735,15 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{editingtoggle\}/i'] = ($PAGE->user_is_editing() ? 'off' : 'on');
         }
 
+        // Tag: {coursecategoryid}.
+        if (stripos($text, '{coursecategoryid}') !== false) {
+            if (empty($PAGE->course->category)) {
+                $replace['/\{coursecategoryid\}/i'] = optional_param('categoryid', 0, PARAM_INT);
+            } else {
+                $replace['/\{coursecategoryid\}/i'] = $PAGE->course->category;
+            }
+        }
+
         // Tag: {categories} and {categoriesmenu}.
         if (stripos($text, '{categories') !== false) {
 
