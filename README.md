@@ -2,7 +2,7 @@
 
 FilterCodes filter plugin for Moodle
 ====================================
-![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2-blue.svg)`
+![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3-blue.svg)`
 ![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.8.x-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
@@ -242,7 +242,6 @@ This menu can be handy for Moodle administrators and managers.
     --Enrolled users|/enrol/users.php?id={courseid}
     --Manage badges|/badges/index.php?type={courseid}
     --Reset course|/course/reset.php?id={courseid}
-    -Add new course|/course/edit.php?category=1&returnto=topcat
     -Course management|/course/management.php
     -Restore Course|/backup/restorefile.php?contextid={coursecontextid}
     -System reports|/admin/category.php?category=reports
@@ -554,7 +553,7 @@ Add the following code to core_renderer code section of your theme. Be sure to r
         /**
          * Applies Moodle filters to custom menu and custom user menu.
          *
-         * Copyright: 2017-2019 TNG Consulting Inc.
+         * Copyright: 2017-2020 TNG Consulting Inc.
          * License:   GNU GPL v3+.
          *
          * @param string $custommenuitems Current custom menu object.
@@ -770,7 +769,7 @@ https://github.com/michael-milette/moodle-filter_filtercodes
 
 # License
 
-Copyright © 2017-2019 TNG Consulting Inc. - https://www.tngconsulting.ca/
+Copyright © 2017-2020 TNG Consulting Inc. - https://www.tngconsulting.ca/
 
 This file is part of FilterCodes for Moodle - https://moodle.org/
 

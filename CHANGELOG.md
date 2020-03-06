@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.2] Dev - 2019-12-18
+## [1.1.3] Dev - 2020-03-06
 ### Added
 - New {lang} tag.
 - New {ifdev} tag.
@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Now checks moodle/course:request capability before creating Course Request link in {ifcourserequests}, {mycourses} and {mycoursemenu}
 - Documentation:FAQ info on how to translate built-in contact forms.
 - Documentation to reflect new functionality.
+- Tested to be compatible with PHP 7.3.
 
 ## [1.1.0] - 2019-11-17
 ### Added
