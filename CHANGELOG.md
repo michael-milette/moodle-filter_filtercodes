@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.3] Dev - 2020-03-08
 ### Added
+- New {categorynumber} tag.
 - New {categoryname} tag.
 - New {categoryid} tag.
 - New {lang} tag.

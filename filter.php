@@ -751,15 +751,29 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{categoryid\}/i'] = $catid;
             }
 
+            if (!empty($catid)) {
+                $category = $DB->get_record('course_categories',array('id'=>$catid));
+            }
+
             // Tag: {categoryname}.
             if (stripos($text, '{categoryname}') !== false) {
                 if (!empty($catid)) {
                     // If category is not 0, get category name.
-                    $category = $DB->get_record('course_categories',array('id'=>$catid));
                     $replace['/\{categoryname\}/i'] = $category->name;
                 } else {
                     // Otherwise, category has no name.
                     $replace['/\{categoryname\}/i'] = '';
+                }
+            }
+
+            // Tag: {categorynumber}.
+            if (stripos($text, '{categorynumber}') !== false) {
+                if (!empty($catid)) {
+                    // If category is not 0, get category number.
+                    $replace['/\{categorynumber\}/i'] = $category->idnumber;
+                } else {
+                    // Otherwise, category has no number.
+                    $replace['/\{categorynumber\}/i'] = '';
                 }
             }
 
