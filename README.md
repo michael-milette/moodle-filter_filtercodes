@@ -150,6 +150,7 @@ Conditionally display content filters
 
 Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetypes, not role shortnames. For example, you could have a role called `students` but, if the archetype for the role is `teacher`, the role will be identified as a `teacher`. Roles not based on archetypes will not with these tags.
 
+* {ifeditmode}{/ifeditmode} : Will display the enclosed content only if editing mode is turned on.
 * {ifenrolled}{/ifenrolled} : Will display the enclosed content only if the user **is** enrolled in the current course.
 * {ifnotenrolled}{/ifnotenrolled} : Will display the enclosed content only if the user is **not** enrolled in the current course.
 * {ifloggedin}{/ifloggedin} : Will display the enclosed content only if the user is logged in as non-guest.
@@ -495,6 +496,7 @@ Create a Page on your Moodle site and include the following code:
 * You should not see the following note {{note}}This could be a comment, todo or reminder.{{/note}}: {note}This could be a comment, todo or reminder.{/note}
 * {{highlight}}This text is highlighted in yellow.{{/highlight}} : {highlight}This text is highlighted in yellow.{/highlight}
 * Current language {{lang}} : {lang}
+* If Editing mode activated {{ifeditmode}}Don't forget to turn off editing mode!{{/ifeditmode}}: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
 * If Enrolled {{ifenrolled}}You are enrolled in this course.{{/ifenrolled}}: {ifenrolled}You are enrolled in this course.{/ifenrolled}
 * If Not Enrolled {{ifnotenrolled}}You are not enrolled in this course.{{/ifnotenrolled}}: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
 * If LoggedIn {{ifloggedin}}You are logged-in.{{/ifloggedin}}: {ifloggedin}You are logged-in.{/ifloggedin}

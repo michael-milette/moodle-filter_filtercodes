@@ -3,12 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.3] Dev - 2020-03-08
 ### Added
-- Coming soon: {ifeditmode}{/ifeditmode} tag.
 - New {categoryname} tag.
 - New {categoryid} tag.
 - New {lang} tag.
-- New {ifdev} tag.
-- New {ifcourserequests}{/ifcourserequests} tag.
+- New {ifeditmode}{/ifeditmode} set of tags.
+- New {ifdev}{/ifdev} set of tags.
+- New {ifcourserequests}{/ifcourserequests} set of tags.
 - Separator in menu above Request a Course link (part of {mycoursesmenu} tag).
 ### Updated
 - Now checks moodle/course:request capability before creating Course Request link in {ifcourserequests}, {mycourses} and {mycoursemenu}

@@ -979,6 +979,20 @@ class filter_filtercodes extends moodle_text_filter {
 
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
+            // Tag: {ifeditmode}.
+            if (stripos($text, '{editingtoggle}') !== false) {
+                // If editing mode is activated...
+                if ($PAGE->user_is_editing()) {
+                    // Just remove the tags.
+                    $replace['/\{ifeditmode\}/i'] = '';
+                    $replace['/\{\/ifeditmode\}/i'] = '';
+                } else {
+                    // If editing mode is not enabled, remove the ifeditmode tags and contained content.
+                    $replace['/\{ifeditmode}(.*?)\{\/ifeditmode\}/ims'] = '';
+                }
+            }
+
+
             // Tag: {ifcourserequests}.
             if (stripos($text, '{ifcourserequests}') !== false) {
                 // If Request a course is enabled...
