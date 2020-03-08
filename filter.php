@@ -735,16 +735,37 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{editingtoggle\}/i'] = ($PAGE->user_is_editing() ? 'off' : 'on');
         }
 
-        // Tag: {coursecategoryid}.
-        if (stripos($text, '{coursecategoryid}') !== false) {
+        // Tags: {category...}.
+        if (stripos($text, '{category') !== false) {
+
             if (empty($PAGE->course->category)) {
-                $replace['/\{coursecategoryid\}/i'] = optional_param('categoryid', 0, PARAM_INT);
+                // If we are not in a course, check if categoryid is part of URL (ex: course lists)
+                $catid = optional_param('categoryid', 0, PARAM_INT);
             } else {
-                $replace['/\{coursecategoryid\}/i'] = $PAGE->course->category;
+                // Retrieve the category id of the course we are in.
+                $catid = $PAGE->course->category;
             }
+
+            // Tag: {categoryid}.
+            if (stripos($text, '{categoryid}') !== false) {
+                $replace['/\{categoryid\}/i'] = $catid;
+            }
+
+            // Tag: {categoryname}.
+            if (stripos($text, '{categoryname}') !== false) {
+                if (!empty($catid)) {
+                    // If category is not 0, get category name.
+                    $category = $DB->get_record('course_categories',array('id'=>$catid));
+                    $replace['/\{categoryname\}/i'] = $category->name;
+                } else {
+                    // Otherwise, category has no name.
+                    $replace['/\{categoryname\}/i'] = '';
+                }
+            }
+
         }
 
-        // Tag: {categories} and {categoriesmenu}.
+        // Tags: {categories...}.
         if (stripos($text, '{categories') !== false) {
 
             // Retrieve list of top categories.
