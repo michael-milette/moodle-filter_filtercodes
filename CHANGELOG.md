@@ -12,10 +12,12 @@ All notable changes to this project will be documented in this file.
 - New {ifdev}{/ifdev} set of tags.
 - New {ifcourserequests}{/ifcourserequests} set of tags.
 - Separator in menu above Request a Course link (part of {mycoursesmenu} tag).
+- New question to FAQ regarding setting filter priorities so that all enabled filters works together.
 ### Updated
 - Now checks moodle/course:request capability before creating Course Request link in {ifcourserequests}, {mycourses} and {mycoursemenu}
 - Documentation:FAQ info on how to translate built-in contact forms.
 - Documentation to reflect new functionality.
+- Updated FAQ.
 - Tested to be compatible with PHP 7.3.
 - Fixed example of Create Course menu item. Now creates a course in the current category.
 

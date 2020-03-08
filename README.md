@@ -402,9 +402,17 @@ Here are a few things you can check:
 * If the tags required a closing tag, make sure that it includes a forward slash. Example: {/ifenrolled}.
 * Try a different tag like {protocol}. If it still doesn't get replaced with http or https either, chances are that this part of Moodle doesn't support filters yet. Please report the part of Moodle that doesn't support filters in the Moodle Tracker. If the problem is with a 3rd party plugin, please report the issue to the developer of that plugin using the Bug Tracker link on the plugin's page on moodle.org/plugins.
 
-### Can I nest tags? For example, {ifloggedin}{ifenrolled}Message to appear if enrolled and loggedin.{/ifenrolled}{/ifloggedin}
+### Can I combine/nest conditional tags?
 
-Yes. In this case, both conditions must be met for the message to appear.
+Yes. You can only combine (AND) them. The two or more tags must be true in order for the content to be displayed. For example:
+
+{ifloggedin}{ifenrolled}You are logged-in and enrolled in this course.{/ifenrolled}{/ifloggedin}
+
+This plugin does not support {IF this OR that} type conditions at this time. Depending on your requirement, the {ifmin...} tags might help you achieve this. These tags enable you to display content to users with a minimum role level. This could be useful if you wanted to only display a message to faculty such as (teacher or above).
+
+### I am using FilterCodes on a multi-language site. Some of my non-FilterCode tags are not being processed. How can I fix this?
+
+This is actually a pretty common question. Simply move FilterCodes to the top of the list in your Moodle Filter Management. The only exception to this would be if one of your other filters were generating content that included FilterCode tags. In that case, place that plugin above FilterCodes.
 
 ### How can I use this to pre-populate one or more fields in a Contact Form for Moodle?
 
@@ -556,48 +564,6 @@ Technically for sure, but only if the theme supports it. If it doesn't, contact 
 
 ### I am a Moodle theme developer. How do I add support for Moodle filters, including this FilterCodes plugin, to my theme?
 
-#### For themes based on **bootstrapbase**
-
-Add the following code to core_renderer code section of your theme. Be sure to replace "themename" with the name of the theme's directory. Note: Your theme may even already have such a class (they often do):
-
-    class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
-        /**
-         * Applies Moodle filters to custom menu and custom user menu.
-         *
-         * Copyright: 2017-2020 TNG Consulting Inc.
-         * License:   GNU GPL v3+.
-         *
-         * @param string $custommenuitems Current custom menu object.
-         * @return Rendered custom_menu that has been filtered.
-         */
-        public function custom_menu($custommenuitems = '') {
-            global $CFG, $PAGE;
-
-            // Don't apply auto-linking filters.
-            $filtermanager = filter_manager::instance();
-            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
-            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
-
-            // Filter custom user menu.
-            // Don't filter custom user menu on the theme settings page. Otherwise it ends up
-            // filtering the edit field itself resulting in a loss of tags.
-            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
-                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
-                        $filteroptions, $skipfilters);
-            }
-
-            // Filter custom menu.
-            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
-                $custommenuitems = $CFG->custommenuitems;
-            }
-            if (stripos($custommenuitems, '{') !== false) {
-                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
-            }
-            $custommenu = new custom_menu($custommenuitems, current_language());
-            return $this->render_custom_menu($custommenu);
-        }
-    }
-
 #### For themes based on **boost**
 
 Add the following code to core_renderer code section of your theme. Note: Your theme may even already have such a class (they often do):
@@ -679,17 +645,59 @@ Add the following code to core_renderer code section of your theme. Note: Your t
         }
     }
 
+#### For themes based on the older **bootstrapbase**
+
+Add the following code to core_renderer code section of your theme. Be sure to replace "themename" with the name of the theme's directory. Note: Your theme may even already have such a class (they often do):
+
+    class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
+        /**
+         * Applies Moodle filters to custom menu and custom user menu.
+         *
+         * Copyright: 2017-2020 TNG Consulting Inc.
+         * License:   GNU GPL v3+.
+         *
+         * @param string $custommenuitems Current custom menu object.
+         * @return Rendered custom_menu that has been filtered.
+         */
+        public function custom_menu($custommenuitems = '') {
+            global $CFG, $PAGE;
+
+            // Don't apply auto-linking filters.
+            $filtermanager = filter_manager::instance();
+            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
+            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
+
+            // Filter custom user menu.
+            // Don't filter custom user menu on the theme settings page. Otherwise it ends up
+            // filtering the edit field itself resulting in a loss of tags.
+            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
+                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
+                        $filteroptions, $skipfilters);
+            }
+
+            // Filter custom menu.
+            if (empty($custommenuitems) && !emty($CFG->custommenuitems)) {
+                $custommenuitems = $CFG->custommenuitems;
+            }
+            if (stripos($custommenuitems, '{') !== false) {
+                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
+            }
+            $custommenu = new custom_menu($custommenuitems, current_language());
+            return $this->render_custom_menu($custommenu);
+        }
+    }
+
+### My theme does not support filters in the menu and the developer does not want to fix the theme. What can I do?
+
+You can patch Moodle handle this properly in the first place. Applying the following patch to Moodle will fix the issue in most themes including the default Boost theme.
+
+* Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-61750-M37
+* Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-61750-M38
+* Moodle master (3.9 and beyond): https://github.com/michael-milette/moodle/tree/MDL-61750-master
+
 ### Why is the IP Address listed as 0:0:0:0:0:0:0:1?
 
 0:0:0:0:0:0:0:1 is the same as localhost and it means that your web browser is probably on the same computer as your web server. This shouldn't happen with users accessing your Moodle site from their own desktop or mobile device.
-
-### Can I combine conditional tags?
-
-Yes. However you can only combine (AND) them so that two or more tags must be true in order for the content to be displayed. For example:
-
-{ifloggedin}{ifenrolled}You are logged-in and enrolled in this course.{/ifenrolled}{/ifloggedin}
-
-This plugin does not support {IF this OR that} type conditions at this time. Depending on your requirement, the {ifmin...} tags might help you achieve this. These tags enable you to display content to users with a minimum role level. This could be useful if you wanted to only display a message to faculty such as (teacher or above).
 
 ### Why does it show me as enrolled on the front page?
 
@@ -715,13 +723,13 @@ Use multiple {scrape} tags.
 
 That is not possible at this time. This is a very simple scraper. With some funding or contributions, this feature can be enhanced.
 
-### How can I get the {getstring} tag to work? It doesn't seem to be getting replaced with the correct text.
+### How can I get the {getstring} tag to work? It doesn't seem to be replaced with the correct text.
 
 Verify that the component (plugin) name and/or the string key are correct. If a component name is not specified, it will default to "moodle". If you recently modified a language file manually in Moodle, you may need to refresh the Moodle cache.
 
 ### How can I customize or translate the forms generated by the {form...} tags?
 
-You can translate or customize the forms Moodle's language editor. Note that using these tags are optional. You can also simply insert the HTML for the form in the Atto editor. These {form...} tags are just provided to quickly create generic forms on your Moodle site.
+You can translate or customize the forms in Moodle's language editor. Note that using these tags are optional. You can also simply insert the HTML for the form in the Atto editor. These {form...} tags are just provided to quickly create generic forms on your Moodle site.
 
 ### Are there any security considerations?
 
