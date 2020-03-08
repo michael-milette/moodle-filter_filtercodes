@@ -777,6 +777,17 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {categorydescription}.
+            if (stripos($text, '{categorydescription}') !== false) {
+                if (!empty($catid)) {
+                    // If category is not 0, get category description.
+                    $replace['/\{categorydescription\}/i'] = $category->description;
+                } else {
+                    // Otherwise, category has no description.
+                    $replace['/\{categorydescription\}/i'] = '';
+                }
+            }
+
         }
 
         // Tags: {categories...}.

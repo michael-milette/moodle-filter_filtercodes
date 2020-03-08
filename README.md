@@ -105,8 +105,9 @@ Moodle metadata filters
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 * {categoryid} : If in a course, the ID of the course's parent category, the category ID of a course category page, otherwise 0.
-* {categoryname} : If in a course, the name of the course's parent category, the category name of a course, otherwise blank.
-* {categorynumber} : If in a course, the number of the course's parent category, the category number of a course, otherwise blank.
+* {categoryname} : If in a course, the name of the course's parent category, otherwise blank.
+* {categorynumber} : If in a course, the number of the course's parent category, otherwise blank.
+* {categorydescription} : If in a course, the number of the description of a course's parent category, otherwise blank.
 * {categories} : Display an unordered list of links to all course categores.
 * {categoriesmenu} : A second level list of categories with links for use in custom menus (filtering must be supported by the theme).
 * {institution} : Display the name of the institution from the user's profile.
@@ -471,6 +472,7 @@ Create a Page on your Moodle site and include the following code:
 * Course category ID (0 if not in a course or category list of course) {{categoryid}}: {categoryid}
 * Course category name (blank if not in a course) {{categoryname}}: {categoryname}
 * Course category number (blank if not in a course) {{categorynumber}}: {categorynumber}
+* Course category description (blank if not in a course) {{categorydescription}}: {categorydescription}
 * Course categories {{categories}}: {categories}
 * Course categories menu {{categoriesmenu}}: {categoriesmenu}
 * WWWroot {{wwwroot}}: {wwwroot}
