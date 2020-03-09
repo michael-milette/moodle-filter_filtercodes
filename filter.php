@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+
 defined('MOODLE_INTERNAL') || die();
 
 use block_online_users\fetcher;
@@ -550,6 +551,38 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Any {course*} or %7Bcourse*%7D tags.
         if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
+
+            if ($CFG->branch >= 37) { // Custom Course Fields were first implemented in Moodle 3.7.
+                // Tag: {course_field_shortname}.
+                // Custom Course Fields.
+                if (stripos($text, '{course_field_') !== false) {
+                    // Cached the custom course field data.
+                    static $fields;
+                    if (!isset($fields)) {
+                        $handler = core_course\customfield\course_handler::create();
+                        $fields = $handler->export_instance_data_object($PAGE->course->id, true);
+                        $fieldsvisible = $handler->export_instance_data_object($PAGE->course->id);
+                        // Blank out the fields that should not be displayed.
+                        foreach ($fields as $field => $value) {
+                            if (empty($fieldsvisible->$field)) {
+                                $fields->$field = '';
+                            }
+                        }
+                    }
+                    foreach ($fields as $field => $value) {
+                        $shortname = strtolower($field);
+                        // If the tag exists and it is not hidden in the custom course field's settings.
+                        if (stripos($text, '{course_field_' . $shortname . '}') !== false) {
+                            $replace['/\{course_field_' . $shortname . '\}/i'] = $value;
+                        }
+                    }
+                }
+            }
+
+            // Tag: {coursecustomfields}.
+            if (stripos($text, '{coursecustomfields}') !== false) {
+                // Display custom fields.
+            }
 
             // Tag: {courseid}.
             if (stripos($text, '{courseid}') !== false) {
