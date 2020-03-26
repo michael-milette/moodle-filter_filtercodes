@@ -102,6 +102,7 @@ Moodle metadata filters
 * {courseenddate} : Course end date. Will display "Open event" if there is no end date.
 * {coursecompletiondate} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled.
 * {coursecount} : Total number of courses on this Moodle site (not including Front Page).
+* {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
@@ -474,6 +475,7 @@ Create a Page on your Moodle site and include the following code:
 * Course Context ID {{coursecontextid}}: {coursecontextid}
 * Course Context ID (encoded) {%coursecontextid%7D}: %coursecontextid%7D
 * Course ID number {{courseidnumber}}: {courseidnumber}
+* Course custom fields {{coursefields}}: {coursefields}
 * Section ID {{sectionid}}: {sectionid}
 * Section ID (encoded) {%7Bsectionid%7D}: %7Bsectionid%7D
 * My Enrolled Courses {{mycourses}}: {mycourses}
@@ -484,6 +486,7 @@ Create a Page on your Moodle site and include the following code:
 * Course category description (blank if not in a course) {{categorydescription}}: {categorydescription}
 * Course categories {{categories}}: {categories}
 * Course categories menu {{categoriesmenu}}: {categoriesmenu}
+* List of custom course fields {{course_fields}}: {course_fields}
 * Course custom fields {{course_field_location}} (assumes you have created a custom course field called "location"): {course_field_location}
 * WWWroot {{wwwroot}}: {wwwroot}
 * WWW for Contact Form {{wwwcontactform}}: {wwwcontactform}

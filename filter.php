@@ -341,14 +341,14 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{profile_field') !== false) {
             if (isloggedin() && !isguestuser()) {
                 // Cached the visibity status of all the defined custom profile fields.
-                static $fields;
-                if (!isset($fields)) {
-                    $fields = $DB->get_records('user_info_field', null, '', 'shortname, visible');
+                static $profilefields;
+                if (!isset($profilefields)) {
+                    $profilefields = $DB->get_records('user_info_field', null, '', 'shortname, visible');
                 }
                 foreach ($USER->profile as $field => $value) {
                     $shortname = strtolower($field);
                     // If the tag exists and it is not hidden in the custom profile field's settings.
-                    if (stripos($text, '{profile_field_' . $shortname . '}') !== false && $fields[$field]->visible != '0') {
+                    if (stripos($text, '{profile_field_' . $shortname . '}') !== false && $profilefields[$field]->visible != '0') {
                         $replace['/\{profile_field_' . $shortname . '\}/i'] = $value;
                     } else {
                         $replace['/\{profile_field_' . $shortname . '\}/i'] = '';
@@ -557,19 +557,19 @@ class filter_filtercodes extends moodle_text_filter {
                 // Custom Course Fields.
                 if (stripos($text, '{course_field_') !== false) {
                     // Cached the custom course field data.
-                    static $fields;
-                    if (!isset($fields)) {
+                    static $coursefields;
+                    if (!isset($coursefields)) {
                         $handler = core_course\customfield\course_handler::create();
-                        $fields = $handler->export_instance_data_object($PAGE->course->id, true);
+                        $coursefields = $handler->export_instance_data_object($PAGE->course->id, true);
                         $fieldsvisible = $handler->export_instance_data_object($PAGE->course->id);
                         // Blank out the fields that should not be displayed.
-                        foreach ($fields as $field => $value) {
+                        foreach ($coursefields as $field => $value) {
                             if (empty($fieldsvisible->$field)) {
-                                $fields->$field = '';
+                                $coursefields->$field = '';
                             }
                         }
                     }
-                    foreach ($fields as $field => $value) {
+                    foreach ($coursefields as $field => $value) {
                         $shortname = strtolower($field);
                         // If the tag exists and it is not hidden in the custom course field's settings.
                         if (stripos($text, '{course_field_' . $shortname . '}') !== false) {
@@ -577,11 +577,21 @@ class filter_filtercodes extends moodle_text_filter {
                         }
                     }
                 }
-            }
 
-            // Tag: {coursecustomfields}.
-            if (stripos($text, '{coursecustomfields}') !== false) {
-                // Display custom fields.
+                // Tag: {course_fields}.
+                if (stripos($text, '{course_fields}') !== false) {
+                    // Display all custom course fields.
+                    $customfields = '';
+                    if ($PAGE->course instanceof stdClass) {
+                        $thiscourse = new \core_course_list_element($PAGE->course);
+                    }
+                    if ($thiscourse->has_custom_fields()) {
+                        $handler = \core_course\customfield\course_handler::create();
+                        $customfields = $handler->display_custom_fields_data($thiscourse->get_custom_fields());
+                    }
+                    $replace['/\{course_fields\}/i'] = $customfields;
+                }
+
             }
 
             // Tag: {courseid}.
