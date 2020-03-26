@@ -282,8 +282,14 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Handle escaped tags.
 
-        // Ignore double bracketed tags.
-        $doublesescapes = (strpos($text, '{{') !== false && strpos($text, '}}') !== false);
+        // Get the configured number of braces for escaping tags in the FilterCodes settings.
+        if (!$escnt = get_config('filter_filtercodes', 'escapebraces')) {
+            $escnt = 2;
+        }
+        $esctagopen = str_repeat('{', $escnt); // Default is {{;
+        $esctagclose = str_repeat('}', $escnt); // Default is }};
+        $doublesescapes = (strpos($text, $esctagopen) !== false && strpos($text, $esctagclose) !== false);
+        // Temporarily replace these with non-printable character. Will be re-adjusted after processing tags.
         if ($doublesescapes) {
             $text = str_replace('{{', chr(2), $text);
             $text = str_replace('}}', chr(3), $text);
@@ -552,9 +558,9 @@ class filter_filtercodes extends moodle_text_filter {
         // Any {course*} or %7Bcourse*%7D tags.
         if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
 
-            if ($CFG->branch >= 37) { // Custom Course Fields were first implemented in Moodle 3.7.
+            // Custom Course Fields - First implemented in Moodle 3.7.
+            if ($CFG->branch >= 37) {
                 // Tag: {course_field_shortname}.
-                // Custom Course Fields.
                 if (stripos($text, '{course_field_') !== false) {
                     // Cached the custom course field data.
                     static $coursefields;
@@ -592,6 +598,13 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{course_fields\}/i'] = $customfields;
                 }
 
+            }
+
+            // Tag: {courseparticipantcount}.
+            if (stripos($text, '{courseparticipantcount}') !== false) {
+                require_once($CFG->dirroot . '/user/lib.php');
+                $cnt = \user_get_total_participants($PAGE->course->id);
+                $replace['/\{courseparticipantcount\}/i'] = $cnt;
             }
 
             // Tag: {courseid}.
