@@ -552,9 +552,9 @@ class filter_filtercodes extends moodle_text_filter {
         // Any {course*} or %7Bcourse*%7D tags.
         if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
 
-            if ($CFG->branch >= 37) { // Custom Course Fields were first implemented in Moodle 3.7.
+            // Custom Course Fields - First implemented in Moodle 3.7.
+            if ($CFG->branch >= 37) {
                 // Tag: {course_field_shortname}.
-                // Custom Course Fields.
                 if (stripos($text, '{course_field_') !== false) {
                     // Cached the custom course field data.
                     static $coursefields;
@@ -592,6 +592,12 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{course_fields\}/i'] = $customfields;
                 }
 
+            }
+
+            // Tag: {courseparticipantcount}.
+            if (stripos($text, '{courseparticipantcount}') !== false) {
+                $cnt = user_get_total_participants($PAGE->course->id);
+                $replace['/\{courseparticipantcount\}/i'] = $cnt;
             }
 
             // Tag: {courseid}.
