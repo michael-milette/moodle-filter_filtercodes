@@ -104,6 +104,7 @@ Moodle metadata filters
 * {coursecount} : Total number of courses on this Moodle site (not including Front Page).
 * {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
+* {courseimage} : Display's the course image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
@@ -489,6 +490,7 @@ Create a Page on your Moodle site and include the following code:
 * Course categories menu {{categoriesmenu}}: {categoriesmenu}
 * List of custom course fields {{course_fields}}: {course_fields}
 * Course custom fields {{course_field_location}} (assumes you have created a custom course field called "location"): {course_field_location}
+* {{courseimage}} : {courseimage}
 * Number of participants in the course {{courseparticipantcount}} : {courseparticipantcount}
 * WWWroot {{wwwroot}}: {wwwroot}
 * WWW for Contact Form {{wwwcontactform}}: {wwwcontactform}
