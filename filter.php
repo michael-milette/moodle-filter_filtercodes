@@ -648,6 +648,29 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
                 }
             }
+            
+            // Tag: {courseimage}. The course image.
+            if (stripos($text, '{courseimage') !== false) {
+                $course = $PAGE->course;
+                $imgurl = '';
+                $context = context_course::instance($course->id);
+                if ($course instanceof stdClass) {
+                    $course = new \core_course_list_element($course);
+                }
+                $coursefiles = $course->get_course_overviewfiles();
+                foreach ($coursefiles as $file) {
+                    if ($isimage = $file->is_valid_image()) {
+                        $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/' . $file->get_component() . '/' . $file->get_filearea() . $file->get_filepath() . $file->get_filename() , !$isimage);
+                        $imgurl = new moodle_url($imgurl);
+                        break;
+                    }
+                }
+                if (empty($imgurl)) {
+                    global $OUTPUT;
+                    $imgurl = $OUTPUT->get_generated_image_for_id($course->id);
+                }
+                $replace['/\{courseimage\}/i'] = '<img src="' . $imgurl . '" class="img-responsive">';
+            }
 
             // Tag: {coursestartdate}. The name of this course.
             if (stripos($text, '{coursestartdate}') !== false) {
