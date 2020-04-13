@@ -1415,13 +1415,13 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Replace double bracketed tags with single brackets.
         if ($doublesescapes) {
-            $text = str_replace(chr(2), '{', $text);
-            $text = str_replace(chr(3), '}', $text);
+            $text = str_replace(chr(2), '{{', $text);
+            $text = str_replace(chr(3), '}}', $text);
         }
         // Replace bracketed encoded tags with encoded tags.
         if ($escapesencoded) {
-            $text = str_replace(chr(4), '%7B', $text);
-            $text = str_replace(chr(5), '%7D', $text);
+            $text = str_replace(chr(4), '{%7B', $text);
+            $text = str_replace(chr(5), '%7D}', $text);
         }
 
         return $text;
