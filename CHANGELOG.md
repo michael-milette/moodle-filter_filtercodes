@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] Dev - 2020-04-10
+## [1.1.3] Dev - 2020-04-17
 ### Added
 - New {courseparticipantcount} tag.
 - New {course_fields} tag.
@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - New question to FAQ regarding setting filter priorities so that all enabled filters works together.
 ### Updated
 - Now checks moodle/course:request capability before creating Course Request link in {ifcourserequests}, {mycourses} and {mycoursemenu}
+- No longer identifies Guest users as being logged-in.
 - Documentation:FAQ info on how to translate built-in contact forms.
 - Documentation to reflect new functionality.
 - Updated FAQ.

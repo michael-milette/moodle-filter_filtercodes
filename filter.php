@@ -145,7 +145,7 @@ class filter_filtercodes extends moodle_text_filter {
      * @return string URL to the photo image file but with $1 for the size.
      */
     private function getprofilepictureurl($user) {
-        if (isloggedin() && $user->picture > 0) {
+        if (isloggedin() && !isguestuser() && $user->picture > 0) {
             $usercontext = context_user::instance($user->id, IGNORE_MISSING);
             $url = moodle_url::make_pluginfile_url($usercontext->id, 'user', 'icon', null, '/', "f$1") . '?rev=' . $user->picture;
         } else {
@@ -365,7 +365,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Substitutions.
 
-        if (isloggedin()) {
+        if (isloggedin() && !isguestuser()) {
             $firstname = $USER->firstname;
             $lastname = $USER->lastname;
         } else {
@@ -396,7 +396,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {alternatename}.
         if (stripos($text, '{alternatename}') !== false) {
             // If alternate name is empty, use firstname instead.
-            if (isloggedin() && !empty(trim($USER->alternatename))) {
+            if (isloggedin() && !isguestuser() && !empty(trim($USER->alternatename))) {
                 $replace['/\{alternatename\}/i'] = $USER->alternatename;
             } else {
                 $replace['/\{alternatename\}/i'] = $firstname;
@@ -405,32 +405,32 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {email}.
         if (stripos($text, '{email}') !== false) {
-            $replace['/\{email\}/i'] = isloggedin() ? $USER->email : '';
+            $replace['/\{email\}/i'] = isloggedin() && !isguestuser() ? $USER->email : '';
         }
 
         // Tag: {city}.
         if (stripos($text, '{city}') !== false) {
-            $replace['/\{city\}/i'] = isloggedin() ? $USER->city : '';
+            $replace['/\{city\}/i'] = isloggedin() && !isguestuser() ? $USER->city : '';
         }
 
         // Tag: {country}.
         if (stripos($text, '{country}') !== false) {
-            $replace['/\{country\}/i'] = isloggedin() && !empty($USER->country) ? get_string($USER->country, 'countries') : '';
+            $replace['/\{country\}/i'] = isloggedin() && !isguestuser() && !empty($USER->country) ? get_string($USER->country, 'countries') : '';
         }
 
         // Tag: {institution}.
         if (stripos($text, '{institution}') !== false) {
-            $replace['/\{institution\}/i'] = isloggedin() ? $USER->institution : '';
+            $replace['/\{institution\}/i'] = isloggedin() && !isguestuser() ? $USER->institution : '';
         }
 
         // Tag: {department}.
         if (stripos($text, '{department}') !== false) {
-            $replace['/\{department\}/i'] = isloggedin() ? $USER->department : '';
+            $replace['/\{department\}/i'] = isloggedin() && !isguestuser() ? $USER->department : '';
         }
 
         // Tag: {idnumber}.
         if (stripos($text, '{idnumber}') !== false) {
-            $replace['/\{idnumber\}/i'] = isloggedin() ? $USER->idnumber : '';
+            $replace['/\{idnumber\}/i'] = isloggedin() && !isguestuser() ? $USER->idnumber : '';
         }
 
         if (get_config('filter_filtercodes', 'enable_scrape')) { // Must be enabled in FilterCodes settings.
@@ -463,7 +463,7 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {username}.
             if (stripos($text, '{username}') !== false) {
-                $replace['/\{username\}/i'] = isloggedin() ? $USER->username : get_string('defaultusername', 'filter_filtercodes');
+                $replace['/\{username\}/i'] = isloggedin() && !isguestuser() ? $USER->username : get_string('defaultusername', 'filter_filtercodes');
             }
 
             // Tag: {userid}.
