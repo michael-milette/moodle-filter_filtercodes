@@ -135,6 +135,7 @@ Moodle metadata filters
 * {recaptcha} : Display the ReCAPTCHA field - for use with Contact Form for Moodle. Note: Will be blank if user is logged-in using a non-guest account.
 * {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
 * {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
+* {toggleeditingmenu} : A Turn Editing On or Turn Editing Off custom menu item. Note that you need to add your own dash(es).
 * {editingtoggle} : "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
 * {fa/fas/far/fal fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
@@ -510,7 +511,8 @@ Create a Page on your Moodle site and include the following code:
 * English {{langx en}}Content{{/langx}}: {langx en}Content{/langx}
 * String with component {{getstring:filter_filtercodes}}filtername{{/getstring}}: {getstring:filter_filtercodes}filtername{/getstring}
 * String {{getstring}}Help{{/getstring}}: {getstring}Help{/getstring}
-*     <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
+* Toggle editing menu {{toggleeditingmenu}}: {toggleeditingmenu}
+* Editing Toggle {{editingtoggle}}: <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
 * FontAwesome "fa-globe": v4.x {{fa fa-globe}} {fa fa-globe}, v5.x {{fas fa-globe}} {fas fa-globe}. Must be supported by your theme.
 * Glyphicons "glyphicon-envelope": Glyphicons {{glyphicon glyphicon-envelope}} {glyphicon glyphicon-envelope}. Must be supported by your theme.
 * Details/summary {{details}}{{summary}}This is the summary{{/summary}} followed by the details.{{/details}}: {details}{summary}This is the summary{/summary} followed by the details.{/details}

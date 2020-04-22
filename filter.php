@@ -655,7 +655,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
                 }
             }
-            
+
             // Tag: {courseimage}. The course image.
             if (stripos($text, '{courseimage') !== false) {
                 $course = $PAGE->course;
@@ -812,6 +812,17 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {editingmode}. Is "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
         if (stripos($text, '{editingtoggle}') !== false) {
             $replace['/\{editingtoggle\}/i'] = ($PAGE->user_is_editing() ? 'off' : 'on');
+        }
+
+        // Tag: {toggleeditingmenu}. Creates menu link to toggle editing on and off.
+        if (stripos($text, '{toggleeditingmenu}') !== false) {
+            $editmode = ($PAGE->user_is_editing() ? 'off' : 'on');
+            $edittext = get_string('turnediting' . $editmode);
+            if ($PAGE->bodyid == 'page-site-index' && $PAGE->pagetype == 'site-index') { // Front page.
+                $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url('/course/view.php', ['id' => $PAGE->course->id, 'sesskey' => sesskey(), 'edit' => $editmode]));
+            } else { // All other pages.
+                $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url($PAGE->url, ['edit' => $editmode, 'adminedit' => $editmode, 'sesskey' => sesskey()])) . PHP_EOL;
+            }
         }
 
         // Tags: {category...}.
@@ -1084,7 +1095,7 @@ class filter_filtercodes extends moodle_text_filter {
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
             // Tag: {ifeditmode}.
-            if (stripos($text, '{editingtoggle}') !== false) {
+            if (stripos($text, '{ifeditmode}') !== false) {
                 // If editing mode is activated...
                 if ($PAGE->user_is_editing()) {
                     // Just remove the tags.
@@ -1095,7 +1106,6 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{ifeditmode}(.*?)\{\/ifeditmode\}/ims'] = '';
                 }
             }
-
 
             // Tag: {ifcourserequests}.
             if (stripos($text, '{ifcourserequests}') !== false) {

@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - New {categoryname} tag.
 - New {categoryid} tag.
 - New {lang} tag.
+- New {toggleeditingmenu} tag.
 - New {ifeditmode}{/ifeditmode} set of tags.
 - New {ifdev}{/ifdev} set of tags.
 - New {ifcourserequests}{/ifcourserequests} set of tags.
