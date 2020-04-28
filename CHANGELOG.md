@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] Dev - 2020-04-17
+## [1.1.3] Dev - 2020-04-28
 ### Added
 - New {courseparticipantcount} tag.
 - New {course_fields} tag.
@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Separator in menu above Request a Course link (part of {mycoursesmenu} tag).
 - New question to FAQ regarding setting filter priorities so that all enabled filters works together.
 ### Updated
+- Read-only name and email address fields are now also disabled in {form...} templates.
 - Now checks moodle/course:request capability before creating Course Request link in {ifcourserequests}, {mycourses} and {mycoursemenu}
 - No longer identifies Guest users as being logged-in.
 - Documentation:FAQ info on how to translate built-in contact forms.

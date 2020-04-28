@@ -64,12 +64,12 @@ $string['formcontactus'] = '
         <div class="form-group">
             <label for="name" id="namelabel" class="d-block">Your name <strong class="required">(required)</strong></label>
             <input id="name" name="name" type="text" size="57" maxlength="45" pattern="[A-zÀ-ž]([A-zÀ-ž\s]){2,}"
-                    title="Minimum 3 letters/spaces." required="required" {readonly} value="{fullname}">
+                    title="Minimum 3 letters/spaces." required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{fullname}">
         </div>
         <div class="form-group">
             <label for="email" id="emaillabel" class="d-block">Email address <strong class="required">(required)</strong></label>
             <input id="email" name="email" type="email" size="57" maxlength="60"
-                    required="required" {readonly} value="{email}">
+                    required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{email}">
         </div>
         <div class="form-group">
             <label for="subject" id="subjectlabel" class="d-block">Subject <strong class="required">(required)</strong></label>
@@ -97,11 +97,11 @@ $string['formcourserequest'] = '
         <div class="form-group">
             <label for="name" id="namelabel" class="d-block">Your name <strong class="required">(required)</strong></label>
             <input id="name" name="name" type="text" size="57" maxlength="45" pattern="[A-zÀ-ž]([A-zÀ-ž\s]){2,}"
-                    title="Minimum 3 letters/spaces." required="required" {readonly} value="{fullname}">
+                    title="Minimum 3 letters/spaces." required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{fullname}">
         </div>
         <div class="form-group">
             <label for="email" id="emaillabel" class="d-block">Email address <strong class="required">(required)</strong></label>
-            <input id="email" name="email" type="email" size="57" maxlength="60" required="required" {readonly} value="{email}">
+            <input id="email" name="email" type="email" size="57" maxlength="60" required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{email}">
         </div>
         <div class="form-group">
             <label for="new_course_name" id="new_course_namelabel" class="d-block">Proposed name of the new course <strong class="required">(required)</strong></label>
@@ -128,11 +128,11 @@ $string['formsupport'] = '
         <div class="form-group">
             <label for="name" id="namelabel" class="d-block">Your name <strong class="required">(required)</strong></label>
             <input id="name" name="name" type="text" size="57" maxlength="45" pattern="[A-zÀ-ž]([A-zÀ-ž\s]){2,}"
-                    title="Minimum 3 letters/spaces." required="required" {readonly} value="{fullname}">
+                    title="Minimum 3 letters/spaces." required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{fullname}">
         </div>
         <div class="form-group">
             <label for="email" id="emaillabel" class="d-block">Email address <strong class="required">(required)</strong></label>
-            <input id="email" name="email" type="email" size="57" maxlength="60" required="required" {readonly} value="{email}">
+            <input id="email" name="email" type="email" size="57" maxlength="60" required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{email}">
         </div>
         <div class="form-group">
             <label for="subject" id="subjectlabel" class="d-block">Subject <strong class="required">(required)</strong></label>
