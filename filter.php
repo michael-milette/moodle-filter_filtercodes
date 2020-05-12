@@ -826,7 +826,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tags: {category...}.
-        if (stripos($text, '{category') !== false) {
+        if (stripos($text, '{categor') !== false) {
 
             if (empty($PAGE->course->category)) {
                 // If we are not in a course, check if categoryid is part of URL (ex: course lists)
@@ -878,39 +878,110 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-        }
-
-        // Tags: {categories...}.
-        if (stripos($text, '{categories') !== false) {
-
-            // Retrieve list of top categories.
-            if ($CFG->branch >= 36) { // Moodle 3.6+.
-                $categories = core_course_category::make_categories_list();
-            } else {
-                require_once($CFG->libdir. '/coursecatlib.php');
-                $categories = coursecat::make_categories_list();
-            }
-
-            // Tag: {categories}. An unordered list of links to enrolled course.
+            // Tag: {categories}. An unordered list of links to categories.
             if (stripos($text, '{categories}') !== false) {
+                // Retrieve list of all categories.
+                if ($CFG->branch >= 36) { // Moodle 3.6+.
+                    $categories = core_course_category::make_categories_list();
+                } else {
+                    require_once($CFG->libdir. '/coursecatlib.php');
+                    $categories = coursecat::make_categories_list();
+                }
                 $list = '';
                 foreach ($categories as $id => $name) {
                     $list .= '<li><a href="' .
                             (new moodle_url('/course/index.php', ['categoryid' => $id])) . '">' . $name . '</a></li>';
                 }
-                $replace['/\{categories\}/i'] = '<ul class="categorylist">' . $list . '</ul>';
+                $list .= !empty($list) ? '<ul class="categorylist">' . $list . '</ul>' : '';
+                $replace['/\{categories\}/i'] = $list;
+                unset($tag);
+                unset($list);
             }
 
-            // Tag: {categoriesmenu}. A custom menu list course categories with links.
+            // Tag: {categoriesmenu}. An unordered list of links to categories.
             if (stripos($text, '{categoriesmenu}') !== false) {
+                // Retrieve list of all categories.
+                if ($CFG->branch >= 36) { // Moodle 3.6+.
+                    $categories = core_course_category::make_categories_list();
+                } else {
+                    require_once($CFG->libdir. '/coursecatlib.php');
+                    $categories = coursecat::make_categories_list();
+                }
                 $list = '';
                 foreach ($categories as $id => $name) {
                     $list .= '-' . $name . '|/course/index.php?categoryid=' . $id . PHP_EOL;
                 }
                 $replace['/\{categoriesmenu\}/i'] = $list;
+                unset($tag);
+                unset($list);
             }
 
-            unset($list);
+            // Tag: {categories0}. An unordered list of links to top level categories.
+            if (stripos($text, '{categories0}') !== false) {
+                $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
+                        FROM {course_categories} cc
+                        WHERE cc.parent = 0 AND cc.visible = 1
+                        ORDER BY cc.sortorder";
+                $list = '';
+                $categories = $DB->get_recordset_sql($sql, array('contextcoursecat' => CONTEXT_COURSECAT));
+                foreach ($categories as $category) {
+                    $list .= '<li><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]) . '">' . $category->name . '</a></li>' . PHP_EOL;
+                }
+                $list .= !empty($list) ? '<ul>' . $list . '</ul>' : '';
+                $categories->close();
+                $replace['/\{categories0\}/i'] = $list;
+                unset($list);
+            }
+
+            // Tag: {categories0menu}. A custom menu list of top level categories with links.
+            if (stripos($text, '{categories0menu}') !== false) {
+                $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
+                        FROM {course_categories} cc
+                        WHERE cc.parent = 0 AND cc.visible = 1
+                        ORDER BY cc.sortorder";
+                $list = '';
+                $categories = $DB->get_recordset_sql($sql, array('contextcoursecat' => CONTEXT_COURSECAT));
+                foreach ($categories as $category) {
+                    $list .= '-' . $category->name . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                }
+                $categories->close();
+                $replace['/\{categories0menu\}/i'] = $list;
+                unset($list);
+            }
+
+            // Tag: {categoriesx}. An unordered list of links to current level categories.
+            if (stripos($text, '{categoriesx}') !== false) {
+                $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
+                        FROM {course_categories} cc
+                        WHERE cc.parent = $catid AND cc.visible = 1
+                        ORDER BY cc.sortorder";
+                $list = '';
+                $categories = $DB->get_recordset_sql($sql, array('contextcoursecat' => CONTEXT_COURSECAT));
+                foreach ($categories as $category) {
+                    $list .= '<li><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]) . '">' . $category->name . '</a></li>' . PHP_EOL;
+                }
+                $list .= !empty($list) ? '<ul>' . $list . '</ul>' : '';
+                $categories->close();
+                $replace['/\{categoriesx\}/i'] = $list;
+                unset($list);
+            }
+
+            // Tag: {categoriesxmenu}. A custom menu list of current categories with links.
+            if (stripos($text, '{categoriesxmenu}') !== false) {
+                $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
+                        FROM {course_categories} cc
+                        WHERE cc.parent = $catid AND cc.visible = 1
+                        ORDER BY cc.sortorder";
+                $list = '';
+                $categories = $DB->get_recordset_sql($sql, array('contextcoursecat' => CONTEXT_COURSECAT));
+                foreach ($categories as $category) {
+                    $list .= '-' . $category->name . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                }
+                $categories->close();
+                $replace['/\{categoriesxmenu\}/i'] = $list;
+                unset($list);
+            }
+
         }
 
         // Tag: {referer}.
@@ -1196,7 +1267,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {ifstudent}. This is similar to {ifenrolled} but only displays if user is enrolled
-            // but must be logged-in and must not have no additional higher level roles as well.
+            // but must be logged-in and must not have additional higher level roles.
             // Example: Student but not Administrator, or Student but not Teacher.
             if ($this->hasonlyarchetype('student')) {
                 if (stripos($text, '{ifstudent}') !== false) {

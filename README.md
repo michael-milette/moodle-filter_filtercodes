@@ -112,8 +112,12 @@ Moodle metadata filters
 * {categoryname} : If in a course, the name of the course's parent category, otherwise blank.
 * {categorynumber} : If in a course, the number of the course's parent category, otherwise blank.
 * {categorydescription} : If in a course, the number of the description of a course's parent category, otherwise blank.
-* {categories} : Display an unordered list of links to all course categores.
+* {categories} : Display an unordered list of links to all course categories.
 * {categoriesmenu} : A second level list of categories with links for use in custom menus (filtering must be supported by the theme).
+* {categories0} : Display an unordered list of just top level links to all course categories.
+* {categories0menu} : A second level list of just top level categories with links for use in custom menus (filtering must be supported by the theme).
+* {categoriesx} : Display an unordered list of other categories in the current category.
+* {categoriesxmenu} : A second level list of other categories in the current category with links for use in custom menus (filtering must be supported by the theme).
 * {institution} : Display the name of the institution from the user's profile.
 * {department} : Display the name of the department from the user's profile.
 * {courseid} or %7Bcourseid%7D : Display a course's ID.
@@ -489,6 +493,10 @@ Create a Page on your Moodle site and include the following code:
 * Course category description (blank if not in a course) {{categorydescription}}: {categorydescription}
 * Course categories {{categories}}: {categories}
 * Course categories menu {{categoriesmenu}}: {categoriesmenu}
+* Top level course categories {{categories0}}: {categories0}
+* Top level course categories menu {{categories0menu}}: {categories0menu}
+* Other course categories in this category {{categoriesx}}: {categoriesx}
+* Other course categories in this categories menu {{categoriesxmenu}}: {categoriesxmenu}
 * List of custom course fields {{course_fields}}: {course_fields}
 * Course custom fields {{course_field_location}} (assumes you have created a custom course field called "location"): {course_field_location}
 * {{courseimage}} : {courseimage}

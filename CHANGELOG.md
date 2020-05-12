@@ -1,8 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] Dev - 2020-04-28
+## [1.1.3] Dev - 2020-05-12
 ### Added
+- New {categories0} tag.
+- New {categories0menu} tag.
+- New {categoriesx} tag.
+- New {categoriesxmenu} tag.
 - New {courseparticipantcount} tag.
 - New {course_fields} tag.
 - New {course_field_...} tags.
