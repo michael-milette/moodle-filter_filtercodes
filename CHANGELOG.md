@@ -1,8 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] Dev - 2020-05-12
+## [1.1.3] Dev - 2020-05-15
 ### Added
+- New {ifloggedinas}{/ifloggedinas} tags.
+- New {ifnotloggedinas}{/ifnotloggedinas} tags.
 - New {categories0} tag.
 - New {categories0menu} tag.
 - New {categoriesx} tag.

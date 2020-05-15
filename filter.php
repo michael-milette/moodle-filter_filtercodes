@@ -1165,6 +1165,32 @@ class filter_filtercodes extends moodle_text_filter {
 
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
+            // Tag: {ifloggedinas}.
+            if (stripos($text, '{ifloggedinas}') !== false) {
+                // If logged-in-as another user...
+                if (\core\session\manager::is_loggedinas()) {
+                    // Just remove the tags.
+                    $replace['/\{ifloggedinas\}/i'] = '';
+                    $replace['/\{\/ifloggedinas\}/i'] = '';
+                } else {
+                    // If logged in as another user, remove the ifloggedinas tags and contained content.
+                    $replace['/\{ifloggedinas}(.*?)\{\/ifloggedinas\}/ims'] = '';
+                }
+            }
+
+            // Tag: {ifnotloggedinas}.
+            if (stripos($text, '{ifnotloggedinas}') !== false) {
+                // If not logged-in-as another user...
+                if (!\core\session\manager::is_loggedinas()) {
+                    // Just remove the tags.
+                    $replace['/\{ifnotloggedinas\}/i'] = '';
+                    $replace['/\{\/ifnotloggedinas\}/i'] = '';
+                } else {
+                    // If logged in as another user, remove the if not loggedinas tags and contained content.
+                    $replace['/\{ifnotloggedinas}(.*?)\{\/ifnotloggedinas\}/ims'] = '';
+                }
+            }
+
             // Tag: {ifeditmode}.
             if (stripos($text, '{ifeditmode}') !== false) {
                 // If editing mode is activated...

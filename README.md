@@ -161,6 +161,8 @@ Conditionally display content filters
 
 Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetypes, not role shortnames. For example, you could have a role called `students` but, if the archetype for the role is `teacher`, the role will be identified as a `teacher`. Roles not based on archetypes will not with these tags.
 
+* {ifloggedinas}{/ifloggedinas} : Will display the enclosed content only if you are logged-in-as (loginas) a different user.
+* {ifnotloggedinas}{/ifnotloggedinas} : Will display the enclosed content only if you are logged-in as yourself and not a different user.
 * {ifeditmode}{/ifeditmode} : Will display the enclosed content only if editing mode is turned on.
 * {ifenrolled}{/ifenrolled} : Will display the enclosed content only if the user **is** enrolled in the current course.
 * {ifnotenrolled}{/ifnotenrolled} : Will display the enclosed content only if the user is **not** enrolled in the current course.
@@ -527,6 +529,8 @@ Create a Page on your Moodle site and include the following code:
 * You should not see the following note {{note}}This could be a comment, todo or reminder.{{/note}}: {note}This could be a comment, todo or reminder.{/note}
 * {{highlight}}This text is highlighted in yellow.{{/highlight}} : {highlight}This text is highlighted in yellow.{/highlight}
 * Current language {{lang}} : {lang}
+* If you are logged-in as a different user {{ifloggedinas}} : {ifloggedinas}You are logged-in as a different user.{/ifloggedinas}
+* If you are NOT logged-in as a different user {{ifloggedinas}} : {ifnotloggedinas}You are logged-in as yourself.{/ifnotloggedinas}
 * If Editing mode activated {{ifeditmode}}Don't forget to turn off editing mode!{{/ifeditmode}}: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
 * If Enrolled {{ifenrolled}}You are enrolled in this course.{{/ifenrolled}}: {ifenrolled}You are enrolled in this course.{/ifenrolled}
 * If Not Enrolled {{ifnotenrolled}}You are not enrolled in this course.{{/ifnotenrolled}}: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
