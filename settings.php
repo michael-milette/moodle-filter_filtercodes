@@ -27,16 +27,33 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
     if ($ADMIN->fulltree) {
-        if ($CFG->version >= 32) { // Only supported in Moodle 3.2+.
-            // Option to enable experimental support for filtercodes in custom navigation menu.
+        // Option to enable experimental support for filtercodes in custom navigation menu.
+        if ($CFG->branch >= 32 && $CFG->branch <= 34) { // Only supported in Moodle 3.2 to 3.4.
             // See https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 for details.
             $default = 0;
             $name = 'filter_filtercodes/enable_customnav';
             $title = get_string('enable_customnav', 'filter_filtercodes');
             $description = get_string('enable_customnav_description', 'filter_filtercodes');
             $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
-            $settings->add($setting);
+        } else { // Disable for all other versions of Moodle.
+            set_config('disabled_customnav', 0, 'filter_filtercodes');
+            $name = 'filter_filtercodes/disabled_customnav';
+            $title = '';
+            $description = get_string('disabled_customnav_description', 'filter_filtercodes');
+            $setting = new admin_setting_heading($name, $title, $description);
         }
+        $settings->add($setting);
+
+        // Course List Columns
+        $choices = [];
+        $choices['2'] = get_string('escapebraces2', 'filter_filtercodes');
+        $choices['3'] = get_string('escapebraces3', 'filter_filtercodes');
+        $default = '2';
+        $name = 'filter_filtercodes/escapebraces';
+        $title = get_string('escapebraces' , 'filter_filtercodes');
+        $description = get_string('escapebraces_desc', 'filter_filtercodes');
+        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+        $settings->add($setting);
 
         // Option to enable scrape tag.
         $default = 0;

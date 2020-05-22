@@ -78,7 +78,9 @@ IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we
 {FilterCodes} are meant to be entered as regular text in the Moodle WYSIWYG editor through they will work equally well if entered in the code view.
 
 Moodle metadata filters
-* {{ }} or {%7B %7D} : You can escape tags so they are not processed by adding an { and } around them.
+* {{ }} : You can escape tags so they are not processed by adding an { and } around them. Can be configured for sets of 3 braces for compatibility with some MathJax in the plugin settings.
+* {{{ }}} : You can escape tags so they are not processed by adding an { and } around them. Can be configured for sets of 2 braces for compatibility with some MathJax in the plugin settings.
+* {%7B %7D} : You can escape tags so they are not processed by adding an {%7B and %7D} around them.
 * {firstname} : Display the user's first name.
 * {surname} or {lastname} : Display the user's surname (family/last name).
 * {fullname} : Display the user's first name and surname.
@@ -145,7 +147,8 @@ Moodle metadata filters
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {highlight}{/highlight} : Highlight text. NOTE: Must only be used within a paragraph.
-* {profile_field_shortname] : Display's custom profile field. Replace "shortname" with the shortname of a custom profile field all in lowercase. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
+* {profile_field_shortname} : Display's custom profile field. Replace "shortname" with the shortname of a custom profile field all in lowercase. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
+* {profilefullname}: Similar to {fullname} except that it displays a profile owner's name when placed on the Profile page.
 
 Contact Form templates
 
@@ -529,6 +532,11 @@ Create a Page on your Moodle site and include the following code:
 * You should not see the following note {{note}}This could be a comment, todo or reminder.{{/note}}: {note}This could be a comment, todo or reminder.{/note}
 * {{highlight}}This text is highlighted in yellow.{{/highlight}} : {highlight}This text is highlighted in yellow.{/highlight}
 * Current language {{lang}} : {lang}
+* Display content of custom profile field {{profile_field_shortname}}: Location: {profile_field_location} - assuming you had created a custom profile field with a shortname called 'location'.
+<<<<<<< Updated upstream
+=======
+* Display profile owner's full name on profile pages {{profilefullname}}: This is the profile of {profilefullname}.
+>>>>>>> Stashed changes
 * If you are logged-in as a different user {{ifloggedinas}} : {ifloggedinas}You are logged-in as a different user.{/ifloggedinas}
 * If you are NOT logged-in as a different user {{ifloggedinas}} : {ifnotloggedinas}You are logged-in as yourself.{/ifnotloggedinas}
 * If Editing mode activated {{ifeditmode}}Don't forget to turn off editing mode!{{/ifeditmode}}: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
@@ -583,13 +591,19 @@ Building on the previous two questions, see the [usage](#usage) section for some
 
 Technically for sure, but only if the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters. See instructions in the next question.
 
-**Note:** As of version 1.0.0 of FilterCodes, experimental support has been added for themes based on Moodle 3.2+ Clean and Boost. In order to work, this feature must be enabled in FilterCodes settings. Filtering will not be applied to the Moodle Theme Settings page and has not been fully tested and tested on other themes. For more information, see https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 .
+**Note:** As of version 1.0.0 of FilterCodes, experimental support was added for Clean and Boost themes in Moodle 3.2 to 3.4. In order to work, this had to be enabled in FilterCodes settings and Filtering will not be applied to the Moodle Theme Settings page. Unfortunately things changed in Moodle 3.5 and it has since not been possible for FilterCodes to do this on its own.
 
-### I am a Moodle theme developer. How do I add support for Moodle filters, including this FilterCodes plugin, to my theme?
+However, there are two ways you can make this work.
+
+1. Encourage Moodle HQ to enable this functionality into future versions of Moodle. For more information and to vote for this functionality, see
+   https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 .
+2. Encourage developers to enable this in their themes or add it yourself. See the next question for details.
+
+### I am a Moodle theme developer. How do I add support for Moodle filters, including FilterCodes, into my theme?
 
 #### For themes based on **boost**
 
-Add the following code to core_renderer code section of your theme. Note: Your theme may even already have such a class (they often do):
+Add the following code to core_renderer section of your theme. Note: Your theme may even already have such a class (they often do):
 
     use filter_manager;
 
@@ -670,7 +684,7 @@ Add the following code to core_renderer code section of your theme. Note: Your t
 
 #### For themes based on the older **bootstrapbase**
 
-Add the following code to core_renderer code section of your theme. Be sure to replace "themename" with the name of the theme's directory. Note: Your theme may even already have such a class (they often do):
+Add the following code to core_renderer section of your theme for Moodle 2.7 to 3.6. Be sure to replace "themename" with the name of the theme's directory. Note: Your theme may even already have such a class (they often do):
 
     class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
         /**

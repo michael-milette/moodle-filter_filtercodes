@@ -1,8 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] Dev - 2020-05-15
+## [1.1.3] Dev - 2020-05-24
 ### Added
+- New configurable setting to use {{{ double }}} or {{{ triple }}} braces to escape tags so they can be displayed (e.g. documentation). You should use this if your site uses Mathjax.
+- New {profilefullname} tag.
 - New {ifloggedinas}{/ifloggedinas} tags.
 - New {ifnotloggedinas}{/ifnotloggedinas} tags.
 - New {categories0} tag.
@@ -36,7 +38,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.0] - 2019-11-17
 ### Added
-- You can now escape tags so they are not processed by adding an { and } around them.
+- You can now escape tags so they are not processed by using a double set of braces {{ and }} around tags.
 - If Request a Course is enabled, it will now be appended in {mycourses} and {mycoursesmenu}.
 - New {wwwcontactform} tag.
 - New {profile_field_...} tags.

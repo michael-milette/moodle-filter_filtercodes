@@ -36,8 +36,13 @@ $string['defaultemail'] = '';
 $string['enable_customnav'] = 'Custom navigation support';
 $string['enable_customnav_description'] = '<strong>Experimental</strong>: Enable support for FilterCode tags in Moodle custom navigation menu.
 Note: Is known to be compatible with Clean and Boost based themes in Moodle 3.2 to 3.4 only. Does not filter tags on the Moodle Theme Settings page.';
+$string['disabled_customnav_description'] = '<strong>Note regarding support for custom menu</strong> - To enable support for FilterCodes in your Moodle site\'s custom menu, you may need to customize your theme or Moodle core. <a href="https://github.com/michael-milette/moodle-filter_filtercodes#can-i-use-filtercodes-in-moodles-custom-menus">Information on how to add FilterCodes support in custom menus</a>.';
 $string['enable_scrape'] = 'Scrape tag support';
 $string['enable_scrape_description'] = 'Enable the scrape tag.';
+$string['escapebraces'] = 'Escape braces';
+$string['escapebraces_desc'] = 'Escaping FilterCode tags is useful when creating FilterCodes documentation for the teachers and course creators on your Moodle site. To display FilterCode tags without them being interpreted by this filter, double the number of braces. Example: {{fullname}} will not display the user\'s name but display the tag instead.<br><br><strong><em>Use Mathjax on your Moodle site?</em></strong> Change this setting to 3 braces instead of 2 so that FilterCodes does not interfere with Mathjax\'s JavaScript.';
+$string['escapebraces2'] = '{{double braces}}';
+$string['escapebraces3'] = '{{{tripple braces}}}';
 
 $string['formquickquestion'] = '
 <fieldset>
