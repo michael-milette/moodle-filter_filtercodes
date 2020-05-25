@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.3] Dev - 2020-05-25
 ### Added
-- New configurable setting to enable/disable escaped {{double}} braces (e.g. for documentation). You may need to disabled this if your site uses Mathjax.
+- New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
+- You can now escape tags so they are not processed by wrapping them in [{brackets}]. {{double-braces}} are no longer supported.
 - New {profilefullname} tag.
 - New {ifloggedinas}{/ifloggedinas} tags.
 - New {ifnotloggedinas}{/ifnotloggedinas} tags.
@@ -35,6 +36,8 @@ All notable changes to this project will be documented in this file.
 - Updated FAQ.
 - Tested to be compatible with PHP 7.3.
 - Fixed example of Create Course menu item. Now creates a course in the current category.
+### Deprecated (no longer inluded)
+- You can no longer escape tags using {{double}} braces. This was causing issues with MathJAX. Bracket your [{tag}] instead.
 
 ## [1.1.0] - 2019-11-17
 ### Added

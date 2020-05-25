@@ -78,8 +78,8 @@ IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we
 {FilterCodes} are meant to be entered as regular text in the Moodle WYSIWYG editor through they will work equally well if entered in the code view.
 
 Moodle metadata filters
-* {{ }} : You can escape tags so they are not processed by adding an { and } around them. Can be disabled in the plugin's settings for compatibility with some MathJAX.
-* {%7B %7D} : You can escape tags so they are not processed by adding an {%7B and %7D} around them.
+* [{ }] : You can escape tags so they are not processed by adding [brackets] around the tag. Can be disabled in the plugin's settings if it causes you problems.
+* [%7B %7D] : You can escape %7Bencoded%7D tags too so they are not processed by adding [brackets] around them.
 * {firstname} : Display the user's first name.
 * {surname} or {lastname} : Display the user's surname (family/last name).
 * {fullname} : Display the user's first name and surname.
@@ -450,116 +450,116 @@ Only the tags listed in this [documentation](#usage) are currently supported. We
 ### How can I test to see if all of the tags are working?
 
 Create a Page on your Moodle site and include the following code:
-* First name {{firstname}}: {firstname}
-* Surname {{surname}}: {surname}
-* Last name {{lastname}}: {lastname}
-* Full name {{fullname}}: {fullname}
-* Alternate name {{alternatename}}: {alternatename}
-* City {{city}}: {city}
-* Country {{country}}: {country}
-* Email {{email}}: {email}
-* User ID {{userid}}: {userid}
-* User ID (encoded) {%7Buserid%7D}: %7Buserid%7D
-* ID Number {{idnumber}}: {idnumber}
-* User name {{username}}: {username}
+* First name [{firstname}]: {firstname}
+* Surname [{surname}]: {surname}
+* Last name [{lastname}]: {lastname}
+* Full name [{fullname}]: {fullname}
+* Alternate name [{alternatename}]: {alternatename}
+* City [{city}]: {city}
+* Country [{country}]: {country}
+* Email [{email}]: {email}
+* User ID [{userid}]: {userid}
+* User ID (encoded) [%7Buserid%7D]: %7Buserid%7D
+* ID Number [{idnumber}]: {idnumber}
+* User name [{username}]: {username}
 * Scrape h1 from example.com: {scrape url="https://example.com/" tag="h1"}
-* User profile picture URL (small) {{userpictureurl sm}}: {userpictureurl sm}
-* User profile picture URL (medium) {{userpictureurl md}}: {userpictureurl md}
-* User profile picture URL (large) {{userpictureurl lg}}: {userpictureurl lg}
-* User profile picture URL (small) {{userpictureimg sm}}: {userpictureimg sm}
-* User profile picture URL (medium) {{userpictureimg md}}: {userpictureimg md}
-* User profile picture URL (large) {{userpictureimg lg}}: {userpictureimg lg}
-* Total number of registered users {{usercount}}: {usercount}
-* Total number of active users {{usersactive}}: {usersactive}
-* Total number of online users {{usersonline}}: {usersonline}
-* Current 4-digit year {{siteyear}}: {siteyear}
-* Course or Site full name {{coursename}}: {coursename}
-* Course or Site short name {{courseshortname}}: {courseshortname}
-* Course start date {{coursestartdate}}: {coursestartdate}
-* Course start date {{courseenddate}}: {courseenddate}
-* Completion date {{coursecompletiondate}}: {coursecompletiondate}
-* Total courses {{coursecount}}: {coursecount}
-* Institution {{institution}}: {institution}
-* Department {{department}}: {department}
-* Course ID {{courseid}}: {courseid}
-* Course ID (encoded) {%7Bcourseid%7D}: %7Bcourseid%7D
-* Course Context ID {{coursecontextid}}: {coursecontextid}
-* Course Context ID (encoded) {%coursecontextid%7D}: %coursecontextid%7D
-* Course ID number {{courseidnumber}}: {courseidnumber}
-* Course custom fields {{coursefields}}: {coursefields}
-* Section ID {{sectionid}}: {sectionid}
-* Section ID (encoded) {%7Bsectionid%7D}: %7Bsectionid%7D
-* My Enrolled Courses {{mycourses}}: {mycourses}
-* My Enrolled Courses menu {{mycoursesmenu}}: {mycoursesmenu}
-* Course category ID (0 if not in a course or category list of course) {{categoryid}}: {categoryid}
-* Course category name (blank if not in a course) {{categoryname}}: {categoryname}
-* Course category number (blank if not in a course) {{categorynumber}}: {categorynumber}
-* Course category description (blank if not in a course) {{categorydescription}}: {categorydescription}
-* Course categories {{categories}}: {categories}
-* Course categories menu {{categoriesmenu}}: {categoriesmenu}
-* Top level course categories {{categories0}}: {categories0}
-* Top level course categories menu {{categories0menu}}: {categories0menu}
-* Other course categories in this category {{categoriesx}}: {categoriesx}
-* Other course categories in this categories menu {{categoriesxmenu}}: {categoriesxmenu}
-* List of custom course fields {{course_fields}}: {course_fields}
-* Course custom fields {{course_field_location}} (assumes you have created a custom course field called "location"): {course_field_location}
-* {{courseimage}} : {courseimage}
-* Number of participants in the course {{courseparticipantcount}} : {courseparticipantcount}
-* WWWroot {{wwwroot}}: {wwwroot}
-* WWW for Contact Form {{wwwcontactform}}: {wwwcontactform}
-* Page path {{pagepath}}: {pagepath}
-* This URL {{thisurl}}: {thisurl}
-* This URL encoded {{thisurl_enc}}: {thisurl_enc}
-* Double encode this URL (useful for whatsurl parameters) {{urlencode}}{{thisurl_enc}}{{/urlencode}}: {urlencode}{thisurl_enc}{/urlencode}
-* Protocol {{protocol}}: {protocol}
-* IP Address {{ipaddress}}: {ipaddress}
-* Moodle session key {{sesskey}}: {sesskey}
-* Moodle session key {%7Bsesskey%7D}: %7Bsesskey%7D
-* Referer {{referer}}: {referer}
-* Referrer {{referrer}}: {referrer}
-* ReCAPTCHA {{recaptcha}}: {recaptcha}
-* Readonly (for form fields when logged-in) {{readonly}}: {readonly}
-* Non-breaking space {{nbsp}}: This{nbsp}: Is it! (view source code to see the non-breaking space)
-* English {{langx en}}Content{{/langx}}: {langx en}Content{/langx}
-* String with component {{getstring:filter_filtercodes}}filtername{{/getstring}}: {getstring:filter_filtercodes}filtername{/getstring}
-* String {{getstring}}Help{{/getstring}}: {getstring}Help{/getstring}
-* Toggle editing menu {{toggleeditingmenu}}: {toggleeditingmenu}
-* Editing Toggle {{editingtoggle}}: <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
-* FontAwesome "fa-globe": v4.x {{fa fa-globe}} {fa fa-globe}, v5.x {{fas fa-globe}} {fas fa-globe}. Must be supported by your theme.
-* Glyphicons "glyphicon-envelope": Glyphicons {{glyphicon glyphicon-envelope}} {glyphicon glyphicon-envelope}. Must be supported by your theme.
-* Details/summary {{details}}{{summary}}This is the summary{{/summary}} followed by the details.{{/details}}: {details}{summary}This is the summary{/summary} followed by the details.{/details}
-* You should not see the following note {{note}}This could be a comment, todo or reminder.{{/note}}: {note}This could be a comment, todo or reminder.{/note}
-* {{highlight}}This text is highlighted in yellow.{{/highlight}} : {highlight}This text is highlighted in yellow.{/highlight}
-* Current language {{lang}} : {lang}
-* Display content of custom profile field {{profile_field_shortname}}: Location: {profile_field_location} - assuming you had created a custom profile field with a shortname called 'location'.
+* User profile picture URL (small) [{userpictureurl sm}]: {userpictureurl sm}
+* User profile picture URL (medium) [{userpictureurl md}]: {userpictureurl md}
+* User profile picture URL (large) [{userpictureurl lg}]: {userpictureurl lg}
+* User profile picture URL (small) [{userpictureimg sm}]: {userpictureimg sm}
+* User profile picture URL (medium) [{userpictureimg md}]: {userpictureimg md}
+* User profile picture URL (large) [{userpictureimg lg}]: {userpictureimg lg}
+* Total number of registered users [{usercount}]: {usercount}
+* Total number of active users [{usersactive}]: {usersactive}
+* Total number of online users [{usersonline}]: {usersonline}
+* Current 4-digit year [{siteyear}]: {siteyear}
+* Course or Site full name [{coursename}]: {coursename}
+* Course or Site short name [{courseshortname}]: {courseshortname}
+* Course start date [{coursestartdate}]: {coursestartdate}
+* Course start date [{courseenddate}]: {courseenddate}
+* Completion date [{coursecompletiondate}]: {coursecompletiondate}
+* Total courses [{coursecount}]: {coursecount}
+* Institution [{institution}]: {institution}
+* Department [{department}]: {department}
+* Course ID [{courseid}]: {courseid}
+* Course ID (encoded) [%7Bcourseid%7D]: %7Bcourseid%7D
+* Course Context ID [{coursecontextid}]: {coursecontextid}
+* Course Context ID (encoded) {%coursecontextid%7D]: %coursecontextid%7D
+* Course ID number [{courseidnumber}]: {courseidnumber}
+* Course custom fields [{coursefields}]: {coursefields}
+* Section ID [{sectionid}]: {sectionid}
+* Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
+* My Enrolled Courses [{mycourses}]: {mycourses}
+* My Enrolled Courses menu [{mycoursesmenu}]: {mycoursesmenu}
+* Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
+* Course category name (blank if not in a course) [{categoryname}]: {categoryname}
+* Course category number (blank if not in a course) [{categorynumber}]: {categorynumber}
+* Course category description (blank if not in a course) [{categorydescription}]: {categorydescription}
+* Course categories [{categories}]: {categories}
+* Course categories menu [{categoriesmenu}]: {categoriesmenu}
+* Top level course categories [{categories0}]: {categories0}
+* Top level course categories menu [{categories0menu}]: {categories0menu}
+* Other course categories in this category [{categoriesx}]: {categoriesx}
+* Other course categories in this categories menu [{categoriesxmenu}]: {categoriesxmenu}
+* List of custom course fields [{course_fields}]: {course_fields}
+* Course custom fields [{course_field_location}] (assumes you have created a custom course field called "location"): {course_field_location}
+* [{courseimage}] : {courseimage}
+* Number of participants in the course [{courseparticipantcount}] : {courseparticipantcount}
+* WWWroot [{wwwroot}]: {wwwroot}
+* WWW for Contact Form [{wwwcontactform}]: {wwwcontactform}
+* Page path [{pagepath}]: {pagepath}
+* This URL [{thisurl}]: {thisurl}
+* This URL encoded [{thisurl_enc}]: {thisurl_enc}
+* Double encode this URL (useful for whatsurl parameters) [{urlencode}][{thisurl_enc}][{/urlencode}]: {urlencode}{thisurl_enc}{/urlencode}
+* Protocol [{protocol}]: {protocol}
+* IP Address [{ipaddress}]: {ipaddress}
+* Moodle session key [{sesskey}]: {sesskey}
+* Moodle session key [%7Bsesskey%7D]: %7Bsesskey%7D
+* Referer [{referer}]: {referer}
+* Referrer [{referrer}]: {referrer}
+* ReCAPTCHA [{recaptcha}]: {recaptcha}
+* Readonly (for form fields when logged-in) [{readonly}]: {readonly}
+* Non-breaking space [{nbsp}]: This{nbsp}: Is it! (view source code to see the non-breaking space)
+* English [{langx en}]Content[{/langx}]: {langx en}Content{/langx}
+* String with component [{getstring:filter_filtercodes}]filtername[{/getstring}]: {getstring:filter_filtercodes}filtername{/getstring}
+* String [{getstring}]Help[{/getstring}]: {getstring}Help{/getstring}
+* Toggle editing menu [{toggleeditingmenu}]: {toggleeditingmenu}
+* Editing Toggle [{editingtoggle}]: <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
+* FontAwesome "fa-globe": v4.x [{fa fa-globe}] {fa fa-globe}, v5.x [{fas fa-globe}] {fas fa-globe}. Must be supported by your theme.
+* Glyphicons "glyphicon-envelope": Glyphicons [{glyphicon glyphicon-envelope}] {glyphicon glyphicon-envelope}. Must be supported by your theme.
+* Details/summary [{details}][{summary}]This is the summary[{/summary}] followed by the details.[{/details}]: {details}{summary}This is the summary{/summary} followed by the details.{/details}
+* You should not see the following note [{note}]This could be a comment, todo or reminder.[{/note}]: {note}This could be a comment, todo or reminder.{/note}
+* [{highlight}]This text is highlighted in yellow.[{/highlight}] : {highlight}This text is highlighted in yellow.{/highlight}
+* Current language [{lang}] : {lang}
+* Display content of custom profile field [{profile_field_shortname}]: Location: {profile_field_location} - assuming you had created a custom profile field with a shortname called 'location'.
 <<<<<<< Updated upstream
 =======
-* Display profile owner's full name on profile pages {{profilefullname}}: This is the profile of {profilefullname}.
+* Display profile owner's full name on profile pages [{profilefullname}]: This is the profile of {profilefullname}.
 >>>>>>> Stashed changes
-* If you are logged-in as a different user {{ifloggedinas}} : {ifloggedinas}You are logged-in as a different user.{/ifloggedinas}
-* If you are NOT logged-in as a different user {{ifloggedinas}} : {ifnotloggedinas}You are logged-in as yourself.{/ifnotloggedinas}
-* If Editing mode activated {{ifeditmode}}Don't forget to turn off editing mode!{{/ifeditmode}}: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
-* If Enrolled {{ifenrolled}}You are enrolled in this course.{{/ifenrolled}}: {ifenrolled}You are enrolled in this course.{/ifenrolled}
-* If Not Enrolled {{ifnotenrolled}}You are not enrolled in this course.{{/ifnotenrolled}}: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
-* If LoggedIn {{ifloggedin}}You are logged-in.{{/ifloggedin}}: {ifloggedin}You are logged-in.{/ifloggedin}
-* If LoggedOut {{ifloggedout}}You are logged-out.{{/ifloggedout}}: {ifloggedout}You are logged-out.{/ifloggedout}
-* If Guest {{ifguest}}You are a guest.{{/ifguest}}: {ifguest}You are a guest.{/ifguest}
-* If Student {{ifstudent}}You are student who is logged-in and enrolled in this course and have no other roles.{{/ifstudent}}: {ifstudent}You are student who is logged-in and enrolled in this course and have no other roles.{/ifstudent}
-* If Non-editing Teacher {{ifassistant}}You are an assistant teacher.{{/ifassistant}}: {ifassistant}You are an assistant teacher.{/ifassistant}
-* If Non-editing Teacher (minimum) {{ifminassistant}}You are an assistant teacher or above.{{/ifminassistant}}: {ifminassistant}You are an assistant teacher or above.{/ifminassistant}
-* If Teacher {{ifteacher}You are a teacher.{/ifteacher}}: {ifteacher}You are a teacher.{/ifteacher}
-* If Teacher (minimum) {{ifminteacher}}You are a teacher or above.{{/ifminteacher}}: {ifminteacher}You are a teacher or above.{/ifminteacher}
-* If Course Creator {{ifcreator}}You are a course creator.{{/ifcreator}}: {ifcreator}You are a course creator.{/ifcreator}
-* If Course Creator (minimum) {{ifmincreator}}You are a course creator or above.{{/ifmincreator}}: {ifmincreator}You are a course creator or above.{/ifmincreator}
-* If Manager {{ifmanager}}You are a manager.{{/ifmanager}}: {ifmanager}You are a manager.{/ifmanager}
+* If you are logged-in as a different user [{ifloggedinas}] : {ifloggedinas}You are logged-in as a different user.{/ifloggedinas}
+* If you are NOT logged-in as a different user [{ifloggedinas}] : {ifnotloggedinas}You are logged-in as yourself.{/ifnotloggedinas}
+* If Editing mode activated [{ifeditmode}]Don't forget to turn off editing mode![{/ifeditmode}]: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
+* If Enrolled [{ifenrolled}]You are enrolled in this course.[{/ifenrolled}]: {ifenrolled}You are enrolled in this course.{/ifenrolled}
+* If Not Enrolled [{ifnotenrolled}]You are not enrolled in this course.[{/ifnotenrolled}]: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
+* If LoggedIn [{ifloggedin}]You are logged-in.[{/ifloggedin}]: {ifloggedin}You are logged-in.{/ifloggedin}
+* If LoggedOut [{ifloggedout}]You are logged-out.[{/ifloggedout}]: {ifloggedout}You are logged-out.{/ifloggedout}
+* If Guest [{ifguest}]You are a guest.[{/ifguest}]: {ifguest}You are a guest.{/ifguest}
+* If Student [{ifstudent}]You are student who is logged-in and enrolled in this course and have no other roles.[{/ifstudent}]: {ifstudent}You are student who is logged-in and enrolled in this course and have no other roles.{/ifstudent}
+* If Non-editing Teacher [{ifassistant}]You are an assistant teacher.[{/ifassistant}]: {ifassistant}You are an assistant teacher.{/ifassistant}
+* If Non-editing Teacher (minimum) [{ifminassistant}]You are an assistant teacher or above.[{/ifminassistant}]: {ifminassistant}You are an assistant teacher or above.{/ifminassistant}
+* If Teacher [{ifteacher}You are a teacher.{/ifteacher}]: {ifteacher}You are a teacher.{/ifteacher}
+* If Teacher (minimum) [{ifminteacher}]You are a teacher or above.[{/ifminteacher}]: {ifminteacher}You are a teacher or above.{/ifminteacher}
+* If Course Creator [{ifcreator}]You are a course creator.[{/ifcreator}]: {ifcreator}You are a course creator.{/ifcreator}
+* If Course Creator (minimum) [{ifmincreator}]You are a course creator or above.[{/ifmincreator}]: {ifmincreator}You are a course creator or above.{/ifmincreator}
+* If Manager [{ifmanager}]You are a manager.[{/ifmanager}]: {ifmanager}You are a manager.{/ifmanager}
 * If Manager (minimum): {ifminmanager}You are a manager or administrator.{/ifminmanager}
-* If Admin {{ifadmin}}You are an administrator.{{/ifadmin}}: {ifadmin}You are an administrator.{/ifadmin}
-* If Developer {{ifdev}}You are an administrator with debugging set to developer mode.{{/ifdev}}: {ifdev}You are an administrator.{/ifdev}
+* If Admin [{ifadmin}]You are an administrator.[{/ifadmin}]: {ifadmin}You are an administrator.{/ifadmin}
+* If Developer [{ifdev}]You are an administrator with debugging set to developer mode.[{/ifdev}]: {ifdev}You are an administrator.{/ifdev}
 * If on Home page: {ifhome}You are on the Home Front page.{/ifhome}
-* If on Dashboard {{ifdashboard}}You are on the Home Front page.{{/ifdashboard}}: {ifdashboard}You are on the Home Front page.{/ifdashboard}
-* If in a course {{ifincourse}}Yes{{/ifincourse}}? {ifincourse}Yes{/ifincourse}
-* If in a section of a course {{ifinsection}}Yes{{/ifinsection}}{{ifnotinsection}}No{{/ifnotinsection}}? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
-* If Request a course is enabled {{ifcourserequests}}Yes{{/ifcourserequests}}? {ifcourserequests}Yes{/ifcourserequests}
+* If on Dashboard [{ifdashboard}]You are on the Home Front page.[{/ifdashboard}]: {ifdashboard}You are on the Home Front page.{/ifdashboard}
+* If in a course [{ifincourse}]Yes[{/ifincourse}]? {ifincourse}Yes{/ifincourse}
+* If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
+* If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
 
 You can switch to different roles to see how each will affect the content being displayed.
 

@@ -282,25 +282,23 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Handle escaped tags to be ignored.
 
-        // Determine if the option to {{ escape braces }} is enabled.
+        // Determine if the option to {escape braces}] is enabled.
         if (!empty(get_config('filter_filtercodes', 'escapebraces'))) {
-            $esctagopen = '{{';
-            $esctagclose = '}}';
-            $doublesescapes = (strpos($text, $esctagopen) !== false && strpos($text, $esctagclose) !== false);
-            // Temporarily replace these with non-printable character. Will be re-adjusted after processing tags.
-            if ($doublesescapes) {
-                $text = str_replace($esctagopen, chr(2), $text);
-                $text = str_replace($esctagclose, chr(3), $text);
+            // Temporarily escaped tags these with non-printable character. Will be re-adjusted after processing tags.
+            $escapedtags = (strpos($text, '[{') !== false && strpos($text, '}]') !== false);
+            if ($escapedtags) {
+                $text = str_replace('[{', chr(2), $text);
+                $text = str_replace('}]', chr(3), $text);
             }
-            // Ignore encoded tags.
-            $escapesencoded = (strpos($text, '{%7B') !== false && strpos($text, '%7D}') !== false);
-            if ($escapesencoded) {
-                $text = str_replace('{%7B', chr(4), $text);
-                $text = str_replace('%7D}', chr(5), $text);
+            // Temporarily escaped tags these with non-printable character. Will be re-adjusted after processing tags.
+            $escapedtagsenc = (strpos($text, '[%7B') !== false && strpos($text, '%7D]') !== false);
+            if ($escapedtagsenc) {
+                $text = str_replace('[%7B', chr(4), $text);
+                $text = str_replace('%7D]', chr(5), $text);
             }
         } else {
-            $esctagopen = '';
-            $esctagclose = '';
+            $escapedtags = false;
+            $escapedtagsenc = false;
         }
 
         // START: Process tags that may end up containing other tags first.
@@ -1548,17 +1546,15 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Handle escaped tags.
 
-        if (!empty($esctagopen)) {
-            // Complete the process of replacing double braced tags with single braces.
-            if ($doublesescapes) {
-                $text = str_replace(chr(2), '{', $text);
-                $text = str_replace(chr(3), '}', $text);
-            }
-            // Replace encoded braced tags with encoded tags.
-            if ($escapesencoded) {
-                $text = str_replace(chr(4), '%7B', $text);
-                $text = str_replace(chr(5), '%7D', $text);
-            }
+        // Complete the process of replacing escaped tags with single braces.
+        if ($escapedtags) {
+            $text = str_replace(chr(2), '{', $text);
+            $text = str_replace(chr(3), '}', $text);
+        }
+        // Complete the process of replacing escaped tags with single escaped braces.
+        if ($escapedtagsenc) {
+            $text = str_replace(chr(4), '%7B', $text);
+            $text = str_replace(chr(5), '%7D', $text);
         }
 
         return $text;

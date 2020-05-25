@@ -39,8 +39,8 @@ Note: Is known to be compatible with Clean and Boost based themes in Moodle 3.2 
 $string['disabled_customnav_description'] = '<strong>Note regarding support for custom menu</strong> - To enable support for FilterCodes in your Moodle site\'s custom menu, you may need to customize your theme or Moodle core. <a href="https://github.com/michael-milette/moodle-filter_filtercodes#can-i-use-filtercodes-in-moodles-custom-menus">Information on how to add FilterCodes support in custom menus</a>.';
 $string['enable_scrape'] = 'Scrape tag support';
 $string['enable_scrape_description'] = 'Enable the scrape tag.';
-$string['escapebraces'] = 'Escape braces';
-$string['escapebraces_desc'] = 'When this option is checked, you will be able to display FilterCode tags without them being interpreted by this filter by doubling the number of braces. This can be very useful when creating FilterCodes documentation for the teachers and course creators on your Moodle site.<br><br>Example: {{fullname}} will not display the user\'s name but display the tag instead.';
+$string['escapebraces'] = 'Escape tags';
+$string['escapebraces_desc'] = 'When this option is checked, you will be able to display FilterCode tags without them being interpreted by this filter by wrapping your tag in [ brackets ]. This can be very useful when creating FilterCodes documentation for the teachers and course creators on your Moodle site.<br><br>Example: [{fullname}] will not display the user\'s full name but display the {fullname} tag instead without the brackets.';
 
 $string['formquickquestion'] = '
 <fieldset>
