@@ -40,9 +40,7 @@ $string['disabled_customnav_description'] = '<strong>Note regarding support for 
 $string['enable_scrape'] = 'Scrape tag support';
 $string['enable_scrape_description'] = 'Enable the scrape tag.';
 $string['escapebraces'] = 'Escape braces';
-$string['escapebraces_desc'] = 'Escaping FilterCode tags is useful when creating FilterCodes documentation for the teachers and course creators on your Moodle site. To display FilterCode tags without them being interpreted by this filter, double the number of braces. Example: {{fullname}} will not display the user\'s name but display the tag instead.<br><br><strong><em>Use Mathjax on your Moodle site?</em></strong> Change this setting to 3 braces instead of 2 so that FilterCodes does not interfere with Mathjax\'s JavaScript.';
-$string['escapebraces2'] = '{{double braces}}';
-$string['escapebraces3'] = '{{{tripple braces}}}';
+$string['escapebraces_desc'] = 'When this option is checked, you will be able to display FilterCode tags without them being interpreted by this filter by doubling the number of braces. This can be very useful when creating FilterCodes documentation for the teachers and course creators on your Moodle site.<br><br>Example: {{fullname}} will not display the user\'s name but display the tag instead.';
 
 $string['formquickquestion'] = '
 <fieldset>

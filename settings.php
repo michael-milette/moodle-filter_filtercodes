@@ -45,14 +45,11 @@ if ($hassiteconfig) {
         $settings->add($setting);
 
         // Course List Columns
-        $choices = [];
-        $choices['2'] = get_string('escapebraces2', 'filter_filtercodes');
-        $choices['3'] = get_string('escapebraces3', 'filter_filtercodes');
-        $default = '2';
+        $default = '1';
         $name = 'filter_filtercodes/escapebraces';
-        $title = get_string('escapebraces' , 'filter_filtercodes');
+        $title = get_string('escapebraces', 'filter_filtercodes');
         $description = get_string('escapebraces_desc', 'filter_filtercodes');
-        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+        $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
         $settings->add($setting);
 
         // Option to enable scrape tag.

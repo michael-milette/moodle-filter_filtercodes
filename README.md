@@ -78,8 +78,7 @@ IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we
 {FilterCodes} are meant to be entered as regular text in the Moodle WYSIWYG editor through they will work equally well if entered in the code view.
 
 Moodle metadata filters
-* {{ }} : You can escape tags so they are not processed by adding an { and } around them. Can be configured for sets of 3 braces for compatibility with some MathJax in the plugin settings.
-* {{{ }}} : You can escape tags so they are not processed by adding an { and } around them. Can be configured for sets of 2 braces for compatibility with some MathJax in the plugin settings.
+* {{ }} : You can escape tags so they are not processed by adding an { and } around them. Can be disabled in the plugin's settings for compatibility with some MathJAX.
 * {%7B %7D} : You can escape tags so they are not processed by adding an {%7B and %7D} around them.
 * {firstname} : Display the user's first name.
 * {surname} or {lastname} : Display the user's surname (family/last name).

@@ -1,9 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] Dev - 2020-05-24
+## [1.1.3] Dev - 2020-05-25
 ### Added
-- New configurable setting to use {{{ double }}} or {{{ triple }}} braces to escape tags so they can be displayed (e.g. documentation). You should use this if your site uses Mathjax.
+- New configurable setting to enable/disable escaped {{double}} braces (e.g. for documentation). You may need to disabled this if your site uses Mathjax.
 - New {profilefullname} tag.
 - New {ifloggedinas}{/ifloggedinas} tags.
 - New {ifnotloggedinas}{/ifnotloggedinas} tags.
