@@ -1170,6 +1170,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{langx\s+(.*?)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';
         }
 
+        // Tag: {-} - Soft hyphen.
+        if (stripos($text, '{-}') !== false) {
+            $replace['/\{-\}/i'] = '&shy;';
+        }
+
         // Tag: {details}{/details}.
         // Tag: {summary}{/summary}.
         if (stripos($text, '{/details}') !== false) {
