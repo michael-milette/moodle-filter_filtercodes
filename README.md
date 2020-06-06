@@ -559,6 +559,8 @@ Create a Page on your Moodle site and include the following code:
 * If in a course [{ifincourse}]Yes[{/ifincourse}]? {ifincourse}Yes{/ifincourse}
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
+* If has custom role {ifcustomrole xx}{/ifcustomrole} : Allow set custom roles not related with course, XX is the role shortname.
+* If has custom role on course {ifcustomincourserole xx}{/ifcustomincourserole} : Allow set custom roles on current course, XX is the role shortname.
 
 You can switch to different roles to see how each will affect the content being displayed.
 
