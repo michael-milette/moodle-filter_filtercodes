@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 use block_online_users\fetcher;
 
+require_once($CFG->dirroot . "/course/renderer.php");
+
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *
@@ -752,6 +754,30 @@ class filter_filtercodes extends moodle_text_filter {
                 // Count visible courses excluding front page.
                 $cnt = $DB->count_records('course', array('visible' => 1)) - 1;
                 $replace['/\{coursesactive\}/i'] = $cnt;
+            }
+
+            // Tag: {courseprogress} and {courseprogressbar}.
+            // Course progress percentage as text.
+            if (stripos($text, '{courseprogress') !== false) {
+                $comppercent = -1; // -1 means disabled.
+                if ($PAGE->course->enablecompletion == 1
+                        && isloggedin()
+                        && !isguestuser()
+                        && context_system::instance() != 'page-site-index'
+                        && $comppc = \core_completion\progress::get_course_progress_percentage($PAGE->course)) {
+                    // Course completion Progress percentage
+                    $comppercent = number_format($comppc, 0);
+                    if (stripos($text, '{courseprogress}') !== false) {
+                        $replace['/\{courseprogress\}/i'] = '<span class="sr-only">' . get_string('aria:courseprogress', 'block_myoverview') . '</span> ' . get_string('completepercent', 'block_myoverview', $comppercent);;
+                    }
+                    // Course completion Progress bar
+                    if (stripos($text, '{courseprogressbar}') !== false) {
+                        $replace['/\{courseprogressbar\}/i'] = '<div class="progress"><div class="progress-bar bar" role="progressbar" aria-valuenow="' . $comppercent . '" style="width: ' . $comppercent . '%" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                    }
+                } else {
+                    $replace['/\{courseprogress\}/i'] = '';
+                    $replace['/\{courseprogressbar\}/i'] = '';
+                }
             }
 
         }

@@ -39,6 +39,8 @@ important for sites wishing to comply with accessibility requirements.
 
 IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
+HOWEVER: Some tags indicated in this documentation as ALPHA may still require some development and are not garantied to be implementaed or implemented in the same way in future releases. Let us know if you think they are useful if they work for you or what changes you might like to see.
+
 [(Back to top)](#table-of-contents)
 
 # Requirements
@@ -103,6 +105,8 @@ Moodle metadata filters
 * {courseenddate} : Course end date. Will display "Open event" if there is no end date.
 * {coursecompletiondate} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled.
 * {coursecount} : Total number of courses on this Moodle site (not including Front Page).
+* {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course
+* {courseprogressbar}: (ALPHA) Displays course progress status as a status bar.
 * {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
 * {courseimage} : Display's the course image.
@@ -479,6 +483,8 @@ Create a Page on your Moodle site and include the following code:
 * Course start date [{coursestartdate}]: {coursestartdate}
 * Course start date [{courseenddate}]: {courseenddate}
 * Completion date [{coursecompletiondate}]: {coursecompletiondate}
+* Course progress (ALPHA) {{courseprogress}}: {courseprogress}
+* Course progress bar (ALPHA) {{courseprogressbar}}: {courseprogressbar}
 * Total courses [{coursecount}]: {coursecount}
 * Institution [{institution}]: {institution}
 * Department [{department}]: {department}
