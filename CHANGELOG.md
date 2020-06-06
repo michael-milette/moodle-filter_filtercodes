@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
 - You can now escape tags so they are not processed by wrapping them in [{brackets}]. {{double-braces}} are no longer supported.
-- Bew {coursecards} tag (ALPHA).
+- New {categorycards} tag (ALPHA}.
+- New {coursecards} tag (ALPHA).
 - New {courseprogress} tag (ALPHA).
 - New {courseprogressbar} tag (ALPHA).
 - New {-} tag (soft hyphen)
@@ -42,6 +43,18 @@ All notable changes to this project will be documented in this file.
 - Fixed example of Create Course menu item. Now creates a course in the current category.
 ### Deprecated (no longer inluded)
 - You can no longer escape tags using {{double}} braces. This was causing issues with MathJAX. Bracket your [{tag}] instead.
+
+### Important notes
+
+Some tags are indicated in this documentation as ALPHA may still require some development and are not guarantied to be implementaed or implemented in the same way in future releases. Please let us know if you think they are useful if they work for you or what changes you might like to see.
+
+These UI components are compatible with most Bootrap 4 based themes including:
+
+Academi, Adaptable, Aigne, Bandeau, Boost, Classic, Eguru, Enlight Lite, Fordson, Foundation, GCWeb, Klass, Moove, Roshni Lite and Trema.
+
+Not compatible with the following Moodle themes:
+
+Boost Campus, Boost Learning, Boost Mgnific and Boost_Training.
 
 ## [1.1.0] - 2019-11-17
 ### Added
