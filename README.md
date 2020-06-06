@@ -105,8 +105,9 @@ Moodle metadata filters
 * {courseenddate} : Course end date. Will display "Open event" if there is no end date.
 * {coursecompletiondate} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled.
 * {coursecount} : Total number of courses on this Moodle site (not including Front Page).
-* {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course
-* {courseprogressbar}: (ALPHA) Displays course progress status as a status bar.
+* {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
+* {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
+* {coursecards}: (ALPHA) Display available courses as cards. Has only been tested on Front Page.
 * {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
 * {courseimage} : Display's the course image.
@@ -485,6 +486,7 @@ Create a Page on your Moodle site and include the following code:
 * Completion date [{coursecompletiondate}]: {coursecompletiondate}
 * Course progress (ALPHA) {{courseprogress}}: {courseprogress}
 * Course progress bar (ALPHA) {{courseprogressbar}}: {courseprogressbar}
+* Course cards (ALPHA) {{coursecards}}: {coursecards}
 * Total courses [{coursecount}]: {coursecount}
 * Institution [{institution}]: {institution}
 * Department [{department}]: {department}

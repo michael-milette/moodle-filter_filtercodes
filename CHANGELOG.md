@@ -1,12 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] Dev - 2020-05-9
+## [1.1.3] Dev - 2020-06-06
 ### Added
 - New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
 - You can now escape tags so they are not processed by wrapping them in [{brackets}]. {{double-braces}} are no longer supported.
-- New {courseprogress} tag.
-- New {courseprogressbar} tag.
+- Bew {coursecards} tag (ALPHA).
+- New {courseprogress} tag (ALPHA).
+- New {courseprogressbar} tag (ALPHA).
 - New {-} tag (soft hyphen)
 - New {profilefullname} tag.
 - New {ifloggedinas}{/ifloggedinas} tags.
