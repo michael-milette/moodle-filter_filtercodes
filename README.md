@@ -39,7 +39,7 @@ important for sites wishing to comply with accessibility requirements.
 
 IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
-HOWEVER: Some tags indicated in this documentation as ALPHA may still require some development and are not garantied to be implementaed or implemented in the same way in future releases. Let us know if you think they are useful if they work for you or what changes you might like to see.
+HOWEVER: Some tags are indicated in this documentation as ALPHA may still require some development and are not guarantied to be implementaed or implemented in the same way in future releases. Please let us know if you think they are useful if they work for you or what changes you might like to see.
 
 [(Back to top)](#table-of-contents)
 
@@ -108,6 +108,7 @@ Moodle metadata filters
 * {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
 * {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
 * {coursecards}: (ALPHA) Display available courses as cards. Has only been tested on Front Page.
+* {categorycards}: (ALPHA) Display top level categories as cards. Has only been tested on Front Page.
 * {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
 * {courseimage} : Display's the course image.
@@ -484,9 +485,10 @@ Create a Page on your Moodle site and include the following code:
 * Course start date [{coursestartdate}]: {coursestartdate}
 * Course start date [{courseenddate}]: {courseenddate}
 * Completion date [{coursecompletiondate}]: {coursecompletiondate}
-* Course progress (ALPHA) {{courseprogress}}: {courseprogress}
-* Course progress bar (ALPHA) {{courseprogressbar}}: {courseprogressbar}
-* Course cards (ALPHA) {{coursecards}}: {coursecards}
+* Course progress (ALPHA) [{courseprogress}]: {courseprogress}
+* Course progress bar (ALPHA) [{courseprogressbar}]: {courseprogressbar}
+* Course cards (ALPHA) [{coursecards}]: {coursecards}
+* Category cards (ALPHA) [{categorycards}]: {categorycards}
 * Total courses [{coursecount}]: {coursecount}
 * Institution [{institution}]: {institution}
 * Department [{department}]: {department}
@@ -528,7 +530,7 @@ Create a Page on your Moodle site and include the following code:
 * Referrer [{referrer}]: {referrer}
 * ReCAPTCHA [{recaptcha}]: {recaptcha}
 * Readonly (for form fields when logged-in) [{readonly}]: {readonly}
-* Soft hyphen {{-}}: AHyphenWilloOlyAppearHere{-}WhenThereIsNoMoreSpace.
+* Soft hyphen [{-}]: AHyphenWilloOlyAppearHere{-}WhenThereIsNoMoreSpace.
 * Non-breaking space [{nbsp}]: This{nbsp}: Is it! (view source code to see the non-breaking space)
 * English [{langx en}]Content[{/langx}]: {langx en}Content{/langx}
 * String with component [{getstring:filter_filtercodes}]filtername[{/getstring}]: {getstring:filter_filtercodes}filtername{/getstring}

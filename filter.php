@@ -828,7 +828,7 @@ class filter_filtercodes extends moodle_text_filter {
                                 <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0">' . $course->get_formatted_name() . '</div>
                                 </a>
                             </div>
-                        ';    
+                        ';
                     }
                 }
                 $replace['/\{coursecards\}/i'] = !empty($header) ? $header . $content . $footer : '';
@@ -1077,6 +1077,49 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 $categories->close();
                 $replace['/\{categoriesxmenu\}/i'] = $list;
+                unset($list);
+            }
+
+            // Tag: {categorycards}. Course categories presented as card tiles.
+            if (stripos($text, '{categorycards}') !== false) {
+                global $DB, $OUTPUT;
+
+                if (empty($PAGE->course->category)) {
+                    // If we are not in a course, check if categoryid is part of URL (ex: course lists)
+                    $catid = optional_param('categoryid', 0, PARAM_INT);
+                } else {
+                    // Retrieve the category id of the course we are in.
+                    $catid = $PAGE->course->category;
+                }
+                $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
+                        FROM {course_categories} cc
+                        WHERE cc.parent = $catid
+                        ORDER BY cc.sortorder";
+                $categories = $DB->get_recordset_sql($sql, array('contextcoursecat' => CONTEXT_COURSECAT));
+
+                $list = '';
+                foreach ($categories as $category) {
+                    if (!core_course_category::can_view_category($category)) {
+                        continue;
+                    }
+
+                    $dimmed = '';
+                    if (!$category->visible) {
+                        $dimmed = 'opacity: 0.5;';
+                    }
+
+                    $imgurl = $OUTPUT->get_generated_image_for_id($category->id + 65535);
+                    $list .= '
+                        <li class="card shadow mr-4 mb-4 ml-0" style="min-width:290px;max-width:290px;' . $dimmed . '">
+                            <a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]) . '" class="text-white h-100">
+                            <div class="card-img" style="background-image: url(' . $imgurl . ');height:100px;"></div>
+                            <div class="card-img-overlay card-title pt-1 pr-3 pb-1 pl-3 m-0" style="height:fit-content;top:auto;background-color: rgba(0,0,0,.3);">' . $category->name . '</div>
+                            </a>
+                        </li>' . PHP_EOL;
+                }
+                $categories->close();
+                $replace['/\{categorycards\}/i'] = !empty($list) ? '<ul class="card-deck mr-0">' . $list . '</ul>' : '';
+                unset($categories);
                 unset($list);
             }
 
