@@ -1,0 +1,16 @@
+{
+    "name": "michael-milette/moodle-filter_filtercodes",
+    "type": "moodle-filter",
+    "description": "This Moodle plugin enables content creators to easily customize and personalize site and course content using plain text tags.",
+    "license": "GPL-3.0+",
+    "require": {
+        "composer/installers": "~1.0"
+    },
+    "extra": {
+        "installer-name": "filtercodes"
+    },
+    "support": {
+        "issues": "https://github.com/michael-milette/moodle-filter_filtercodes/issues",
+        "source": "https://github.com/michael-milette/moodle-filter_filtercodes/"
+    }
+}
