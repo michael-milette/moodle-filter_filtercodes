@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param int $oldversion the version we are upgrading from
  * @return bool result
  */
-function xmldb_filter_filtercodes_upgrade($oldversion) {
+function xmldb_filter_filtercodes_upgrade($oldversion = 0) {
 
     // Moodle v2.7.0 release upgrade line.
     // Upgrade steps below.

@@ -61,7 +61,9 @@ class filter_filtercodes_testcase extends advanced_testcase {
      * @return void
      */
     public function test_filter_filtercodes() {
-        global $CFG, $USER, $DB;
+        global $CFG, $USER, $DB, $PAGE;
+
+        $PAGE->set_url(new moodle_url('/'));
 
         $this->setadminuser();
         $course = $this->getDataGenerator()->create_course();
@@ -88,19 +90,17 @@ class filter_filtercodes_testcase extends advanced_testcase {
                         ' (<span lang="es">mejor dicho, en español</span>)',
             ),
             array (
-                'before' => 'Some non-filtered content plus some content in French' .
-                        ' ({langx fr}mieux en français){/langx}',
-                'after'  => 'Some non-filtered content plus some content in French' .
-                        ' (<span lang="fr">mieux en français</span>)',
+                'before' => 'Some non-filtered content plus some content in French ({langx fr}mieux en français{/langx})',
+                'after'  => 'Some non-filtered content plus some content in French (<span lang="fr">mieux en français</span>)',
             ),
             array (
-                'before' => '{langx es}Algo en español{langx}{langx fr}Quelque chose en français{/langx}',
-                'after'  => '<span lang="es">Algo en español</span><span lang="fr">Quelque chose en français</span>',
+                'before' => '{langx es}Algo de español{/langx}{langx fr}Quelque chose en français{/langx}',
+                'after'  => '<span lang="es">Algo de español</span><span lang="fr">Quelque chose en français</span>',
             ),
             array (
-                'before' => 'Non-filtered {begin}{langx es}Algo en español{langx}{langx fr}Quelque chose en français{/langx}'.
-                        'Non-filtered{end}',
-                'after'  => 'Non-filtered {begin}<span lang="es">Algo en español</span><span lang="fr">Quelque chose en français'.
+                'before' => 'Non-filtered {begin}{langx es}Algo de español{/langx}{langx fr}Quelque chose en français{/langx}'.
+                        ' Non-filtered{end}',
+                'after'  => 'Non-filtered {begin}<span lang="es">Algo de español</span><span lang="fr">Quelque chose en français'.
                         '</span> Non-filtered{end}',
             ),
             array (
@@ -109,11 +109,11 @@ class filter_filtercodes_testcase extends advanced_testcase {
             ),
             array (
                 'before' => '{langx}Bad filter syntax{langx}{langx es}Algo de español{/langx}',
-                'after'  => '{langx}Bad filter syntax{langx}<span lang="es">Algo en español</span>',
+                'after'  => '{langx}Bad filter syntax{langx}<span lang="es">Algo de español</span>',
             ),
             array (
                 'before' => 'Before {langx}Bad filter syntax{langx} {langx es}Algo de español{/langx} After',
-                'after'  => 'Before {langx}Bad filter syntax{langx} <span lang="es">Algo en español</span> After',
+                'after'  => 'Before {langx}Bad filter syntax{langx} <span lang="es">Algo de español</span> After',
             ),
             array (
                 'before' => 'Before {langx non-existent-language}Some content{/langx} After',
@@ -121,15 +121,19 @@ class filter_filtercodes_testcase extends advanced_testcase {
             ),
             array (
                 'before' => 'Before {langx en_ca}Some content{/langx} After',
-                'after'  => 'Before <span lang="en_ca"}Some content</span> After',
+                'after'  => 'Before <span lang="en_ca">Some content</span> After',
             ),
             array (
                 'before' => 'Before {langx en-ca}Some content{/langx} After',
-                'after'  => 'Before <span lang="en-ca"}Some content</span> After',
+                'after'  => 'Before <span lang="en-ca">Some content</span> After',
             ),
             array (
                 'before' => 'Before{nbsp}: Some content After',
                 'after'  => 'Before&nbsp;: Some content After',
+            ),
+            array (
+                'before' => 'Before{-}: Some content After',
+                'after'  => 'Before&shy;: Some content After',
             ),
             array (
                 'before' => '{firstname}',
@@ -161,7 +165,7 @@ class filter_filtercodes_testcase extends advanced_testcase {
             ),
             array (
                 'before' => '{country}',
-                'after'  => get_string($USER->country, 'countries'),
+                'after'  => !empty($USER->country) ? get_string($USER->country, 'countries') : '',
             ),
             array (
                 'before' => '{email}',
@@ -237,7 +241,7 @@ class filter_filtercodes_testcase extends advanced_testcase {
             ),
             array (
                 'before' => '{pagepath}',
-                'after'  => $PAGE->url->out_as_local_url(),
+                'after'  => $CFG->wwwroot . '?',
             ),
             array (
                 'before' => '{ipaddress}',
