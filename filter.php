@@ -18,11 +18,10 @@
  * Main filter code for FilterCodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2020 TNG Consulting Inc. - www.tngcosulting.ca
+ * @copyright  2017-2020 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -149,7 +148,8 @@ class filter_filtercodes extends moodle_text_filter {
     private function getprofilepictureurl($user) {
         if (isloggedin() && !isguestuser() && $user->picture > 0) {
             $usercontext = context_user::instance($user->id, IGNORE_MISSING);
-            $url = moodle_url::make_pluginfile_url($usercontext->id, 'user', 'icon', null, '/', "f$1") . '?rev=' . $user->picture;
+            $url = moodle_url::make_pluginfile_url($usercontext->id, 'user', 'icon', null, '/', "f$1")
+                    . '?rev=' . $user->picture;
         } else {
             // If the user does not have a profile picture, use the default faceless picture.
             global $PAGE, $CFG;
@@ -187,7 +187,7 @@ class filter_filtercodes extends moodle_text_filter {
         global $CFG;
         // Is user not logged-in or logged-in as guest?
         if (!isloggedin() || isguestuser()) {
-            // Is Moodle reCAPTCHA configured?
+            // If Moodle reCAPTCHA configured.
             if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
                 // Yes? Generate reCAPTCHA.
                 if (file_exists($CFG->libdir . '/recaptchalib_v2.php')) {
@@ -331,6 +331,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
         }
+
         // Apply all of the filtercodes so far.
         $newtext = null;
         if (count($replace) > 0) {
@@ -343,6 +344,13 @@ class filter_filtercodes extends moodle_text_filter {
         $replace = [];
 
         // END: Process tags that may end up containing other tags first.
+
+        //
+        // FilterCodes extended (future feature).
+        //
+        if (file_exists(dirname(__FILE__) . '/filter-ext.php')) {
+            include(dirname(__FILE__) . '/filter-ext.php');
+        }
 
         if (stripos($text, '{profile') !== false) {
 
@@ -358,7 +366,8 @@ class filter_filtercodes extends moodle_text_filter {
                     foreach ($USER->profile as $field => $value) {
                         $shortname = strtolower($field);
                         // If the tag exists and it is not hidden in the custom profile field's settings.
-                        if (stripos($text, '{profile_field_' . $shortname . '}') !== false && $profilefields[$field]->visible != '0') {
+                        if (stripos($text, '{profile_field_' . $shortname . '}') !== false
+                                && $profilefields[$field]->visible != '0') {
                             $replace['/\{profile_field_' . $shortname . '\}/i'] = $value;
                         } else {
                             $replace['/\{profile_field_' . $shortname . '\}/i'] = '';
@@ -373,7 +382,8 @@ class filter_filtercodes extends moodle_text_filter {
                 if (isloggedin() && !isguestuser()) {
                     $fullname = $USER->firstname . ' ' . $USER->lastname;
                     if ($PAGE->pagelayout == 'mypublic' && $PAGE->pagetype == 'user-profile') {
-                        $userid = optional_param('userid', optional_param('user', optional_param('id', $USER->id, PARAM_INT), PARAM_INT), PARAM_INT);
+                        $userid = optional_param('userid', optional_param('user',
+                                optional_param('id', $USER->id, PARAM_INT), PARAM_INT), PARAM_INT);
                         if ($user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0))) {
                             $fullname = $user->firstname . ' ' . $user->lastname;
                         }
@@ -436,7 +446,8 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {country}.
         if (stripos($text, '{country}') !== false) {
-            $replace['/\{country\}/i'] = isloggedin() && !isguestuser() && !empty($USER->country) ? get_string($USER->country, 'countries') : '';
+            $replace['/\{country\}/i'] = isloggedin() && !isguestuser()
+                    && !empty($USER->country) ? get_string($USER->country, 'countries') : '';
         }
 
         // Tag: {institution}.
@@ -484,8 +495,8 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {username}.
             if (stripos($text, '{username}') !== false) {
-                $replace['/\{username\}/i'] = isloggedin() && !isguestuser() ?
-                        $USER->username : get_string('defaultusername', 'filter_filtercodes');
+                $replace['/\{username\}/i'] = isloggedin()
+                        && !isguestuser() ? $USER->username : get_string('defaultusername', 'filter_filtercodes');
             }
 
             // Tag: {userid}.
@@ -700,7 +711,8 @@ class filter_filtercodes extends moodle_text_filter {
                 $coursefiles = $course->get_course_overviewfiles();
                 foreach ($coursefiles as $file) {
                     if ($isimage = $file->is_valid_image()) {
-                        $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/' . $file->get_component() . '/' . $file->get_filearea() . $file->get_filepath() . $file->get_filename() , !$isimage);
+                        $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/' . $file->get_component()
+                                . '/' . $file->get_filearea() . $file->get_filepath() . $file->get_filename() , !$isimage);
                         $imgurl = new moodle_url($imgurl);
                         break;
                     }
@@ -712,7 +724,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{courseimage\}/i'] = '<img src="' . $imgurl . '" class="img-responsive">';
             }
 
-            // Tag: {coursestartdate}. The name of this course.
+            // Tag: {coursestartdate}. The course start date.
             if (stripos($text, '{coursestartdate}') !== false) {
                 if (empty($PAGE->course->startdate)) {
                     $PAGE->course->startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $course->id]);
@@ -724,7 +736,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {courseenddate}. The name of this course.
+            // Tag: {courseenddate}. The course end date.
             if (stripos($text, '{courseenddate}') !== false) {
                 if (empty($PAGE->course->enddate)) {
                     $PAGE->course->enddate = $DB->get_field_select('course', 'enddate', 'id = :id', ['id' => $course->id]);
@@ -736,7 +748,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {coursecompletiondate}. The name of this course.
+            // Tag: {coursecompletiondate}. The course completion date.
             if (stripos($text, '{coursecompletiondate}') !== false) {
                 if ($PAGE->course
                         && isset($CFG->enablecompletion)
@@ -771,20 +783,27 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {courseprogress} and {courseprogressbar}.
             // Course progress percentage as text.
             if (stripos($text, '{courseprogress') !== false) {
-                $comppercent = -1; // -1 means disabled.
+                $comppercent = -1; // Disabled: -1.
                 if ($PAGE->course->enablecompletion == 1
                         && isloggedin()
                         && !isguestuser()
                         && context_system::instance() != 'page-site-index'
                         && $comppc = \core_completion\progress::get_course_progress_percentage($PAGE->course)) {
-                    // Course completion Progress percentage
+                    // Course completion progress percentage.
                     $comppercent = number_format($comppc, 0);
                     if (stripos($text, '{courseprogress}') !== false) {
-                        $replace['/\{courseprogress\}/i'] = '<span class="sr-only">' . get_string('aria:courseprogress', 'block_myoverview') . '</span> ' . get_string('completepercent', 'block_myoverview', $comppercent);;
+                        $replace['/\{courseprogress\}/i'] = '<span class="sr-only">'
+                                . get_string('aria:courseprogress', 'block_myoverview') . '</span> '
+                                . get_string('completepercent', 'block_myoverview', $comppercent);
                     }
-                    // Course completion Progress bar
+                    // Course completion progress bar.
                     if (stripos($text, '{courseprogressbar}') !== false) {
-                        $replace['/\{courseprogressbar\}/i'] = '<div class="progress"><div class="progress-bar bar" role="progressbar" aria-valuenow="' . $comppercent . '" style="width: ' . $comppercent . '%" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                        $replace['/\{courseprogressbar\}/i'] = '
+                                <div class="progress">
+                                    <div class="progress-bar bar" role="progressbar" aria-valuenow="' . $comppercent
+                                        . '" style="width: ' . $comppercent . '%" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>';
                     }
                 } else {
                     $replace['/\{courseprogress\}/i'] = '';
@@ -824,7 +843,9 @@ class filter_filtercodes extends moodle_text_filter {
                         $imgurl = '';
                         foreach ($coursefiles as $file) {
                             if ($isimage = $file->is_valid_image()) {
-                                $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/' . $file->get_component() . '/' . $file->get_filearea() . $file->get_filepath() . $file->get_filename() , !$isimage);
+                                $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/'
+                                        . $file->get_component() . '/' . $file->get_filearea() . $file->get_filepath()
+                                        . $file->get_filename(), !$isimage);
                                 $imgurl = new moodle_url($imgurl);
                                 break;
                             }
@@ -836,7 +857,9 @@ class filter_filtercodes extends moodle_text_filter {
                         $content .= '
                             <div class="card shadow mr-4 mb-4 ml-1" style="min-width:300px;max-width:300px;">
                                 <a href="' . $courseurl . '" class="text-normal h-100">
-                                <div class="card-img-top" style="background-image:url(' . $imgurl . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;background-repeat:no-repeat;background-position:center;"></div>
+                                <div class="card-img-top" style="background-image:url(' . $imgurl
+                                        . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;'
+                                        . 'background-repeat:no-repeat;background-position:center;"></div>
                                 <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0">' . $course->get_formatted_name() . '</div>
                                 </a>
                             </div>
@@ -929,9 +952,11 @@ class filter_filtercodes extends moodle_text_filter {
             $editmode = ($PAGE->user_is_editing() ? 'off' : 'on');
             $edittext = get_string('turnediting' . $editmode);
             if ($PAGE->bodyid == 'page-site-index' && $PAGE->pagetype == 'site-index') { // Front page.
-                $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url('/course/view.php', ['id' => $PAGE->course->id, 'sesskey' => sesskey(), 'edit' => $editmode]));
+                $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url('/course/view.php',
+                        ['id' => $PAGE->course->id, 'sesskey' => sesskey(), 'edit' => $editmode]));
             } else { // All other pages.
-                $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url($PAGE->url, ['edit' => $editmode, 'adminedit' => $editmode, 'sesskey' => sesskey()])) . PHP_EOL;
+                $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url($PAGE->url,
+                        ['edit' => $editmode, 'adminedit' => $editmode, 'sesskey' => sesskey()])) . PHP_EOL;
             }
         }
 
@@ -939,7 +964,7 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{categor') !== false) {
 
             if (empty($PAGE->course->category)) {
-                // If we are not in a course, check if categoryid is part of URL (ex: course lists)
+                // If we are not in a course, check if categoryid is part of URL (ex: course lists).
                 $catid = optional_param('categoryid', 0, PARAM_INT);
             } else {
                 // Retrieve the category id of the course we are in.
@@ -952,7 +977,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             if (!empty($catid)) {
-                $category = $DB->get_record('course_categories',array('id'=>$catid));
+                $category = $DB->get_record('course_categories', array('id' => $catid));
             }
 
             // Tag: {categoryname}.
@@ -1002,7 +1027,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $list .= '<li><a href="' .
                             (new moodle_url('/course/index.php', ['categoryid' => $id])) . '">' . $name . '</a></li>';
                 }
-                $list .= !empty($list) ? '<ul class="categorylist">' . $list . '</ul>' : '';
+                $list = !empty($list) ? '<ul class="categorylist">' . $list . '</ul>' : '';
                 $replace['/\{categories\}/i'] = $list;
                 unset($tag);
                 unset($list);
@@ -1035,9 +1060,10 @@ class filter_filtercodes extends moodle_text_filter {
                 $list = '';
                 $categories = $DB->get_recordset_sql($sql, array('contextcoursecat' => CONTEXT_COURSECAT));
                 foreach ($categories as $category) {
-                    $list .= '<li><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]) . '">' . $category->name . '</a></li>' . PHP_EOL;
+                    $list .= '<li><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id])
+                            . '">' . $category->name . '</a></li>' . PHP_EOL;
                 }
-                $list .= !empty($list) ? '<ul>' . $list . '</ul>' : '';
+                $list = !empty($list) ? '<ul>' . $list . '</ul>' : '';
                 $categories->close();
                 $replace['/\{categories0\}/i'] = $list;
                 unset($list);
@@ -1068,9 +1094,10 @@ class filter_filtercodes extends moodle_text_filter {
                 $list = '';
                 $categories = $DB->get_recordset_sql($sql, array('contextcoursecat' => CONTEXT_COURSECAT));
                 foreach ($categories as $category) {
-                    $list .= '<li><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]) . '">' . $category->name . '</a></li>' . PHP_EOL;
+                    $list .= '<li><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]) . '">'
+                            . $category->name . '</a></li>' . PHP_EOL;
                 }
-                $list .= !empty($list) ? '<ul>' . $list . '</ul>' : '';
+                $list = !empty($list) ? '<ul>' . $list . '</ul>' : '';
                 $categories->close();
                 $replace['/\{categoriesx\}/i'] = $list;
                 unset($list);
@@ -1097,7 +1124,7 @@ class filter_filtercodes extends moodle_text_filter {
                 global $DB, $OUTPUT;
 
                 if (empty($PAGE->course->category)) {
-                    // If we are not in a course, check if categoryid is part of URL (ex: course lists)
+                    // If we are not in a course, check if categoryid is part of URL (ex: course lists).
                     $catid = optional_param('categoryid', 0, PARAM_INT);
                 } else {
                     // Retrieve the category id of the course we are in.
@@ -1123,9 +1150,12 @@ class filter_filtercodes extends moodle_text_filter {
                     $imgurl = $OUTPUT->get_generated_image_for_id($category->id + 65535);
                     $list .= '
                         <li class="card shadow mr-4 mb-4 ml-0" style="min-width:290px;max-width:290px;' . $dimmed . '">
-                            <a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]) . '" class="text-white h-100">
+                            <a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id])
+                                . '" class="text-white h-100">
                             <div class="card-img" style="background-image: url(' . $imgurl . ');height:100px;"></div>
-                            <div class="card-img-overlay card-title pt-1 pr-3 pb-1 pl-3 m-0" style="height:fit-content;top:auto;background-color: rgba(0,0,0,.3);">' . $category->name . '</div>
+                            <div class="card-img-overlay card-title pt-1 pr-3 pb-1 pl-3 m-0" '
+                                . 'style="height:fit-content;top:auto;background-color: rgba(0,0,0,.3);">'
+                                . $category->name . '</div>
                             </a>
                         </li>' . PHP_EOL;
                 }

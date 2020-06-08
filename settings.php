@@ -44,7 +44,7 @@ if ($hassiteconfig) {
         }
         $settings->add($setting);
 
-        // Course List Columns
+        // Course List Columns.
         $default = '1';
         $name = 'filter_filtercodes/escapebraces';
         $title = get_string('escapebraces', 'filter_filtercodes');
