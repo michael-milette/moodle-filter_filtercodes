@@ -39,7 +39,7 @@ important for sites wishing to comply with accessibility requirements.
 
 IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
-HOWEVER: Some tags are indicated in this documentation as ALPHA may still require some development and are not guarantied to be implementaed or implemented in the same way in future releases. Please let us know if you think they are useful if they work for you or what changes you might like to see.
+HOWEVER: There may be some tags identified as ALPHA in this documentation. These may still require some development and are not guarantied to be implementaed or implemented in the same way in future releases. Please let us know if you think they are useful if they work for you or what changes you might like to see.
 
 [(Back to top)](#table-of-contents)
 
@@ -92,6 +92,7 @@ Moodle metadata filters
 * {userid} or %7Buserid%7D : Display the user's Moodle ID.
 * {idnumber} : Display the user's idnumber from their profile.
 * {username} : Display the user's username.
+* {userdescription} : Display the user's description.
 * {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
@@ -469,6 +470,7 @@ Create a Page on your Moodle site and include the following code:
 * User ID (encoded) [%7Buserid%7D]: %7Buserid%7D
 * ID Number [{idnumber}]: {idnumber}
 * User name [{username}]: {username}
+* User description [{userdescription}] : {userdescription}
 * Scrape h1 from example.com: {scrape url="https://example.com/" tag="h1"}
 * User profile picture URL (small) [{userpictureurl sm}]: {userpictureurl sm}
 * User profile picture URL (medium) [{userpictureurl md}]: {userpictureurl md}

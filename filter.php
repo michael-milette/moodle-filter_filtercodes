@@ -513,7 +513,8 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {username}.
             if (stripos($text, '{username}') !== false) {
-                $replace['/\{username\}/i'] = isloggedin() && !isguestuser() ? $USER->username : get_string('defaultusername', 'filter_filtercodes');
+                $replace['/\{username\}/i'] = isloggedin() && !isguestuser() ?
+                        $USER->username : get_string('defaultusername', 'filter_filtercodes');
             }
 
             // Tag: {userid}.
@@ -560,6 +561,17 @@ class filter_filtercodes extends moodle_text_filter {
                         $changed = true;
                     }
                     $replace['/\{userpictureimg\s+(\w+)\}/i'] = $tag;
+                }
+            }
+
+            // Tag: {userdescription}.
+            if (stripos($text, '{userdescription}') !== false) {
+                if (isloggedin() && !isguestuser()) {
+                    $user = $DB->get_record('user', array('id' => $USER->id), 'description', MUST_EXIST);
+                    $replace['/\{userdescription\}/i'] = format_text($user->description, $USER->descriptionformat);
+                    unset($user);
+                } else {
+                    $replace['/\{userdescription\}/i'] = '';
                 }
             }
 
