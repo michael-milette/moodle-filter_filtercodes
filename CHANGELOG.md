@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - Updated FAQ.
 - Tested to be compatible with PHP 7.3.
 - Fixed example of Create Course menu item. Now creates a course in the current category.
+- Fixed {note} tag which was not working.
 ### Deprecated (no longer inluded)
 - You can no longer escape tags using {{double}} braces. This was causing issues with MathJAX. Bracket your [{tag}] instead.
 

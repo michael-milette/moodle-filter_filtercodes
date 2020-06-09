@@ -1343,6 +1343,12 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{\/highlight\}/i'] = '</span>';
         }
 
+        // Tag: {note} - Used to add notes which appear when editing but not displayed.
+        if (stripos($text, '{note}') !== false) {
+            // Remove the note content.
+            $replace['/\{note\}(.*?)\{\/note\}/ims'] = '';
+        }
+
         //
         // HTML tagging.
         //
@@ -1744,11 +1750,6 @@ class filter_filtercodes extends moodle_text_filter {
                         // Remove the ifminmanager strings.
                         $replace['/\{ifminmanager\}(.*?)\{\/ifminmanager\}/ims'] = '';
                     }
-                }
-                // Tag: {note} - Used to add notes which appear when editing but not displayed.
-                if (stripos($text, '{note}') !== false) {
-                    // Remove the note content.
-                    $replace['/\{note\}(.*?)\{\/note\}/ims'] = '';
                 }
 
             }
