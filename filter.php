@@ -1154,7 +1154,8 @@ class filter_filtercodes extends moodle_text_filter {
                                 . '" class="text-white h-100">
                             <div class="card-img" style="background-image: url(' . $imgurl . ');height:100px;"></div>
                             <div class="card-img-overlay card-title pt-1 pr-3 pb-1 pl-3 m-0" '
-                                . 'style="height:fit-content;top:auto;background-color: rgba(0,0,0,.3);">'
+                                . 'style="height:fit-content;top:auto;background-color: rgba(0,0,0,.4);'
+                                . 'text-shadow:-1px -1px 0 #767676, 1px -1px 0 #767676, -1px 1px 0 #767676, 1px 1px 0 #767676">'
                                 . $category->name . '</div>
                             </a>
                         </li>' . PHP_EOL;
