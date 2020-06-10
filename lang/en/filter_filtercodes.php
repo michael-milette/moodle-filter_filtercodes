@@ -84,7 +84,6 @@ $string['formcontactus'] = '
             <textarea id="message" name="message" rows="5" cols="58" minlength="5"
                     title="Minimum 5 characters." required="required"></textarea>
         </div>
-        <div class="form-group">
         <input type="hidden" id="sesskey" name="sesskey" value="">
         <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
         {recaptcha}
@@ -146,7 +145,7 @@ $string['formsupport'] = '
                 <option value="Suggestion">I have a suggestion</option>
                 <option value="Error message">I am getting an error message</option>
                 <option value="System error">Something is not working the way it is supposed to</option>
-                <option value="Course">I am having difficulty accesssing a course or some course content</option>
+                <option value="Course">I am having difficulty accessing a course or some course content</option>
                 <option value="Other reason">Other (please specify)</option>
             </select>
         </div>
