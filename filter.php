@@ -1667,13 +1667,13 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {ifcustomrole roleid}.
+            // Tag: {ifcustomrole rolename}.
             if (stripos($text, '{ifcustomrole') !== false) {
                 $re = '/{ifcustomrole\s+(.*?)\}(.*?)\{\/ifcustomrole\}/ims';
                 $found = preg_match_all($re, $text, $matches);
                 if ($found > 0) {
                     foreach ($matches[1] as $roleshortname) {
-                        $key = '/{ifnotcustomrole\s+' . $roleshortname . '\}(.*?)\{\/ifnotcustomrole\}/ims';
+                        $key = '/{ifcustomrole\s+' . $roleshortname . '\}(.*?)\{\/ifcustomrole\}/ims';
                         $contextid = ($PAGE->course->id == SITEID) ? 0 : context_course::instance($PAGE->course->id)->id;
                         if ($this->hascustomrole($roleshortname, $contextid)) {
                             // Just remove the tags.
