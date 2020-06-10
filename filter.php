@@ -41,7 +41,8 @@ class filter_filtercodes extends moodle_text_filter {
     /** @var array $customroles array of Roles key is shortname and value is the id */
     private static $customroles = [];
     /**
-     * @var array $customroles array of Roles key is shortname + context_id and the value is a boolean showing if user is allowed
+     * @var array $customrolespermissions array of Roles key is shortname + context_id and the value is a boolean showing if
+     * user is allowed
      */
     private static $customrolespermissions = [];
 
@@ -1671,9 +1672,10 @@ class filter_filtercodes extends moodle_text_filter {
                 $re = '/{ifcustomrole\s+(.*?)\}(.*?)\{\/ifcustomrole\}/ims';
                 $found = preg_match_all($re, $text, $matches);
                 if ($found > 0) {
-                    foreach ($matches[1] as $ind => $roleshortname) {
-                        $key = '/{ifcustomrole\s+' . $roleshortname . '\}(.*?)\{\/ifcustomrole\}/ims';
-                        if ($this->hascustomrole($roleshortname, 0)) {
+                    foreach ($matches[1] as $roleshortname) {
+                        $key = '/{ifnotcustomrole\s+' . $roleshortname . '\}(.*?)\{\/ifnotcustomrole\}/ims';
+                        $contextid = ($PAGE->course->id == SITEID) ? 0 : context_course::instance($PAGE->course->id)->id;
+                        if ($this->hascustomrole($roleshortname, $contextid)) {
                             // Just remove the tags.
                             $replace[$key] = '$1';
                         } else {
@@ -1684,18 +1686,19 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {ifcustomincourserole roleid}.
-            if (stripos($text, '{ifcustomincourserole') !== false) {
-                $re = '/{ifcustomincourserole\s+(.*?)\}(.*?)\{\/ifcustomincourserole\}/ims';
+            // Tag: {ifnotcustomrole rolename}.
+            if (stripos($text, '{ifnotcustomrole') !== false) {
+                $re = '/{ifnotcustomrole\s+(.*?)\}(.*?)\{\/ifnotcustomrole\}/ims';
                 $found = preg_match_all($re, $text, $matches);
                 if ($found > 0) {
-                    foreach ($matches[1] as $ind => $roleshortname) {
-                        $key = '/{ifcustomincourserole\s+' . $roleshortname . '\}(.*?)\{\/ifcustomincourserole\}/ims';
-                        if ($this->hascustomrole($roleshortname, $PAGE->context->id)) {
+                    foreach ($matches[1] as $roleshortname) {
+                        $key = '/{ifnotcustomrole\s+' . $roleshortname . '\}(.*?)\{\/ifnotcustomrole\}/ims';
+                        $contextid = ($PAGE->course->id == SITEID) ? 0 : context_course::instance($PAGE->course->id)->id;
+                        if (!$this->hascustomrole($roleshortname, $contextid)) {
                             // Just remove the tags.
                             $replace[$key] = '$1';
                         } else {
-                            // Remove the ifcustomincourserole strings.
+                            // Remove the ifnotcustomrole strings.
                             $replace[$key] = '';
                         }
                     }
