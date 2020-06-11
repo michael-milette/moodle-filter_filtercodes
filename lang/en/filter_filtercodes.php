@@ -43,23 +43,26 @@ $string['escapebraces'] = 'Escape tags';
 $string['escapebraces_desc'] = 'When this option is checked, you will be able to display FilterCode tags without them being interpreted by this filter by wrapping your tag in [ brackets ]. This can be very useful when creating FilterCodes documentation for the teachers and course creators on your Moodle site.<br><br>Example: [{fullname}] will not display the user\'s full name but display the {fullname} tag instead without the brackets.';
 
 $string['formquickquestion'] = '
-<fieldset>
-    <div class="form-group">
-        <label for="subject" id="subjectlabel" class="d-block">Subject <strong class="required">(required)</strong></label>
-        <input class="block" id="subject" name="subject" type="text" size="57" maxlength="80" minlength="5"
-                title="Minimum 5 characters." required="required">
+<form action="{wwwroot}/local/contact/index.php" method="post" class="cf contact-us">
+    <fieldset>
+        <div class="form-group">
+            <label for="subject" id="subjectlabel" class="d-block">Subject <strong class="required">(required)</strong></label>
+            <input class="block" id="subject" name="subject" type="text" size="57" maxlength="80" minlength="5"
+                    title="Minimum 5 characters." required="required">
+        </div>
+        <div class="form-group">
+            <label for="message" id="messagelabel" class="d-block">Message <strong class="required">(required)</strong></label>
+            <textarea id="message" name="message" rows="5" cols="58" minlength="5"
+                    title="Minimum 5 characters." required="required"></textarea>
+        </div>
+        <input type="hidden" id="sesskey" name="sesskey" value="">
+        <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
+        {recaptcha}
+    </fieldset>
+    <div>
+        <input type="submit" name="submit" id="submit" value="Send">
     </div>
-    <div class="form-group">
-        <label for="message" id="messagelabel" class="d-block">Message <strong class="required">(required)</strong></label>
-        <textarea id="message" name="message" rows="5" cols="58" minlength="5"
-                title="Minimum 5 characters." required="required"></textarea>
-    </div>
-    <input type="hidden" id="sesskey" name="sesskey" value="">
-    <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
-</fieldset>
-<div>
-    <input type="submit" name="submit" id="submit" value="Send">
-</div>
+</form>
 ';
 $string['formcontactus'] = '
 <form action="{wwwroot}/local/contact/index.php" method="post" class="cf contact-us">
@@ -117,6 +120,7 @@ $string['formcourserequest'] = '
         </div>
         <input type="hidden" id="sesskey" name="sesskey" value="">
         <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
+        {recaptcha}
     </fieldset>
     <div>
         <input type="submit" name="submit" id="submit" value="Submit request for this course">
@@ -164,6 +168,7 @@ $string['formsupport'] = '
         </div>
         <input type="hidden" id="sesskey" name="sesskey" value="">
         <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
+        {recaptcha}
     </fieldset>
     <div>
         <input type="submit" name="submit" id="submit" value="Submit request for help">
@@ -176,6 +181,7 @@ $string['formcheckin'] = '
         <input type="hidden" id="subject" name="subject" value="Present!">
         <input type="hidden" id="sesskey" name="sesskey" value="">
         <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
+        {recaptcha}
     </fieldset>
     <div>
         <input type="submit" name="submit" id="submit" value="I\'m here!">
