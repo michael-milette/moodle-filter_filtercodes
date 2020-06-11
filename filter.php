@@ -38,13 +38,6 @@ require_once($CFG->dirroot . "/course/renderer.php");
 class filter_filtercodes extends moodle_text_filter {
     /** @var object $archetypes Object array of Moodle archetypes. */
     public $archetypes = [];
-    /** @var array $customroles array of Roles key is shortname and value is the id */
-    private static $customroles = [];
-    /**
-     * @var array $customrolespermissions array of Roles key is shortname + context_id and the value is a boolean showing if
-     * user is allowed
-     */
-    private static $customrolespermissions = [];
 
     /**
      * Constructor: Get the role IDs associated with each of the archetypes.
@@ -144,29 +137,6 @@ class filter_filtercodes extends moodle_text_filter {
         // Return true regardless of the archetype if we are an administrator and not in a switched role.
         global $PAGE;
         return !is_role_switched($PAGE->course->id) && is_siteadmin();
-    }
-
-    /**
-     * Checks a custom role filtered or not by context id
-     *
-     * @param $roleshortname
-     * @param int $contextid
-     */
-    private function hascustomrole($roleshortname, $contextid = 0) {
-        $keytocheck = $roleshortname . '-' . $contextid;
-        if (!isset(self::$customrolespermissions[$keytocheck])) {
-            global $USER, $DB;
-            if (!isset(self::$customroles[$roleshortname])) {
-                self::$customroles[$roleshortname] = $DB->get_field('role', 'id', ['shortname' => $roleshortname]);
-            }
-            $hasrole = false;
-            if (self::$customroles[$roleshortname]) {
-                $hasrole = user_has_role_assignment($USER->id, self::$customroles[$roleshortname], $contextid);
-            }
-            self::$customrolespermissions[$keytocheck] = $hasrole;
-        }
-
-        return self::$customrolespermissions[$keytocheck];
     }
 
     /**
@@ -1664,44 +1634,6 @@ class filter_filtercodes extends moodle_text_filter {
                 } else {
                     // If not a developer with debugging set to DEVELOPER mode, remove the ifdev tags and contained content.
                     $replace['/\{ifdev}(.*?)\{\/ifdev\}/ims'] = '';
-                }
-            }
-
-            // Tag: {ifcustomrole rolename}.
-            if (stripos($text, '{ifcustomrole') !== false) {
-                $re = '/{ifcustomrole\s+(.*?)\}(.*?)\{\/ifcustomrole\}/ims';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $roleshortname) {
-                        $key = '/{ifcustomrole\s+' . $roleshortname . '\}(.*?)\{\/ifcustomrole\}/ims';
-                        $contextid = ($PAGE->course->id == SITEID) ? 0 : context_course::instance($PAGE->course->id)->id;
-                        if ($this->hascustomrole($roleshortname, $contextid)) {
-                            // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else {
-                            // Remove the ifcustomrole strings.
-                            $replace[$key] = '';
-                        }
-                    }
-                }
-            }
-
-            // Tag: {ifnotcustomrole rolename}.
-            if (stripos($text, '{ifnotcustomrole') !== false) {
-                $re = '/{ifnotcustomrole\s+(.*?)\}(.*?)\{\/ifnotcustomrole\}/ims';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $roleshortname) {
-                        $key = '/{ifnotcustomrole\s+' . $roleshortname . '\}(.*?)\{\/ifnotcustomrole\}/ims';
-                        $contextid = ($PAGE->course->id == SITEID) ? 0 : context_course::instance($PAGE->course->id)->id;
-                        if (!$this->hascustomrole($roleshortname, $contextid)) {
-                            // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else {
-                            // Remove the ifnotcustomrole strings.
-                            $replace[$key] = '';
-                        }
-                    }
                 }
             }
 
