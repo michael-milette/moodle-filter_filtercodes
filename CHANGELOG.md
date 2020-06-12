@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] Dev - 2020-06-07
+## [1.1.3] Dev - 2020-06-12
 ### Added
 - New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
 - You can now escape tags so they are not processed by wrapping them in [{brackets}]. {{double-braces}} are no longer supported.
@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 - New {ifeditmode}{/ifeditmode} set of tags.
 - New {ifdev}{/ifdev} set of tags.
 - New {ifcourserequests}{/ifcourserequests} set of tags.
+- composer.json
 - Separator in menu above Request a Course link (part of {mycoursesmenu} tag).
 - New question to FAQ regarding setting filter priorities so that all enabled filters works together.
 ### Updated
@@ -39,7 +40,8 @@ All notable changes to this project will be documented in this file.
 - No longer identifies Guest users as being logged-in.
 - Documentation:FAQ info on how to translate built-in contact forms.
 - Documentation to reflect new functionality.
-- Updated FAQ.
+- FAQ.
+- .travis.yml and fixed issues.
 - Tested to be compatible with PHP 7.3.
 - Fixed example of Create Course menu item. Now creates a course in the current category.
 - Fixed {note} tag which was not working.
@@ -99,6 +101,7 @@ Boost Campus, Boost Learning, Boost Mgnific and Boost_Training.
 - New {glyphicon...} tag (for Glyphicons).
 - New {sectionid} and %7Bsectionid%7D tags.
 - New {details}, {summary}, {/summary}, {/details} tags (experimental).
+- New .travis.yml configuration file for Travis.
 - Expanded compatibility - now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4, 3.5, 3.6 and now 3.7.
 ### Updated
 - Fixed {categories} filter code compatibility with Moodle 2.7 to 3.5.
