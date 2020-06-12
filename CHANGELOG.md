@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
 - You can now escape tags so they are not processed by wrapping them in [{brackets}]. {{double-braces}} are no longer supported.
+- New {ifcustomrole roleshortname}{/{ifcustomrole} tags.
+- New {ifnotcustomrole roleshortname}{/{ifnotcustomrole} tags.
 - New {userdescription} tag.
 - New {categorycards} tag (ALPHA}.
 - New {coursecards} tag (ALPHA).

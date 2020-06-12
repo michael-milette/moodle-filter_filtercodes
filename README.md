@@ -189,6 +189,8 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifminmanager}{/ifminmanager} : Will display the enclosed content only if the user is logged-in as a manager or above.
 * {ifadmin}{/ifadmin} : Will display the enclosed content only if the user is logged-in as an administrator.
 * {ifdev}{/ifdev} : Will display the enclosed content only if the user is logged-in as an administrator and developer debugging mode is enabled.
+* {ifcustomrole roleshortname}{/ifcustomrole} : Will display enclosed content only if the user has the custom role specified by its shortname within the current context.
+* {ifnotcustomrole roleshortname}{/ifnotcustomrole} : Will display enclosed content only if the user does not have the custom role specified by its shortname within the current context.
 * {ifhome}{/ifhome} : Will display the enclosed content only if the user is on the Moodle Home Front Page.
 * {ifdashboard}{/ifdashboard} : Will display the enclosed content only if the user is on the Moodle Dashboard.
 * {ifincourse}{/ifincourse} : Will display the enclosed content only if the user is in a course other than the Front page.
@@ -566,6 +568,8 @@ Create a Page on your Moodle site and include the following code:
 * If Manager (minimum): {ifminmanager}You are a manager or administrator.{/ifminmanager}
 * If Admin [{ifadmin}]You are an administrator.[{/ifadmin}]: {ifadmin}You are an administrator.{/ifadmin}
 * If Developer [{ifdev}]You are an administrator with debugging set to developer mode.[{/ifdev}]: {ifdev}You are an administrator.{/ifdev}
+* If user has a parent custom role [{ifcustomrole parent}]You have a parent custom role in this context[{/ifcustomrole}]: {ifcustomrole parent}You have a parent custom role in this context{/ifcustomrole}.
+* If user does not have a parent custom role [{ifnotcustomrole parent}]You do not have a parent custom role in this context[{/ifnotcustomrole}]: {ifnotcustomrole parent}You do not have a parent custom role in this context{/ifnotcustomrole}.
 * If on Home page: {ifhome}You are on the Home Front page.{/ifhome}
 * If on Dashboard [{ifdashboard}]You are on the Home Front page.[{/ifdashboard}]: {ifdashboard}You are on the Home Front page.{/ifdashboard}
 * If in a course [{ifincourse}]Yes[{/ifincourse}]? {ifincourse}Yes{/ifincourse}
