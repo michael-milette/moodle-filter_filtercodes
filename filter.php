@@ -1339,7 +1339,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {/highlight}{/highlight}.
+        // Tag: {highlight}{/highlight}.
         if (stripos($text, '{/highlight}') !== false) {
             $replace['/\{highlight\}/i'] = '<span style="background-color:#FFFF00;">';
             $replace['/\{\/highlight\}/i'] = '</span>';
@@ -1776,6 +1776,27 @@ class filter_filtercodes extends moodle_text_filter {
             $newtext = preg_replace_callback('/\{urlencode}(.*?)\{\/urlencode\}/is',
                 function($matches) {
                     return urlencode($matches[1]);
+                }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+                $changed = true;
+            }
+        }
+        
+        // Tag: {help}{/help}.
+        if (stripos($text, '{/help}') !== false) {
+            static $help;
+            static $helpwrapper = [];
+            if (!isset($help)) {
+                $help = get_string('help');
+                $helpwrapper[0] = '<a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover" data-placement="right"'.
+                        ' data-content="<div class=&quot;no-overflow&quot;><p>';
+                $helpwrapper[1] = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon fa fa-question-circle'.
+                        ' text-info fa-fw " title="' . $help . '" aria-label="' . $help . '"></i></a>';
+            }
+            $newtext = preg_replace_callback('/\{help}(.*?)\{\/help\}/is',
+                function($matches) use($helpwrapper) {
+                    return $helpwrapper[0] . htmlspecialchars($matches[1]) . $helpwrapper[1];
                 }, $text);
             if ($newtext !== false) {
                 $text = $newtext;

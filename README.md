@@ -152,6 +152,7 @@ Moodle metadata filters
 * {fa/fas/far/fal fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
 * {note}content{/note} : Enables you to include a note which will not be displayed.
+* {help}content{/help} : Enables you to create popup help icons just like Moodle does.
 * {highlight}{/highlight} : Highlight text. NOTE: Must only be used within a paragraph.
 * {profile_field_shortname} : Display's custom profile field. Replace "shortname" with the shortname of a custom profile field all in lowercase. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
 * {profilefullname}: Similar to {fullname} except that it displays a profile owner's name when placed on the Profile page.
@@ -545,6 +546,7 @@ Create a Page on your Moodle site and include the following code:
 * Glyphicons "glyphicon-envelope": Glyphicons [{glyphicon glyphicon-envelope}] {glyphicon glyphicon-envelope}. Must be supported by your theme.
 * Details/summary [{details}][{summary}]This is the summary[{/summary}] followed by the details.[{/details}]: {details}{summary}This is the summary{/summary} followed by the details.{/details}
 * You should not see the following note [{note}]This could be a comment, todo or reminder.[{/note}]: {note}This could be a comment, todo or reminder.{/note}
+* Click for [{help}content{/help}] : {help}Enables you to create popup help icons and bubbles just like Moodle does.{/help}
 * [{highlight}]This text is highlighted in yellow.[{/highlight}] : {highlight}This text is highlighted in yellow.{/highlight}
 * Current language [{lang}] : {lang}
 * Display content of custom profile field [{profile_field_shortname}]: Location: {profile_field_location} - assuming you had created a custom profile field with a shortname called 'location'.
