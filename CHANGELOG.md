@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
 - You can now escape tags so they are not processed by wrapping them in [{brackets}]. {{double-braces}} are no longer supported.
 - New {help}{/help} tags.
+- New {info}{/info} tags.
 - New {ifcustomrole roleshortname}{/{ifcustomrole} tags.
 - New {ifnotcustomrole roleshortname}{/{ifnotcustomrole} tags.
 - New {userdescription} tag.
@@ -45,7 +46,7 @@ All notable changes to this project will be documented in this file.
 - Documentation to reflect new functionality.
 - FAQ.
 - .travis.yml and fixed issues.
-- Tested to be compatible with PHP 7.3.
+- Tested to be compatible with PHP 7.3 and 7.4.
 - Fixed example of Create Course menu item. Now creates a course in the current category.
 - Fixed {note} tag which was not working.
 ### Deprecated (no longer inluded)

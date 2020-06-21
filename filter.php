@@ -1789,14 +1789,35 @@ class filter_filtercodes extends moodle_text_filter {
             static $helpwrapper = [];
             if (!isset($help)) {
                 $help = get_string('help');
-                $helpwrapper[0] = '<a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover" data-placement="right"'.
-                        ' data-content="<div class=&quot;no-overflow&quot;><p>';
-                $helpwrapper[1] = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon fa fa-question-circle'.
-                        ' text-info fa-fw " title="' . $help . '" aria-label="' . $help . '"></i></a>';
+                $helpwrapper[0] = '<a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover"'
+                        . ' data-placement="right" data-content="<div class=&quot;no-overflow&quot;><p>';
+                $helpwrapper[1] = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
+                        . ' fa fa-question-circle text-info fa-fw " title="' . $help . '" aria-label="' . $help . '"></i></a>';
             }
             $newtext = preg_replace_callback('/\{help}(.*?)\{\/help\}/is',
                 function($matches) use($helpwrapper) {
                     return $helpwrapper[0] . htmlspecialchars($matches[1]) . $helpwrapper[1];
+                }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+                $changed = true;
+            }
+        }
+
+        // Tag: {info}{/info}.
+        if (stripos($text, '{/info}') !== false) {
+            static $info;
+            static $infowrapper = [];
+            if (!isset($info)) {
+                $info = get_string('info');
+                $infowrapper[0] = '<a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover"'
+                        . ' data-placement="right" data-content="<div class=&quot;no-overflow&quot;><p>';
+                $infowrapper[1] = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
+                        . ' fa fa-info-circle text-info fa-fw " title="' . $info . '" aria-label="' . $info . '"></i></a>';
+            }
+            $newtext = preg_replace_callback('/\{info}(.*?)\{\/info\}/is',
+                function($matches) use($infowrapper) {
+                    return $infowrapper[0] . htmlspecialchars($matches[1]) . $infowrapper[1];
                 }, $text);
             if ($newtext !== false) {
                 $text = $newtext;
