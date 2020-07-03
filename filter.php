@@ -520,6 +520,11 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {diskfreespace}.
+        if (stripos($text, '{diskfreespace}') !== false) {
+            $replace['/\{diskfreespace\}/i'] = display_size(disk_free_space('.'));
+        }
+
         // Any {user*} tags.
         if (stripos($text, '{user') !== false) {
 

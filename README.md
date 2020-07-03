@@ -114,6 +114,7 @@ Moodle metadata filters
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
 * {courseimage} : Display's the course image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
+* {diskfreespace} : Display amount of free disk space for application folder.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 * {categoryid} : If in a course, the ID of the course's parent category, the category ID of a course category page, otherwise 0.
@@ -506,6 +507,7 @@ Create a Page on your Moodle site and include the following code:
 * Course custom fields [{coursefields}]: {coursefields}
 * Section ID [{sectionid}]: {sectionid}
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
+* Available free disk space [{diskfreespace}]: {diskfreespace}
 * My Enrolled Courses [{mycourses}]: {mycourses}
 * My Enrolled Courses menu [{mycoursesmenu}]: {mycoursesmenu}
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
