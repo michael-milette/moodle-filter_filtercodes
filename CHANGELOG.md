@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] Dev - 2020-07-01
+## [2.0.0] 2020-07-01
 ### Added
 - New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
 - You can now escape tags so they are not processed by wrapping them in [{brackets}]. {{double-braces}} are no longer supported.
@@ -41,14 +41,15 @@ All notable changes to this project will be documented in this file.
 - Separator in menu above Request a Course link (part of {mycoursesmenu} tag).
 - New question to FAQ regarding setting filter priorities so that all enabled filters works together.
 ### Updated
+- Tested to be compatible with PHP 7.3 and 7.4.
+- Tested to be compatible with Moodle 3.9.
 - Read-only name and email address fields are now also disabled in {form...} templates.
 - Now checks moodle/course:request capability before creating Course Request link in {ifcourserequests}, {mycourses} and {mycoursemenu}
 - No longer identifies Guest users as being logged-in.
-- Documentation:FAQ info on how to translate built-in contact forms.
+- Documentation: FAQ info on how to translate built-in contact forms.
 - Documentation to reflect new functionality.
-- FAQ.
+- Updated FAQ.
 - .travis.yml and fixed issues.
-- Tested to be compatible with PHP 7.3 and 7.4.
 - Fixed example of Create Course menu item. Now creates a course in the current category.
 - Fixed {note} tag which was not working.
 ### Deprecated (no longer inluded)
@@ -56,15 +57,18 @@ All notable changes to this project will be documented in this file.
 
 ### Important notes
 
-Some tags are indicated in this documentation as ALPHA may still require some development and are not guarantied to be implementaed or implemented in the same way in future releases. Please let us know if you think they are useful if they work for you or what changes you might like to see.
+Some tags, which are indicated in this documentation as ALPHA, may still require some development and are not guarantied to be implementaed or implemented in the same way in future releases. Please let us know if you think they are useful if they work for you or what changes you might like to see.
 
-These UI components are compatible with most Bootrap 4 based themes including:
+UI tags are compatible with most Bootrap 4 based themes for Moodle. They have been tested with:
 
 Academi, Adaptable, Aigne, Bandeau, Boost, Classic, Eguru, Enlight Lite, Fordson, Foundation, GCWeb, Klass, Moove, Roshni Lite and Trema.
 
-Not compatible with the following Moodle themes:
+They were found to be incompatible with the following Moodle themes:
 
-Boost Campus, Boost Learning, Boost Mgnific and Boost_Training.
+* Boost Campus
+* Boost Learning
+* Boost Mgnific
+* Boost_Training
 
 ## [1.1.0] - 2019-11-17
 ### Added

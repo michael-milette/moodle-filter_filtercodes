@@ -147,10 +147,11 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
-     * Checks a custom role filtered or not by context id
+     * Checks if a user has a custom role or not within the current context.
      *
-     * @param $roleshortname
-     * @param int $contextid
+     * @param string $roleshortname The role's shortname.
+     * @param integer $contextid The context where the tag appears.
+     * @return boolean True if user has custom role, otherwise, false.
      */
     private function hascustomrole($roleshortname, $contextid = 0) {
         $keytocheck = $roleshortname . '-' . $contextid;
@@ -1792,7 +1793,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $changed = true;
             }
         }
-        
+
         // Tag: {help}{/help}.
         if (stripos($text, '{/help}') !== false) {
             static $help;
