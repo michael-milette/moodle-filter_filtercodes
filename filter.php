@@ -520,9 +520,14 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {diskfreespace}.
+        // Tag: {diskfreespace} - free space of Moodle application volume.
         if (stripos($text, '{diskfreespace}') !== false) {
             $replace['/\{diskfreespace\}/i'] = display_size(disk_free_space('.'));
+        }
+
+        // Tag: {diskfreespacedata} - free space of Moodledata volume.
+        if (stripos($text, '{diskfreespacedata}') !== false) {
+            $replace['/\{diskfreespacedata\}/i'] = display_size(disk_free_space($CFG->dataroot));
         }
 
         // Any {user*} tags.

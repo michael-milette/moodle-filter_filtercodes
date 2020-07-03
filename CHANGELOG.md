@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
 - You can now escape tags so they are not processed by wrapping them in [{brackets}]. {{double-braces}} are no longer supported.
+- New {diskfreespacedata} tag.
 - New {diskfreespace} tag.
 - New {help}{/help} tags.
 - New {info}{/info} tags.

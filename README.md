@@ -115,6 +115,7 @@ Moodle metadata filters
 * {courseimage} : Display's the course image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
 * {diskfreespace} : Display amount of free disk space for application folder.
+* {diskfreespacedata} : Display amount of free disk space for moodledata folder.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 * {categoryid} : If in a course, the ID of the course's parent category, the category ID of a course category page, otherwise 0.
@@ -507,7 +508,8 @@ Create a Page on your Moodle site and include the following code:
 * Course custom fields [{coursefields}]: {coursefields}
 * Section ID [{sectionid}]: {sectionid}
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
-* Available free disk space [{diskfreespace}]: {diskfreespace}
+* Available free application disk space [{diskfreespace}]: {diskfreespace}
+* Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}
 * My Enrolled Courses [{mycourses}]: {mycourses}
 * My Enrolled Courses menu [{mycoursesmenu}]: {mycoursesmenu}
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
