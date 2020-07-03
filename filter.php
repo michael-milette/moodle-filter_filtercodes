@@ -1792,7 +1792,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $changed = true;
             }
         }
-        
+
         // Tag: {help}{/help}.
         if (stripos($text, '{/help}') !== false) {
             static $help;
