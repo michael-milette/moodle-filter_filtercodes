@@ -1678,27 +1678,27 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-	    // Tag: {iftenant tenantid}
-	    if (class_exists('tool_tenant\tenancy')) {
-		// Get current tenantid
-		$currenttenantid = \tool_tenant\tenancy::get_tenant_id(); 
-            	if (stripos($text, '{iftenant') !== false) {
-                    $re = '/{iftenant\s+(.*?)\}(.*?)\{\/iftenant\}/ims';
-                $found = preg_match_all($re, $text, $matches);
+        // Tag: {iftenant tenantid}.        
+	    if (class_exists('tool_tenant\tenancy')) {            
+		    // Get current tenantid
+		    $currenttenantid = \tool_tenant\tenancy::get_tenant_id(); 
+            if (stripos($text, '{iftenant') !== false) {                
+                $re = '/{iftenant\s+(.*?)\}(.*?)\{\/iftenant\}/ims';
+                $found = preg_match_all($re, $text, $matches);              
                 if ($found > 0) {
-                    foreach ($matches[1] as $tenantid) {
+                    foreach ($matches[1] as $tenantid) {                        
                         $key = '/{iftenant\s+' . $tenantid . '\}(.*?)\{\/iftenant\}/ims';
                         if ($tenantid == $currenttenantid) {
                             // Just remove the tags.
                             $replace[$key] = '$1';
                         } else {
-                            // Remove the ifcustomrole strings.
+                            // Remove the iftenant strings.
                             $replace[$key] = '';
                         }
                     }
-		}
+                }
             }
-
+	    }
 
             // Tag: {ifcustomrole rolename}.
             if (stripos($text, '{ifcustomrole') !== false) {
