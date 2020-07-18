@@ -1679,16 +1679,25 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
         // Tag: {iftenant tenantid}.        
-	    if (class_exists('tool_tenant\tenancy')) {            
-		    // Get current tenantid
-		    $currenttenantid = \tool_tenant\tenancy::get_tenant_id(); 
+	    if (class_exists('tool_tenant\tenancy')) {                        
+            $tenants = \tool_tenant\tenancy::get_tenants();
+            // Get current tenantid
+            $currenttenantid = \tool_tenant\tenancy::get_tenant_id(); 
+            // We will use tenant's idnumber if it is set. If not, default to tenant id
+            $currenttenantidnumber = 1;
+            foreach ($tenants as $tenant) {
+                if ($tenant->id == $currenttenantid) {
+                    $currenttenantidnumber = $tenant->idnumber ? $tenant->idnumber : $tenant->id;
+                }
+            }
+            
             if (stripos($text, '{iftenant') !== false) {                
                 $re = '/{iftenant\s+(.*?)\}(.*?)\{\/iftenant\}/ims';
                 $found = preg_match_all($re, $text, $matches);              
                 if ($found > 0) {
                     foreach ($matches[1] as $tenantid) {                        
                         $key = '/{iftenant\s+' . $tenantid . '\}(.*?)\{\/iftenant\}/ims';
-                        if ($tenantid == $currenttenantid) {
+                        if ($tenantid == $currenttenantidnumber) {
                             // Just remove the tags.
                             $replace[$key] = '$1';
                         } else {
