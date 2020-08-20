@@ -97,6 +97,7 @@ Moodle metadata filters
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
 * {usercount} : Count total number of registered users on the site. Does not included deleted users, primary admin or guest.
+* {userfirstaccess} : Date that the user first accessd the site
 * {usersactive} : Count total number of registered users on the site. Does not included deleted users, disabled users, primary admin or guest.
 * {usersonline} : Total number of users who were online in the last 5 minutes.
 * {siteyear} : 4-digit current year.
@@ -226,6 +227,19 @@ The opening {langx xx} may also include a [culture code](https://en.wikipedia.or
 The {langx fr-CA}{/langx} filter will convert this into the following HTML
 
     <span lang="fr-CA">Contenu</span>
+
+Date strftime Arguments
+
+The 4 datetime codes can optionally take a strftime string to define the format. This string must be enclosed with double quotes.
+
+* {userfirstaccess}
+* {coursestartdate}
+* {courseenddate}
+* {coursecompletiondate}
+
+Example:
+    
+    {userfirstaccess "%m/%d/%Y, %H:%M:%S"}
 
 ## FilterCodes in a custom menu
 
