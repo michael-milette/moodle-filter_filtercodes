@@ -108,6 +108,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
 * {profile_field_shortname} : Display's custom profile field. Replace "shortname" with the shortname of a custom profile field all in lowercase. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
 * {profilefullname}: Similar to {fullname} except that it displays a profile owner's name when placed on the Profile page.
+* {firstaccessdate} : Date that the user first accessd the site.
 
 ### System Information
 
@@ -567,10 +568,11 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Total number of active users [{usersactive}]: {usersactive}
 * Total number of online users [{usersonline}]: {usersonline}
 * Current 4-digit year [{siteyear}]: {siteyear}
+* You first accessed the site on [{firstaccessdate}] : {firstaccessdate}
 * Course or Site full name [{coursename}]: {coursename}
 * Course or Site short name [{courseshortname}]: {courseshortname}
 * Course start date [{coursestartdate}]: {coursestartdate}
-* Course start date [{courseenddate}]: {courseenddate}
+* Course end date [{courseenddate}]: {courseenddate}
 * Completion date [{coursecompletiondate}]: {coursecompletiondate}
 * Course progress (ALPHA) [{courseprogress}]: {courseprogress}
 * Course progress bar (ALPHA) [{courseprogressbar}]: {courseprogressbar}

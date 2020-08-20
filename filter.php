@@ -570,6 +570,18 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{idnumber\}/i'] = isloggedin() && !isguestuser() ? $USER->idnumber : '';
         }
 
+        // Tag: {firstaccessdate}. User first access date.
+        if (stripos($text, '{firstaccessdate}') !== false) {
+            if (isloggedin() && !isguestuser() && !empty($USER->firstaccess)) {
+                // Replace {firstaccessdate} tag with formatted date.
+                if (stripos($text, '{firstaccessdate}') !== false) {
+                    $replace['/\{firstaccessdate\}/i'] = userdate($USER->firstaccess, get_string('strftimedatefullshort'));
+                }
+            } else {
+                $replace['/\{firstaccessdate\}/i'] = get_string('never');
+            }
+        }
+
         if (get_config('filter_filtercodes', 'enable_scrape')) { // Must be enabled in FilterCodes settings.
             // Tag: {scrape url="" tag="" class="" id="" code=""}.
             if (stripos($text, '{scrape ') !== false) {
@@ -847,44 +859,53 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {coursestartdate}. The course start date.
-            if (stripos($text, '{coursestartdate}') !== false) {
+            if (stripos($text, '{coursestartdate') !== false) {
                 if (empty($PAGE->course->startdate)) {
-                    $PAGE->course->startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $course->id]);
+                    $PAGE->course->startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $PAGE->course->id]);
                 }
-                if ($PAGE->course->startdate > 0) {
-                    $replace['/\{coursestartdate\}/i'] = userdate($PAGE->course->startdate, get_string('strftimedatefullshort'));
+                if (!empty($PAGE->course->startdate)) {
+                    // Replace {coursestartdate} tag with formatted date.
+                    if (stripos($text, '{coursestartdate}') !== false) {
+                        $replace['/\{coursestartdate\}/i'] = userdate($PAGE->course->startdate, get_string('strftimedatefullshort'));
+                    }
                 } else {
-                    $replace['/\{coursestartdate\}/i'] = get_string('none');
+                    $replace['/\{coursestartdate\}/i'] = get_string('notyetstarted', 'completion');
                 }
             }
 
             // Tag: {courseenddate}. The course end date.
-            if (stripos($text, '{courseenddate}') !== false) {
+            if (stripos($text, '{courseenddate') !== false) {
                 if (empty($PAGE->course->enddate)) {
-                    $PAGE->course->enddate = $DB->get_field_select('course', 'enddate', 'id = :id', ['id' => $course->id]);
+                    $PAGE->course->enddate = $DB->get_field_select('course', 'enddate', 'id = :id', ['id' => $PAGE->course->id]);
                 }
-                if ($PAGE->course->enddate > 0) {
-                    $replace['/\{courseenddate\}/i'] = userdate($PAGE->course->enddate, get_string('strftimedatefullshort'));
-                } else {
+                if (!empty($PAGE->course->enddate)) {
+                    // Replace {courseenddate} tag with formatted date.
+                    if (stripos($text, '{courseenddate}') !== false) {
+                        $replace['/\{courseenddate\}/i'] = userdate($PAGE->course->enddate, get_string('strftimedatefullshort'));
+                    }
+                } else { // No end date has been set.
                     $replace['/\{courseenddate\}/i'] = get_string('none');
                 }
             }
 
             // Tag: {coursecompletiondate}. The course completion date.
-            if (stripos($text, '{coursecompletiondate}') !== false) {
+            if (stripos($text, '{coursecompletiondate') !== false) {
                 if ($PAGE->course
                         && isset($CFG->enablecompletion)
                         && $CFG->enablecompletion == COMPLETION_ENABLED
                         && $PAGE->course->enablecompletion) {
                     $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $PAGE->course->id]);
-                    if ($ccompletion->timecompleted) {
-                        $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted,
-                                get_string('strftimedatefullshort'));
-                    } else {
-                        $replace['/\{coursecompletiondate\}/i'] = get_string('notcompleted', 'completion');
+                    $incomplete = get_string('notcompleted', 'completion');
+                } else { // Completion not enabled.
+                    $incomplete = get_string('completionnotenabled', 'completion');
+                }
+                if (!empty($ccompletion->timecompleted)) {
+                    // Replace {coursecompletiondate} tag with formatted date.
+                    if (stripos($text, '{coursecompletiondate}') !== false) {
+                        $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted, get_string('strftimedatefullshort'));
                     }
                 } else {
-                    $replace['/\{coursecompletiondate\}/i'] = get_string('completionnotenabled', 'completion');
+                    $replace['/\{coursecompletiondate\}/i'] = $incomplete;
                 }
             }
 

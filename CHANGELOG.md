@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - New {timezone} tag.
 - New {preferredlanguage} tag.
 - New {coursesummary} tag.
+- New {firstaccessdate} tag/
 ### Updated
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
 - {alert} to allow for optional contextual class stying.
