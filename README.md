@@ -109,6 +109,7 @@ Moodle metadata filters
 * {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
 * {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
 * {coursecards}: (ALPHA) Display available courses as cards. Has only been tested on Front Page.
+* {coursecards_categoryID}: (ALPHA) Display available courses from category ID as cards. Has only been tested on Front Page.
 * {categorycards}: (ALPHA) Display top level categories as cards. Has only been tested on Front Page.
 * {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.

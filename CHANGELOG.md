@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - New {userdescription} tag.
 - New {categorycards} tag (ALPHA}.
 - New {coursecards} tag (ALPHA).
+- New {coursecards_categoryCATID} tag (ALPHA).
 - New {courseprogress} tag (ALPHA).
 - New {courseprogressbar} tag (ALPHA).
 - New {-} tag (soft hyphen)
