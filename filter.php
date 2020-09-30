@@ -598,28 +598,6 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {userfirstaccess} or {userfirstaccess "strftime"}
-            if (stripos($text, '{userfirstaccess') !== false) {
-                if (isloggedin() && !isguestuser()) {
-                    $user = $DB->get_record('user', array('id' => $USER->id), 'firstaccess', MUST_EXIST);
-                    $newtext = preg_replace_callback('/{userfirstaccess(\s+"(.*)")?}/i',
-                        function($matches) use ($user) {
-                            if(sizeof($matches) == 1 && $matches[0] == "{userfirstaccess}"){
-                                return userdate($user->firstaccess, get_string('strftimedatefullshort'));
-                            }else if(sizeof($matches) == 3){
-                                return userdate($user->firstaccess, $matches[2]);
-                            }
-                        }, $text);
-                    if ($newtext !== false) {
-                        $text = $newtext;
-                        $changed = true;
-                    }
-                    unset($user);
-                } else {
-                    $replace['/\{userfirstaccess(\s+"(.*)")?\}/i'] = get_string('none');
-                }
-            }
-
             // Tag: {usercount}.
             if (stripos($text, '{usercount}') !== false) {
                 // Count total number of current users on the site.
@@ -787,78 +765,45 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{courseimage\}/i'] = '<img src="' . $imgurl . '" class="img-responsive">';
             }
 
-            // Tag: {coursestartdate} or {coursestartdate "strftime"}. The course start date.
-            if (stripos($text, '{coursestartdate') !== false) {
+            // Tag: {coursestartdate}. The course start date.
+            if (stripos($text, '{coursestartdate}') !== false) {
                 if (empty($PAGE->course->startdate)) {
                     $PAGE->course->startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $course->id]);
                 }
                 if ($PAGE->course->startdate > 0) {
-                    $newtext = preg_replace_callback('/{coursestartdate(\s+"(.*)")?}/i',
-                        function($matches) use ($PAGE) {
-                            if(sizeof($matches) == 1 && $matches[0] == "{coursestartdate}"){
-                                return userdate($PAGE->course->startdate, get_string('strftimedatefullshort'));
-                            }else if(sizeof($matches) == 3){
-                                return userdate($PAGE->course->startdate, $matches[2]);
-                            }
-                        }, $text);
-                    if ($newtext !== false) {
-                        $text = $newtext;
-                        $changed = true;
-                    }
+                    $replace['/\{coursestartdate\}/i'] = userdate($PAGE->course->startdate, get_string('strftimedatefullshort'));
                 } else {
-                    $replace['/\{coursestartdate(\s+"(.*)")?\}/i'] = get_string('none');
+                    $replace['/\{coursestartdate\}/i'] = get_string('none');
                 }
             }
 
-            // Tag: {courseenddate} or {coursesenddate "strftime"}. The course end date.
-            if (stripos($text, '{courseenddate') !== false) {
+            // Tag: {courseenddate}. The course end date.
+            if (stripos($text, '{courseenddate}') !== false) {
                 if (empty($PAGE->course->enddate)) {
                     $PAGE->course->enddate = $DB->get_field_select('course', 'enddate', 'id = :id', ['id' => $course->id]);
                 }
                 if ($PAGE->course->enddate > 0) {
-                    $newtext = preg_replace_callback('/{courseenddate(\s+"(.*)")?}/i',
-                        function($matches) use ($PAGE) {
-                            if(sizeof($matches) == 1 && $matches[0] == "{courseenddate}"){
-                                return userdate($PAGE->course->enddate, get_string('strftimedatefullshort'));
-                            }else if(sizeof($matches) == 3){
-                                return userdate($PAGE->course->enddate, $matches[2]);
-                            }
-                        }, $text);
-                    if ($newtext !== false) {
-                        $text = $newtext;
-                        $changed = true;
-                    }
+                    $replace['/\{courseenddate\}/i'] = userdate($PAGE->course->enddate, get_string('strftimedatefullshort'));
                 } else {
-                    $replace['/\{courseenddate(\s+"(.*)")?\}/i'] = get_string('none');
+                    $replace['/\{courseenddate\}/i'] = get_string('none');
                 }
             }
 
-
-            // Tag: {coursecompletiondate} or {coursecompletiondate "strftime"}. The course completion date.
-            if (stripos($text, '{coursecompletiondate') !== false) {
+            // Tag: {coursecompletiondate}. The course completion date.
+            if (stripos($text, '{coursecompletiondate}') !== false) {
                 if ($PAGE->course
                         && isset($CFG->enablecompletion)
                         && $CFG->enablecompletion == COMPLETION_ENABLED
                         && $PAGE->course->enablecompletion) {
                     $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $PAGE->course->id]);
                     if ($ccompletion->timecompleted) {
-                        $newtext = preg_replace_callback('/{coursecompletiondate(\s+"(.*)")?}/i',
-                            function($matches) use ($ccompletion) {
-                                if(sizeof($matches) == 1 && $matches[0] == "{coursecompletiondate}"){
-                                    return userdate($ccompletion->timecompleted, get_string('strftimedatefullshort'));
-                                }else if(sizeof($matches) == 3){
-                                    return userdate($ccompletion->timecompleted, $matches[2]);
-                                }
-                            }, $text);
-                        if ($newtext !== false) {
-                            $text = $newtext;
-                            $changed = true;
-                        }
+                        $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted,
+                                get_string('strftimedatefullshort'));
                     } else {
-                        $replace['/\{coursecompletiondate(\s+"(.*)")?\}/i'] = get_string('notcompleted', 'completion');
+                        $replace['/\{coursecompletiondate\}/i'] = get_string('notcompleted', 'completion');
                     }
                 } else {
-                    $replace['/\{coursecompletiondate(\s+"(.*)")?\}/i'] = get_string('completionnotenabled', 'completion');
+                    $replace['/\{coursecompletiondate\}/i'] = get_string('completionnotenabled', 'completion');
                 }
             }
 
