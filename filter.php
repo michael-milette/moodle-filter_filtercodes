@@ -1796,10 +1796,19 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {alert}{/alert}.
         if (stripos($text, '{/alert}') !== false) {
+            // If alert <style> parameter is not included, default to alert-warning
             $newtext = preg_replace_callback('/\{alert}(.*?)\{\/alert\}/is',
                 function($matches) {
                     return '<div class="alert alert-warning" role="alert"><p>' . $matches[1] . '</p></div>';
                 }, $text);
+            //If {alert <style> is defined
+            // Replaces style with passed parameter 
+            if (!$newtext){
+                $newtext = preg_replace_callback('/\{alert\s(.*?)\}(.*?)\{\/alert\}/is',
+                function($matches) {
+                    return '<div class="alert alert-' . $matches[1] . '" role="alert"><p>' . $matches[2] . '</p></div>';
+                }, $text);
+            }
             if ($newtext !== false) {
                 $text = $newtext;
                 $changed = true;

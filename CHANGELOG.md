@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.0.2] 2020-10-03
+### Updated
+- Updated {alert} to allow for contextual class stying, Eg, `{alert primary}` or `{alert success}`. You can view a list of the contextual clases [here](https://getbootstrap.com/docs/4.0/components/alerts/)
+
 ## [2.0.1] 2020-10-02
 ### Added
 - New {alert}{/alert} tags (ALPHA).
