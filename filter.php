@@ -1794,6 +1794,18 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {alert}{/alert}.
+        if (stripos($text, '{/alert}') !== false) {
+            $newtext = preg_replace_callback('/\{alert}(.*?)\{\/alert\}/is',
+                function($matches) {
+                    return '<div class="alert alert-warning" role="alert"><p>' . $matches[1] . '</p></div>';
+                }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+                $changed = true;
+            }
+        }
+
         // Tag: {help}{/help}.
         if (stripos($text, '{/help}') !== false) {
             static $help;
