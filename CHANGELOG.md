@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.0.1] 2020-10-02
+### Added
+- New {alert}{/alert} tags (ALPHA).
+
 ## [2.0.0] 2020-07-01
 ### Added
 - New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
@@ -12,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - New {ifcustomrole roleshortname}{/{ifcustomrole} tags.
 - New {ifnotcustomrole roleshortname}{/{ifnotcustomrole} tags.
 - New {userdescription} tag.
-- New {categorycards} tag (ALPHA}.
+- New {categorycards} tag (ALPHA).
 - New {coursecards} tag (ALPHA).
 - New {courseprogress} tag (ALPHA).
 - New {courseprogressbar} tag (ALPHA).
