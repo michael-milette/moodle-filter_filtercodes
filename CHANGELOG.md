@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New {alert}{/alert} tags (ALPHA).
 - New {ifincohort idname|idnumber}{/ifincohort} tags.
+- New {webpage} tag.
 ### Updated
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
 

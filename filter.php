@@ -486,6 +486,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{institution\}/i'] = isloggedin() && !isguestuser() ? $USER->institution : '';
         }
 
+        // Tag: {webpage}.
+        if (stripos($text, '{webpage}') !== false) {
+            $replace['/\{webpage\}/i'] = isloggedin() && !isguestuser() ? $USER->url : '';
+        }
+
         // Tag: {department}.
         if (stripos($text, '{department}') !== false) {
             $replace['/\{department\}/i'] = isloggedin() && !isguestuser() ? $USER->department : '';

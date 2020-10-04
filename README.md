@@ -93,6 +93,7 @@ Moodle metadata filters
 * {idnumber} : Display the user's idnumber from their profile.
 * {username} : Display the user's username.
 * {userdescription} : Display the user's description.
+* {webpage} : Display the user's webpage as seen in their profile.
 * {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
@@ -479,6 +480,7 @@ Create a Page on your Moodle site and include the following code:
 * ID Number [{idnumber}]: {idnumber}
 * User name [{username}]: {username}
 * User description [{userdescription}] : {userdescription}
+* Website URL [{website}] : {website}
 * Scrape h1 from example.com: {scrape url="https://example.com/" tag="h1"}
 * User profile picture URL (small) [{userpictureurl sm}]: {userpictureurl sm}
 * User profile picture URL (medium) [{userpictureurl md}]: {userpictureurl md}
