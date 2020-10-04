@@ -833,8 +833,8 @@ class filter_filtercodes extends moodle_text_filter {
                 if ($PAGE->course->enablecompletion == 1
                         && isloggedin()
                         && !isguestuser()
-                        && context_system::instance() != 'page-site-index'
-                        && $comppc = \core_completion\progress::get_course_progress_percentage($PAGE->course)) {
+                        && context_system::instance() != 'page-site-index') {
+                    $comppc = \core_completion\progress::get_course_progress_percentage($PAGE->course);
                     // Course completion progress percentage.
                     $comppercent = number_format($comppc, 0);
                     if (stripos($text, '{courseprogress}') !== false) {
