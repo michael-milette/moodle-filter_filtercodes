@@ -1427,6 +1427,29 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifincohort idname|idnumber}.
+            if (stripos($text, '{ifincohort ') !== false) {
+                static $mycohorts;
+                if (empty($mycohorts)) { // Cache list of cohorts.
+                    require_once($CFG->dirroot.'/cohort/lib.php');
+                    $mycohorts = cohort_get_user_cohorts($USER->id);
+                }
+                $newtext = preg_replace_callback('/\{ifincohort (\w*)\}(.*?)\{\/ifincohort\}/is',
+                    function ($matches) use($mycohorts) {
+                        foreach ($mycohorts as $cohort) {
+                            if ($cohort->idnumber == $matches[1] || $cohort->id == $matches[1]) {
+                                return ($matches[2]);
+                            };
+                        }
+                        return '';
+                    }, $text
+                );
+                if ($newtext !== false) {
+                    $text = $newtext;
+                    $changed = true;
+                }
+            }
+
             // Tag: {ifeditmode}.
             if (stripos($text, '{ifeditmode}') !== false) {
                 // If editing mode is activated...
