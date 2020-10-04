@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New {alert}{/alert} tags (ALPHA).
 - New {ifincohort idname|idnumber}{/ifincohort} tags.
+- New {webpage} tag.
 
 ## [2.0.0] 2020-07-01
 ### Added
