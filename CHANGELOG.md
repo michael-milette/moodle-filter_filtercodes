@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - New {ifnoteditmode} tag.
 ### Updated
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
+- Updated {alert} to allow for contextual class stying
 
 ## [2.0.0] 2020-07-01
 ### Added

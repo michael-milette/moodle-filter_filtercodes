@@ -157,7 +157,7 @@ Moodle metadata filters
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {help}content{/help} : Enables you to create popup help icons just like Moodle does.
 * {info}content{/info} : Enables you to create popup help icons just like the popup Help icons but with an "i" information icon.
-* {alert}content{/info}: (ALPHA) Creates an alert box containing the specified content.
+* {alert ...}content{/alert}: (ALPHA) Creates an alert box containing the specified content. You can add contextual classes by adding them as a parameter. Eg, `{alert primary}` or `{alert success}`. You can view a list of the contextual clases [here](https://getbootstrap.com/docs/4.0/components/alerts/)
 * {highlight}{/highlight} : Highlight text. NOTE: Must only be used within a paragraph.
 * {profile_field_shortname} : Display's custom profile field. Replace "shortname" with the shortname of a custom profile field all in lowercase. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
 * {profilefullname}: Similar to {fullname} except that it displays a profile owner's name when placed on the Profile page.
