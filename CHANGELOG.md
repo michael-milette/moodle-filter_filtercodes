@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.0.1] dev-2020-10-04
+## [2.0.2] dev-2020-10-05
 ### Added
 - New {alert}{/alert} tags (ALPHA).
 - New {ifincohort idname|idnumber}{/ifincohort} tags.
@@ -9,7 +9,8 @@ All notable changes to this project will be documented in this file.
 - New {ifnoteditmode} tag.
 ### Updated
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
-- Updated {alert} to allow for contextual class stying
+- {alert} to allow for optional contextual class stying.
+- Reorganized and grouped list of tags and made some corrections in the documentation.
 
 ## [2.0.0] 2020-07-01
 ### Added
