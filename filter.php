@@ -486,6 +486,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{institution\}/i'] = isloggedin() && !isguestuser() ? $USER->institution : '';
         }
 
+        // Tag: {webpage}.
+        if (stripos($text, '{webpage}') !== false) {
+            $replace['/\{webpage\}/i'] = isloggedin() && !isguestuser() ? $USER->url : '';
+        }
+
         // Tag: {department}.
         if (stripos($text, '{department}') !== false) {
             $replace['/\{department\}/i'] = isloggedin() && !isguestuser() ? $USER->department : '';
@@ -828,8 +833,8 @@ class filter_filtercodes extends moodle_text_filter {
                 if ($PAGE->course->enablecompletion == 1
                         && isloggedin()
                         && !isguestuser()
-                        && context_system::instance() != 'page-site-index'
-                        && $comppc = \core_completion\progress::get_course_progress_percentage($PAGE->course)) {
+                        && context_system::instance() != 'page-site-index') {
+                    $comppc = \core_completion\progress::get_course_progress_percentage($PAGE->course);
                     // Course completion progress percentage.
                     $comppercent = number_format($comppc, 0);
                     if (stripos($text, '{courseprogress}') !== false) {
@@ -1427,6 +1432,29 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifincohort idname|idnumber}.
+            if (stripos($text, '{ifincohort ') !== false) {
+                static $mycohorts;
+                if (empty($mycohorts)) { // Cache list of cohorts.
+                    require_once($CFG->dirroot.'/cohort/lib.php');
+                    $mycohorts = cohort_get_user_cohorts($USER->id);
+                }
+                $newtext = preg_replace_callback('/\{ifincohort (\w*)\}(.*?)\{\/ifincohort\}/is',
+                    function ($matches) use($mycohorts) {
+                        foreach ($mycohorts as $cohort) {
+                            if ($cohort->idnumber == $matches[1] || $cohort->id == $matches[1]) {
+                                return ($matches[2]);
+                            };
+                        }
+                        return '';
+                    }, $text
+                );
+                if ($newtext !== false) {
+                    $text = $newtext;
+                    $changed = true;
+                }
+            }
+
             // Tag: {ifeditmode}.
             if (stripos($text, '{ifeditmode}') !== false) {
                 // If editing mode is activated...
@@ -1437,6 +1465,19 @@ class filter_filtercodes extends moodle_text_filter {
                 } else {
                     // If editing mode is not enabled, remove the ifeditmode tags and contained content.
                     $replace['/\{ifeditmode}(.*?)\{\/ifeditmode\}/ims'] = '';
+                }
+            }
+
+            // Tag: {ifnoteditmode}.
+            if (stripos($text, '{ifnoteditmode}') !== false) {
+                // If editing mode is activated...
+                if ($PAGE->user_is_editing()) {
+                    // If editing mode is enabled, remove the ifnoteditmode tags and contained content.
+                    $replace['/\{ifnoteditmode}(.*?)\{\/ifnoteditmode\}/ims'] = '';
+                } else {
+                    // Just remove the tags.
+                    $replace['/\{ifnoteditmode\}/i'] = '';
+                    $replace['/\{\/ifnoteditmode\}/i'] = '';
                 }
             }
 

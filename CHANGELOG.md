@@ -1,13 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.0.2] 2020-10-03
-### Updated
-- Updated {alert} to allow for contextual class stying, Eg, `{alert primary}` or `{alert success}`. You can view a list of the contextual clases [here](https://getbootstrap.com/docs/4.0/components/alerts/)
-
-## [2.0.1] 2020-10-02
+## [2.0.1] dev-2020-10-04
 ### Added
 - New {alert}{/alert} tags (ALPHA).
+- New {ifincohort idname|idnumber}{/ifincohort} tags.
+- New {webpage} tag.
+- New {ifnoteditmode} tag.
+### Updated
+- {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
+- Updated {alert} to allow for contextual class stying
 
 ## [2.0.0] 2020-07-01
 ### Added

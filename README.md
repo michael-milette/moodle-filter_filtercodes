@@ -93,6 +93,7 @@ Moodle metadata filters
 * {idnumber} : Display the user's idnumber from their profile.
 * {username} : Display the user's username.
 * {userdescription} : Display the user's description.
+* {webpage} : Display the user's webpage as seen in their profile.
 * {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
@@ -202,6 +203,7 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifinsection}{/ifinsection} : Will display the enclosed content only if the user is in a section of a course which is not the Front Page.
 * {ifnotinsection}{/ifnotinsection} : Will display the enclosed content only if the user is not in a section of a course.
 * {ifcourserequests}{/ifcourserequests} : Will display enclosed contents only if the Request a Course feature is enabled.
+* {ifincohort idname|idnumber}{/ifincohort} : Will display enclosed content only if user is a member of the specified cohort. You can specify the ID of the cohort or the ID Number field in your cohort settings.
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
@@ -478,6 +480,7 @@ Create a Page on your Moodle site and include the following code:
 * ID Number [{idnumber}]: {idnumber}
 * User name [{username}]: {username}
 * User description [{userdescription}] : {userdescription}
+* Website URL [{website}] : {website}
 * Scrape h1 from example.com: {scrape url="https://example.com/" tag="h1"}
 * User profile picture URL (small) [{userpictureurl sm}]: {userpictureurl sm}
 * User profile picture URL (medium) [{userpictureurl md}]: {userpictureurl md}
@@ -561,7 +564,8 @@ Create a Page on your Moodle site and include the following code:
 * Display profile owner's full name on profile pages [{profilefullname}]: This is the profile of {profilefullname}.
 * If you are logged-in as a different user [{ifloggedinas}] : {ifloggedinas}You are logged-in as a different user.{/ifloggedinas}
 * If you are NOT logged-in as a different user [{ifloggedinas}] : {ifnotloggedinas}You are logged-in as yourself.{/ifnotloggedinas}
-* If Editing mode activated [{ifeditmode}]Don't forget to turn off editing mode![{/ifeditmode}]: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
+* If Editing mode activated (on) [{ifeditmode}]Don't forget to turn off editing mode![{/ifeditmode}]: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
+* If Editing mode is deactivated (off) [{ifnoteditmode}]&lt;a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on"&gt;Turn edit mode on&lt;a/&gt;[{ifnoteditmode}]: {ifnoteditmode}<a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on">Turn edit mode on</a>{ifnoteditmode};
 * If Enrolled [{ifenrolled}]You are enrolled in this course.[{/ifenrolled}]: {ifenrolled}You are enrolled in this course.{/ifenrolled}
 * If Not Enrolled [{ifnotenrolled}]You are not enrolled in this course.[{/ifnotenrolled}]: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
 * If LoggedIn [{ifloggedin}]You are logged-in.[{/ifloggedin}]: {ifloggedin}You are logged-in.{/ifloggedin}
@@ -585,6 +589,7 @@ Create a Page on your Moodle site and include the following code:
 * If in a course [{ifincourse}]Yes[{/ifincourse}]? {ifincourse}Yes{/ifincourse}
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
+* Are you a member of the "moodlers" cohort [{ifincohort moodlers}]Yes[{/ifincohort}]? {ifincohort moodlers}Yes{/ifincohort}
 
 You can switch to different roles to see how each will affect the content being displayed.
 
