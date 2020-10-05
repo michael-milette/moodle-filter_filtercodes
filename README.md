@@ -564,7 +564,8 @@ Create a Page on your Moodle site and include the following code:
 * Display profile owner's full name on profile pages [{profilefullname}]: This is the profile of {profilefullname}.
 * If you are logged-in as a different user [{ifloggedinas}] : {ifloggedinas}You are logged-in as a different user.{/ifloggedinas}
 * If you are NOT logged-in as a different user [{ifloggedinas}] : {ifnotloggedinas}You are logged-in as yourself.{/ifnotloggedinas}
-* If Editing mode activated [{ifeditmode}]Don't forget to turn off editing mode![{/ifeditmode}]: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
+* If Editing mode activated (on) [{ifeditmode}]Don't forget to turn off editing mode![{/ifeditmode}]: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
+* If Editing mode is deactivated (off) [{ifnoteditmode}]&lt;a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on"&gt;Turn edit mode on&lt;a/&gt;[{ifnoteditmode}]: {ifnoteditmode}<a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on">Turn edit mode on</a>{ifnoteditmode};
 * If Enrolled [{ifenrolled}]You are enrolled in this course.[{/ifenrolled}]: {ifenrolled}You are enrolled in this course.{/ifenrolled}
 * If Not Enrolled [{ifnotenrolled}]You are not enrolled in this course.[{/ifnotenrolled}]: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
 * If LoggedIn [{ifloggedin}]You are logged-in.[{/ifloggedin}]: {ifloggedin}You are logged-in.{/ifloggedin}
