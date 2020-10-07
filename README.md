@@ -205,7 +205,7 @@ For Custom Contact Forms
 * {editingtoggle} : "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
 * {wwwcontactform} : Action URL for Contact Form forms. (requires Contact Form plugin).
 
-Conditionally display content filters
+Conditionally display content filters (All versions of Moodle)
 
 Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetypes, not role shortnames. For example, you could have a role called `students` but, if the archetype for the role is `teacher`, the role will be identified as a `teacher`. Roles not based on archetypes will not with these tags.
 
@@ -242,6 +242,10 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifeditmode}{/ifeditmode} : Will display the enclosed content only if editing mode is turned on.
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
+
+Conditionally display content filters (only for Moodle Workplace)
+
+* {iftenant idnumber|tenantid}{/iftenant} : (ALPHA) Will display the content if a tenant idnumber or tenant id is specified.
 
 HTML and "lang" tagging
 
@@ -457,16 +461,24 @@ https://github.com/michael-milette/moodle-filter_filtercodes
 
 ## Frequently Asked Questions
 
-IMPORANT: Although we expect everything to work, this ALPHA release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
+IMPORANT: Although we expect everything to work, this release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
-### {FilterCodes} Why are tags displayed as entered instead of being converted to data?
+### Troubleshooting: Why are tags displayed as entered instead of being converted to expected content/data?
 
 Here are a few things you can check:
-* Make sure the plugin is enabled. See installation instructions.
-* If the tag is in a heading, make sure you have enabled the plugin for both content and headings.
-* For the {langx} tag, make sure you included the 2 letter language code in the opening tag. The closing tag must not contain any language code.
-* If the tags required a closing tag, make sure that it includes a forward slash. Example: {/ifenrolled}.
-* Try a different tag like {protocol}. If it still doesn't get replaced with http or https either, chances are that this part of Moodle doesn't support filters yet. Please report the part of Moodle that doesn't support filters in the Moodle Tracker. If the problem is with a 3rd party plugin, please report the issue to the developer of that plugin using the Bug Tracker link on the plugin's page on moodle.org/plugins.
+
+* Make sure the plugin is enabled (**On**) for both **Headings and Content** in Site Administration > Plugins > Filters > Manage Filters. See installation instructions.
+* Make sure that the tag you are trying to use is supported in the version of FilterCodes you currently have installed on your Moodle site. See the CHANGELOG.md for the history of when tags were added.
+* Try testing using the {firstname} tag. It was one of the very first (it's not even in the history). If it works with this tags, it should work with others.
+* Make sure you specified any required parameters in your tag. In the case of the {langx} tag for example, make sure you included the 2 letter language code in the opening tag. Example: {langx fr}.
+* If the tags required a closing tag, make sure that it includes a forward slash and does not include any parameters. Example: {/ifenrolled}.
+* If the tag requires a closing tag, Make sure that the closing tag does not contain any parameters. Only opening tags may contain parameters.
+* If it doesn't work with a particular 3rd party theme (i.e. not included with Moodle), try it using it in the Boost theme.
+* If it doesn't work with a particular 3rd party plugin (i.e. not included with Moodle), try using the tag in an HTML block or label.
+* If you have determined that the problem is with a 3rd party plugin or theme, please report the issue to its developer using the **Bug Tracker** link on the plugin's page located at moodle.org/plugins. Provide as much information as you can. It may be helpful to point them to the [Moodle Output API documentation](https://docs.moodle.org/dev/Output_functions), specifically the format_text() and format_string() functions.
+* If it still doesn't work, chances are that this some part of Moodle doesn't support filters yet. It is rare but it happens (example: Badges). Please report the part of Moodle that doesn't support filters in the [Moodle Tracker](https://tracker.moodle.org).
+* Read the rest of this FAQ section.
+* If all else fails, ask questions. There are links on the [FilterCodes](https://moodle.org/plugins/filter_filtercodes) plugin page to the [Discussion](https://moodle.org/mod/forum/discuss.php?d=359252) forum for getting help and the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues) on GitHub for reporting bugs.
 
 ### Can I combine/nest conditional tags?
 
@@ -626,6 +638,7 @@ Create a Page on your Moodle site and include the following code:
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
 * Are you a member of the "moodlers" cohort [{ifincohort moodlers}]Yes[{/ifincohort}]? {ifincohort moodlers}Yes{/ifincohort} (will be blank of not a member)
+* Is your tenant id 1? [{iftenant id}][{/iftenant}] {iftenant 1}Yes{/iftenant}
 
 You can switch to different roles to see how each will affect the content being displayed.
 
