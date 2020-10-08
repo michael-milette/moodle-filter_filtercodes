@@ -81,12 +81,12 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 
 ## List of FilterCode tags
 
-Creating FilterCodes Documentation
+### Creating FilterCodes Documentation
 
 * [{ }] : You can escape tags so they are not processed by adding [brackets] around the tag. Can be disabled in the plugin's settings if it causes you problems.
 * [%7B %7D] : You can escape %7Bencoded%7D tags too so they are not processed by adding [brackets] around them.
 
-Profile
+### Profile
 
 * {firstname} : Display the user's first name.
 * {surname} or {lastname} : Display the user's surname (family/last name).
@@ -107,8 +107,9 @@ Profile
 * {profile_field_shortname} : Display's custom profile field. Replace "shortname" with the shortname of a custom profile field all in lowercase. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
 * {profilefullname}: Similar to {fullname} except that it displays a profile owner's name when placed on the Profile page.
 
-System Information
+### System Information
 
+* {filtercodes} : Will display version and release of FilterCodes plugin. Not that this information is only available to those who can edit the tag.
 * {usercount} : Count total number of registered users on the site. Does not included deleted users, primary admin or guest.
 * {usersactive} : Count total number of registered users on the site. Does not included deleted users, disabled users, primary admin or guest.
 * {usersonline} : Total number of users who were online in the last 5 minutes.
@@ -118,7 +119,7 @@ System Information
 * {diskfreespacedata} : Display amount of free disk space for moodledata folder.
 * {wwwroot} : Root URL of the Moodle site.
 
-UI Elements
+### UI Elements
 
 * {coursecards}: (ALPHA) Display available courses as cards. Has only been tested on Front Page.
 * {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
@@ -126,7 +127,7 @@ UI Elements
 * {categorycards}: (ALPHA) Display top level categories as cards. Has only been tested on Front Page.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 
-For use in courses
+### For use in courses
 
 * {coursename} : Display the full name of the current course or the site name if not in a course.
 * {courseshortname} : Display the short name of the current course or the site short name if not in a course.
@@ -144,7 +145,7 @@ For use in courses
 * {courseidnumber} : Display a course's ID number.
 * {sectionid} : Display the section ID (not to be confused with the section number).
 
-Categories
+### Categories
 
 * {categoryid} : If in a course, the ID of the course's parent category, the category ID of a course category page, otherwise 0.
 * {categoryname} : If in a course, the name of the course's parent category, otherwise blank.
@@ -154,7 +155,7 @@ Categories
 * {categories0} : Display an unordered list of just top level links to all course categories.
 * {categoriesx} : Display an unordered list of other categories in the current category.
 
-Custom menu
+### Custom menu
 
 * {categoriesmenu} : A second level list of categories with links for use in custom menus (filtering must be supported by the theme).
 * {categories0menu} : A second level list of just top level categories with links for use in custom menus (filtering must be supported by the theme).
@@ -162,7 +163,7 @@ Custom menu
 * {toggleeditingmenu} : A Turn Editing On or Turn Editing Off custom menu item. Note that you need to add your own dash(es).
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
 
-URL
+### URL
 
 * {pagepath} : Path of the current page without wwwroot.
 * {thisurl} : The complete URL of the current page.
@@ -175,7 +176,7 @@ URL
 * {sesskey} or %7Bsesskey%7D : Moodle session key.
 * {wwwcontactform} : Action URL for Contact Form forms. (requires Contact Form plugin).
 
-Content
+### Content
 
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {help}content{/help} : Enables you to create popup help icons just like Moodle does.
@@ -187,7 +188,7 @@ Content
 * {fa/fas/far/fal fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
 
-Contact Form templates
+### Contact Form templates
 
 The following tags are replaced by Contact Form templates and therefore require that you have the Contact Form for Moodle plugin installed.
 
@@ -197,7 +198,7 @@ The following tags are replaced by Contact Form templates and therefore require 
 * {formsupport} : Adds a "Support Request" form to your site (example: in a page). Form includes Name, Email address, pre-determined Subject, specific Subject, URL and Message fields.
 * {formcheckin} : Adds a "I'm here!" button to your to your course. Form does not include any other fields. Note: User must be logged in or the button will not be displayed.
 
-For Custom Contact Forms
+### Useful for creating Custom Contact Forms and Links
 
 * {lang} : 2-letter language code of current Moodle language.
 * {recaptcha} : Display the ReCAPTCHA field - for use with Contact Form for Moodle. Note: Will be blank if user is logged-in using a non-guest account.
@@ -205,20 +206,26 @@ For Custom Contact Forms
 * {editingtoggle} : "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
 * {wwwcontactform} : Action URL for Contact Form forms. (requires Contact Form plugin).
 
-Conditionally display content filters (All versions of Moodle)
+### Conditionally display content filters (All versions of Moodle)
 
 Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetypes, not role shortnames. For example, you could have a role called `students` but, if the archetype for the role is `teacher`, the role will be identified as a `teacher`. Roles not based on archetypes will not with these tags.
+
+#### Logged in/out
 
 * {ifloggedin}{/ifloggedin} : Will display the enclosed content only if the user is logged in as non-guest.
 * {ifloggedout}{/ifloggedout} : Will display the enclosed content only if the user is logged out or is loggedin as guest.
 * {ifloggedinas}{/ifloggedinas} : Will display the enclosed content only if you are logged-in-as (loginas) a different user.
 * {ifnotloggedinas}{/ifnotloggedinas} : Will display the enclosed content only if you are logged-in as yourself and not a different user.
 
+#### Courses
+
 * {ifenrolled}{/ifenrolled} : Will display the enclosed content only if the user **is** enrolled in the current course.
 * {ifnotenrolled}{/ifnotenrolled} : Will display the enclosed content only if the user is **not** enrolled in the current course.
 * {ifincourse}{/ifincourse} : Will display the enclosed content only if the user is in a course other than the Front page.
 * {ifinsection}{/ifinsection} : Will display the enclosed content only if the user is in a section of a course which is not the Front Page.
 * {ifnotinsection}{/ifnotinsection} : Will display the enclosed content only if the user is not in a section of a course.
+
+#### Roles
 
 * {ifguest}{/ifguest} : Will display the enclosed content only if the user is logged-in as guest.
 * {ifstudent}{/ifstudent} : Will display the enclosed content only if the user is logged-in and enrolled in the course (no other roles).
@@ -235,6 +242,8 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifnotcustomrole roleshortname}{/ifnotcustomrole} : Will display enclosed content only if the user does not have the custom role specified by its shortname within the current context.
 * {ifincohort CohortID|idnumber}{/ifincohort} : Will display enclosed content only if user is a member of the specified cohort. You can specify the Cohort ID in your cohort settings or its ID number. Cohort ID can contain a combination of letters from a to z, A to Z, numbers 0 to 9 and underscores. It will not work if it contains spaces, dashes or other special characters.
 
+#### Miscellanious
+
 * {ifdev}{/ifdev} : Will display the enclosed content only if the user is logged-in as an administrator and developer debugging mode is enabled.
 * {ifhome}{/ifhome} : Will display the enclosed content only if the user is on the Moodle Home Front Page.
 * {ifdashboard}{/ifdashboard} : Will display the enclosed content only if the user is on the Moodle Dashboard.
@@ -243,12 +252,12 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
-Conditionally display content filters (For Moodle Workplace)
+#### Conditionally display content filters (For Moodle Workplace)
 
 * {iftenant idnumber|tenantid}{/iftenant} : (ALPHA) Will display the content if a tenant idnumber or tenant id is specified. Only {iftenant 1} will work in Moodle classic.
 * {ifworkplace}{/ifworkplace} : (ALPHA) Will display the content only if displayed in Moodle Workplace.
 
-HTML and "lang" tagging
+### HTML and "lang" tagging
 
 * {-} : Is substituted for &shy;, a soft hyphen that only appears when needed.
 * {nbsp} : Is substituted for a non-breaking space when displayed.
@@ -277,7 +286,7 @@ Here are a couple of examples of how to create really useful custom menus using 
 
 Feel free to customize these for your own needs and to make more of these for other roles like Course creators, Teachers, Teacher assistants and even Students.
 
-**Doesn't work?** If FilterCodes doesn't work with your theme, contact the developer / maintainer of the theme and refer them to the [FAQ](#faq) section of this documentation to provide them with an easy way for them to enable support for Moodle filters.
+**Doesn't work?** If FilterCodes doesn't work with your theme's custom menu, contact the developer / maintainer of the theme and refer them to the [FAQ](#faq) section of this documentation which will provide them with an easy way for them to enable support for Moodle filters.
 
 ### General menu
 
@@ -356,7 +365,7 @@ Tip: Are you a theme developers? Add a direct link to your theme's settings page
 Notes:
 
 - **Enrolled users**, in the **This course** submenu, will only work in a course.
-- **[Code checker](https://moodle.org/plugins/local_codechecker)**, **[Moodle PHPdoc check](https://moodle.org/plugins/local_moodlecheck)** and [Moodle Adminer](https://moodle.org/plugins/local_adminer) are add-on plugins that need to be installed in order for the links to work.
+- **[Code checker](https://moodle.org/plugins/local_codechecker)**, **[Moodle PHPdoc check](https://moodle.org/plugins/local_moodlecheck)** and [Moodle Adminer](https://moodle.org/plugins/local_adminer) require add-on 3rd party plugins which need to be installed in order for the links to work.
 
 ## Scrape'ing content
 
@@ -507,15 +516,24 @@ Pro Tip: You can pre-populate a field and make it non-editable for logged-in use
 
 ### Why do administrators see the text of all other roles when using {ifminxxxx}Content{/ifminxxxx} tags?
 
-This is normal as the administrator has the permission of all other roles. the {ifmin...} tags will display content if the user has a minimum of the specified role or above. For example, {ifminteacher}Content here!{/ifminteacher} will display "Content here!" whether the user is a teacher, course creator, manager or administrator even if they are not a teacher.
+This is normal as the administrator has the permission of all other roles. The {ifmin...} tags will display content if the user has a minimum of the specified role or above. For example, {ifminteacher}Content here!{/ifminteacher} will display "Content here!" whether the user is a teacher, course creator, manager or administrator even if they are not a teacher.
 
 ### Is there a tag to display...?
 
-Only the tags listed in this [documentation](#usage) are currently supported. We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll find a link for this on the plugin's page. The subject line should start with "Feature Request: ". Please provide as much detail as possible on what you are trying to accomplish and, if possible, where in Moodle the information would come from. Be sure to check back on your issue as we may have further questions for you.
+Only the tags listed in this [documentation](#usage) are currently supported (version on GitHub is often newer than on Moodle.org). We are happy to add new functionality in future releases of FilterCodes. Please post all requests in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues). You'll also find a link for this on the plugin's page. The subject line should start with "Feature Request: ".
 
-### How can I test to see if all of the tags are working?
+When requesting a new tag, please provide:
 
-Create a Page on your Moodle site and include the following code:
+* As much detail as possible on what you are trying to accomplish.
+* An example of how it would be used.
+* If possible, where in Moodle the information would come from.
+
+Be sure to check back on your issue as we may have further questions for you.
+
+### Do you have examples, samples and ways to which tags are working in my version of FilterCodes?
+
+Create a Page on your Moodle site, preferably in a course, so that those tags work too, and include the following code:
+
 * First name [{firstname}]: {firstname}
 * Surname [{surname}]: {surname}
 * Last name [{lastname}]: {lastname}
@@ -579,7 +597,7 @@ Create a Page on your Moodle site and include the following code:
 * Course custom fields [{course_field_location}] (assumes you have created a custom course field called "location"): {course_field_location}
 * [{courseimage}] : {courseimage}
 * Number of participants in the course [{courseparticipantcount}] : {courseparticipantcount}
-* WWWroot [{wwwroot}]: {wwwroot}
+* The base (root) URL of your Moodle site [{wwwroot}]: {wwwroot}
 * WWW for Contact Form [{wwwcontactform}]: {wwwcontactform}
 * Page path [{pagepath}]: {pagepath}
 * This URL [{thisurl}]: {thisurl}
@@ -638,9 +656,10 @@ Create a Page on your Moodle site and include the following code:
 * If in a course [{ifincourse}]Yes[{/ifincourse}]? {ifincourse}Yes{/ifincourse}
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
-* Are you a member of the "moodlers" cohort [{ifincohort moodlers}]Yes[{/ifincohort}]? {ifincohort moodlers}Yes{/ifincohort} (will be blank of not a member)
+* Are you a member of the "moodlers" cohort [{ifincohort moodlers}]Yes[{/ifincohort}]? {ifincohort moodlers}Yes{/ifincohort} (will be blank of not a member of cohort)
 * Is your tenant id 1? [{iftenant 1}]Yes[{/iftenant}] : {iftenant 1}Yes{/iftenant} Note: In Moodle classic, tenant id is assumed to be 1.
 * Is this Moodle Workplace? [{ifworkplace}]Yes[{/ifworkplace}] : {ifworkplace}Yes{/ifworkplace}
+* This is FilterCodes version [{filtercodes}] : {filtercodes} Note: Will be blank if you do not have the ability to edit this tag.
 
 You can switch to different roles to see how each will affect the content being displayed.
 
@@ -680,6 +699,10 @@ However, there are two ways you can make this work.
 2. Encourage developers to enable this in their themes or add it yourself. See the next question for details.
 
 ### I am a Moodle theme developer. How do I add support for Moodle filters, including FilterCodes, into my theme?
+
+You will need to pass all output (except user content) through the format_text() or format_string() functions of the [Moodle Output API documentation](https://docs.moodle.org/dev/Output_functions).
+
+### I am a Moodle theme developer. How do I add support for FilterCodes in the Custom Menu?
 
 #### For themes based on **boost**
 

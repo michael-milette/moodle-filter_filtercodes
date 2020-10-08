@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 use block_online_users\fetcher;
 
-require_once($CFG->dirroot . "/course/renderer.php");
+require_once($CFG->dirroot . '/course/renderer.php');
 
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
@@ -381,6 +381,19 @@ class filter_filtercodes extends moodle_text_filter {
         //
         if (file_exists(dirname(__FILE__) . '/filter-ext.php')) {
             include(dirname(__FILE__) . '/filter-ext.php');
+        }
+
+        // Tag: {filtercodes}. Show version of FilterCodes, but only if you have permission to add the tag.
+        if (stripos($text, '{filtercodes}') !== false) {
+            // If you have the ability to edit the content.
+            if (has_capability('moodle/course:update', $PAGE->context)) {
+                // Show the version of the FilterCodes plugin.
+                $plugin = new stdClass();
+                require($CFG->dirroot . '/filter/filtercodes/version.php');
+                $replace['/\{filtercodes\}/i'] = "$plugin->release ($plugin->version)";
+            } else {
+                $replace['/\{filtercodes\}/i'] = '';
+            }
         }
 
         if (stripos($text, '{profile') !== false) {
