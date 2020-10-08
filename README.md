@@ -34,7 +34,7 @@ In addition, it also enables you to:
 * Inserting non-breaking spaces;
 * Tagging text as being in a different language;
 
-Usage of the {FilterCodes} tags requires no knowledge of HTML but might be
+Usage of the FilterCodes tags requires no knowledge of HTML but might be
 important for sites wishing to comply with accessibility requirements.
 
 IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
@@ -77,7 +77,7 @@ To activate, go to Site Administration > Plugins > Filters > Manage filters" and
 
 IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
-{FilterCodes} are meant to be entered as regular text in the Moodle WYSIWYG editor through they will work equally well if entered in the HTML code view.
+FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor through they will work equally well if entered in the HTML code view.
 
 ## List of FilterCode tags
 
@@ -245,7 +245,7 @@ If the condition is not met in the particular context, the specified tag and it'
 
 Conditionally display content filters (only for Moodle Workplace)
 
-* {iftenant idnumber|tenantid}{/iftenant} : (ALPHA) Will display the content if a tenant idnumber or tenant id is specified.
+* {iftenant idnumber|tenantid}{/iftenant} : (ALPHA) Will display the content if a tenant idnumber or tenant id is specified. Only {iftenant 1} will work in Moodle classic.
 
 HTML and "lang" tagging
 
@@ -433,15 +433,15 @@ Note that, once uninstalled, any tags and content normally handled by this plugi
 # Limitations
 
 * The {langx xx}{/langx} tag only supports inline text, not blocks of text.
-* Unpredictable results may occur if you interweave HTML code with {FilterCodes} tags.
+* Unpredictable results may occur if you interweave HTML code with {FilterCodesTag} tags.
 
 Incorrect example:
 
-    <strong>{FilterCode}Content</strong>{/FilterCode}
+    <strong>{FilterCodesTag}Content</strong>{/FilterCodesTag}
 
 Correct example:
 
-    {FilterCode}<strong>Content</strong>{/FilterCode}
+    {FilterCodesTag}<strong>Content</strong>{/FilterCodeTag}
 
 # Language Support
 
@@ -638,7 +638,7 @@ Create a Page on your Moodle site and include the following code:
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
 * Are you a member of the "moodlers" cohort [{ifincohort moodlers}]Yes[{/ifincohort}]? {ifincohort moodlers}Yes{/ifincohort} (will be blank of not a member)
-* Is your tenant id 1? [{iftenant id}][{/iftenant}] {iftenant 1}Yes{/iftenant}
+* Is your tenant id 1? [{iftenant id}][{/iftenant}] {iftenant 1}Yes{/iftenant} Note: In Moodle classic, tenant id is assumed to be 1.
 
 You can switch to different roles to see how each will affect the content being displayed.
 

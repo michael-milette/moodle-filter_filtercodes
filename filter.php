@@ -1719,24 +1719,32 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-        // Tag: {iftenant tenantid}.        
-	    if (class_exists('tool_tenant\tenancy')) {                        
-            $tenants = \tool_tenant\tenancy::get_tenants();
-            // Get current tenantid
-            $currenttenantid = \tool_tenant\tenancy::get_tenant_id(); 
-            // We will use tenant's idnumber if it is set. If not, default to tenant id
-            $currenttenantidnumber = 1;
-            foreach ($tenants as $tenant) {
-                if ($tenant->id == $currenttenantid) {
-                    $currenttenantidnumber = $tenant->idnumber ? $tenant->idnumber : $tenant->id;
+            // Tag: {iftenant idnumber|tenantid}. Only for Moodle Workplace
+            if (stripos($text, '{iftenant') !== false) {
+                if (class_exists('tool_tenant\tenancy')) {
+                    // Moodle Workplace.
+                    $tenants = \tool_tenant\tenancy::get_tenants();
+                    // Get current tenantid
+                    $currenttenantid = \tool_tenant\tenancy::get_tenant_id();
+                } else {
+                    // Moodle Classic - Just simulate functionality as tenant 1.
+                    // This allows a course to work in both Moodle Classic and Workplace.
+                    $tenants[0] = new stdClass();
+                    $tenants[0]->idnumber = 1;
+                    $tenants[0]->id = 1;
+                    $currenttenantid = 1;
                 }
-            }
-            
-            if (stripos($text, '{iftenant') !== false) {                
+                // We will use tenant's idnumber if it is set. If not, default to tenant id
+                $currenttenantidnumber = 1;
+                foreach ($tenants as $tenant) {
+                    if ($tenant->id == $currenttenantid) {
+                        $currenttenantidnumber = $tenant->idnumber ? $tenant->idnumber : $tenant->id;
+                    }
+                }
                 $re = '/{iftenant\s+(.*?)\}(.*?)\{\/iftenant\}/ims';
-                $found = preg_match_all($re, $text, $matches);              
+                $found = preg_match_all($re, $text, $matches);
                 if ($found > 0) {
-                    foreach ($matches[1] as $tenantid) {                        
+                    foreach ($matches[1] as $tenantid) {
                         $key = '/{iftenant\s+' . $tenantid . '\}(.*?)\{\/iftenant\}/ims';
                         if ($tenantid == $currenttenantidnumber) {
                             // Just remove the tags.
@@ -1748,7 +1756,6 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 }
             }
-	    }
 
             // Tag: {ifcustomrole rolename}.
             if (stripos($text, '{ifcustomrole') !== false) {
