@@ -1757,6 +1757,31 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifworkplace}. Only for Moodle Workplace
+            if (stripos($text, '{ifworkplace}') !== false) {
+                if (class_exists('tool_tenant\tenancy')) {
+                    // Moodle Workplace - Just remove the tags.
+                    $replace['/\{ifworkplace\}/i'] = '';
+                    $replace['/\{\/ifworkplace\}/i'] = '';
+                } else {
+                    // If Moodle Classic, remove the ifworkplace tags and text.
+                    $replace['/\{ifworkplace}(.*?)\{\/ifworkplace\}/ims'] = '';
+                }
+            }
+
+            // Tag: {iftenant idnumber|tenantid}. Only for Moodle Workplace
+            if (stripos($text, '{ifworkplace}') !== false) {
+                if (class_exists('tool_tenant\tenancy')) {
+                    // Moodle Workplace.
+                    // Just remove the tags.
+                    $replace['/\{ifworkplace\}/i'] = '';
+                    $replace['/\{\/ifworkplace\}/i'] = '';
+                } else {
+                    // If not Moodle Workplace, remove the ifworkplace tags and text.
+                    $replace['/\{ifworkplace}(.*?)\{\/ifworkplace\}/ims'] = '';
+                }
+            }
+
             // Tag: {ifcustomrole rolename}.
             if (stripos($text, '{ifcustomrole') !== false) {
                 $re = '/{ifcustomrole\s+(.*?)\}(.*?)\{\/ifcustomrole\}/ims';

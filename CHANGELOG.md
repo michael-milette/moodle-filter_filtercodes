@@ -7,7 +7,8 @@ All notable changes to this project will be documented in this file.
 - New {ifincohort idname|idnumber}{/ifincohort} tags.
 - New {webpage} tag.
 - New {ifnoteditmode} tag.
-- New {iftenant idnumber|tenantid}{/iftenant} (ALPHA) tags. (Workplace only - in Moodle classic, tenant is assumed to be 1)
+- New {iftenant idnumber|tenantid}{/iftenant} (ALPHA) tags. (Workplace only - in Moodle classic, tenant is assumed to be 1).
+- New {ifworkplace}{/ifworkplace} (ALPHA) tags. (Workplace only - in Moodle classic, will not display tags or content).
 ### Updated
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
 - {alert} to allow for optional contextual class stying.

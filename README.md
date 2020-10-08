@@ -243,9 +243,10 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
-Conditionally display content filters (only for Moodle Workplace)
+Conditionally display content filters (For Moodle Workplace)
 
 * {iftenant idnumber|tenantid}{/iftenant} : (ALPHA) Will display the content if a tenant idnumber or tenant id is specified. Only {iftenant 1} will work in Moodle classic.
+* {ifworkplace}{/ifworkplace} : (ALPHA) Will display the content only if displayed in Moodle Workplace.
 
 HTML and "lang" tagging
 
@@ -638,7 +639,8 @@ Create a Page on your Moodle site and include the following code:
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
 * Are you a member of the "moodlers" cohort [{ifincohort moodlers}]Yes[{/ifincohort}]? {ifincohort moodlers}Yes{/ifincohort} (will be blank of not a member)
-* Is your tenant id 1? [{iftenant id}][{/iftenant}] {iftenant 1}Yes{/iftenant} Note: In Moodle classic, tenant id is assumed to be 1.
+* Is your tenant id 1? [{iftenant 1}]Yes[{/iftenant}] : {iftenant 1}Yes{/iftenant} Note: In Moodle classic, tenant id is assumed to be 1.
+* Is this Moodle Workplace? [{ifworkplace}]Yes[{/ifworkplace}] : {ifworkplace}Yes{/ifworkplace}
 
 You can switch to different roles to see how each will affect the content being displayed.
 
