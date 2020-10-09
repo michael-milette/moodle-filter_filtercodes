@@ -59,5 +59,29 @@ if ($hassiteconfig) {
         $description = get_string('enable_scrape_description', 'filter_filtercodes');
         $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
         $settings->add($setting);
+
+        // Option to disable disk space filtercodes.
+        $default = 1;
+        $name = 'filter_filtercodes/enable_diskspace';
+        $title = get_string('enable_diskspace', 'filter_filtercodes');
+        $description = get_string('enable_diskspace_description', 'filter_filtercodes');
+        $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+        $settings->add($setting);
+
+        // Option to disable IP address filtercode.
+        $default = 1;
+        $name = 'filter_filtercodes/enable_ipaddress';
+        $title = get_string('enable_ipaddress', 'filter_filtercodes');
+        $description = get_string('enable_ipaddress_description', 'filter_filtercodes');
+        $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+        $settings->add($setting);
+
+        // Option to disable session key filtercode.
+        $default = 1;
+        $name = 'filter_filtercodes/enable_sesskey';
+        $title = get_string('enable_sesskey', 'filter_filtercodes');
+        $description = get_string('enable_sesskey_description', 'filter_filtercodes');
+        $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+        $settings->add($setting);
     }
 }

@@ -526,14 +526,16 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {diskfreespace} - free space of Moodle application volume.
-        if (stripos($text, '{diskfreespace}') !== false) {
-            $replace['/\{diskfreespace\}/i'] = display_size(disk_free_space('.'));
-        }
+        if (get_config('filter_filtercodes', 'enable_diskspace')) { // Must be enabled in FilterCodes settings.
+            // Tag: {diskfreespace} - free space of Moodle application volume.
+            if (stripos($text, '{diskfreespace}') !== false) {
+                $replace['/\{diskfreespace\}/i'] = display_size(disk_free_space('.'));
+            }
 
-        // Tag: {diskfreespacedata} - free space of Moodledata volume.
-        if (stripos($text, '{diskfreespacedata}') !== false) {
-            $replace['/\{diskfreespacedata\}/i'] = display_size(disk_free_space($CFG->dataroot));
+            // Tag: {diskfreespacedata} - free space of Moodledata volume.
+            if (stripos($text, '{diskfreespacedata}') !== false) {
+                $replace['/\{diskfreespacedata\}/i'] = display_size(disk_free_space($CFG->dataroot));
+            }
         }
 
         // Any {user*} tags.
@@ -1271,19 +1273,23 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{protocol\}/i'] = 'http' . ($this->ishttps() ? 's' : '');
         }
 
-        // Tag: {ipaddress}.
-        if (stripos($text, '{ipaddress}') !== false) {
-            $replace['/\{ipaddress\}/i'] = getremoteaddr();
+        if (get_config('filter_filtercodes', 'enable_ipaddress')) { // Must be enabled in FilterCodes settings.
+            // Tag: {ipaddress}.
+            if (stripos($text, '{ipaddress}') !== false) {
+                $replace['/\{ipaddress\}/i'] = getremoteaddr();
+            }
         }
 
-        // Any {sesskey} or %7Bsesskey%7D tags.
-        // Tag: {sesskey}.
-        if (stripos($text, '{sesskey}') !== false) {
-            $replace['/\{sesskey\}/i'] = sesskey();
-        }
-        // Alternative Tag: %7Bsesskey%7D (for encoded URLs).
-        if (stripos($text, '%7Bsesskey%7D') !== false) {
-            $replace['/%7Bsesskey%7D/i'] = sesskey();
+        if (get_config('filter_filtercodes', 'enable_sesskey')) { // Must be enabled in FilterCodes settings.
+            // Any {sesskey} or %7Bsesskey%7D tags.
+            // Tag: {sesskey}.
+            if (stripos($text, '{sesskey}') !== false) {
+                $replace['/\{sesskey\}/i'] = sesskey();
+            }
+            // Alternative Tag: %7Bsesskey%7D (for encoded URLs).
+            if (stripos($text, '%7Bsesskey%7D') !== false) {
+                $replace['/%7Bsesskey%7D/i'] = sesskey();
+            }
         }
 
         // Tag: {sectionid}.

@@ -41,6 +41,12 @@ $string['enable_scrape'] = 'Scrape tag support';
 $string['enable_scrape_description'] = 'Enable the scrape tag.';
 $string['escapebraces'] = 'Escape tags';
 $string['escapebraces_desc'] = 'When this option is checked, you will be able to display FilterCode tags without them being interpreted by this filter by wrapping your tag in [ brackets ]. This can be very useful when creating FilterCodes documentation for the teachers and course creators on your Moodle site.<br><br>Example: [{fullname}] will not display the user\'s full name but display the {fullname} tag instead without the brackets.';
+$string['enable_diskspace'] = 'Free disk space tag support';
+$string['enable_diskspace_description'] = 'Enable the diskfreespace and diskfreespacedata tags.';
+$string['enable_ipaddress'] = 'IP address tag support';
+$string['enable_ipaddress_description'] = 'Enable the ipaddress tag.';
+$string['enable_sesskey'] = 'Session key tag support';
+$string['enable_sesskey_description'] = 'Enable the sesskey tag.';
 
 $string['formquickquestion'] = '
 <form action="{wwwroot}/local/contact/index.php" method="post" class="cf contact-us">
