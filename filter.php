@@ -1732,6 +1732,33 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifingroup id|idnumber}.
+            if (stripos($text, '{ifingroup') !== false) {
+                static $mygroups;
+                if (!isset($mygroups)) { // Fetch my groups.
+                    $mygroups = groups_get_all_groups($PAGE->course->id, $USER->id);
+                }
+                $re = '/{ifingroup\s+(.*?)\}(.*?)\{\/ifingroup\}/ims';
+                $found = preg_match_all($re, $text, $matches);
+                if ($found > 0) {
+                    foreach ($matches[1] as $groupid) {
+                        $key = '/{ifingroup\s+' . $groupid . '\}(.*?)\{\/ifingroup\}/ims';
+                        $ismember = false;
+                        foreach ($mygroups as $group) {
+                            if ($groupid == $group->id || $groupid == $group->idnumber) {
+                                $ismember = true;
+                                break;
+                            }
+                        }
+                        if ($ismember) { // Just remove the tags.
+                            $replace[$key] = '$1';
+                        } else { // Remove the ifingroup tags and content.
+                            $replace[$key] = '';
+                        }
+                    }
+                }
+            }
+
             // Tag: {iftenant idnumber|tenantid}. Only for Moodle Workplace
             if (stripos($text, '{iftenant') !== false) {
                 if (class_exists('tool_tenant\tenancy')) {

@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.0.3] dev-2020-10-07
+## [2.0.4] dev-2020-10-09
 ### Added
+- New {ifingroup id|idnumber}{/ifingroup} tags.
 - New {filtercodes} tag. Note: Only works for teachers and above.
 - New {alert style}{/alert} tags (ALPHA).
 - New {ifincohort idname|idnumber}{/ifincohort} tags.

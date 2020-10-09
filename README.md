@@ -145,6 +145,8 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courseidnumber} : Display a course's ID number.
 * {sectionid} : Display the section ID (not to be confused with the section number).
 
+Also see Courses section below.
+
 ### Categories
 
 * {categoryid} : If in a course, the ID of the course's parent category, the category ID of a course category page, otherwise 0.
@@ -224,6 +226,7 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifincourse}{/ifincourse} : Will display the enclosed content only if the user is in a course other than the Front page.
 * {ifinsection}{/ifinsection} : Will display the enclosed content only if the user is in a section of a course which is not the Front Page.
 * {ifnotinsection}{/ifnotinsection} : Will display the enclosed content only if the user is not in a section of a course.
+* {ifingroup id|idnumber}{/ifingroup} : Display content if the user is part of the specified course group ID or group ID number.
 
 #### Roles
 
@@ -660,6 +663,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Is your tenant id 1? [{iftenant 1}]Yes[{/iftenant}] : {iftenant 1}Yes{/iftenant} Note: In Moodle classic, tenant id is assumed to be 1.
 * Is this Moodle Workplace? [{ifworkplace}]Yes[{/ifworkplace}] : {ifworkplace}Yes{/ifworkplace}
 * This is FilterCodes version [{filtercodes}] : {filtercodes} Note: Will be blank if you do not have the ability to edit this tag.
+* Are you a member of the ATEAM group [{ifingroup ATEAM}]Yes[{/ifingroup}] ? : {ifingroup ATEAM}Yes{/ifingroup} Note: Only works in courses.
 
 You can switch to different roles to see how each will affect the content being displayed.
 
