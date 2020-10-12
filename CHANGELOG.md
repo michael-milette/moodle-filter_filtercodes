@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.0.5] dev-2021-02-02
+### Added
+- categoryid parameter for {coursecards categoryid=x} tag (ALPHA).
+
 ## [2.1.0] 2020-11-23
 ### Added
 - New {ifingroup id|idnumber}{/ifingroup} tags.

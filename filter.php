@@ -873,9 +873,9 @@ class filter_filtercodes extends moodle_text_filter {
                 $coursefiles = $course->get_course_overviewfiles();
                 foreach ($coursefiles as $file) {
                     if ($isimage = $file->is_valid_image()) {
-                        $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/' . $file->get_component()
-                                . '/' . $file->get_filearea() . $file->get_filepath() . $file->get_filename() , !$isimage);
-                        $imgurl = new moodle_url($imgurl);
+                        $imgurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
+                                $file->get_filearea(), null, $file->get_filepath(),
+                                $file->get_filename())->out(false);
                         break;
                     }
                 }
@@ -1047,62 +1047,78 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            if (stripos($text, '{coursecards}') !== false) {
+            if (stripos($text, '{coursecards') !== false) { //Only do the expensive regex if it's worth it.
                 global $CFG, $OUTPUT;
+                $matches = [];
 
-                $chelper = new coursecat_helper();
-                $chelper->set_show_courses(20)->set_courses_display_options(array(
-                    'recursive' => true,
-                    'limit' => $CFG->frontpagecourselimit,
-                    'viewmoreurl' => new moodle_url('/course/index.php'),
-                    'viewmoretext' => new lang_string('fulllistofcourses')
-                ));
+                preg_match_all('#{coursecards(| categoryid=([0-9])*)}#', $text, $matches);
+                $results = array_combine($matches[0], $matches[2]);
 
-                $chelper->set_attributes(array('class' => 'frontpage-course-list-all'));
-                $courses = core_course_category::get(0)->get_courses($chelper->get_courses_display_options());
-
-                $rcourseids = array_keys($courses);
-
-                $header = '<div class="card-deck mr-0">';
-                $footer = '</div>';
-                $content = '';
-                if (count($rcourseids) > 0) {
-                    foreach ($rcourseids as $courseid) {
-                        $course = get_course($courseid);
-
-                        // Load image from course image. If none, generate a course image based on the course ID.
-                        $context = context_course::instance($courseid);
-                        if ($course instanceof stdClass) {
-                            $course = new \core_course_list_element($course);
-                        }
-                        $coursefiles = $course->get_course_overviewfiles();
-                        $imgurl = '';
-                        foreach ($coursefiles as $file) {
-                            if ($isimage = $file->is_valid_image()) {
-                                $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/'
-                                        . $file->get_component() . '/' . $file->get_filearea() . $file->get_filepath()
-                                        . $file->get_filename(), !$isimage);
-                                $imgurl = new moodle_url($imgurl);
-                                break;
-                            }
-                        }
-                        if (empty($imgurl)) {
-                            $imgurl = $OUTPUT->get_generated_image_for_id($courseid);
-                        }
-                        $courseurl = new moodle_url('/course/view.php', array('id' => $courseid ));
-                        $content .= '
-                            <div class="card shadow mr-4 mb-4 ml-1" style="min-width:300px;max-width:300px;">
-                                <a href="' . $courseurl . '" class="text-normal h-100">
-                                <div class="card-img-top" style="background-image:url(' . $imgurl
-                                        . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;'
-                                        . 'background-repeat:no-repeat;background-position:center;"></div>
-                                <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0">' . $course->get_formatted_name() . '</div>
-                                </a>
-                            </div>
-                        ';
+                foreach ($results as $placeholder => $categoryid) {
+                    if (empty($categoryid)) {
+                        $categoryid = 0;
                     }
+
+                    try {
+                        $core_course_category = core_course_category::get($categoryid);
+                    } catch (moodle_exception $ex) {
+                        $replace['/'.$placeholder.'/i'] = '';
+                        continue;
+                    }
+
+                    $chelper = new coursecat_helper();
+                    $chelper->set_show_courses(20)->set_courses_display_options(array(
+                            'recursive' => true,
+                            'limit' => $CFG->frontpagecourselimit,
+                            'viewmoreurl' => new moodle_url('/course/index.php'),
+                            'viewmoretext' => new lang_string('fulllistofcourses')
+                    ));
+
+                    $chelper->set_attributes(array('class' => 'frontpage-course-list-all'));
+                    $courses = $core_course_category->get_courses($chelper->get_courses_display_options());
+
+                    $rcourseids = array_keys($courses);
+
+                    $header = '<div class="card-deck mr-0">';
+                    $footer = '</div>';
+                    $content = '';
+                    if (count($rcourseids) > 0) {
+                        foreach ($rcourseids as $courseid) {
+                            $course = get_course($courseid);
+
+                            // Load image from course image. If none, generate a course image based on the course ID.
+                            $context = context_course::instance($courseid);
+                            if ($course instanceof stdClass) {
+                                $course = new \core_course_list_element($course);
+                            }
+                            $coursefiles = $course->get_course_overviewfiles();
+                            $imgurl = '';
+                            foreach ($coursefiles as $file) {
+                                if ($isimage = $file->is_valid_image()) {
+                                    $imgurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
+                                            $file->get_filearea(), null, $file->get_filepath(),
+                                            $file->get_filename())->out(false);
+                                    break;
+                                }
+                            }
+                            if (empty($imgurl)) {
+                                $imgurl = $OUTPUT->get_generated_image_for_id($courseid);
+                            }
+                            $courseurl = new moodle_url('/course/view.php', array('id' => $courseid ));
+                            $content .= '<div class="filtercodes_coursecards card shadow mr-4 mb-4 ml-1" style="min-width: 300px;max-width: 300px;height: 300px;">
+                                <div class="card-img-top" style="max-width: 300px;height: 250px;">
+                                    <a href="' . $courseurl . '" class="text-normal h-100">
+                                        <img style="max-width: 100%;max-height: 200px;" src="' . $imgurl .'">
+                                    </a>
+                                </div>
+                                <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0" style="height: 50px;">
+                                    <a href="' . $courseurl . '">' . $course->get_formatted_name() . '</a>
+                                </div>
+                            </div>';
+                        }
+                    }
+                    $replace['/'.$placeholder.'/i'] = !empty($header) ? $header . $content . $footer : '';
                 }
-                $replace['/\{coursecards\}/i'] = !empty($header) ? $header . $content . $footer : '';
             }
         }
 
