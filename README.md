@@ -835,9 +835,9 @@ Add the following code to core_renderer section of your theme for Moodle 2.7 to 
 
 You can patch Moodle handle this properly in the first place. Applying the following patch to Moodle will fix the issue in most themes including the default Boost theme.
 
-* Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-61750-M37
-* Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-61750-M38
-* Moodle master (3.9 and beyond): https://github.com/michael-milette/moodle/tree/MDL-61750-master
+* Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-63219-M37
+* Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-63219-M38
+* Moodle 3.9: https://github.com/michael-milette/moodle/tree/MDL-63219-M39
 
 ### Why is the IP Address listed as 0:0:0:0:0:0:0:1?
 
