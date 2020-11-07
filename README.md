@@ -95,6 +95,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {city} : Display the user's city.
 * {country} : Display the user's country.
 * {timezone} : Display the user's preferred timezone.
+* {preferredlanguage} : Display the user's preferred language in that language. Because of this, it will be encapulated in an HTML span tag with an appropriately set lang attribute.
 * {email} : Display the user's email address.
 * {userid} or %7Buserid%7D : Display the user's Moodle ID.
 * {idnumber} : Display the user's idnumber from their profile.
@@ -546,6 +547,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * City [{city}]: {city}
 * Country [{country}]: {country}
 * Preferred timezone [{timezone}]: {timezone}
+* Preferred language [{preferredlanguage}]: {preferredlanguage}
 * Email [{email}]: {email}
 * User ID [{userid}]: {userid}
 * User ID (encoded) [%7Buserid%7D]: %7Buserid%7D

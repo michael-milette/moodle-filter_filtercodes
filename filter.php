@@ -500,6 +500,27 @@ class filter_filtercodes extends moodle_text_filter {
                     ? core_date::get_localised_timezone($USER->timezone) : '';
         }
 
+        // Tag: {preferredlanguage}.
+        if (stripos($text, '{preferredlanguage}') !== false) {
+            if (isloggedin() && !isguestuser()) {
+                if ('en' == $USER->lang) {
+                    $langconfig = $CFG->dirroot . '/lang/en/langconfig.php';
+                } else {
+                    $langconfig = $CFG->dataroot . '/lang/' . $USER->lang . '/langconfig.php';
+                }
+                // Ignore parents here for now.
+                $string = array();
+                include($langconfig);
+                if (!empty($string['thislanguage'])) {
+                    $replace['/\{preferredlanguage\}/i'] = '<span lang="' . $string['iso6391'] . '">' . $string['thislanguage'] . '</span>';
+                } else { // This should never happen since the known user already exists.
+                    $replace['/\{preferredlanguage\}/i'] = get_string('unknown', 'notes');
+                }
+            } else {
+                $replace['/\{preferredlanguage\}/i'] = '';
+            }
+        }
+
         // Tag: {institution}.
         if (stripos($text, '{institution}') !== false) {
             $replace['/\{institution\}/i'] = isloggedin() && !isguestuser() ? $USER->institution : '';
