@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.0.4] dev-2020-10-17
+## [2.0.5] dev-2020-11-07
 ### Added
 - New {ifingroup id|idnumber}{/ifingroup} tags.
 - New {filtercodes} tag. Note: Only works for teachers and above.
@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - New {ifnoteditmode} tag.
 - New {iftenant idnumber|tenantid}{/iftenant} (ALPHA) tags. (Workplace only - in Moodle classic, tenant is assumed to be 1).
 - New {ifworkplace}{/ifworkplace} (ALPHA) tags. (Workplace only - in Moodle classic, will not display tags or content).
+- New {timezone} tag.
 ### Updated
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
 - {alert} to allow for optional contextual class stying.

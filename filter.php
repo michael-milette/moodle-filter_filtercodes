@@ -490,8 +490,14 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {country}.
         if (stripos($text, '{country}') !== false) {
-            $replace['/\{country\}/i'] = isloggedin() && !isguestuser()
-                    && !empty($USER->country) ? get_string($USER->country, 'countries') : '';
+            $replace['/\{country\}/i'] = isloggedin() && !isguestuser() && !empty($USER->country)
+                    ? get_string($USER->country, 'countries') : '';
+        }
+
+        // Tag: {timezone}.
+        if (stripos($text, '{timezone}') !== false) {
+            $replace['/\{timezone\}/i'] = isloggedin() && !isguestuser() && !empty($USER->timezone)
+                    ? core_date::get_localised_timezone($USER->timezone) : '';
         }
 
         // Tag: {institution}.
