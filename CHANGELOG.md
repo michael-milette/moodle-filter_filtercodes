@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Reorganized and grouped list of tags and made some corrections in the documentation.
 - FAQ: Information on how to patch Moodle to enable FilterCodes in the custom menu.
 - FAQ: Search the README.md file for the word Troubleshooting to now find helpful information.
+- Fixed {diskfreespace} and {diskfreespacedata} on very large/unlimited storage. Note: Greater than about 84,703.29 Yottabyte (YB) is now considered infinite.
 
 ## [2.0.0] 2020-07-01
 ### Added

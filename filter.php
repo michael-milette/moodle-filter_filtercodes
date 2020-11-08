@@ -297,6 +297,31 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Convert a number of bytes (e.g. filesize) into human readable format.
+     *
+     * @param float $bytes Raw number of bytes.
+     * @return string Bytes in human readable format.
+     */
+    private function humanbytes($bytes) {
+        if ($bytes === false || $bytes < 0 || is_null($bytes) || $bytes > 1.0E+26) {
+            // If invalid number of bytes, or value is more than about 84,703.29 Yottabyte (YB), assume it is infinite.
+            $str = '&infin;'; // Could not determine, assume infinite.
+        } else {
+            static $unit;
+            if (!isset($unit)) {
+                $units = ['sizeb', 'sizekb', 'sizemb', 'sizegb', 'sizetb', 'sizeeb', 'sizezb', 'sizeyb'];
+                $units = get_strings($units, 'filter_filtercodes');
+                $units = array_values((array) $units);
+            }
+            $base = 1024;
+            $factor = min((int) log($bytes, $base), count($units) - 1);
+            $precision = [0, 2, 2, 1, 1, 1, 1, 0];
+            $str = sprintf("%1.{$precision[$factor]}f", $bytes / pow($base, $factor)) . ' ' . $units[$factor];
+        }
+        return $str;
+    }
+
+    /**
      * Main filter function called by Moodle.
      *
      * @param string $text   Content to be filtered.
@@ -568,12 +593,14 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {diskfreespace} - free space of Moodle application volume.
         if (stripos($text, '{diskfreespace}') !== false) {
-            $replace['/\{diskfreespace\}/i'] = display_size(disk_free_space('.'));
+            $bytes = @disk_free_space('.');
+            $replace['/\{diskfreespace\}/i'] = $this->humanbytes($bytes);
         }
 
         // Tag: {diskfreespacedata} - free space of Moodledata volume.
         if (stripos($text, '{diskfreespacedata}') !== false) {
-            $replace['/\{diskfreespacedata\}/i'] = display_size(disk_free_space($CFG->dataroot));
+            $bytes = @disk_free_space($CFG->dataroot);
+            $replace['/\{diskfreespacedata\}/i'] = $this->humanbytes($bytes);
         }
 
         // Any {user*} tags.

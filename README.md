@@ -117,8 +117,8 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {usersonline} : Total number of users who were online in the last 5 minutes.
 * {siteyear} : 4-digit current year.
 * {coursecount} : Total number of courses on this Moodle site (not including Front Page).
-* {diskfreespace} : Display amount of free disk space for application folder.
-* {diskfreespacedata} : Display amount of free disk space for moodledata folder.
+* {diskfreespace} : Display amount of free disk space for application folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
+* {diskfreespacedata} : Display amount of free disk space for moodledata folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
 * {wwwroot} : Root URL of the Moodle site.
 
 ### UI Elements
