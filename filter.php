@@ -817,6 +817,11 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {coursesummary}.
+            if (stripos($text, '{coursesummary}') !== false) {
+                $replace['/\{coursesummary\}/i'] = $PAGE->course->summary;
+            }
+
             // Tag: {courseimage}. The course image.
             if (stripos($text, '{courseimage') !== false) {
                 $course = $PAGE->course;
