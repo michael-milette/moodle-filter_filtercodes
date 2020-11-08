@@ -427,19 +427,23 @@ class filter_filtercodes extends moodle_text_filter {
             // Custom Profile Fields.
             if (stripos($text, '{profile_field') !== false) {
                 if (isloggedin() && !isguestuser()) {
-                    // Cached the visibity status of all the defined custom profile fields.
+                    // Cached the defined custom profile fields and data.
                     static $profilefields;
+                    static $profiledata;
                     if (!isset($profilefields)) {
-                        $profilefields = $DB->get_records('user_info_field', null, '', 'shortname, visible');
+                        $profilefields = $DB->get_records('user_info_field', null, '', 'id, shortname, visible');
+                        if (!empty($profilefields)) {
+                            $profiledata = $DB->get_records_menu('user_info_data', ['userid' => $USER->id], '', 'fieldid, data');
+                        }
                     }
-                    foreach ($USER->profile as $field => $value) {
-                        $shortname = strtolower($field);
-                        // If the tag exists and it is not hidden in the custom profile field's settings.
-                        if (stripos($text, '{profile_field_' . $shortname . '}') !== false
-                                && $profilefields[$field]->visible != '0') {
-                            $replace['/\{profile_field_' . $shortname . '\}/i'] = $value;
+
+                    foreach ($profilefields as $field) {
+                        // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
+                        if (stripos($text, '{profile_field_' . $field->shortname . '}') !== false && $field->visible != '0') {
+                            $data = !empty($profiledata[$field->id]) ? $profiledata[$field->id] : '';
+                            $replace['/\{profile_field_' . $field->shortname . '\}/i'] = $data;
                         } else {
-                            $replace['/\{profile_field_' . $shortname . '\}/i'] = '';
+                            $replace['/\{profile_field_' . $field->shortname . '\}/i'] = '';
                         }
                     }
                 }

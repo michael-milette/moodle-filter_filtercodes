@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - FAQ: Information on how to patch Moodle to enable FilterCodes in the custom menu.
 - FAQ: Search the README.md file for the word Troubleshooting to now find helpful information.
 - Fixed {diskfreespace} and {diskfreespacedata} on very large/unlimited storage. Note: Greater than about 84,703.29 Yottabyte (YB) is now considered infinite.
+- {profile_field_shortname} now supports textarea type custom fields.
 
 ## [2.0.0] 2020-07-01
 ### Added
