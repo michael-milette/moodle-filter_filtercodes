@@ -386,6 +386,12 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{' . $form . '\}/i'] = '';
                 }
             }
+
+            // Tag: {formsesskey}.
+            if (stripos($text, '{formsesskey}') !== false) {
+                $replace['/\{formsesskey\}/i'] = '<input type="hidden" id="sesskey" name="sesskey" value="">';
+                $replace['/\{formsesskey\}/i'] .= '<script>document.getElementById(\'sesskey\').value = M.cfg.sesskey;</script>';
+            }
         }
 
         // Apply all of the filtercodes so far.

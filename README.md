@@ -211,6 +211,7 @@ The following tags are replaced by Contact Form templates and therefore require 
 * {readonly} : To be used within form input fields to make them read-only if the user is logged-in.
 * {editingtoggle} : "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
 * {wwwcontactform} : Action URL for Contact Form forms. (requires Contact Form plugin).
+* {formsesskey} : Not a form. This can be used instead of having to insert the required hidden input field and JavaScript Snippet.
 
 ### Conditionally display content filters (All versions of Moodle)
 
