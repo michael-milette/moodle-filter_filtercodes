@@ -1,2 +1,4 @@
 /lang/*
 !/lang/en
+*.swp
+vendor
