@@ -16,6 +16,10 @@ All notable changes to this project will be documented in this file.
 - New {coursesummary} tag.
 - New {firstaccessdate} tag.
 - New {formsesskey} tag.
+- New Moodle date/time format option for the {firstaccessdate} tag.
+- New Moodle date/time format option for the {coursestartdate} tag.
+- New Moodle date/time format option for the {courseenddate} tag.
+- New Moodle date/time format option for the {coursecompletiondate} tag.
 ### Updated
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
 - {alert} to allow for optional contextual class stying.
