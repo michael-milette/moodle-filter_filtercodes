@@ -576,19 +576,19 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{idnumber\}/i'] = isloggedin() && !isguestuser() ? $USER->idnumber : '';
         }
 
-        // Tag: {firstaccessdate} or {firstaccessdate dateFormat}.
+        // Tag: {firstaccessdate} or {firstaccessdate dateTimeFormat}.
         if (stripos($text, '{firstaccessdate') !== false) {
             if (isloggedin() && !isguestuser() && !empty($USER->firstaccess)) {
                 // Replace {firstaccessdate} tag with formatted date.
                 if (stripos($text, '{firstaccessdate}') !== false) {
                     $replace['/\{firstaccessdate\}/i'] = userdate($USER->firstaccess, get_string('strftimedatefullshort'));
                 }
-                // Replace {firstaccessdate dateFormat} tag and parameters with formatted date.
+                // Replace {firstaccessdate dateTimeFormat} tag and parameters with formatted date.
                 if (stripos($text, '{firstaccessdate ') !== false) {
                     $newtext = preg_replace_callback('/\{firstaccessdate\s+(.+)\}/i',
                         function ($matches) use ($USER) {
                             // Hack to remove everything after the closing }, if it is still there.
-                            // TODO: Improve regex above to support strftime strings.
+                            // TODO: Improve regex above to support PHP strftime strings.
                             $matches[1] = strtok($matches[1], '}');
                             // Check if this is a built-in Moodle date/time format.
                             if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -885,7 +885,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{courseimage\}/i'] = '<img src="' . $imgurl . '" class="img-responsive">';
             }
 
-            // Tag: {coursestartdate} or {coursestartdate dateFormat}. The course start date.
+            // Tag: {coursestartdate} or {coursestartdate dateTimeFormat}. The course start date.
             if (stripos($text, '{coursestartdate') !== false) {
                 if (empty($PAGE->course->startdate)) {
                     $PAGE->course->startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $PAGE->course->id]);
@@ -895,12 +895,12 @@ class filter_filtercodes extends moodle_text_filter {
                     if (stripos($text, '{coursestartdate}') !== false) {
                         $replace['/\{coursestartdate\}/i'] = userdate($PAGE->course->startdate, get_string('strftimedatefullshort'));
                     }
-                    // Replace {coursestartdate dateFormat} tag and parameters with formatted date.
+                    // Replace {coursestartdate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{coursestartdate ') !== false) {
                         $newtext = preg_replace_callback('/\{coursestartdate\s+(.+)\}/i',
                             function ($matches) use ($PAGE) {
                                 // Hack to remove everything after the closing }, if it is still there.
-                                // TODO: Improve regex above to support strftime strings.
+                                // TODO: Improve regex above to support PHP strftime strings.
                                 $matches[1] = strtok($matches[1], '}');
                                 // Check if this is a built-in Moodle date/time format.
                                 if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -921,7 +921,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {courseenddate} or {coursesenddate dateFormat}. The course end date.
+            // Tag: {courseenddate} or {coursesenddate dateTimeFormat}. The course end date.
             if (stripos($text, '{courseenddate') !== false) {
                 if (empty($PAGE->course->enddate)) {
                     $PAGE->course->enddate = $DB->get_field_select('course', 'enddate', 'id = :id', ['id' => $PAGE->course->id]);
@@ -931,12 +931,12 @@ class filter_filtercodes extends moodle_text_filter {
                     if (stripos($text, '{courseenddate}') !== false) {
                         $replace['/\{courseenddate\}/i'] = userdate($PAGE->course->enddate, get_string('strftimedatefullshort'));
                     }
-                    // Replace {courseenddate dateFormat} tag and parameters with formatted date.
+                    // Replace {courseenddate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{courseenddate ') !== false) {
                         $newtext = preg_replace_callback('/\{courseenddate\s+(.+)\}/i',
                             function ($matches) use ($PAGE) {
                                 // Hack to remove everything after the closing }, if it is still there.
-                                // TODO: Improve regex above to support strftime strings.
+                                // TODO: Improve regex above to support PHP strftime strings.
                                 $matches[1] = strtok($matches[1], '}');
                                 // Check if this is a built-in Moodle date/time format.
                                 if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -957,7 +957,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {coursecompletiondate} or {coursecompletiondate dateFormat}. The course completion date.
+            // Tag: {coursecompletiondate} or {coursecompletiondate dateTimeFormat}. The course completion date.
             if (stripos($text, '{coursecompletiondate') !== false) {
                 if ($PAGE->course
                         && isset($CFG->enablecompletion)
@@ -973,12 +973,12 @@ class filter_filtercodes extends moodle_text_filter {
                     if (stripos($text, '{coursecompletiondate}') !== false) {
                         $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted, get_string('strftimedatefullshort'));
                     }
-                    // Replace {coursecompletiondate dateFormat} tag and parameters with formatted date.
+                    // Replace {coursecompletiondate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{coursecompletiondate ') !== false) {
                         $newtext = preg_replace_callback('/\{coursecompletiondate\s+(.+)\}/i',
                             function($matches) use ($ccompletion) {
                                 // Hack to remove everything after the closing }, if it is still there.
-                                // TODO: Improve regex above to support strftime strings.
+                                // TODO: Improve regex above to support PHP strftime strings.
                                 $matches[1] = strtok($matches[1], '}');
                                 // Check if this is a built-in Moodle date/time format.
                                 if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -1512,6 +1512,37 @@ class filter_filtercodes extends moodle_text_filter {
                 $text = $newtext;
                 $changed = true;
             }
+        }
+
+        // Tag: {now} or {now dateTimeFormat}.
+        if (stripos($text, '{now') !== false) {
+            // Replace {now} tag with formatted date.
+            $now = time();
+            if (stripos($text, '{now}') !== false) {
+                $replace['/\{now\}/i'] = userdate($now, get_string('strftimedatefullshort'));
+            }
+            // Replace {now dateTimeFormat} tag and parameters with formatted date.
+            if (stripos($text, '{now ') !== false) {
+                $newtext = preg_replace_callback('/\{now\s+(.+)\}/im',
+                    function ($matches) use ($now) {
+                        // Hack to remove everything after the closing }, if it is still there.
+                        // TODO: Improve regex above to support PHP strftime strings.
+                        $matches[1] = strtok($matches[1], '}');
+                        // Check if this is a built-in Moodle date/time format.
+                        if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                            // It is! Get the strftime string.
+                            $matches[1] = get_string($matches[1], 'langconfig');
+                        }
+                        return userdate($now, $matches[1]);
+                    },
+                    $text
+                );
+                if ($newtext !== false) {
+                    $text = $newtext;
+                    $changed = true;
+                }
+            }
+            unset($now);
         }
 
         // Tag: {fa fa-icon-name}.

@@ -121,6 +121,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {diskfreespace} : Display amount of free disk space for application folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
 * {diskfreespacedata} : Display amount of free disk space for moodledata folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
 * {wwwroot} : Root URL of the Moodle site.
+* {now dateTimeFormat} : Display's the current date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 
 ### UI Elements
 
@@ -673,6 +674,24 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Is this Moodle Workplace? [{ifworkplace}]Yes[{/ifworkplace}] : {ifworkplace}Yes{/ifworkplace}
 * This is FilterCodes version [{filtercodes}] : {filtercodes} Note: Will be blank if you do not have the ability to edit this tag.
 * Are you a member of the ATEAM group [{ifingroup ATEAM}]Yes[{/ifingroup}] ? : {ifingroup ATEAM}Yes{/ifingroup} Note: Only works in courses.
+* It is now [{now}] : {now}
+* It is now [{now backupnameformat}] : {now backupnameformat}
+* It is now [{now strftimedate}] : {now strftimedate}
+* It is now [{now strftimedatemonthabbr}] : {now strftimedatemonthabbr}
+* It is now [{now strftimedatefullshort}] : {now strftimedatefullshort}
+* It is now [{now strftimedateshort}] : {now strftimedateshort}
+* It is now [{now strftimedateshortmonthabbr}] : {now strftimedateshortmonthabbr}
+* It is now [{now strftimedatetime}] : {now strftimedatetime}
+* It is now [{now strftimedaydate}] : {now strftimedaydate}
+* It is now [{now strftimedaydatetime}] : {now strftimedaydatetime}
+* It is now [{now strftimedayshort}] : {now strftimedayshort}
+* It is now [{now strftimedaytime}] : {now strftimedaytime}
+* It is now [{now strftimemonthyear}] : {now strftimemonthyear}
+* It is now [{now strftimerecent}] : {now strftimerecent}
+* It is now [{now strftimerecentfull}] : {now strftimerecentfull}
+* It is now [{now strftimetime}] : {now strftimetime}
+* It is now [{now strftimetime12}] : {now strftimetime12}
+* It is now [{now strftimetime24}] : {now strftimetime24}
 
 You can switch to different roles to see how each will affect the content being displayed.
 
