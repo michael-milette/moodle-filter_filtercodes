@@ -547,7 +547,8 @@ class filter_filtercodes extends moodle_text_filter {
                 $string = array();
                 include($langconfig);
                 if (!empty($string['thislanguage'])) {
-                    $replace['/\{preferredlanguage\}/i'] = '<span lang="' . $string['iso6391'] . '">' . $string['thislanguage'] . '</span>';
+                    $replace['/\{preferredlanguage\}/i'] = '<span lang="' . $string['iso6391'] . '">' . $string['thislanguage']
+                            . '</span>';
                 } else { // This should never happen since the known user already exists.
                     $replace['/\{preferredlanguage\}/i'] = get_string('unknown', 'notes');
                 }
@@ -647,7 +648,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Any {user*} tags.
-        if (stripos($text, '{user') !== false) {
+        if (stripos($text, '{user') !== false || stripos($text, '%7Buser') !== false) {
 
             // Tag: {username}.
             if (stripos($text, '{username}') !== false) {
@@ -888,12 +889,15 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {coursestartdate} or {coursestartdate dateTimeFormat}. The course start date.
             if (stripos($text, '{coursestartdate') !== false) {
                 if (empty($PAGE->course->startdate)) {
-                    $PAGE->course->startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $PAGE->course->id]);
+                    $PAGE->course->startdate = $DB->get_field_select(
+                            'course', 'startdate', 'id = :id', ['id' => $PAGE->course->id]
+                    );
                 }
                 if (!empty($PAGE->course->startdate)) {
                     // Replace {coursestartdate} tag with formatted date.
                     if (stripos($text, '{coursestartdate}') !== false) {
-                        $replace['/\{coursestartdate\}/i'] = userdate($PAGE->course->startdate, get_string('strftimedatefullshort'));
+                        $replace['/\{coursestartdate\}/i'] = userdate($PAGE->course->startdate,
+                                get_string('strftimedatefullshort'));
                     }
                     // Replace {coursestartdate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{coursestartdate ') !== false) {
@@ -971,7 +975,8 @@ class filter_filtercodes extends moodle_text_filter {
                 if (!empty($ccompletion->timecompleted)) {
                     // Replace {coursecompletiondate} tag with formatted date.
                     if (stripos($text, '{coursecompletiondate}') !== false) {
-                        $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted, get_string('strftimedatefullshort'));
+                        $replace['/\{coursecompletiondate\}/i'] = userdate($ccompletion->timecompleted,
+                                get_string('strftimedatefullshort'));
                     }
                     // Replace {coursecompletiondate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{coursecompletiondate ') !== false) {
@@ -1171,6 +1176,37 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{siteyear}') !== false) {
                 $replace['/\{siteyear\}/i'] = date('Y');
             }
+        }
+
+        // Tag: {now} or {now dateTimeFormat}.
+        if (stripos($text, '{now') !== false) {
+            // Replace {now} tag with formatted date.
+            $now = time();
+            if (stripos($text, '{now}') !== false) {
+                $replace['/\{now\}/i'] = userdate($now, get_string('strftimedatefullshort'));
+            }
+            // Replace {now dateTimeFormat} tag and parameters with formatted date.
+            if (stripos($text, '{now ') !== false) {
+                $newtext = preg_replace_callback('/\{now\s+(.+)\}/im',
+                    function ($matches) use ($now) {
+                        // Hack to remove everything after the closing }, if it is still there.
+                        // TODO: Improve regex above to support PHP strftime strings.
+                        $matches[1] = strtok($matches[1], '}');
+                        // Check if this is a built-in Moodle date/time format.
+                        if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                            // It is! Get the strftime string.
+                            $matches[1] = get_string($matches[1], 'langconfig');
+                        }
+                        return userdate($now, $matches[1]);
+                    },
+                    $text
+                );
+                if ($newtext !== false) {
+                    $text = $newtext;
+                    $changed = true;
+                }
+            }
+            unset($now);
         }
 
         // Tag: {editingmode}. Is "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
@@ -1512,37 +1548,6 @@ class filter_filtercodes extends moodle_text_filter {
                 $text = $newtext;
                 $changed = true;
             }
-        }
-
-        // Tag: {now} or {now dateTimeFormat}.
-        if (stripos($text, '{now') !== false) {
-            // Replace {now} tag with formatted date.
-            $now = time();
-            if (stripos($text, '{now}') !== false) {
-                $replace['/\{now\}/i'] = userdate($now, get_string('strftimedatefullshort'));
-            }
-            // Replace {now dateTimeFormat} tag and parameters with formatted date.
-            if (stripos($text, '{now ') !== false) {
-                $newtext = preg_replace_callback('/\{now\s+(.+)\}/im',
-                    function ($matches) use ($now) {
-                        // Hack to remove everything after the closing }, if it is still there.
-                        // TODO: Improve regex above to support PHP strftime strings.
-                        $matches[1] = strtok($matches[1], '}');
-                        // Check if this is a built-in Moodle date/time format.
-                        if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
-                            // It is! Get the strftime string.
-                            $matches[1] = get_string($matches[1], 'langconfig');
-                        }
-                        return userdate($now, $matches[1]);
-                    },
-                    $text
-                );
-                if ($newtext !== false) {
-                    $text = $newtext;
-                    $changed = true;
-                }
-            }
-            unset($now);
         }
 
         // Tag: {fa fa-icon-name}.
@@ -1962,12 +1967,12 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {iftenant idnumber|tenantid}. Only for Moodle Workplace
+            // Tag: {iftenant idnumber|tenantid}. Only for Moodle Workplace.
             if (stripos($text, '{iftenant') !== false) {
                 if (class_exists('tool_tenant\tenancy')) {
                     // Moodle Workplace.
                     $tenants = \tool_tenant\tenancy::get_tenants();
-                    // Get current tenantid
+                    // Get current tenantid.
                     $currenttenantid = \tool_tenant\tenancy::get_tenant_id();
                 } else {
                     // Moodle Classic - Just simulate functionality as tenant 1.
@@ -1977,7 +1982,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $tenants[0]->id = 1;
                     $currenttenantid = 1;
                 }
-                // We will use tenant's idnumber if it is set. If not, default to tenant id
+                // We will use tenant's idnumber if it is set. If not, default to tenant id.
                 $currenttenantidnumber = 1;
                 foreach ($tenants as $tenant) {
                     if ($tenant->id == $currenttenantid) {
@@ -2000,7 +2005,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {ifworkplace}. Only for Moodle Workplace
+            // Tag: {ifworkplace}. Only for Moodle Workplace.
             if (stripos($text, '{ifworkplace}') !== false) {
                 if (class_exists('tool_tenant\tenancy')) {
                     // Moodle Workplace - Just remove the tags.
@@ -2012,7 +2017,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {iftenant idnumber|tenantid}. Only for Moodle Workplace
+            // Tag: {iftenant idnumber|tenantid}. Only for Moodle Workplace.
             if (stripos($text, '{ifworkplace}') !== false) {
                 if (class_exists('tool_tenant\tenancy')) {
                     // Moodle Workplace.
@@ -2125,7 +2130,7 @@ class filter_filtercodes extends moodle_text_filter {
                             $role = $DB->get_record('role', array('shortname' => 'manager'), '*', MUST_EXIST);
                             $userfields = 'u.id, u.username, u.firstname, u.lastname';
                             $roleusers = get_role_users($role->id, $syscontext, false, $userfields);
-                            $issitemanager = array_key_exists($USER->id, array_column($roleusers, NULL, 'id'));
+                            $issitemanager = array_key_exists($USER->id, array_column($roleusers, null, 'id'));
                         }
                     }
                     if ($issitemanager) {
@@ -2169,9 +2174,9 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{/alert}') !== false) {
             $newtext = preg_replace_callback('/\{alert(\s\w*)?\}(.*?)\{\/alert\}/is',
             function($matches) {
-                // If alert <style> parameter is not included, default to alert-warning
+                // If alert <style> parameter is not included, default to alert-warning.
                 $matches[1] = trim($matches[1]);
-                $matches[1] = empty($matches[1])? 'warning' : $matches[1];
+                $matches[1] = empty($matches[1]) ? 'warning' : $matches[1];
                 return '<div class="alert alert-' . $matches[1] . '" role="alert"><p>' . $matches[2] . '</p></div>';
             }, $text);
             if ($newtext !== false) {

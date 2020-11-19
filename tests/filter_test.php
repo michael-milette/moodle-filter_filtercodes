@@ -61,7 +61,7 @@ class filter_filtercodes_testcase extends advanced_testcase {
      * @return void
      */
     public function test_filter_filtercodes() {
-        global $CFG, $USER, $DB, $PAGE;
+        global $CFG, $USER, $DB, $PAGE, $SITE;
 
         $PAGE->set_url(new moodle_url('/'));
 
@@ -144,12 +144,12 @@ class filter_filtercodes_testcase extends advanced_testcase {
                 'after'  => $USER->lastname,
             ),
             array (
-                'before' => '{{alternatename}}',
-                'after'  => $USER->alternatename,
+                'before' => '{alternatename}',
+                'after'  => !empty(trim($USER->alternatename)) ? $USER->alternatename : $USER->firstname,
             ),
             array (
                 'before' => '{fullname}',
-                'after'  => $USER->lastname . ' ' . $USER->lastname,
+                'after'  => $USER->firstname . ' ' . $USER->lastname,
             ),
             array (
                 'before' => '{getstring}help{/getstring}',
@@ -200,20 +200,24 @@ class filter_filtercodes_testcase extends advanced_testcase {
                 'after'  => $DB->count_records('user', array('deleted' => 0, 'suspended' => 0, 'confirmed' => 1)) - 2,
             ),
             array (
-                'before' => '{course}',
-                'after'  => $course->id,
+                'before' => '{courseid}',
+                'after'  => $PAGE->course->id,
+            ),
+            array (
+                'before' => '{courseidnumber}',
+                'after'  => $PAGE->course->idnumber,
             ),
             array (
                 'before' => '%7Bcourseid%7D',
-                'after'  => $course->id,
+                'after'  => $PAGE->course->id,
             ),
             array (
                 'before' => '{coursename}',
-                'after'  => $course->fullname,
+                'after'  => $PAGE->course->fullname,
             ),
             array (
                 'before' => '{courseshortname}',
-                'after'  => $course->shortname,
+                'after'  => $PAGE->course->shortname,
             ),
             array (
                 'before' => '{coursecount}',
@@ -224,8 +228,16 @@ class filter_filtercodes_testcase extends advanced_testcase {
                 'after'  => $DB->count_records('course', array('visible' => 1)) - 1,
             ),
             array (
+                'before' => '{coursesummary}',
+                'after'  => $PAGE->course->summary,
+            ),
+            array (
                 'before' => '{siteyear}',
                 'after'  => date('Y'),
+            ),
+            array (
+                'before' => '{editingtoggle}',
+                'after'  => ($PAGE->user_is_editing() ? 'off' : 'on'),
             ),
             array (
                 'before' => '{wwwroot}',
@@ -241,7 +253,7 @@ class filter_filtercodes_testcase extends advanced_testcase {
             ),
             array (
                 'before' => '{pagepath}',
-                'after'  => $CFG->wwwroot . '?',
+                'after'  => '/?',
             ),
             array (
                 'before' => '{ipaddress}',
@@ -269,7 +281,7 @@ class filter_filtercodes_testcase extends advanced_testcase {
             ),
             array (
                 'before' => '{fa fa-icon-name}',
-                'after'  => '<span class="fa-icon-name" aria-hidden="true"></span>',
+                'after'  => '<span class="fa fa-icon-name" aria-hidden="true"></span>',
             ),
             array (
                 'before' => '{glyphicon glyphicon-name}',
