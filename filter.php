@@ -2114,6 +2114,30 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 }
 
+                // Tag: {ifminsitemanager}.
+                if (stripos($text, '{ifminsitemanager}') !== false) {
+                    static $issitemanager;
+                    // If a manager or above.
+                    if (!isset($issitemanager) && $issitemanager = $this->hasminarchetype('manager')) {
+                        if (!is_siteadmin()) {
+                            // Is at least a manager, but a site manager? Let's see.
+                            $syscontext = context_system::instance();
+                            $role = $DB->get_record('role', array('shortname' => 'manager'), '*', MUST_EXIST);
+                            $userfields = 'u.id, u.username, u.firstname, u.lastname';
+                            $roleusers = get_role_users($role->id, $syscontext, false, $userfields);
+                            $issitemanager = array_key_exists($USER->id, array_column($roleusers, NULL, 'id'));
+                        }
+                    }
+                    if ($issitemanager) {
+                        // Just remove the tags.
+                        $replace['/\{ifminsitemanager\}/i'] = '';
+                        $replace['/\{\/ifminsitemanager\}/i'] = '';
+                    } else {
+                        // Remove the ifminsitemanager strings.
+                        $replace['/\{ifminsitemanager\}(.*?)\{\/ifminsitemanager\}/ims'] = '';
+                    }
+                }
+
             }
 
         }

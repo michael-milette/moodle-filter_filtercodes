@@ -246,6 +246,7 @@ Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetype
 * {ifmincreator}{/ifmincreator} : Will display the enclosed content only if the user is logged-in as a course creator or above.
 * {ifmanager}{/ifmanager} : Will display the enclosed content only if the user is logged-in as a manager.
 * {ifminmanager}{/ifminmanager} : Will display the enclosed content only if the user is logged-in as a manager or above.
+* {ifminsitemanager}{/ifminsitemanager} : Will display the enclosed content only if the user is logged-in as a site manager or above.
 * {ifadmin}{/ifadmin} : Will display the enclosed content only if the user is logged-in as an administrator.
 * {ifcustomrole roleshortname}{/ifcustomrole} : Will display enclosed content only if the user has the custom role specified by its shortname within the current context.
 * {ifnotcustomrole roleshortname}{/ifnotcustomrole} : Will display enclosed content only if the user does not have the custom role specified by its shortname within the current context.
@@ -340,7 +341,9 @@ This menu can be handy for Moodle administrators and managers.
     -Course management|/course/management.php
     -Restore Course|/backup/restorefile.php?contextid={coursecontextid}
     -System reports|/admin/category.php?category=reports
+    {ifminsitemanager}
     -User management|/admin/user.php
+    {/ifminsitemanager}
     -###
     -Moodle support|https://moodle.org/course/view.php?id=5
     {/ifminmanager}
@@ -659,7 +662,8 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If Course Creator [{ifcreator}]You are a course creator.[{/ifcreator}]: {ifcreator}You are a course creator.{/ifcreator}
 * If Course Creator (minimum) [{ifmincreator}]You are a course creator or above.[{/ifmincreator}]: {ifmincreator}You are a course creator or above.{/ifmincreator}
 * If Manager [{ifmanager}]You are a manager.[{/ifmanager}]: {ifmanager}You are a manager.{/ifmanager}
-* If Manager (minimum): {ifminmanager}You are a manager or administrator.{/ifminmanager}
+* If Manager (minimum) [{ifminmanager}]You are a manager or administrator.[{/ifminmanager}]: {ifminmanager}You are a manager or administrator.{/ifminmanager}
+* If Site Manager (minimum) [{ifminsitemanager}]You are a site manager or administrator.[{/ifminsitemanager}]: {ifminsitemanager}You are a site manager or administrator.{/ifminsitemanager}
 * If Admin [{ifadmin}]You are an administrator.[{/ifadmin}]: {ifadmin}You are an administrator.{/ifadmin}
 * If Developer [{ifdev}]You are an administrator with debugging set to developer mode.[{/ifdev}]: {ifdev}You are an administrator.{/ifdev}
 * If user has a parent custom role [{ifcustomrole parent}]You have a parent custom role in this context[{/ifcustomrole}]: {ifcustomrole parent}You have a parent custom role in this context{/ifcustomrole}.

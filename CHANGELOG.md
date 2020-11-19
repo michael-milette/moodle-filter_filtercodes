@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.0.6] dev-2020-11-18
+## [2.0.7] dev-2020-11-19
 ### Added
 - New {ifingroup id|idnumber}{/ifingroup} tags.
 - New {filtercodes} tag. Note: Only works for teachers and above.
@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - New Moodle date/time format option for the {courseenddate} tag.
 - New Moodle date/time format option for the {coursecompletiondate} tag.
 - New {now dateTimeFormat} tag.
+- New {ifminsitemanager} tag.
 
 ### Updated
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
