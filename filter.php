@@ -849,7 +849,7 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{courseshortname}') !== false) {
                 $course = $PAGE->course;
                 if ($course->id == $SITE->id) { // Front page - use site name.
-                    $replace['/\{courseshortname\}/i'] = format_string($SITE->fullname);
+                    $replace['/\{courseshortname\}/i'] = format_string($SITE->shortname);
                 } else { // In a course - use course full name.
                     $coursecontext = context_course::instance($course->id);
                     $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
