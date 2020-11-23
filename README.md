@@ -3,7 +3,7 @@
 FilterCodes filter plugin for Moodle
 ====================================
 ![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3%2F%20v7.4-blue.svg)`
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.9.x-orange.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.10.x-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -117,11 +117,11 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {usersactive} : Count total number of registered users on the site. Does not included deleted users, disabled users, primary admin or guest.
 * {usersonline} : Total number of users who were online in the last 5 minutes.
 * {siteyear} : 4-digit current year.
+* {now dateTimeFormat} : Display's the current date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {coursecount} : Total number of courses on this Moodle site (not including Front Page).
 * {diskfreespace} : Display amount of free disk space for application folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
 * {diskfreespacedata} : Display amount of free disk space for moodledata folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
 * {wwwroot} : Root URL of the Moodle site.
-* {now dateTimeFormat} : Display's the current date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 
 ### UI Elements
 
@@ -870,6 +870,7 @@ You can patch Moodle handle this properly in the first place. Applying the follo
 * Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-63219-M37
 * Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-63219-M38
 * Moodle 3.9: https://github.com/michael-milette/moodle/tree/MDL-63219-M39
+* Moodle 3.10: https://github.com/michael-milette/moodle/tree/MDL-63219-M310
 
 ### Why is the IP Address listed as 0:0:0:0:0:0:0:1?
 

@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.0.7] dev-2020-11-19
+## [2.1.0] 2020-11-23
 ### Added
 - New {ifingroup id|idnumber}{/ifingroup} tags.
 - New {filtercodes} tag. Note: Only works for teachers and above.
@@ -32,8 +32,8 @@ All notable changes to this project will be documented in this file.
 - {profile_field_shortname} now supports textarea type custom fields.
 - Re-enabled the %7Buserid%7D tag.
 - Fixed {courseshortname} so that it displays the site shortname if you are not in a course.
-- Now passes 100% of the PHPUnit Tests.
-- Tested to be compatible with Moodle 3.10.
+- Should now be passing 100% of the PHPUnit Tests.
+- Tested to be compatible up to and including Moodle 3.10.
 
 ## [2.0.0] 2020-07-01
 ### Added
