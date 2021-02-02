@@ -140,6 +140,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {coursecompletiondate dateTimeFormat} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
 * {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
+* {coursecards categoryid=x}: (ALPHA) Display available courses as cards. Optional categoryid parameter to specify one or more category IDs.
 * {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
 * {coursesummary} : Display's the course summary. If placed in a site page, displays the site summary.
@@ -581,7 +582,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Completion date [{coursecompletiondate strftimedatetime}]: {coursecompletiondate strftimedatetime}
 * Course progress (ALPHA) [{courseprogress}]: {courseprogress}
 * Course progress bar (ALPHA) [{courseprogressbar}]: {courseprogressbar}
-* Course cards (ALPHA) [{coursecards}]: {coursecards}
+* Course cards (ALPHA) [{coursecards categoryid=1}]: If miscellaneous category still exists, it will be displayed: {coursecards categoryid=1}
 * Category cards (ALPHA) [{categorycards}]: {categorycards}
 * Total courses [{coursecount}]: {coursecount}
 * Institution [{institution}]: {institution}
