@@ -18,7 +18,7 @@
  * Main filter code for FilterCodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2020 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2021 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/course/renderer.php');
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *
- * @copyright  2017-2020 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2021 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_filtercodes extends moodle_text_filter {
@@ -437,16 +437,22 @@ class filter_filtercodes extends moodle_text_filter {
                     static $profilefields;
                     static $profiledata;
                     if (!isset($profilefields)) {
-                        $profilefields = $DB->get_records('user_info_field', null, '', 'id, shortname, visible');
+                        $profilefields = $DB->get_records('user_info_field', null, '', 'id, datatype, shortname, visible, param3');
                         if (!empty($profilefields)) {
                             $profiledata = $DB->get_records_menu('user_info_data', ['userid' => $USER->id], '', 'fieldid, data');
                         }
                     }
-
                     foreach ($profilefields as $field) {
                         // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
                         if (stripos($text, '{profile_field_' . $field->shortname . '}') !== false && $field->visible != '0') {
                             $data = !empty($profiledata[$field->id]) ? $profiledata[$field->id] : '';
+                            switch ($field->datatype) {
+                                case 'datetime':
+                                    // Include date and time or just date?
+                                    $datetimeformat = (!empty($field->param3) ? 'strftimedaydatetime' : 'strftimedate');
+                                    $data = empty($data) ? '' : userdate($data, get_string($datetimeformat, 'langconfig'));
+                                    break;
+                            }
                             $replace['/\{profile_field_' . $field->shortname . '\}/i'] = $data;
                         } else {
                             $replace['/\{profile_field_' . $field->shortname . '\}/i'] = '';
