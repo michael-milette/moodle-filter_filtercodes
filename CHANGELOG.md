@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [2.1.1] 2021-02-13
 ### Updated
 - {profile_field_...} of type Date/Time now displays date/time instead of a number.
+- {profile_field_...} of type Checkbox now displays Yes/No instead of a 1 or 0.
 ## [2.1.0] 2020-11-23
 ### Added
 - New {ifingroup id|idnumber}{/ifingroup} tags.
