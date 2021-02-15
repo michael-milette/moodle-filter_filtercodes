@@ -185,6 +185,7 @@ Also see Courses section below.
 
 ### Content
 
+* {filtercodes_...} : Use your own custom FilterCodes tags in the filter's settings. This is sometimes referred to as global blocks. An example of this might be if you wanted to define a standardized copyright or other text, email address, website URL, phone number, name, link, support information and more. Define and centrally manage up to 20 global block tags.
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {help}content{/help} : Enables you to create popup help icons just like Moodle does.
 * {info}content{/info} : Enables you to create popup help icons just like the popup Help icons but with an "i" information icon.
@@ -993,7 +994,7 @@ https://github.com/michael-milette/moodle-filter_filtercodes
 
 # License
 
-Copyright © 2017-2020 TNG Consulting Inc. - https://www.tngconsulting.ca/
+Copyright © 2017-2021 TNG Consulting Inc. - https://www.tngconsulting.ca/
 
 This file is part of FilterCodes for Moodle - https://moodle.org/
 
