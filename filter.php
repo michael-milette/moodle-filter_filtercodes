@@ -840,6 +840,11 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/%coursecontextid%7D/i'] = $coursecontextid;
             }
 
+            // Tag: %7Bcoursemoduleid%7D (escaped).
+            if (stripos($text, '%7Bcoursemoduleid%7D') !== false) {
+                $replace['/\%7Bcoursemoduleid%7D/i'] = @$PAGE->cm->id;
+            }
+
             // Tag: {courseidnumber}.
             if (stripos($text, '{courseidnumber}') !== false) {
                 $replace['/\{courseidnumber\}/i'] = $PAGE->course->idnumber;
@@ -1521,7 +1526,6 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{sectionid}') !== false) {
             $replace['/\{sectionid\}/i'] = @$PAGE->cm->sectionnum;
         }
-
         // Alternative Tag: %7Bsectionid%7D.
         if (stripos($text, '%7Bsectionid%7D') !== false) {
             $replace['/\%7Bsectionid%7D/i'] = @$PAGE->cm->sectionnum;
