@@ -1,9 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.1] 2021-02-13
+## [2.1.3] 2021-02-21
 ### Added
 - New %7Bcoursemoduleid%7D tag.
+- New option for you to define your own global {global_...} tags.
 ### Updated
 - {profile_field_...} of type Date/Time now displays date/time instead of a number.
 - {profile_field_...} of type Checkbox now displays Yes/No instead of a 1 or 0.

@@ -18,7 +18,7 @@
  * English strings for FilterCodes plugin.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2020 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2021 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -50,6 +50,15 @@ $string['sizetb'] = 'TB';
 $string['sizeeb'] = 'EB';
 $string['sizezb'] = 'ZB';
 $string['sizeyb'] = 'YB';
+
+$string['globaltagheadingtitle'] = 'Global custom tags';
+$string['globaltagheadingdesc'] = 'Define your own global tags, sometimes also called global blocks.';
+$string['globaltagcount'] = 'Number of global tags.';
+$string['globaltagcountdesc'] = 'Select the number of tags you want to define. For optional performance, only select the the number you will need.';
+$string['globaltagnametitle'] = 'Tag: global_';
+$string['globaltagnamedesc'] = 'This will be part of your tag name, prefixed with "global_". Example: If you enter "address" here, your tag will be called {global_address}". Must be a single string of letters only, no spaces, numbers or special characters are permitted.';
+$string['globaltagcontenttitle'] = 'Content';
+$string['globaltagcontentdesc'] = 'This is the content that your global tag will replace. Example: If your tag is called "{global_address}", that tag will be replaced by the content entered into this field.';
 
 $string['formquickquestion'] = '
 <form action="{wwwroot}/local/contact/index.php" method="post" class="cf contact-us">

@@ -405,15 +405,6 @@ class filter_filtercodes extends moodle_text_filter {
         }
         $replace = [];
 
-        // END: Process tags that may end up containing other tags first.
-
-        //
-        // FilterCodes extended (future feature).
-        //
-        if (file_exists(dirname(__FILE__) . '/filter-ext.php')) {
-            include(dirname(__FILE__) . '/filter-ext.php');
-        }
-
         // Tag: {filtercodes}. Show version of FilterCodes, but only if you have permission to add the tag.
         if (stripos($text, '{filtercodes}') !== false) {
             // If you have the ability to edit the content.
@@ -425,6 +416,35 @@ class filter_filtercodes extends moodle_text_filter {
             } else {
                 $replace['/\{filtercodes\}/i'] = '';
             }
+        }
+
+        // Tag: {global_[custom]}. Global Custom tags as defined in plugin settings.
+        if (stripos($text, '{global_') !== false) {
+            // Get total number of defined global block tags.
+            $globaltagcount = get_config('filter_filtercodes', 'globaltagcount');
+            for ($i = 1; $i <= $globaltagcount; $i++) {
+                // Get name of tag.
+                $tag = get_config('filter_filtercodes', 'globalname' . $i);
+                // If defined and tag exists in the content.
+                if (!empty($tag) && stripos($text, '{global_' . $tag . '}') !== false) {
+                    // Replace the tag with new content.
+                    $content = get_config('filter_filtercodes', 'globalcontent' . $i);
+                    $replace['/\{global_' . $tag . '\}/i'] = $content;
+                }
+            }
+            unset($i);
+            unset($globaltagcount);
+            unset($tag);
+            unset($content);
+        }
+
+        // END: Process tags that may end up containing other tags first.
+
+        //
+        // FilterCodes extended (future feature).
+        //
+        if (file_exists(dirname(__FILE__) . '/filter-ext.php')) {
+            include(dirname(__FILE__) . '/filter-ext.php');
         }
 
         if (stripos($text, '{profile') !== false) {
