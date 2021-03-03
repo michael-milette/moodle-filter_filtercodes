@@ -385,6 +385,8 @@ Notes:
 
 Note: This feature must be enabled in FilterCodes settings.
 
+IMPORTANT: You cannot use this feature to scrape content from any website that requires you to be logged-in in order to access the content. The {scrape} tag can only access content as a non-authenticated user, even if you are logged-in.
+
 As of version 0.4.7, you can now use FileterCodes to scrape content from another web page. Your mileage may vary and depends a lot on your configuration, the website from which you are scraping content and more.
 
 {scrape url="..." tag="..." class="..." id="..." code="..."}
@@ -832,7 +834,7 @@ Add the following code to core_renderer section of your theme for Moodle 2.7 to 
         /**
          * Applies Moodle filters to custom menu and custom user menu.
          *
-         * Copyright: 2017-2020 TNG Consulting Inc.
+         * Copyright: 2017-2021 TNG Consulting Inc.
          * License:   GNU GPL v3+.
          *
          * @param string $custommenuitems Current custom menu object.

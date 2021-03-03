@@ -18,7 +18,7 @@
  * FilterCodes filter upgrade code.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2020 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2021 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

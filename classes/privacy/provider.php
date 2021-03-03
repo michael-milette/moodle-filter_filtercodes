@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for filter_filtercodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2020 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2021 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Privacy Subsystem for filter_filtercodes implementing null_provider.
  *
- * @copyright  2017-2020 TNG Consulting Inc. <www.tngconsulting.ca>
+ * @copyright  2017-2021 TNG Consulting Inc. <www.tngconsulting.ca>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {
