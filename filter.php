@@ -452,35 +452,34 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {profile_field_...}.
             // Custom Profile Fields.
             if (stripos($text, '{profile_field') !== false) {
-                if (isloggedin() && !isguestuser()) {
-                    // Cached the defined custom profile fields and data.
-                    static $profilefields;
-                    static $profiledata;
-                    if (!isset($profilefields)) {
-                        $profilefields = $DB->get_records('user_info_field', null, '', 'id, datatype, shortname, visible, param3');
-                        if (!empty($profilefields)) {
-                            $profiledata = $DB->get_records_menu('user_info_data', ['userid' => $USER->id], '', 'fieldid, data');
-                        }
+                $isuser = (isloggedin() && !isguestuser());
+                // Cached the defined custom profile fields and data.
+                static $profilefields;
+                static $profiledata;
+                if (!isset($profilefields)) {
+                    $profilefields = $DB->get_records('user_info_field', null, '', 'id, datatype, shortname, visible, param3');
+                    if ($isuser && !empty($profilefields)) {
+                        $profiledata = $DB->get_records_menu('user_info_data', ['userid' => $USER->id], '', 'fieldid, data');
                     }
-                    foreach ($profilefields as $field) {
-                        // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
-                        if (stripos($text, '{profile_field_' . $field->shortname . '}') !== false && $field->visible != '0') {
-                            $data = isset($profiledata[$field->id]) ? trim($profiledata[$field->id]) : '';
-                            switch ($field->datatype) { // Format data for some field types.
-                                case 'datetime':
-                                    // Include date and time or just date?
-                                    $datetimeformat = !empty($field->param3) ? 'strftimedaydatetime' : 'strftimedate';
-                                    $data = empty($data) ? '' : userdate($data, get_string($datetimeformat, 'langconfig'));
-                                    break;
-                                case 'checkbox':
-                                    // 1 = Yes, 0 = No
-                                    $data = empty($data) ? get_string('no') : get_string('yes');
-                                    break;
-                            }
-                            $replace['/\{profile_field_' . $field->shortname . '\}/i'] = $data;
-                        } else {
-                            $replace['/\{profile_field_' . $field->shortname . '\}/i'] = '';
+                }
+                foreach ($profilefields as $field) {
+                    // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
+                    if ($isuser && stripos($text, '{profile_field_' . $field->shortname . '}') !== false && $field->visible != '0') {
+                        $data = isset($profiledata[$field->id]) ? trim($profiledata[$field->id]) : '';
+                        switch ($field->datatype) { // Format data for some field types.
+                            case 'datetime':
+                                // Include date and time or just date?
+                                $datetimeformat = !empty($field->param3) ? 'strftimedaydatetime' : 'strftimedate';
+                                $data = empty($data) ? '' : userdate($data, get_string($datetimeformat, 'langconfig'));
+                                break;
+                            case 'checkbox':
+                                // 1 = Yes, 0 = No
+                                $data = empty($data) ? get_string('no') : get_string('yes');
+                                break;
                         }
+                        $replace['/\{profile_field_' . $field->shortname . '\}/i'] = $data;
+                    } else {
+                        $replace['/\{profile_field_' . $field->shortname . '\}/i'] = '';
                     }
                 }
             }

@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - {profile_field_...} of type Date/Time now displays date/time instead of a number.
 - {profile_field_...} of type Checkbox now displays Yes/No instead of a 1 or 0.
 - {profile_field_...} of other types will now display value if field contains 0.
+- {profile_field_...} tags will now be removed if user is not logged in.
 - Documentation.
 - Copyright notice for 2021.
 
