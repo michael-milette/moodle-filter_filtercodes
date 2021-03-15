@@ -465,7 +465,7 @@ class filter_filtercodes extends moodle_text_filter {
                     foreach ($profilefields as $field) {
                         // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
                         if (stripos($text, '{profile_field_' . $field->shortname . '}') !== false && $field->visible != '0') {
-                            $data = !empty($profiledata[$field->id]) ? $profiledata[$field->id] : '';
+                            $data = isset($profiledata[$field->id]) ? trim($profiledata[$field->id]) : '';
                             switch ($field->datatype) { // Format data for some field types.
                                 case 'datetime':
                                     // Include date and time or just date?
