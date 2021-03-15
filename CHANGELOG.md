@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New %7Bcoursemoduleid%7D tag.
 - New option for you to define your own global {global_...} tags.
+- New {courserequest} tag.
+- New {courserequestmenu} tag.
+- New {courserequestmenu0} tag.
 ### Updated
+- Request a Course link is no longer included in {mycourses}. See new {courserequest} tag.
+- Request a Course link is no longer included in {mycoursesmenu}. See new {courserequestmenu0} and {courserequestmenu} tags.
 - {profile_field_...} of type Date/Time now displays date/time instead of a number.
 - {profile_field_...} of type Checkbox now displays Yes/No instead of a 1 or 0.
 - {profile_field_...} of other types will now display value if field contains 0.

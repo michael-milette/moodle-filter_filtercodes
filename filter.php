@@ -1138,6 +1138,39 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 $replace['/\{coursecards\}/i'] = !empty($header) ? $header . $content . $footer : '';
             }
+
+            // Tag: {courserequest}. An unordered list of links to enrolled course.
+            if (stripos($text, '{courserequest}') !== false) {
+                // Add request a course link.
+                $context = context_system::instance();
+                if (!empty($CFG->enablecourserequests) && has_capability('moodle/course:request', $context)) {
+                    $link = '<a href="' . new moodle_url('/course/request.php') . '">' . get_string('requestcourse') . '</a>';
+                } else {
+                    $link = '';
+                }
+                $replace['/\{courserequest\}/i'] = $link;
+            }
+
+            if (stripos($text, '{courserequestmenu') !== false) {
+                // Add request a course link.
+                $context = context_system::instance();
+                if (!empty($CFG->enablecourserequests) && has_capability('moodle/course:request', $context)) {
+                    if (stripos($text, '{courserequestmenu0}') !== false) {
+                        // Top level menu.
+                        $link = get_string('requestcourse') . '|' . new moodle_url('/course/request.php');
+                        $replace['/\{courserequestmenu0\}/i'] = $link;
+                    }
+                    if (stripos($text, '{courserequestmenu}') !== false) {
+                        // Not top level menu.
+                        $link = '-###' . PHP_EOL;
+                        $link .= '-' . get_string('requestcourse') . '|' . new moodle_url('/course/request.php');
+                        $replace['/\{courserequestmenu\}/i'] = $link;
+                    }
+                } else {
+                    $replace['/\{courserequestmenu\}/i'] = '';
+                }
+
+            }
         }
 
         // Tag: {mycourses} and {mycoursesmenu}.
@@ -1165,13 +1198,8 @@ class filter_filtercodes extends moodle_text_filter {
                     if (empty($list)) {
                         $list .= '<li>' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . '</li>';
                     }
-                    // Add request a course link.
-                    $context = context_system::instance();
-                    if (!empty($CFG->enablecourserequests) && has_capability('moodle/course:request', $context)) {
-                        $list .= '<li><a href="' . new moodle_url('/course/request.php') . '">' .
-                                get_string('requestcourse') . '</a></li>';
-                    }
-                    $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist">' . $list . '</ul>';
+                    $replace['/\{mycourses\}/i'] = $list;
+                    unset($list);
                 }
 
                 // Tag: {mycoursesmenu}. A custom menu list of enrolled course names with links.
@@ -1185,17 +1213,10 @@ class filter_filtercodes extends moodle_text_filter {
                     if (empty($list)) {
                         $list .= '-' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . PHP_EOL;
                     }
-                    // Add request a course link.
-                    $context = context_system::instance();
-                    if (!empty($CFG->enablecourserequests) && has_capability('moodle/course:request', $context)) {
-                        $list .= '-###' . PHP_EOL;
-                        $list .= '-' . get_string('requestcourse') . '|' . new moodle_url('/course/request.php');
-                    }
                     $replace['/\{mycoursesmenu\}/i'] = $list;
+                    unset($list);
                 }
-                unset($list);
                 unset($mycourses);
-
             } else { // Not logged in.
                 // Replace tags with message indicating that you need to be logged in.
                 $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';

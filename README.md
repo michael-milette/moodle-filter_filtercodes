@@ -130,6 +130,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
 * {categorycards}: (ALPHA) Display top level categories as cards. Has only been tested on Front Page.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
+* {courserequest} : Displays a Request a Course link.
 
 ### For use in courses
 
@@ -170,6 +171,8 @@ Also see Courses section below.
 * {categoriesxmenu} : A second level list of other categories in the current category with links for use in custom menus (filtering must be supported by the theme).
 * {toggleeditingmenu} : A Turn Editing On or Turn Editing Off custom menu item. Note that you need to add your own dash(es).
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
+* {courserequestmenu0} : Request a course / Course request in a top level custom menu.
+* {courserequestmenu} : Request a course / Course request in submenu.
 
 ### URL
 
@@ -603,6 +606,9 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}
 * My Enrolled Courses [{mycourses}]: {mycourses}
 * My Enrolled Courses menu [{mycoursesmenu}]: {mycoursesmenu}
+* My Enrolled Courses [{courserequest}]: {myccourserequestourses}
+* Request a course / Course request in top level menu [{courserequestmenu0}]: {courserequestmenu0}
+* Request a course / Course request in submenu [{courserequestmenu}]: {courserequestmenu}
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course category name (blank if not in a course) [{categoryname}]: {categoryname}
 * Course category number (blank if not in a course) [{categorynumber}]: {categorynumber}
