@@ -394,30 +394,6 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Apply all of the filtercodes so far.
-        $newtext = null;
-        if (count($replace) > 0) {
-            $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
-        }
-        if (!is_null($newtext)) {
-            $text = $newtext;
-            $changed = true;
-        }
-        $replace = [];
-
-        // Tag: {filtercodes}. Show version of FilterCodes, but only if you have permission to add the tag.
-        if (stripos($text, '{filtercodes}') !== false) {
-            // If you have the ability to edit the content.
-            if (has_capability('moodle/course:update', $PAGE->context)) {
-                // Show the version of the FilterCodes plugin.
-                $plugin = new stdClass();
-                require($CFG->dirroot . '/filter/filtercodes/version.php');
-                $replace['/\{filtercodes\}/i'] = "$plugin->release ($plugin->version)";
-            } else {
-                $replace['/\{filtercodes\}/i'] = '';
-            }
-        }
-
         // Tag: {global_[custom]}. Global Custom tags as defined in plugin settings.
         if (stripos($text, '{global_') !== false) {
             // Get total number of defined global block tags.
@@ -437,6 +413,17 @@ class filter_filtercodes extends moodle_text_filter {
             unset($tag);
             unset($content);
         }
+
+        // Apply all of the filtercodes so far.
+        $newtext = null;
+        if (count($replace) > 0) {
+            $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
+        }
+        if (!is_null($newtext)) {
+            $text = $newtext;
+            $changed = true;
+        }
+        $replace = [];
 
         // END: Process tags that may end up containing other tags first.
 
@@ -2197,6 +2184,19 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 }
 
+            }
+
+            // Tag: {filtercodes}. Show version of FilterCodes, but only if you have permission to add the tag.
+            if (stripos($text, '{filtercodes}') !== false) {
+                // If you have the ability to edit the content.
+                if (has_capability('moodle/course:update', $PAGE->context)) {
+                    // Show the version of the FilterCodes plugin.
+                    $plugin = new stdClass();
+                    require($CFG->dirroot . '/filter/filtercodes/version.php');
+                    $replace['/\{filtercodes\}/i'] = "$plugin->release ($plugin->version)";
+                } else {
+                    $replace['/\{filtercodes\}/i'] = '';
+                }
             }
 
         }
