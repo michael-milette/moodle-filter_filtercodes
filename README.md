@@ -126,6 +126,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 ### UI Elements
 
 * {coursecards}: (ALPHA) Display available courses as cards. Has only been tested on Front Page.
+* {coursecards id}: (ALPHA) Same as {coursecards} but you can specify the top level category ID number to be displayed.
 * {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
 * {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
 * {categorycards}: (ALPHA) Display top level categories as cards. Has only been tested on Front Page.

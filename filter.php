@@ -1068,7 +1068,9 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            if (stripos($text, '{coursecards}') !== false) {
+            // Tag: {coursecards} and {coursecards <categoryid>}.
+            // Display courses in a category branch as cards.
+            if ($catids = (stripos($text, '{coursecards') !== false)) {
                 global $CFG, $OUTPUT;
 
                 $chelper = new coursecat_helper();
@@ -1080,50 +1082,66 @@ class filter_filtercodes extends moodle_text_filter {
                 ));
 
                 $chelper->set_attributes(array('class' => 'frontpage-course-list-all'));
-                $courses = core_course_category::get(0)->get_courses($chelper->get_courses_display_options());
-
-                $rcourseids = array_keys($courses);
-
-                $header = '<div class="card-deck mr-0">';
-                $footer = '</div>';
-                $content = '';
-                if (count($rcourseids) > 0) {
-                    foreach ($rcourseids as $courseid) {
-                        $course = get_course($courseid);
-
-                        // Load image from course image. If none, generate a course image based on the course ID.
-                        $context = context_course::instance($courseid);
-                        if ($course instanceof stdClass) {
-                            $course = new \core_course_list_element($course);
-                        }
-                        $coursefiles = $course->get_course_overviewfiles();
-                        $imgurl = '';
-                        foreach ($coursefiles as $file) {
-                            if ($isimage = $file->is_valid_image()) {
-                                $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/'
-                                        . $file->get_component() . '/' . $file->get_filearea() . $file->get_filepath()
-                                        . $file->get_filename(), !$isimage);
-                                $imgurl = new moodle_url($imgurl);
-                                break;
-                            }
-                        }
-                        if (empty($imgurl)) {
-                            $imgurl = $OUTPUT->get_generated_image_for_id($courseid);
-                        }
-                        $courseurl = new moodle_url('/course/view.php', array('id' => $courseid ));
-                        $content .= '
-                            <div class="card shadow mr-4 mb-4 ml-1" style="min-width:300px;max-width:300px;">
-                                <a href="' . $courseurl . '" class="text-normal h-100">
-                                <div class="card-img-top" style="background-image:url(' . $imgurl
-                                        . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;'
-                                        . 'background-repeat:no-repeat;background-position:center;"></div>
-                                <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0">' . $course->get_formatted_name() . '</div>
-                                </a>
-                            </div>
-                        ';
-                    }
+                // Find all coursecards tags where category ID was specified.
+                preg_match_all('/\{coursecards ([0-9]+)\}/', $text, $matches);
+                // Check if tag with no cateogry.
+                $nocat = (stripos($text, '{coursecards}') !== false);
+                if ($nocat) {
+                    $matches[1][] = 0;
                 }
-                $replace['/\{coursecards\}/i'] = !empty($header) ? $header . $content . $footer : '';
+                // Eliminate duplicate categories.
+                $categories = array_unique($matches[1]);
+
+                foreach($categories as $catid) {
+                    $courses = core_course_category::get($catid)->get_courses($chelper->get_courses_display_options());
+
+                    $rcourseids = array_keys($courses);
+
+                    $header = '<div class="card-deck mr-0">';
+                    $footer = '</div>';
+                    $content = '';
+                    if (count($rcourseids) > 0) {
+                        foreach ($rcourseids as $courseid) {
+                            $course = get_course($courseid);
+
+                            // Load image from course image. If none, generate a course image based on the course ID.
+                            $context = context_course::instance($courseid);
+                            if ($course instanceof stdClass) {
+                                $course = new \core_course_list_element($course);
+                            }
+                            $coursefiles = $course->get_course_overviewfiles();
+                            $imgurl = '';
+                            foreach ($coursefiles as $file) {
+                                if ($isimage = $file->is_valid_image()) {
+                                    // file_encode_url is deprecated as per MDL-31071 but still in wide use.
+                                    $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/'
+                                            . $file->get_component() . '/' . $file->get_filearea() . $file->get_filepath()
+                                            . $file->get_filename(), !$isimage);
+                                    $imgurl = new moodle_url($imgurl);
+                                    break;
+                                }
+                            }
+                            if (empty($imgurl)) {
+                                $imgurl = $OUTPUT->get_generated_image_for_id($courseid);
+                            }
+                            $courseurl = new moodle_url('/course/view.php', array('id' => $courseid ));
+                            $content .= '
+                                <div class="card shadow mr-4 mb-4 ml-1" style="min-width:300px;max-width:300px;">
+                                    <a href="' . $courseurl . '" class="text-normal h-100">
+                                    <div class="card-img-top" style="background-image:url(' . $imgurl
+                                            . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;'
+                                            . 'background-repeat:no-repeat;background-position:center;"></div>
+                                    <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0">' . $course->get_formatted_name() . '</div>
+                                    </a>
+                                </div>
+                            ';
+                        }
+                    }
+                    if ($catid == 0 && $nocat) {
+                        $replace['/\{coursecards\}/i'] = !empty($header) ? $header . $content . $footer : '';
+                    }
+                    $replace['/\{coursecards ' . $catid . '\}/i'] = !empty($header) ? $header . $content . $footer : '';
+                }
             }
 
             // Tag: {courserequest}. An unordered list of links to enrolled course.

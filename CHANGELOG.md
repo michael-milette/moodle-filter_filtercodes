@@ -1,13 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.3] 2021-03-15 BETA
+## [2.1.4] 2021-04-09 BETA
 ### Added
 - New %7Bcoursemoduleid%7D tag.
 - New option for you to define your own global {global_...} tags.
 - New {courserequest} tag.
 - New {courserequestmenu} tag.
 - New {courserequestmenu0} tag.
+- New {coursecards catid} tag. You can now optionally specify courses in a specific category id to display.
 ### Updated
 - Request a Course link is no longer included in {mycourses}. See new {courserequest} tag.
 - Request a Course link is no longer included in {mycoursesmenu}. See new {courserequestmenu0} and {courserequestmenu} tags.
