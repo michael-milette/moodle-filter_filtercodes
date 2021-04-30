@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.4] 2021-04-30 BETA
+## [2.1.5] 2021-04-30 BETA
 ### Added
 - New %7Bcoursemoduleid%7D tag.
 - New option for you to define your own global {global_...} tags.
@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - New {courserequestmenu} tag.
 - New {courserequestmenu0} tag.
 - New {coursecards catid} tag. You can now optionally specify courses in a specific category id to display.
+- New setting to hide completed courses in {mycoursesmenu} list.
 ### Updated
 - {coursesummary} can now include other FilterCodes.
 - {categorycards} titles now always display white.

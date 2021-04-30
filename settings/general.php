@@ -50,6 +50,14 @@ $description = get_string('escapebraces_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
+// Hide completed courses in {mycoursesmenu} tags.
+$default = '0';
+$name = 'filter_filtercodes/hidecompletedcourses';
+$title = get_string('hidecompletedcourses', 'filter_filtercodes');
+$description = get_string('hidecompletedcourses_desc', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
 // Option to enable scrape tag.
 $default = 0;
 $name = 'filter_filtercodes/enable_scrape';

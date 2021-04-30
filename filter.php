@@ -1207,6 +1207,19 @@ class filter_filtercodes extends moodle_text_filter {
                     unset($list);
                 }
 
+                // Remove completed courses from the list.
+                if (isset($CFG->enablecompletion) && $CFG->enablecompletion == COMPLETION_ENABLED
+                        && get_config('filter_filtercodes', 'hidecompletedcourses')) {
+                    //echo '<pre>'; var_dump($mycourses);die;
+                    foreach ($mycourses as $key => $mycourse) {
+                        $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $mycourse->id]);
+                        if (!empty($ccompletion->timecompleted)) {
+                            // Remove completed course from the list.
+                            unset($mycourses[$key]);
+                        }
+                    }
+                }
+
                 // Tag: {mycoursesmenu}. A custom menu list of enrolled course names with links.
                 if (stripos($text, '{mycoursesmenu}') !== false) {
                     $list = '';
