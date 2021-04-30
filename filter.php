@@ -414,6 +414,11 @@ class filter_filtercodes extends moodle_text_filter {
             unset($content);
         }
 
+        // Tag: {coursesummary}.
+        if (stripos($text, '{coursesummary}') !== false) {
+            $replace['/\{coursesummary\}/i'] = $PAGE->course->summary;
+        }
+
         // Apply all of the filtercodes so far.
         $newtext = null;
         if (count($replace) > 0) {
@@ -876,11 +881,6 @@ class filter_filtercodes extends moodle_text_filter {
                     $coursecontext = context_course::instance($course->id);
                     $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
                 }
-            }
-
-            // Tag: {coursesummary}.
-            if (stripos($text, '{coursesummary}') !== false) {
-                $replace['/\{coursesummary\}/i'] = $PAGE->course->summary;
             }
 
             // Tag: {courseimage}. The course image.

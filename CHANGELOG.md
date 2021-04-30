@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.4] 2021-04-09 BETA
+## [2.1.4] 2021-04-30 BETA
 ### Added
 - New %7Bcoursemoduleid%7D tag.
 - New option for you to define your own global {global_...} tags.
@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 - New {courserequestmenu0} tag.
 - New {coursecards catid} tag. You can now optionally specify courses in a specific category id to display.
 ### Updated
+- {coursesummary} can now include other FilterCodes.
+- {categorycards} titles now always display white.
 - Request a Course link is no longer included in {mycourses}. See new {courserequest} tag.
 - Request a Course link is no longer included in {mycoursesmenu}. See new {courserequestmenu0} and {courserequestmenu} tags.
 - {profile_field_...} of type Date/Time now displays date/time instead of a number.
