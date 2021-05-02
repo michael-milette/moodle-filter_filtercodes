@@ -2,7 +2,7 @@
 
 FilterCodes filter plugin for Moodle
 ====================================
-![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3%2F%20v7.4-blue.svg)`
+![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3%2F%20v7.4-blue.svg)
 ![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.10.x-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
@@ -15,10 +15,17 @@ FilterCodes filter plugin for Moodle
 - [Download FilterCodes for Moodle](#download-filtercodes-for-moodle)
 - [Installation](#installation)
 - [Usage](#usage)
+    - [List of FilterCode tags](#list-of-filtercode-tags)
+    - [Define your own custom global tags](#define-your-own-custom-global-tags)
+    - [FilterCodes in a custom menu](#filtercodes-in-a-custom-menu)
+    - [Scrap'ing content](#scrapeing-content)
+    - [Back to section / Back to course](#back-to-section--back-to-course)
+    - [Optional FilterCodes for Moodle settings](#optional-filtercodes-for-moodle-settings)
 - [Updating](#updating)
 - [Uninstallation](#uninstallation)
 - [Limitations](#limitations)
 - [Language Support](#language-support)
+- [Troubleshooting](#troubleshooting)
 - [Frequently Asked Questions (FAQ)](#faq)
 - [Contributing](#contributing)
 - [Motivation for this plugin](#motivation-for-this-plugin)
@@ -27,19 +34,19 @@ FilterCodes filter plugin for Moodle
 
 # Basic Overview
 
-FilterCodes filter for Moodle enables content creators to easily customize
-and personalize site and course content using plain text tags.
+FilterCodes filter for Moodle enables content creators to easily customize and personalize Moodle sites and course content using over 135 plain text tags that can be used **almost** anywhere in Moodle.
 
 In addition, it also enables you to:
+
+* Add user interface (UI) elements
 * Inserting non-breaking spaces;
 * Tagging text as being in a different language;
 
-Usage of the FilterCodes tags requires no knowledge of HTML but might be
-important for sites wishing to comply with accessibility requirements.
+Usage of the FilterCodes tags requires no knowledge of HTML but might be important for sites wishing to comply with accessibility requirements.
 
-IMPORTANT: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
+**IMPORTANT**: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
-HOWEVER: There may be some tags identified as ALPHA in this documentation. These may still require some development and are not guarantied to be implementaed or implemented in the same way in future releases. Please let us know if you think they are useful if they work for you or what changes you might like to see.
+**ALPHA TAGS**: There may be some tags identified as ALPHA in this documentation. These may still require some development and are not guarantied to be implemented at all or implemented in the same way in future releases. Please let us know if you think they are useful if they work for you or what changes you might like to see.
 
 [(Back to top)](#table-of-contents)
 
@@ -167,11 +174,13 @@ Also see Courses section below.
 
 ### Custom menu
 
-* {categoriesmenu} : A second level list of categories with links for use in custom menus (filtering must be supported by the theme).
-* {categories0menu} : A second level list of just top level categories with links for use in custom menus (filtering must be supported by the theme).
-* {categoriesxmenu} : A second level list of other categories in the current category with links for use in custom menus (filtering must be supported by the theme).
+Note: Filtering must be supported in custom menu by your theme.
+
+* {categoriesmenu} : A second level list of categories with links for use in custom menus.
+* {categories0menu} : A second level list of just top level categories with links for use in custom menus.
+* {categoriesxmenu} : A second level list of other categories in the current category with links for use in custom menus.
 * {toggleeditingmenu} : A Turn Editing On or Turn Editing Off custom menu item. Note that you need to add your own dash(es).
-* {mycoursesmenu} : A second level list of courses with links for use in custom menus (filtering must be supported by the theme).
+* {mycoursesmenu} : A second level list of courses with links for use in custom menus .
 * {courserequestmenu0} : Request a course / Course request in a top level custom menu.
 * {courserequestmenu} : Request a course / Course request in submenu.
 
@@ -194,7 +203,7 @@ Also see Courses section below.
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {help}content{/help} : Enables you to create popup help icons just like Moodle does.
 * {info}content{/info} : Enables you to create popup help icons just like the popup Help icons but with an "i" information icon.
-* {alert style}content{/alert}: (ALPHA) Creates an alert box containing the specified content. You can change the style by specifying an optional parameter. Example: `{alert primary}` or `{alert success}`. [List of styles](https://getbootstrap.com/docs/4.0/components/alerts/)
+* {alert style}content{/alert}: (ALPHA) Creates an alert box containing the specified content. You can change the style by specifying an optional parameter. Example: **{alert primary}** or **{alert success}**. [List of styles](https://getbootstrap.com/docs/4.0/components/alerts/)
 * {highlight}{/highlight} : Highlight text. NOTE: Must only be used within a paragraph.
 * {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
 * {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
@@ -222,7 +231,7 @@ The following tags are replaced by Contact Form templates and therefore require 
 
 ### Conditionally display content filters (All versions of Moodle)
 
-Note: {if`rolename`} and {ifmin`rolename`} type tags are based on role archetypes, not role shortnames. For example, you could have a role called `students` but, if the archetype for the role is `teacher`, the role will be identified as a `teacher`. Roles not based on archetypes will not with these tags.
+Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetypes, not role shortnames. For example, you could have a role called *students* but, if the archetype for the role is *teacher*, the role will be identified as a *teacher*. Roles not based on archetypes will not with these tags.
 
 #### Logged in/out
 
@@ -277,8 +286,8 @@ If the condition is not met in the particular context, the specified tag and it'
 
 * {-} : Is substituted for &shy;, a soft hyphen that only appears when needed.
 * {nbsp} : Is substituted for a non-breaking space when displayed.
-* {langx xx}{/langx} : Tag specific text in a particular language by wrapping the text in a plain text pair of {langx xx} {/langx} or {langx xx-XX} {/langx} tags. This makes no visible changes to the content but wraps the content in an HTML <span lang="xx"></span> inline tag. As a result, screen readers will make use of this localization information to apply a particular pronunciation if the text is in a different language than the language of the rest of the page. This is required for compliance with W3C Web Content Accessibility Guidelines (WCAG 2.0)
 * {details}{summary}{/summary}{/details} : An easy way to create an HTML 5 Details/Summary expandable section in your page. IMPORTANT: {details}{summary}{/summary} must all be on one line (it is ok if the line wraps). The rest of the details can be on multiple lines followed by the {/details}. This is an experimental feature which may result in invalid HTML but it works.
+* {langx xx}{/langx} : Tag specific text in a particular language by wrapping the text in a plain text pair of {langx xx} {/langx} or {langx xx-XX} {/langx} tags. This makes no visible changes to the content but wraps the content in an HTML <span lang="xx"></span> inline tag. As a result, screen readers will make use of this localization information to apply a particular pronunciation if the text is in a different language than the language of the rest of the page. This is required for compliance with W3C Web Content Accessibility Guidelines (WCAG 2.0)
 
 The opening {langx xx} tag should include two [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code abbreviation letters in lowercase associated with language's name. French, for example, has the code **fr**:
 
@@ -296,94 +305,280 @@ The {langx fr-CA}{/langx} filter will convert this into the following HTML
 
     <span lang="fr-CA">Contenu</span>
 
+## Define your own custom global tags
+
+You can define your own global tags, sometimes also called global blocks. This can only be configured by Moodle Administrators by going to **Site Administration** > **Plugins** > **Filters** > **FilterCodes**.
+
+You can create up to 20 custom global tags by specifying the tag name. The tag name will automatically be prefixed by global. For example, if you define a tag called *copyright*, it will create a FilterCodes tag {global_*copyright*}.
+
+The content which you can insert is only limited by your imagination. You can include plain text content, such as one or more words, HTML source code or even a JavaScript snippet (wrap in a script tag). You can also enter almost any content using the WYSIWYG Atto editor by checking the "Pretty HTML format" checkbox. This allows you to create formatted content, uploaded images and more. Note: It does not support PHP code.
+
+Let's say you want to include a support email address in some of your courses. You could define a global tag called "global_email" and set it to "support@example.com". Then, wherever you want that email address to appear on your site, you just need to add the tag {global_email}. That way, when you decide to change the email address to "coursehelp@example.com", you need just change it here in the clobal custom tag settings.
+
 ## FilterCodes in a custom menu
 
-Here are a couple of examples of how to create really useful custom menus using FilterCodes. Just copy and paste the code into the **Custom menu items** field (Site administration > Appearance > Theme settings)
+Here are a few examples of how to create really useful custom menus using FilterCodes. Just copy and paste the code into the **Custom menu items** field (Site administration > Appearance > Theme settings). Feel free to customize these for your own needs and to make more of these for other roles like Moodle Managers, Course creators, Teachers, Teacher assistants and even Students.
 
-Feel free to customize these for your own needs and to make more of these for other roles like Course creators, Teachers, Teacher assistants and even Students.
+**Multi-language support**
 
-**Doesn't work?** If FilterCodes doesn't work with your theme's custom menu, contact the developer / maintainer of the theme and refer them to the [FAQ](#faq) section of this documentation which will provide them with an easy way for them to enable support for Moodle filters.
+The examples often make use of strings defined in Moodle. So, if you renamed your Dashboard to My Dashboard using the Moodle language editor, it will be reflected when the menu is displayed and change language when the user changes language in Moodle.
+
+In cases where a string is not available as a Moodle language strings, some of the examples below also demonstrate how you can make use of the excellent [Multi-Language Content (v2)](https://moodle.org/plugins/filter_multilang2) plugin to add support for {mlang} tags. In the examples below, English and French are used. If you only use one langauge, remove the {mlang} tags along with the alternate language text.
+
+**Doesn't work?**
+
+If FilterCodes doesn't work with your theme's custom menu, contact the developer / maintainer of the theme and refer them to the [FAQ](#faq) section of this documentation. It will provide them with an easy way for them to enable support for Moodle filters.
+
+Alternatively, apply the Moodle core patch mentioned in https://tracker.moodle.org/browse/MDL-63219 . But remember, you will need to re-apply this after each Moodle update/upgrade. The advantage of this method is that it will add support for filters in the custom menu of most Moodle themes, not just your particular theme.
+
+Some themes may not support horizontal menu separators. Again, contact the developer / maintainer of the theme to get them to fix this or remove the -### lines.
 
 ### General menu
 
-This will add a Home link, a listing of categories, a listing of courses in which you are currently enrolled, and a Logout link, but only if you are currently logged in.
+This will add a Home link, a listing of top-level categories, a listing of courses in which you are currently enrolled, and a Logout link, but only if you are currently logged in.
 
-    Home|\
-    Course catalogue
-    {categoriesmenu}
+    {fa fa-home} {getstring}home{/getstring}|/{ifloggedin}?redirect=0{/ifloggedin}
+    {fa fa-th} {mlang en}Course catalogue{mlang}{mlang fr}Répertoire des cours{mlang}
+    {categories0menu}
+        -###
+        -{getstring}fulllistofcourses{/getstring}|/course/
     {ifloggedin}
-    My Courses
+    {fa fa-tachometer} {getstring}myhome{/getstring}|/my/
+    {fa fa-graduation-cap} {getstring}mycourses{/getstring}
     {mycoursesmenu}
-    Logout|/login/logout.php?sesskey={sesskey}
+    {courserequestmenu}
+    {getstring}logout{/getstring}|/login/logout.php?sesskey={sesskey}
     {/ifloggedin}
+    {fa fa-question} {getstring}help{/getstring}|/mod/page/view.php?id=275
 
 ### Admin menu
 
-This menu can be handy for Moodle administrators and managers.
+Parts of this menu will only appear for Moodle administrators, managers, course creators and teachers depending on the user's role within the current context. For example:
 
-    {ifminmanager}
-    Admin
-    {ifadmin}
-    -Moodle Settings
-    --Additional HTML|/admin/settings.php?section=additionalhtml
-    --Advanced features|/admin/settings.php?section=optionalsubsystems
-    --Frontpage|/admin/settings.php?section=frontpagesettings
-    --Notifications|/admin/index.php
-    --Plugin overview|/admin/plugins.php
-    --Profile fields|/user/profile/index.php
-    --Support contact|/admin/settings.php?section=supportcontact
-    --Theme settings|/admin/settings.php?section=themesettings
-    -Install
-    --Plugin|https://moodle.org/plugins
-    --Theme|https://moodle.org/plugins/browse.php?list=category&id=3
-    {/ifadmin}
-    -This course
-    --Turn editing on|/course/view.php?id={courseid}&sesskey={sesskey}&edit=on
-    --Course Backup|/backup/backup.php?id={courseid}
-    --Enrolled users|/enrol/users.php?id={courseid}
-    --Manage badges|/badges/index.php?type={courseid}
-    --Reset course|/course/reset.php?id={courseid}
-    -Add new course|/course/edit.php?category={categoryid}&returnto=topcat
-    -Course management|/course/management.php
-    -Restore Course|/backup/restorefile.php?contextid={coursecontextid}
-    -System reports|/admin/category.php?category=reports
-    {ifminsitemanager}
-    -User management|/admin/user.php
-    {/ifminsitemanager}
+- {ifincourse} menu items will only appear in a course.
+- Category Course Creators will only see the Admin menu within categories where they have that role.
+- Teachers will only see the Admin menu within the course where they are a teacher.
+
+    {ifminteacher}
+    {fa fa-wrench} {getstring}admin{/getstring}
+    {/ifminteacher}
+    {ifmincreator}
+    -{getstring}administrationsite{/getstring}|/admin/search.php
+    -{toggleeditingmenu}
+    -Moodle Admin Basics course|https://learn.moodle.org/course/view.php?id=23353|Learn.Moodle.org
     -###
-    -Moodle support|https://moodle.org/course/view.php?id=5
+    {/ifmincreator}
+    {ifminmanager}
+    -{getstring}user{/getstring}: {mlang en}Management{mlang}{mlang fr}Gestion{mlang}|/admin/user.php
+    {ifminsitemanager}
+    -{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php
+    -###
+    {/ifminsitemanager}
+    -{getstring}course{/getstring}: {mlang en}Management{mlang}{mlang fr}Gestion{mlang}|/course/management.php
+    -{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php?category={coursecategoryid}&returnto=topcat
     {/ifminmanager}
+    {ifminteacher}
+    -{getstring}course{/getstring}: {getstring}restore{/getstring}|/backup/restorefile.php?contextid={coursecontextid}
+    {ifincourse}
+    -{getstring}course{/getstring}: {getstring}backup{/getstring}|/backup/backup.php?id={courseid}
+    -{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}
+    -{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/index.php?type={courseid}
+    -{getstring}course{/getstring}: {getstring}reset{/getstring}|/course/reset.php?id={courseid}
+    -Course: Layoutit|https://www.layoutit.com/build" target="popup" onclick="window.open('https://www.layoutit.com/build','popup','width=1340,height=700'); return false;|Bootstrap Page Builder
+    {/ifincourse}
+    -###
+    {/ifminteacher}
+    {ifminmanager}
+    -{getstring}site{/getstring}: System reports|/admin/category.php?category=reports
+    {/ifminmanager}
+    {ifadmin}
+    -{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php?section=additionalhtml
+    -{getstring}site{/getstring}: {getstring:admin}frontpage{/getstring}|/admin/settings.php?section=frontpagesettings|Including site name
+    -{getstring}site{/getstring}: {getstring:admin}plugins{/getstring}|/admin/search.php#linkmodules
+    -{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php?section=supportcontact
+    -{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php?section=themesettings|Including custom menus, designer mode, theme in URL
+    -{getstring}site{/getstring}: Boost|/admin/settings.php?section=themesettingboost
+    -{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})|/admin/index.php
+    {/ifadmin}
 
-In this extensive example, part of the custom menu will appear only to users with a manager role while everything will appear to administrators. Nothing will appear for everyone else.
+Tips: If you are not using the Boost theme, customize the link in the 3rd to last line to your theme's settings page.
 
-### Developer menu
+### Developer Tools menu
 
 If you are a developer, this little menu is worth installing FilterCodes alone.
 
-Together with the Administration menu above, these can be a real productivity boost for developers who are tired of always digging through the **Site administration** block to find the options they are looking for. Tailor it to your particular projects with links to any page you need regularly:
+Together with the Administration menu above, these can be a real productivity boost for developers who are tired of always digging through the **Site administration** block to find the options they are looking for. Tailor it to your particular projects with links to any page you use regularly.
+
+This will display the enclosed content only if the user is logged-in as an administrator and developer debugging mode is enabled. If you want it to display regardless of the state of developer debugging,change {ifdev} and {/ifdev} to {ifadmin} and {/ifadmin} respectively.
 
     {ifdev}
     Dev tools
-    -Configure debugging|/admin/settings.php?section=debugging
+    -{getstring:tool_installaddon}installaddons{/getstring}|/admin/tool/installaddon
+    -###
+    -{getstring:admin}debugging{/getstring}|/admin/settings.php?section=debugging
+    -{getstring:admin}purgecachespage{/getstring}|/admin/purgecaches.php?confirm=1&sesskey={sesskey}
+    -###
     -Code checker|/local/codechecker
     -Moodle PHPdoc check|/local/moodlecheck
-    -Purge cache|/admin/purgecaches.php?confirm=1&sesskey={sesskey}
+    -Adminer|/local/adminer
+    -{getstring}phpinfo{/getstring}|/admin/phpinfo.php
     -###
-    -Adminer|/local/local/adminer
-    -PHP Info|/admin/phpinfo.php
-    -###
-    -Developer docs|https://moodle.org/development
-    -Developer forum|https://moodle.org/mod/forum/view.php?id=55
-    -Tracker|https://tracker.moodle.org/
-    -AMOS|https://lang.moodle.org/
+    -Developer docs|https://moodle.org/development|Moodle.org
+    -Developer forum|https://moodle.org/mod/forum/view.php?id=55|Moodle.org
+    -Tracker|https://tracker.moodle.org/|Moodle.org
+    -AMOS|https://lang.moodle.org/|Moodle.org
+    -Development Tutorial|https://www.youtube.com/watch?v=UY_pcs4HdDM
+    -Moodle Development School|https://moodledev.moodle.school/
     {/ifdev}
-
-Tip: Are you a theme developers? Add a direct link to your theme's settings page.
 
 Notes:
 
-- **Enrolled users**, in the **This course** submenu, will only work in a course.
-- **[Code checker](https://moodle.org/plugins/local_codechecker)**, **[Moodle PHPdoc check](https://moodle.org/plugins/local_moodlecheck)** and [Moodle Adminer](https://moodle.org/plugins/local_adminer) require add-on 3rd party plugins which need to be installed in order for the links to work.
+- **[Code checker](https://moodle.org/plugins/local_codechecker)**, **[Moodle PHPdoc check](https://moodle.org/plugins/local_moodlecheck)** and **[Moodle Adminer](https://moodle.org/plugins/local_adminer)** require add-on 3rd party plugins which need to be installed in order for the links to work.
+
+## FilterCodes in custom menus
+
+Note: The source code in this section was updated in May 2021.
+
+FilterCodes can work in custom menus but but, unfortunately, only if the theme supports it or you patched Moodle. If it does not work for you, contact the theme's developer and request that they add support for Moodle filters. See instructions are included below.
+
+**Note:** As of version 1.0.0 of FilterCodes, experimental support was added for Clean and Boost themes in Moodle 3.2 to 3.4. In order to work, this had to be enabled in FilterCodes settings and Filtering will not be applied to the Moodle Theme Settings page. Unfortunately things changed in Moodle 3.5 and it has since not been possible for FilterCodes to do this on its own.
+
+There are two ways to make FilterCodes work in Moodle's custom menu:
+
+1. Add a few lines of code to your Moodle theme. Even better, your theme's developer to enable this in their themes.
+
+### For themes based on **boost**
+
+Add the following code to core_renderer section of your theme. Note: Your theme may even already have such a class (they often do):
+
+    use filter_manager;
+
+    class core_renderer extends \theme_boost\output\core_renderer {
+        /**
+         * Applies Moodle filters to custom menu and custom user menu.
+         *
+         * @param string $custommenuitems Current custom menu object.
+         * @return Rendered custom_menu that has been filtered.
+         */
+        public function custom_menu($custommenuitems = '') {
+            global $CFG, $PAGE;
+
+            // Don't apply auto-linking filters.
+            $filtermanager = filter_manager::instance();
+            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
+            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink');
+
+            // Filter custom user menu.
+            // Don't filter custom user menu on the settings page. Otherwise it ends up
+            // filtering the edit field itself resulting in a loss of the tag.
+            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
+                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
+                        $filteroptions, $skipfilters);
+            }
+
+            // Filter custom menu.
+            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
+                $custommenuitems = $CFG->custommenuitems;
+            }
+            if (stripos($custommenuitems, '{') !== false) {
+                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
+            }
+            $custommenu = new custom_menu($custommenuitems, current_language());
+            return $this->render_custom_menu($custommenu);
+        }
+
+        /**
+         * We want to show the custom menus as a list of links in the footer on small screens.
+         * Just return the menu object exported so we can render it differently.
+         */
+        public function custom_menu_flat() {
+            global $CFG, $PAGE;
+            $custommenuitems = '';
+
+            // Don't apply auto-linking filters.
+            $filtermanager = filter_manager::instance();
+            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
+            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink');
+
+            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
+                $custommenuitems = $CFG->custommenuitems;
+            }
+            if (stripos($custommenuitems, '{') !== false) {
+                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
+            }
+            $custommenu = new custom_menu($custommenuitems, current_language());
+            $langs = get_string_manager()->get_list_of_translations();
+            $haslangmenu = $this->lang_menu() != '';
+
+            if ($haslangmenu) {
+                $strlang = get_string('language');
+                $currentlang = current_language();
+                if (isset($langs[$currentlang])) {
+                    $currentlang = $langs[$currentlang];
+                } else {
+                    $currentlang = $strlang;
+                }
+                $this->language = $custommenu->add($currentlang, new moodle_url('#'), $strlang, 10000);
+                foreach ($langs as $langtype => $langname) {
+                    $this->language->add($langname, new moodle_url($this->page->url, array('lang' => $langtype)), $langname);
+                }
+            }
+
+            return $custommenu->export_for_template($this);
+        }
+    }
+
+### For themes based on the older **bootstrapbase**
+
+Add the following code to core_renderer section of your theme for Moodle 2.7 to 3.6. Be sure to replace "themename" with the name of the theme's directory. Note: Your theme may even already have such a class (they often do):
+
+    class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
+        /**
+         * Applies Moodle filters to custom menu and custom user menu.
+         *
+         * Copyright: 2017-2021 TNG Consulting Inc.
+         * License:   GNU GPL v3+.
+         *
+         * @param string $custommenuitems Current custom menu object.
+         * @return Rendered custom_menu that has been filtered.
+         */
+        public function custom_menu($custommenuitems = '') {
+            global $CFG, $PAGE;
+
+            // Don't apply auto-linking filters.
+            $filtermanager = filter_manager::instance();
+            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
+            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink');
+
+            // Filter custom user menu.
+            // Don't filter custom user menu on the theme settings page. Otherwise it ends up
+            // filtering the edit field itself resulting in a loss of tags.
+            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
+                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
+                        $filteroptions, $skipfilters);
+            }
+
+            // Filter custom menu.
+            if (empty($custommenuitems) && !emty($CFG->custommenuitems)) {
+                $custommenuitems = $CFG->custommenuitems;
+            }
+            if (stripos($custommenuitems, '{') !== false) {
+                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
+            }
+            $custommenu = new custom_menu($custommenuitems, current_language());
+            return $this->render_custom_menu($custommenu);
+        }
+    }
+
+2. Patch your instance of Moodle. Even better, encourage Moodle HQ to enable this functionality in future releases of Moodle. For more information and to vote for this functionality, see
+   https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 .
+
+To patch Moodle to handle this properly for most Moodle themes, apply the following patch to Moodle:
+
+* Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-63219-M37
+* Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-63219-M38
+* Moodle 3.9: https://github.com/michael-milette/moodle/tree/MDL-63219-M39
+* Moodle 3.10: https://github.com/michael-milette/moodle/tree/MDL-63219-M310
 
 ## Scrape'ing content
 
@@ -421,19 +616,33 @@ If you are in a section and want to go directly back to the main course outline 
 
 ## Optional FilterCodes for Moodle settings
 
-FilterCodes for Moodle includes the following settings. These are available on the plugin's `Settings` page by going to:
+FilterCodes for Moodle includes the following settings. These are available on the plugin's **Settings** page by going to:
 
 Site administration > Plugins > Filters > Filter Codes
 
 ### Custom navigation support
 
-Experimental: Enable support for FilterCode tags in Moodle custom navigation menu. Note: Is known to be compatible with Clean and Boost based themes.
+Experimental: Only available in Moodle 3.2, 3.3 and 3.4. Enable support for FilterCode tags in Moodle custom navigation menu. Note: Is known to be compatible with Clean and Boost based themes.
 
-NOTE: Does not filter tags on the Moodle Theme Settings page. This is not a bug. It is just the way it has to be for now.
+NOTE: Does not filter tags on the Moodle Theme Settings page. This is not a bug, just a limitation.
+
+For information on enabling FilterCodes in custom menus of other versions of Moodle, see [FilterCodes in a custom menu](#filtercodes-in-a-custom-menu)
+
+### Escape tags
+
+When this option is checked, you will be able to display FilterCode tags without them being interpreted by this filter by wrapping your tag in [ brackets ]. This can be very useful when creating FilterCodes documentation for the teachers and course creators on your Moodle site.
+
+### Hide completed courses
+
+Enable to filter out completed courses in {mycoursesmenu} tag listings. When checked, only incomplete courses and courses where completion tracking is not enabled will be displayed. Default (unchecked) is to display all courses regardless of completion status..
 
 ### Scrape tag support
 
 Enable or disable the {scrape} tag.
+
+### Global custom tags
+
+Define your own global tags, sometimes also called global blocks. This feature enables you to create your own tags that are prefixed by global_ . You can currently define up to 20 custom {global_...} tags.
 
 [(Back to top)](#table-of-contents)
 
@@ -462,6 +671,7 @@ Note that, once uninstalled, any tags and content normally handled by this plugi
 
 # Limitations
 
+* Do not use [For use in courses](#for-use-in-courses) type tags inside your course summary. Course listings and course descriptions pages are not displayed within the context of a course. These only work properly within courses. Keep context in mind.
 * The {langx xx}{/langx} tag only supports inline text, not blocks of text.
 * Unpredictable results may occur if you interweave HTML code with {FilterCodesTag} tags.
 
@@ -487,13 +697,9 @@ This plugin has not been tested for right-to-left (RTL) language support. If you
 
 https://github.com/michael-milette/moodle-filter_filtercodes
 
-# FAQ
+# Troubleshooting
 
-## Frequently Asked Questions
-
-IMPORANT: Although we expect everything to work, this release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
-
-### Troubleshooting: Why are tags displayed as entered instead of being converted to expected content/data?
+Why are tags displayed as entered instead of being converted to expected content/data?
 
 Here are a few things you can check:
 
@@ -509,6 +715,13 @@ Here are a few things you can check:
 * If it still doesn't work, chances are that this some part of Moodle doesn't support filters yet. It is rare but it happens (example: Badges). Please report the part of Moodle that doesn't support filters in the [Moodle Tracker](https://tracker.moodle.org).
 * Read the rest of this FAQ section.
 * If all else fails, ask questions. There are links on the [FilterCodes](https://moodle.org/plugins/filter_filtercodes) plugin page to the [Discussion](https://moodle.org/mod/forum/discuss.php?d=359252) forum for getting help and the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues) on GitHub for reporting bugs.
+
+More helpful information can be found in the [FAQ](#faq) below.
+
+# FAQ
+## Answers to Frequently Asked Questions
+
+IMPORANT: Although we expect everything to work, this release has not been fully tested in every situation. If you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
 ### Can I combine/nest conditional tags?
 
@@ -553,6 +766,8 @@ Be sure to check back on your issue as we may have further questions for you.
 ### Do you have examples, samples and ways to which tags are working in my version of FilterCodes?
 
 Create a Page on your Moodle site, preferably in a course, so that those tags work too, and include the following code:
+
+<details><summary>View page content code</summary>
 
 * First name [{firstname}]: {firstname}
 * Surname [{surname}]: {surname}
@@ -709,6 +924,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * It is now [{now strftimetime12}] : {now strftimetime12}
 * It is now [{now strftimetime24}] : {now strftimetime24}
 
+</details>
 You can switch to different roles to see how each will affect the content being displayed.
 
 ### When a user is logged out, the First name, Surname, Full Name, Email address and Username are empty. How can I set default values for these tags?
@@ -733,156 +949,6 @@ Bonus: This is also how you would hide it for users who are not logged-in.
 ### How can I create a menu that is just for administrators or some other roles?
 
 Building on the previous two questions, see the [usage](#usage) section for some examples. Feel free to share your own ideas in the discussion forum.
-
-### Can I use FilterCodes in Moodle's custom menus?
-
-Technically for sure, but only if the theme supports it. If it doesn't, contact the theme's developer and request that they add support for Moodle filters. See instructions in the next question.
-
-**Note:** As of version 1.0.0 of FilterCodes, experimental support was added for Clean and Boost themes in Moodle 3.2 to 3.4. In order to work, this had to be enabled in FilterCodes settings and Filtering will not be applied to the Moodle Theme Settings page. Unfortunately things changed in Moodle 3.5 and it has since not been possible for FilterCodes to do this on its own.
-
-However, there are two ways you can make this work.
-
-1. Encourage Moodle HQ to enable this functionality into future versions of Moodle. For more information and to vote for this functionality, see
-   https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 .
-2. Encourage developers to enable this in their themes or add it yourself. See the next question for details.
-
-### I am a Moodle theme developer. How do I add support for Moodle filters, including FilterCodes, into my theme?
-
-You will need to pass all output (except user content) through the format_text() or format_string() functions of the [Moodle Output API documentation](https://docs.moodle.org/dev/Output_functions).
-
-### I am a Moodle theme developer. How do I add support for FilterCodes in the Custom Menu?
-
-#### For themes based on **boost**
-
-Add the following code to core_renderer section of your theme. Note: Your theme may even already have such a class (they often do):
-
-    use filter_manager;
-
-    class core_renderer extends \theme_boost\output\core_renderer {
-        /**
-         * Applies Moodle filters to custom menu and custom user menu.
-         *
-         * @param string $custommenuitems Current custom menu object.
-         * @return Rendered custom_menu that has been filtered.
-         */
-        public function custom_menu($custommenuitems = '') {
-            global $CFG, $PAGE;
-
-            // Don't apply auto-linking filters.
-            $filtermanager = filter_manager::instance();
-            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
-            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
-
-            // Filter custom user menu.
-            // Don't filter custom user menu on the settings page. Otherwise it ends up
-            // filtering the edit field itself resulting in a loss of the tag.
-            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
-                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
-                        $filteroptions, $skipfilters);
-            }
-
-            // Filter custom menu.
-            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
-                $custommenuitems = $CFG->custommenuitems;
-            }
-            if (stripos($custommenuitems, '{') !== false) {
-                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
-            }
-            $custommenu = new custom_menu($custommenuitems, current_language());
-            return $this->render_custom_menu($custommenu);
-        }
-
-        /**
-         * We want to show the custom menus as a list of links in the footer on small screens.
-         * Just return the menu object exported so we can render it differently.
-         */
-        public function custom_menu_flat() {
-            global $CFG, $PAGE;
-            $custommenuitems = '';
-
-            // Don't apply auto-linking filters.
-            $filtermanager = filter_manager::instance();
-            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
-            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
-
-            if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
-                $custommenuitems = $CFG->custommenuitems;
-            }
-            if (stripos($custommenuitems, '{') !== false) {
-                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
-            }
-            $custommenu = new custom_menu($custommenuitems, current_language());
-            $langs = get_string_manager()->get_list_of_translations();
-            $haslangmenu = $this->lang_menu() != '';
-
-            if ($haslangmenu) {
-                $strlang = get_string('language');
-                $currentlang = current_language();
-                if (isset($langs[$currentlang])) {
-                    $currentlang = $langs[$currentlang];
-                } else {
-                    $currentlang = $strlang;
-                }
-                $this->language = $custommenu->add($currentlang, new moodle_url('#'), $strlang, 10000);
-                foreach ($langs as $langtype => $langname) {
-                    $this->language->add($langname, new moodle_url($this->page->url, array('lang' => $langtype)), $langname);
-                }
-            }
-
-            return $custommenu->export_for_template($this);
-        }
-    }
-
-#### For themes based on the older **bootstrapbase**
-
-Add the following code to core_renderer section of your theme for Moodle 2.7 to 3.6. Be sure to replace "themename" with the name of the theme's directory. Note: Your theme may even already have such a class (they often do):
-
-    class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
-        /**
-         * Applies Moodle filters to custom menu and custom user menu.
-         *
-         * Copyright: 2017-2021 TNG Consulting Inc.
-         * License:   GNU GPL v3+.
-         *
-         * @param string $custommenuitems Current custom menu object.
-         * @return Rendered custom_menu that has been filtered.
-         */
-        public function custom_menu($custommenuitems = '') {
-            global $CFG, $PAGE;
-
-            // Don't apply auto-linking filters.
-            $filtermanager = filter_manager::instance();
-            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
-            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
-
-            // Filter custom user menu.
-            // Don't filter custom user menu on the theme settings page. Otherwise it ends up
-            // filtering the edit field itself resulting in a loss of tags.
-            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
-                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
-                        $filteroptions, $skipfilters);
-            }
-
-            // Filter custom menu.
-            if (empty($custommenuitems) && !emty($CFG->custommenuitems)) {
-                $custommenuitems = $CFG->custommenuitems;
-            }
-            if (stripos($custommenuitems, '{') !== false) {
-                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
-            }
-            $custommenu = new custom_menu($custommenuitems, current_language());
-            return $this->render_custom_menu($custommenu);
-        }
-    }
-
-### My theme does not support filters in the menu and the developer does not want to fix the theme. What can I do?
-
-You can patch Moodle handle this properly in the first place. Applying the following patch to Moodle will fix the issue in most themes including the default Boost theme.
-
-* Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-63219-M37
-* Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-63219-M38
-* Moodle 3.9: https://github.com/michael-milette/moodle/tree/MDL-63219-M39
-* Moodle 3.10: https://github.com/michael-milette/moodle/tree/MDL-63219-M310
 
 ### Why is the IP Address listed as 0:0:0:0:0:0:0:1?
 
@@ -952,7 +1018,7 @@ ALPHA WARNING: You may discover that you can also use (strftime)[https://www.php
 
 There are no known security considerations at this time.
 
-## Other questions
+### How can I get answers to other questions?
 
 Got a burning question that is not covered here? If you can't find your answer, submit your question in the Moodle forums or open a new issue on Github at:
 
@@ -968,19 +1034,31 @@ If you are interested in helping, please take a look at our [contributing](https
 
 Michael Milette - Author and Lead Developer
 
-comete-upn - {getstring} tag (2018-11-21 - Thanks!).
+Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
+
+* comete-upn: New {getstring} tag (2018).
+* ewallah: Testing of phpunit testing script (2019).
+* vpn: Enhanced {alert} tag (2020).
+* rschrenk: Enhanced [{tag}] commenting options (2020).
+* andrewhancox: Enhanced {coursecards} tag (2020).
+* petermApredne: New {firstaccessdate} tag (2020).
+* petermApredne: New {coursestartdate} tag (2020).
+* petermApredne: New {courseenddate} tag (2020).
+* petermApredne: New {coursecompletiondate} tag (2020).
+* pablojavier: New {iftenant} tag (2020).
+* 3iPunt and abertranb: New {ifcustomrole} tag (2020).
+* 3iPunt and abertranb: New {ifnotcustomrole} tag (2020).
+
+Thank you also to all the people who have requested features, tested and reported bugs.
 
 ## Pending Features
 
 Some of the features we are considering for future releases include:
 
-* Finish unit testing script.
-* Add ability to access additional information from profile fields.
-* Add ability to access information in custom profile fields.
+* Catch-up on developing unit testing.
 * Add ability to access course meta information. Example, teacher's name.
 * Add ability to list courses in the current course's category.
 * Add ability to list subcategories of the current category.
-* Add ability to define custom code blocks - useful for creating global content blocks that can be centrally updated.
 * Add settings page with option to disable unused or unwanted filters in order to optimize performance or simply disable features.
 * Create an Atto add-on (separate plugin) to make it easier to insert FilterCodes tags.
 
@@ -990,14 +1068,13 @@ If you could use any of these features, or have other requirements, consider con
 
 # Motivation for this plugin
 
-The development of this plugin was motivated through our own experience in Moodle development and topics discussed in the Moodle forums. The project is sponsored and supported by TNG Consulting Inc.
+The development of this plugin was motivated through our own experience in Moodle development, features requested by out clients and topics discussed in the Moodle forums. The project is sponsored and supported by TNG Consulting Inc.
 
 [(Back to top)](#table-of-contents)
 
 # Further Information
 
-For further information regarding the filter_filtercodes plugin, support or to
-report a bug, please visit the project page at:
+For further information regarding the filter_filtercodes plugin, support or to report a bug, please visit the project page at:
 
 https://github.com/michael-milette/moodle-filter_filtercodes
 
