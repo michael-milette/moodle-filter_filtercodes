@@ -1093,7 +1093,16 @@ class filter_filtercodes extends moodle_text_filter {
                 $categories = array_unique($matches[1]);
 
                 foreach($categories as $catid) {
-                    $courses = core_course_category::get($catid)->get_courses($chelper->get_courses_display_options());
+                    try {
+                        $coursecat = core_course_category::get($catid);
+                        // Get list of courses in this category.
+                        $courses = $coursecat->get_courses($chelper->get_courses_display_options());
+                    }
+                    catch(Exception $e) {
+                        // Course category not found or not accessible.
+                        // No courses available.
+                        $courses = [];
+                    }
 
                     $rcourseids = array_keys($courses);
 
