@@ -1,11 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.7] 2021-05-19 BETA
+## [2.2.0] 2021-05-20
 ### Added
 - New {courseteachers} tag (ALPHA).
 - New %7Bcoursemoduleid%7D tag.
-- New option for you to define your own global {global_...} tags.
+- New user define global {global_...} tags (up to 20).
 - New {courserequest} tag.
 - New {courserequestmenu} tag.
 - New {courserequestmenu0} tag.
