@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.6] 2021-05-10 BETA
+## [2.1.7] 2021-05-19 BETA
 ### Added
 - New {courseteachers} tag (ALPHA).
 - New %7Bcoursemoduleid%7D tag.
@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - New {coursecards catid} tag. You can now optionally specify courses in a specific category id to display.
 - New setting to hide completed courses in {mycoursesmenu} list.
 - New {menudev} tag.
+- New {ifprofile_field_...}{/ifprofile_field_...} tags.
 ### Updated
 - {coursesummary} can now include other FilterCodes.
 - {categorycards} titles now always display white.

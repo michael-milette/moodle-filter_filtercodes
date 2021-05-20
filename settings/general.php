@@ -58,6 +58,14 @@ $description = get_string('hidecompletedcourses_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
+// Restrict {ifprofilefied} tag to only access to visible fields.
+$default = '0';
+$name = 'filter_filtercodes/ifprofilefiedonlyvisible';
+$title = get_string('ifprofilefiedonlyvisible', 'filter_filtercodes');
+$description = get_string('ifprofilefiedonlyvisible_desc', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
 // Option to enable scrape tag.
 $default = 0; // Default is disabled.
 $name = 'filter_filtercodes/enable_scrape';

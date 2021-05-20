@@ -47,6 +47,8 @@ $string['courseteachershowpic'] = 'Show teacher picture';
 $string['courseteachershowpic_desc'] = 'If enabled, will display the teacher\'s profile picture in {courseteachers} tags.';
 $string['courseteacherlinktype'] = 'Teacher link type';
 $string['courseteacherlinktype_desc'] = 'Choose the type of link for the teacher\s link in the {courseteachers} tags.';
+$string['ifprofilefiedonlyvisible'] = '{ifprofilefied} only visible.';
+$string['ifprofilefiedonlyvisible_desc'] = 'Restrict the {ifprofilefied} tag to only access visible fields. Hidden fields will behave as if the field was empty. If unchecked, this tag will be able to check hidden user fields.';
 
 $string['sizeb'] = 'B';
 $string['sizekb'] = 'KB';

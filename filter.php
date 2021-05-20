@@ -1793,6 +1793,67 @@ class filter_filtercodes extends moodle_text_filter {
 
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
+            // Tag: {ifprofile_field_...}.
+            // If Custom Profile Fields is not empty.
+            if (stripos($text, '{ifprofile_field_') !== false) {
+                $isuser = (isloggedin() && !isguestuser());
+                // Cached the defined custom profile fields and data.
+                static $profilefields;
+                static $profiledata;
+                if (!isset($profilefields)) {
+                    $profilefields = $DB->get_records('user_info_field', null, '', 'id, datatype, shortname, visible, param3');
+                    if ($isuser && !empty($profilefields)) {
+                        $profiledata = $DB->get_records_menu('user_info_data', ['userid' => $USER->id], '', 'fieldid, data');
+                    }
+                }
+
+                foreach ($profilefields as $field) {
+                    $tag = 'ifprofile_field_' . $field->shortname;
+
+                    // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
+                    if (isset($profiledata[$field->id]) && $isuser &&
+                            ($field->visible == '0' || get_config('filter_filtercodes', 'ifprofilefiedonlyvisible'))) {
+                        $data = trim($profiledata[$field->id]);
+                    } else {
+                        $data = '';
+                    }
+
+                    // If the value is empty or zero, remove the all of the tags and their contents for that field shortname.
+                    if (empty($data)) {
+                        $replace['/\{ ' . $tag . '(.*?)\}(.*?)\{\/' . $tag . '\}/ims'] = '';
+                        continue;
+                    }
+
+                    // If no comparison value is specified.
+                    if (stripos($text, '{' . $tag . '}') !== false) {
+                        // Just remove the tags.
+                        $replace['/\{' . $tag . '\}/i'] = '';
+                        $replace['/\{\/' . $tag . '\}/i'] = '';
+                    }
+
+                    // // If the custom profile field specifies a matching profile value, just remove the tags.
+                    // // TODO: Not finished yet.
+                    // if (stripos($text, '{' . $tag . '=') !== false) {
+                    //     $replace['/\{' . $tag . '=(.*?)\}/i'] = '';
+                    //     $replace['/\{\/' . $tag . '\}/i'] = '';
+                    // }
+                    // $newtext = preg_replace_callback('/\{' . $tag . '=(.*?)\}(.*?)\{\/' . $tag . '\}/is',
+                    //     function ($matches) use($data) {
+                    //         foreach ($mycohorts as $cohort) {
+                    //             if ($cohort->idnumber == $matches[1] || $cohort->id == $matches[1]) {
+                    //                 return ($matches[2]);
+                    //             };
+                    //         }
+                    //         return '';
+                    //     }, $text
+                    // );
+                    // if ($newtext !== false) {
+                    //     $text = $newtext;
+                    //     $changed = true;
+                    // }
+                }
+            }
+
             // Tag: {ifloggedinas}.
             if (stripos($text, '{ifloggedinas}') !== false) {
                 // If logged-in-as another user...
