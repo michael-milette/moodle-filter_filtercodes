@@ -1812,7 +1812,7 @@ class filter_filtercodes extends moodle_text_filter {
 
                     // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
                     if (isset($profiledata[$field->id]) && $isuser &&
-                            ($field->visible == '0' || get_config('filter_filtercodes', 'ifprofilefiedonlyvisible'))) {
+                            ($field->visible == '0' || !get_config('filter_filtercodes', 'ifprofilefiedonlyvisible'))) {
                         $data = trim($profiledata[$field->id]);
                     } else {
                         $data = '';
@@ -1820,7 +1820,7 @@ class filter_filtercodes extends moodle_text_filter {
 
                     // If the value is empty or zero, remove the all of the tags and their contents for that field shortname.
                     if (empty($data)) {
-                        $replace['/\{ ' . $tag . '(.*?)\}(.*?)\{\/' . $tag . '\}/ims'] = '';
+                        $replace['/\{' . $tag . '(.*?)\}(.*?)\{\/' . $tag . '\}/ims'] = '';
                         continue;
                     }
 
