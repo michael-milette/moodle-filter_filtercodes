@@ -42,7 +42,7 @@ if ($CFG->branch >= 32 && $CFG->branch <= 34) { // Only supported in Moodle 3.2 
 }
 $settings->add($setting);
 
-// Course List Columns.
+// Option to use alternative braces to escape tags.
 $default = '1';
 $name = 'filter_filtercodes/escapebraces';
 $title = get_string('escapebraces', 'filter_filtercodes');
@@ -59,9 +59,26 @@ $setting = new admin_setting_configcheckbox($name, $title, $description, $defaul
 $settings->add($setting);
 
 // Option to enable scrape tag.
-$default = 0;
+$default = 0; // Default is disabled.
 $name = 'filter_filtercodes/enable_scrape';
 $title = get_string('enable_scrape', 'filter_filtercodes');
 $description = get_string('enable_scrape_description', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
+// Option to show teachers profile picture.
+$default = 0; // Default is to not show profile picture.
+$name = 'filter_filtercodes/courseteachershowpic';
+$title = get_string('courseteachershowpic', 'filter_filtercodes');
+$description = get_string('courseteachershowpic_desc', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
+// Option to select link type for {teacher} tag.
+$default = ''; // Default is to not link the teachers name.
+$name = 'filter_filtercodes/courseteacherlinktype';
+$title = get_string('courseteacherlinktype', 'filter_filtercodes');
+$description = get_string('courseteacherlinktype_desc', 'filter_filtercodes');
+$choices = ['' => get_string('none'), 'email' => get_string('issueremail', 'badges'), 'message' => get_string('message', 'message'), 'profile' => get_string('profile')];
+$setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);

@@ -143,12 +143,12 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 ### For use in courses
 
 * {coursename} : Display the full name of the current course or the site name if not in a course.
-* {courseshortname} : Display the short name of the current course or the site short name if not in a course.
-* {coursestartdate dateTimeFormat} : Course start date. Will display "Open event" if there is no start date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
+* {courseshortname} : Display the short name of t he current course or the site short name if not in a course.
+* {coursestartdate dateTimeFormat} : Course star t date. Will display "Open event" if there is no start date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {courseenddate dateTimeFormat} : Course end date. Will display "Open event" if there is no end date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {coursecompletiondate dateTimeFormat} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
-* {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
-* {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
+* {courseprogress}: (ALPHA) Displays course progress status in words.
+* {courseprogressbar}: (ALPHA) Displays course progress status as a status bar.
 * {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
 * {coursesummary} : Display's the course summary. If placed in a site page, displays the site summary.
@@ -159,6 +159,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * %7Bcoursemoduleid%7D : Display a course's activity module ID - for use in URLs. Only for use in course activity modules.
 * {courseidnumber} : Display a course's ID number.
 * {sectionid} : Display the section ID (not to be confused with the section number).
+* {courseteachers}: (ALPHA) List of course teachers linked to their profiles.
 
 Also see Courses section below.
 
@@ -640,6 +641,14 @@ Enable to filter out completed courses in {mycoursesmenu} tag listings. When che
 
 Enable or disable the {scrape} tag.
 
+### Show teacher picture
+
+Enable or disable showing of teacher profile picture in {courseteachers} tag.
+
+### Teacher link type
+
+Choose the type of link for the teacher\s link in the {courseteachers} tags. Choose none if you don't want the name to be a link.
+
 ### Global custom tags
 
 Define your own global tags, sometimes also called global blocks. This feature enables you to create your own tags that are prefixed by global_ . You can currently define up to 20 custom {global_...} tags.
@@ -818,6 +827,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course custom fields [{coursefields}]: {coursefields}
 * Section ID [{sectionid}]: {sectionid}
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
+* Teachers in this course [{courseteachers}]: {courseteachers}
 * Available free application disk space [{diskfreespace}]: {diskfreespace}
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}
 * My Enrolled Courses [{mycourses}]: {mycourses}

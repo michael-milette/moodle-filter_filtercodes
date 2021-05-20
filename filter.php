@@ -822,6 +822,53 @@ class filter_filtercodes extends moodle_text_filter {
 
             }
 
+            // Tag: {courseteachers}.
+            if (stripos($text, '{courseteachers') !== false) {
+                $teachers = '';
+                if ($PAGE->course->id) { // Courses, not site pages.
+                    $contextid = $DB->get_field('context', 'id', array ('instanceid' => $PAGE->course->id, 'contextlevel'=>50), $strictness=IGNORE_MULTIPLE);
+                    $userids = $DB->get_records('role_assignments',array('roleid' => '3' , 'contextid' => $contextid));
+                    $teachershowpic = get_config('filter_filtercodes', 'courseteachershowpic');
+                    $teacherlinktype = get_config('filter_filtercodes', 'courseteacherlinktype');
+                    $linksr = ['' => '', 'email' => get_string('issueremail', 'badges'), 'message' => get_string('message', 'message'), 'profile' => get_string('profile')];
+                    $iconclass = ['' => '', 'email' => 'fa fa-envelope-o', 'message' => 'fa fa-comment', 'profile' => 'fa fa-info-circle'];
+                    $iconclass = '<i class="' . $iconclass[$teacherlinktype] . '" aria-hidden="true"></i> ';
+
+                    foreach ($userids as $teacher) {
+                        $user = $DB->get_record('user', array('id'=>$teacher->userid), $fields='*', $strictness=IGNORE_MULTIPLE);
+                        $url = str_replace('$1', '3', $this->getprofilepictureurl($user));
+                        $fullname = $user->firstname . ' ' . $user->lastname;
+                        if ($teachershowpic) {
+                            $teachers .= '<img src="' . $url . '" alt="' . $fullname . '" class="img-fluid img-thumbnail"><br>';
+                        }
+                        $teachers .= '<li class="mb-4">';
+                        $teacherclose = '<span class="sr-only">' . $linksr[$teacherlinktype] . ' : </span>' . $fullname . '</a><li>';
+                        switch ($teacherlinktype) {
+                            case 'email':
+                                $teachers .= $iconclass . '<a href="mailto:' . $user->email . '">';
+                                $teachers .= $teacherclose;
+                                break;
+                            case 'message':
+                                $teachers .= $iconclass . '<a href="' . $CFG->wwwroot . '/message/index.php?id=' . $user->id . '">';
+                                $teachers .= $teacherclose;
+                                break;
+                            case 'profile':
+                                $teachers .= $iconclass . '<a href="' . $CFG->wwwroot . '/user/profile.php?id=' . $user->id . '">';
+                                $teachers .= $teacherclose;
+                                break;
+                            default: // Default is no-link.
+                                $teachers .= $fullname . '</li>';
+                                break;
+                        }
+                    }
+                }
+                if (empty($teachers)) {
+                    $replace['/\{courseteachers\}/i'] = get_string('noteachersyet');
+                } else {
+                    $replace['/\{courseteachers\}/i'] = '<ul class="fc-teachers list-unstyled ml-0 pl-0">' . $teachers . '</ul>';
+                }
+            }
+
             // Tag: {courseparticipantcount}.
             if (stripos($text, '{courseparticipantcount}') !== false) {
                 require_once($CFG->dirroot . '/user/lib.php');
