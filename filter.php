@@ -419,6 +419,44 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{coursesummary\}/i'] = $PAGE->course->summary;
         }
 
+        // Tag: {menudev}
+        if (stripos($text, '{menudev}') !== false) {
+            $menu = '';
+            $menu .= '-{getstring:tool_installaddon}installaddons{/getstring}|/admin/tool/installaddon' . PHP_EOL;
+            $menu .= '-###' . PHP_EOL;
+            $menu .= '-{getstring:admin}debugging{/getstring}|/admin/settings.php?section=debugging' . PHP_EOL;
+            $menu .= '-{getstring:admin}purgecachespage{/getstring}|/admin/purgecaches.php' . PHP_EOL;
+            $menu .= '-###' . PHP_EOL;
+            if (file_exists(dirname(__FILE__) . '/../../local/adminer/index.php')) {
+                $menu .= '-{getstring:local_adminer}pluginname{/getstring}|/local/adminer' . PHP_EOL;
+            }
+            if (file_exists(dirname(__FILE__) . '/../../local/codechecker/index.php')) {
+                $menu .= '-{getstring:local_codechecker}pluginname{/getstring}|/local/codechecker' . PHP_EOL;
+            }
+            if (file_exists(dirname(__FILE__) . '/../../local/moodlecheck/index.php')) {
+                $menu .= '-{getstring:local_moodlecheck}pluginname{/getstring}|/local/moodlecheck' . PHP_EOL;
+            }
+            if (file_exists(dirname(__FILE__) . '/../../admin/tool/pluginskel/index.php')) {
+                $menu .= '-{getstring:tool_pluginskel}pluginname{/getstring}|/admin/tool/pluginskel' . PHP_EOL;
+            }
+            $menu .= '-{getstring}phpinfo{/getstring}|/admin/phpinfo.php' . PHP_EOL;
+            $menu .= '-###' . PHP_EOL;
+            $menu .= '-Layoutit|https://www.layoutit.com/build" target="popup" onclick="window.open(\'https://www.layoutit.com/build\',\'popup\',\'width=1340,height=700\'); return false;|Bootstrap Page Builder ({getstring}english{/getstring})' . PHP_EOL;
+            $menu .= '-Pixlr|https://pixlr.com/editor/" target="popup" onclick="window.open(\'https://pixlr.com/editor/\',\'popup\',\'width=1340,height=700\'); return false;|Photo Editor ({getstring}english{/getstring})' . PHP_EOL;
+            $menu .= '-ScreenApp|https://screenapp.io/#/recording" target="popup" onclick="window.open(\'https://screenapp.io/#/recording\',\'popup\',\'width=1340,height=700\'); return false;|Screen Recorder ({getstring}english{/getstring})' . PHP_EOL;
+            $menu .= '-###' . PHP_EOL;
+            $menu .= '-MoodleDev docs|https://moodle.org/development|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
+            $menu .= '-MoodleDev forum|https://moodle.org/mod/forum/view.php?id=55|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
+            $menu .= '-Tracker|https://tracker.moodle.org/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
+            $menu .= '-AMOS|https://lang.moodle.org/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
+            $menu .= '-WCAG 2.1|https://www.w3.org/WAI/WCAG21/quickref/|W3C ({getstring}english{/getstring})' . PHP_EOL;
+            $menu .= '-###' . PHP_EOL;
+            $menu .= '-DevTuts|https://www.youtube.com/watch?v=UY_pcs4HdDM|{getstring}english{/getstring}' . PHP_EOL;
+            $menu .= '-Moodle Development School|https://moodledev.moodle.school/|{getstring}english{/getstring}' . PHP_EOL;
+            $menu .= '-Learn Moodle|https://learn.moodle.org/|{getstring}english{/getstring}' . PHP_EOL;
+            $replace['/\{menudev\}/i'] = $menu;
+        }
+
         // Apply all of the filtercodes so far.
         $newtext = null;
         if (count($replace) > 0) {
@@ -457,7 +495,7 @@ class filter_filtercodes extends moodle_text_filter {
                 foreach ($profilefields as $field) {
                     // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
                     if ($isuser && stripos($text, '{profile_field_' . $field->shortname . '}') !== false && $field->visible != '0') {
-                        $data = isset($profiledata[$field->id]) ? trim($profiledata[$field->id]) : '';
+                        $data = isset($profiledata[$field->id]) ? trim($profiledata[$field->id]) : '' . PHP_EOL;
                         switch ($field->datatype) { // Format data for some field types.
                             case 'datetime':
                                 // Include date and time or just date?

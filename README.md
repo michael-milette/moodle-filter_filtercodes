@@ -184,6 +184,7 @@ Note: Filtering must be supported in custom menu by your theme.
 * {mycoursesmenu} : A second level list of courses with links for use in custom menus .
 * {courserequestmenu0} : Request a course / Course request in a top level custom menu.
 * {courserequestmenu} : Request a course / Course request in submenu.
+* {menudev} : Useful menu for Moodle developers.
 
 ### URL
 
@@ -435,6 +436,8 @@ This will display the enclosed content only if the user is logged-in as an admin
 Notes:
 
 - **[Code checker](https://moodle.org/plugins/local_codechecker)**, **[Moodle PHPdoc check](https://moodle.org/plugins/local_moodlecheck)** and **[Moodle Adminer](https://moodle.org/plugins/local_adminer)** require add-on 3rd party plugins which need to be installed in order for the links to work.
+
+Even better, try out {menudev}. It includes all of the above and more. Best of all, it only includes menu items for the developer tools that you have installed. Just replace everything below the words "Dev tools" and above the "{/ifdev}" line.
 
 ## FilterCodes in custom menus
 
@@ -835,6 +838,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * My Enrolled Courses [{courserequest}]: {myccourserequestourses}
 * Request a course / Course request in top level menu [{courserequestmenu0}]: {courserequestmenu0}
 * Request a course / Course request in submenu [{courserequestmenu}]: {courserequestmenu}
+* Dev sub-menu items [{menudev}]: {menudev}
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course category name (blank if not in a course) [{categoryname}]: {categoryname}
 * Course category number (blank if not in a course) [{categorynumber}]: {categorynumber}
