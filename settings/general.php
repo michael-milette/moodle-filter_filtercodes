@@ -87,6 +87,9 @@ $default = ''; // Default is to not link the teachers name.
 $name = 'filter_filtercodes/courseteacherlinktype';
 $title = get_string('courseteacherlinktype', 'filter_filtercodes');
 $description = get_string('courseteacherlinktype_desc', 'filter_filtercodes');
-$choices = ['' => get_string('none'), 'email' => get_string('issueremail', 'badges'), 'message' => get_string('message', 'message'), 'profile' => get_string('profile')];
+$choices = ['' => get_string('none'),
+        'email' => get_string('issueremail', 'badges'),
+        'message' => get_string('message', 'message'),
+        'profile' => get_string('profile')];
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);

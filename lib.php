@@ -40,8 +40,8 @@ function filter_filtercodes_render_navbar_output() {
 
             // Don't apply auto-linking filters.
             $filtermanager = filter_manager::instance();
-            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
-            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters');
+            $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
+            $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters'];
 
             // Filter Custom Menu.
             $CFG->custommenuitems = $filtermanager->filter_text($CFG->custommenuitems,

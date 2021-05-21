@@ -1,11 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.7] 2021-05-19 BETA
+## [2.2.0] 2021-05-22
 ### Added
 - New {courseteachers} tag (ALPHA).
 - New %7Bcoursemoduleid%7D tag.
-- New option for you to define your own global {global_...} tags.
+- New define custom global {global_...} tags (up to 20).
 - New {courserequest} tag.
 - New {courserequestmenu} tag.
 - New {courserequestmenu0} tag.
@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - New {supportname} tag.
 - New {supportemail} tag.
 - New {supportpage} tag.
+- New {webpage} gets automatically substituted to {profile_field_webpage} as of Moodle 3.11.
 ### Updated
 - {coursesummary} can now include other FilterCodes.
 - {categorycards} titles now always display white.
@@ -25,7 +26,9 @@ All notable changes to this project will be documented in this file.
 - {profile_field_...} of type Checkbox now displays Yes/No instead of a 1 or 0.
 - {profile_field_...} of other types will now display value if field contains 0.
 - {profile_field_...} tags will now be removed if user is not logged in.
-- Updated documentation.
+- {filtercodes} tag now works on all pages but only for users who have course:update capability.
+- Custom menu tags should not be processed through the "URL to Link" (urltolink) filter. See README.md to update your theme.
+- Documentation in this README.md file.
 - Copyright notice for 2021.
 
 ## [2.1.0] 2020-11-23
@@ -47,8 +50,10 @@ All notable changes to this project will be documented in this file.
 - New Moodle date/time format option for the {coursestartdate} tag.
 - New Moodle date/time format option for the {courseenddate} tag.
 - New Moodle date/time format option for the {coursecompletiondate} tag.
-- New {now dateTimeFormat} tag.
 - New {ifminsitemanager} tag.
+- New {now} tag.
+- New option to format the date/time {now dateTimeFormat}.
+
 ### Updated
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
 - {alert} to allow for optional contextual class stying.

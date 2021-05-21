@@ -28,12 +28,11 @@ defined('MOODLE_INTERNAL') || die();
 // FilterCodes plugin.
 $name = 'filter_filtercodes';
 
-// Page Table of contents
+// Page Table of contents.
 $title = get_string('globaltagheadingtitle', $name);
 $description = get_string('globaltagheadingdesc', $name);
 $setting = new admin_setting_heading($name . '/globaltagheadingtitle', $title, $description);
 $settings->add($setting);
-
 
 // Number of tags.
 $title = get_string('globaltagcount', $name);

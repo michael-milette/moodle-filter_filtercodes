@@ -3,7 +3,7 @@
 FilterCodes filter plugin for Moodle
 ====================================
 ![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3%2F%20v7.4-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.10.x-orange.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.11.x-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -133,7 +133,6 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {supportemail} : Support email address as seen on Site Administration > Server > Support contact.
 * {supporturl} : Support page as seen on Site Administration > Server > Support contact.
 
-
 ### UI Elements
 
 * {coursecards}: (ALPHA) Display available courses as cards. Has only been tested on Front Page.
@@ -248,8 +247,8 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 
 #### Courses
 
-* {ifenrolled}{/ifenrolled} : Will display the enclosed content only if the user **is** enrolled in the current course.
-* {ifnotenrolled}{/ifnotenrolled} : Will display the enclosed content only if the user is **not** enrolled in the current course.
+* {ifenrolled}{/ifenrolled} : Will display the enclosed content only if the user **is** enrolled as **a student** in the current course. This tag does not take any other roles into consideration.
+* {ifnotenrolled}{/ifnotenrolled} : Will display the enclosed content only if the user is **not** enrolled as **a student** in the current course. This tag does not take any other roles into consideration.
 * {ifincourse}{/ifincourse} : Will display the enclosed content only if the user is in a course other than the Front page.
 * {ifinsection}{/ifinsection} : Will display the enclosed content only if the user is in a section of a course which is not the Front Page.
 * {ifnotinsection}{/ifnotinsection} : Will display the enclosed content only if the user is not in a section of a course.
@@ -456,7 +455,9 @@ There are two ways to make FilterCodes work in Moodle's custom menu:
 
 1. Add a few lines of code to your Moodle theme. Even better, your theme's developer to enable this in their themes.
 
-### For themes based on **boost**
+### For themes based on **boost** (Moodle 3.2 and later)
+
+Note: Supported in Moodle 3.2 and later.
 
 Add the following code to core_renderer section of your theme. Note: Your theme may even already have such a class (they often do):
 
@@ -474,8 +475,8 @@ Add the following code to core_renderer section of your theme. Note: Your theme 
 
             // Don't apply auto-linking filters.
             $filtermanager = filter_manager::instance();
-            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
-            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink');
+            $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
+            $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink'];
 
             // Filter custom user menu.
             // Don't filter custom user menu on the settings page. Otherwise it ends up
@@ -506,8 +507,8 @@ Add the following code to core_renderer section of your theme. Note: Your theme 
 
             // Don't apply auto-linking filters.
             $filtermanager = filter_manager::instance();
-            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
-            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink');
+            $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
+            $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink'];
 
             if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
                 $custommenuitems = $CFG->custommenuitems;
@@ -529,7 +530,7 @@ Add the following code to core_renderer section of your theme. Note: Your theme 
                 }
                 $this->language = $custommenu->add($currentlang, new moodle_url('#'), $strlang, 10000);
                 foreach ($langs as $langtype => $langname) {
-                    $this->language->add($langname, new moodle_url($this->page->url, array('lang' => $langtype)), $langname);
+                    $this->language->add($langname, new moodle_url($this->page->url, ['lang' => $langtype]), $langname);
                 }
             }
 
@@ -537,7 +538,9 @@ Add the following code to core_renderer section of your theme. Note: Your theme 
         }
     }
 
-### For themes based on the older **bootstrapbase**
+### For themes based on the older **bootstrapbase** (Moodle 2.7 to 3.6)
+
+Note: Supported in Moodle 2.7 to 3.6.
 
 Add the following code to core_renderer section of your theme for Moodle 2.7 to 3.6. Be sure to replace "themename" with the name of the theme's directory. Note: Your theme may even already have such a class (they often do):
 
@@ -556,8 +559,8 @@ Add the following code to core_renderer section of your theme for Moodle 2.7 to 
 
             // Don't apply auto-linking filters.
             $filtermanager = filter_manager::instance();
-            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
-            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink');
+            $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
+            $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink'];
 
             // Filter custom user menu.
             // Don't filter custom user menu on the theme settings page. Otherwise it ends up
@@ -588,6 +591,8 @@ To patch Moodle to handle this properly for most Moodle themes, apply the follow
 * Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-63219-M38
 * Moodle 3.9: https://github.com/michael-milette/moodle/tree/MDL-63219-M39
 * Moodle 3.10: https://github.com/michael-milette/moodle/tree/MDL-63219-M310
+* Moodle 3.11: https://github.com/michael-milette/moodle/tree/MDL-63219-M311
+* Moodle master: https://github.com/michael-milette/moodle/tree/MDL-63219-master
 
 ## Scrape'ing content
 
@@ -660,6 +665,24 @@ Choose the type of link for the teacher\s link in the {courseteachers} tags. Cho
 ### Global custom tags
 
 Define your own global tags, sometimes also called global blocks. This feature enables you to create your own tags that are prefixed by global_ . You can currently define up to 20 custom {global_...} tags.
+
+### Customizing or translating the forms generated by the {form...} tags
+
+You can translate or customize the form tags in Moodle's language editor. Here is how to do it:
+
+1. Navigate to Site Administration > Language > Language Customization.
+2. Select the language you want to customize.
+3. Click the **Open Language Pack for Editing** button.
+4. Wait until the **Continue** button apppears. This may take a little time. Please be patient.
+5. In the **Show Strings of These Components** field, scroll down and select **filter_filtercodes.php**.
+6. Click the **Show Strings** button.
+7. Scroll down to the strings called formcheckin, formcontactus, formcourserequest, formquickquestion and formsupport. This is the HTML for the tags of the same name.
+8. Edit the form as needed.
+9. Scroll to the bottom of the page and click the **Save changes to the language pack** button.
+
+For more information on editing language strings in Moodle, visit: https://docs.moodle.org/en/Language_customisation.
+
+Alternatively, you could simply insert the HTML for the form in the Atto editor. These {form...} tags are just provided to quickly create generic forms on your Moodle site.
 
 [(Back to top)](#table-of-contents)
 
@@ -801,7 +824,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * ID Number [{idnumber}]: {idnumber}
 * User name [{username}]: {username}
 * User description [{userdescription}] : {userdescription}
-* Website URL [{website}] : {website}
+* User web page URL [{webpage}] : {webpage}
 * Scrape h1 from example.com: {scrape url="https://example.com/" tag="h1"}
 * User profile picture URL (small) [{userpictureurl sm}]: {userpictureurl sm}
 * User profile picture URL (medium) [{userpictureurl md}]: {userpictureurl md}
@@ -832,7 +855,6 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course Context ID (encoded) [%7Bcoursecontextid%7D]: %7Bcoursecontextid%7D
 * Course Module ID (encoded) [%7Bcoursemoduleid%7D]: %7Bcoursemoduleid%7D (Note: Only available in a course activity)
 * Course ID number [{courseidnumber}]: {courseidnumber}
-* Course custom fields [{coursefields}]: {coursefields}
 * Section ID [{sectionid}]: {sectionid}
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
 * Teachers in this course [{courseteachers}]: {courseteachers}
@@ -840,10 +862,10 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}
 * My Enrolled Courses [{mycourses}]: {mycourses}
 * My Enrolled Courses menu [{mycoursesmenu}]: {mycoursesmenu}
-* My Enrolled Courses [{courserequest}]: {myccourserequestourses}
+* Link to the request a course page (blank if not enabled) [{courserequest}]: {courserequest}
 * Request a course / Course request in top level menu [{courserequestmenu0}]: {courserequestmenu0}
 * Request a course / Course request in submenu [{courserequestmenu}]: {courserequestmenu}
-* Dev sub-menu items [{menudev}]: {menudev}
+* Moodle Dev custom menu items [{menudev}]: {menudev}
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course category name (blank if not in a course) [{categoryname}]: {categoryname}
 * Course category number (blank if not in a course) [{categorynumber}]: {categorynumber}
@@ -876,11 +898,11 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Referrer [{referrer}]: {referrer}
 * ReCAPTCHA [{recaptcha}]: {recaptcha}
 * Readonly (for form fields when logged-in) [{readonly}]: {readonly}
-* Soft hyphen [{-}]: AHyphenWilloOlyAppearHere{-}WhenThereIsNoMoreSpace.
+* Soft hyphen [{-}]: AHyphenWillOnlyAppearHere{-}WhenThereIsNotEnoughSpace.
 * Non-breaking space [{nbsp}]: This{nbsp}: Is it! (view source code to see the non-breaking space)
 * English [{langx en}]Content[{/langx}]: {langx en}Content{/langx}
 * String with component [{getstring:filter_filtercodes}]filtername[{/getstring}]: {getstring:filter_filtercodes}filtername{/getstring}
-* String [{getstring}]Help[{/getstring}]: {getstring}Help{/getstring}
+* String [{getstring}]Help[{/getstring}]: {getstring}help{/getstring}
 * Toggle editing menu [{toggleeditingmenu}]: {toggleeditingmenu}
 * Editing Toggle [{editingtoggle}]: <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
 * FontAwesome "fa-globe": v4.x [{fa fa-globe}] {fa fa-globe}, v5.x [{fas fa-globe}] {fas fa-globe}. Must be supported by your theme.
@@ -889,16 +911,16 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * You should not see the following note [{note}]This could be a comment, todo or reminder.[{/note}]: {note}This could be a comment, todo or reminder.{/note}
 * Click for [{help}content{/help}] : {help}Enables you to create popup help icons and bubbles just like Moodle does.{/help}
 * Click for [{info}content{/info}] : {Info}Enables you to create popup info icons and bubbles just like the Help popup but with an info icon. Useful for adding extra information or hidden tips in your content.{/info}
-* {alert}This is an example of an alert box.{/info}
+* {alert}This is an example of an alert box.{/alert}
 * [{highlight}]This text is highlighted in yellow.[{/highlight}] : {highlight}This text is highlighted in yellow.{/highlight}
 * Current language [{lang}] : {lang}
-* Display content of custom profile field [{profile_field_shortname}]: Location: {profile_field_location} - assuming you had created a custom profile field with a shortname called 'location'.
+* Display content of custom profile field [{profile_field_learningstyle}] - assuming you have a custom profile field with a shortname called 'learningstyle': {profile_field_learningstyle}
 * Display profile owner's full name on profile pages [{profilefullname}]: This is the profile of {profilefullname}.
 * If you are logged-in as a different user [{ifloggedinas}] : {ifloggedinas}You are logged-in as a different user.{/ifloggedinas}
 * If you are NOT logged-in as a different user [{ifloggedinas}] : {ifnotloggedinas}You are logged-in as yourself.{/ifnotloggedinas}
 * If Editing mode activated (on) [{ifeditmode}]Don't forget to turn off editing mode![{/ifeditmode}]: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
 * If defined custom profile field with a shortname called "iswoman" is not blank or zero [{ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}]: {ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}
-* If Editing mode is deactivated (off) [{ifnoteditmode}]&lt;a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on"&gt;Turn edit mode on&lt;a/&gt;[{/ifnoteditmode}]: {ifnoteditmode}<a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on">Turn edit mode on</a>{/ifnoteditmode};
+* If Editing mode is deactivated (off) [{ifnoteditmode}]&lt;a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on"&gt;Turn edit mode on&lt;a/&gt;[{/ifnoteditmode}]: {ifnoteditmode}<a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on">Turn edit mode on</a>{/ifnoteditmode}
 * If Enrolled [{ifenrolled}]You are enrolled in this course.[{/ifenrolled}]: {ifenrolled}You are enrolled in this course.{/ifenrolled}
 * If Not Enrolled [{ifnotenrolled}]You are not enrolled in this course.[{/ifnotenrolled}]: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
 * If LoggedIn [{ifloggedin}]You are logged-in.[{/ifloggedin}]: {ifloggedin}You are logged-in.{/ifloggedin}
@@ -1007,7 +1029,7 @@ Verify that the component (plugin) name and/or the string key are correct. If a 
 
 ### How can I customize or translate the forms generated by the {form...} tags?
 
-You can translate or customize the forms in Moodle's language editor. Note that using these tags are optional. You can also simply insert the HTML for the form in the Atto editor. These {form...} tags are just provided to quickly create generic forms on your Moodle site.
+See **Customizing or translating the forms generated by the {form...} tags** in the [Usage](#usage) section.
 
 ### What are the Supported dateTimeFormat formats?
 
@@ -1059,18 +1081,18 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
-* comete-upn: New {getstring} tag (2018).
-* ewallah: Testing of phpunit testing script (2019).
-* vpn: Enhanced {alert} tag (2020).
-* rschrenk: Enhanced [{tag}] commenting options (2020).
-* andrewhancox: Enhanced {coursecards} tag (2020).
-* petermApredne: New {firstaccessdate} tag (2020).
-* petermApredne: New {coursestartdate} tag (2020).
-* petermApredne: New {courseenddate} tag (2020).
-* petermApredne: New {coursecompletiondate} tag (2020).
-* pablojavier: New {iftenant} tag (2020).
 * 3iPunt and abertranb: New {ifcustomrole} tag (2020).
 * 3iPunt and abertranb: New {ifnotcustomrole} tag (2020).
+* andrewhancox: Enhanced {coursecards} tag (2020).
+* comete-upn: New {getstring} tag (2018).
+* ewallah: Testing of phpunit testing script (2019).
+* pablojavier: New {iftenant} tag (2020).
+* petermApredne: New {coursecompletiondate} tag (2020).
+* petermApredne: New {courseenddate} tag (2020).
+* petermApredne: New {coursestartdate} tag (2020).
+* petermApredne: New {firstaccessdate} tag (2020).
+* rschrenk: Enhanced [{tag}] commenting options (2020).
+* vpn: Enhanced {alert} tag (2020).
 
 Thank you also to all the people who have requested features, tested and reported bugs.
 
@@ -1079,7 +1101,7 @@ Thank you also to all the people who have requested features, tested and reporte
 Some of the features we are considering for future releases include:
 
 * Catch-up on developing unit testing.
-* Add ability to access course meta information. Example, teacher's name.
+* Add ability to access course meta information.
 * Add ability to list courses in the current course's category.
 * Add ability to list subcategories of the current category.
 * Add settings page with option to disable unused or unwanted filters in order to optimize performance or simply disable features.

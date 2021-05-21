@@ -47,8 +47,8 @@ $string['courseteachershowpic'] = 'Show teacher picture';
 $string['courseteachershowpic_desc'] = 'If enabled, will display the teacher\'s profile picture in {courseteachers} tags.';
 $string['courseteacherlinktype'] = 'Teacher link type';
 $string['courseteacherlinktype_desc'] = 'Choose the type of link for the teacher\s link in the {courseteachers} tags.';
-$string['ifprofilefiedonlyvisible'] = '{ifprofilefied} only visible.';
-$string['ifprofilefiedonlyvisible_desc'] = 'Restrict the {ifprofilefied} tag to only access visible fields. Hidden fields will behave as if the field was empty. If unchecked, this tag will be able to check hidden user fields.';
+$string['ifprofilefiedonlyvisible'] = '{ifprofile_field_} only visible.';
+$string['ifprofilefiedonlyvisible_desc'] = 'Restrict the {ifprofile_field_...} tag to only access visible profile fields. Hidden fields will behave as if the field was empty. If unchecked, this tag will be able to check hidden user fields.';
 
 $string['sizeb'] = 'B';
 $string['sizekb'] = 'KB';
@@ -67,6 +67,13 @@ $string['globaltagnametitle'] = 'Tag: global_';
 $string['globaltagnamedesc'] = 'This will be part of your tag name, prefixed with "global_". Example: If you enter "address" here, your tag will be called {global_address}". Must be a single string of letters only, no spaces, numbers or special characters are permitted.';
 $string['globaltagcontenttitle'] = 'Content';
 $string['globaltagcontentdesc'] = 'This is the content that your global tag will replace. Example: If your tag is called "{global_address}", that tag will be replaced by the content entered into this field.';
+$string['pagebuilder'] = 'Page builder';
+$string['pagebuilderlink'] = 'https://www.layoutit.com/build';
+$string['photoeditor'] = 'Photo editor';
+$string['photoeditorname'] = 'Pixlr';
+$string['photoeditorlink'] = 'https://pixlr.com/editor/';
+$string['screenrec'] = 'Screen recorder';
+$string['screenreclink'] = 'https://screenapp.io/#/recording';
 
 $string['formquickquestion'] = '
 <form action="{wwwroot}/local/contact/index.php" method="post" class="cf contact-us">

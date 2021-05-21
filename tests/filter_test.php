@@ -52,7 +52,7 @@ class filter_filtercodes_testcase extends advanced_testcase {
     protected function setUp() {
         parent::setUp();
         $this->resetAfterTest(true);
-        $this->filter = new filter_filtercodes(context_system::instance(), array());
+        $this->filter = new filter_filtercodes(context_system::instance(), []);
     }
 
     /**
@@ -70,224 +70,224 @@ class filter_filtercodes_testcase extends advanced_testcase {
         $context = context_course::instance($course->id);
         filter_set_local_state('filtercodes', $context->id, TEXTFILTER_ON);
 
-        $tests = array(
-            array (
+        $tests = [
+            [
                 'before' => 'No langx tags',
                 'after'  => 'No langx tags',
-            ),
-            array (
+            ],
+            [
                 'before' => '{langx es}Todo el texto está en español{/langx}',
                 'after'  => '<span lang="es">Todo el texto está en español</span>',
-            ),
-            array (
+            ],
+            [
                 'before' => '{langx fr}Ceci est du texte en français{/langx}',
                 'after'  => '<span lang="fr">Ceci est du texte en français</span>',
-            ),
-            array (
+            ],
+            [
                 'before' => 'Some non-filtered content plus some content in Spanish' .
                         ' ({langx es}mejor dicho, en español{/langx})',
                 'after' => 'Some non-filtered content plus some content in Spanish' .
                         ' (<span lang="es">mejor dicho, en español</span>)',
-            ),
-            array (
+            ],
+            [
                 'before' => 'Some non-filtered content plus some content in French ({langx fr}mieux en français{/langx})',
                 'after'  => 'Some non-filtered content plus some content in French (<span lang="fr">mieux en français</span>)',
-            ),
-            array (
+            ],
+            [
                 'before' => '{langx es}Algo de español{/langx}{langx fr}Quelque chose en français{/langx}',
                 'after'  => '<span lang="es">Algo de español</span><span lang="fr">Quelque chose en français</span>',
-            ),
-            array (
+            ],
+            [
                 'before' => 'Non-filtered {begin}{langx es}Algo de español{/langx}{langx fr}Quelque chose en français{/langx}'.
                         ' Non-filtered{end}',
                 'after'  => 'Non-filtered {begin}<span lang="es">Algo de español</span><span lang="fr">Quelque chose en français'.
                         '</span> Non-filtered{end}',
-            ),
-            array (
+            ],
+            [
                 'before' => '{langx}Bad filter syntax{langx}',
                 'after'  => '{langx}Bad filter syntax{langx}',
-            ),
-            array (
+            ],
+            [
                 'before' => '{langx}Bad filter syntax{langx}{langx es}Algo de español{/langx}',
                 'after'  => '{langx}Bad filter syntax{langx}<span lang="es">Algo de español</span>',
-            ),
-            array (
+            ],
+            [
                 'before' => 'Before {langx}Bad filter syntax{langx} {langx es}Algo de español{/langx} After',
                 'after'  => 'Before {langx}Bad filter syntax{langx} <span lang="es">Algo de español</span> After',
-            ),
-            array (
+            ],
+            [
                 'before' => 'Before {langx non-existent-language}Some content{/langx} After',
                 'after'  => 'Before <span lang="non-existent-language">Some content</span> After',
-            ),
-            array (
+            ],
+            [
                 'before' => 'Before {langx en_ca}Some content{/langx} After',
                 'after'  => 'Before <span lang="en_ca">Some content</span> After',
-            ),
-            array (
+            ],
+            [
                 'before' => 'Before {langx en-ca}Some content{/langx} After',
                 'after'  => 'Before <span lang="en-ca">Some content</span> After',
-            ),
-            array (
+            ],
+            [
                 'before' => 'Before{nbsp}: Some content After',
                 'after'  => 'Before&nbsp;: Some content After',
-            ),
-            array (
+            ],
+            [
                 'before' => 'Before{-}: Some content After',
                 'after'  => 'Before&shy;: Some content After',
-            ),
-            array (
+            ],
+            [
                 'before' => '{firstname}',
                 'after'  => $USER->firstname,
-            ),
-            array (
+            ],
+            [
                 'before' => '{lastname}',
                 'after'  => $USER->lastname,
-            ),
-            array (
+            ],
+            [
                 'before' => '{alternatename}',
                 'after'  => !empty(trim($USER->alternatename)) ? $USER->alternatename : $USER->firstname,
-            ),
-            array (
+            ],
+            [
                 'before' => '{fullname}',
                 'after'  => $USER->firstname . ' ' . $USER->lastname,
-            ),
-            array (
+            ],
+            [
                 'before' => '{getstring}help{/getstring}',
                 'after'  => 'Help',
-            ),
-            array (
+            ],
+            [
                 'before' => '{getstring:filter_filtercodes}pluginname{/getstring}',
                 'after'  => 'Filter Codes',
-            ),
-            array (
+            ],
+            [
                 'before' => '{city}',
                 'after'  => $USER->city,
-            ),
-            array (
+            ],
+            [
                 'before' => '{country}',
                 'after'  => !empty($USER->country) ? get_string($USER->country, 'countries') : '',
-            ),
-            array (
+            ],
+            [
                 'before' => '{email}',
                 'after'  => $USER->email,
-            ),
-            array (
+            ],
+            [
                 'before' => '{userid}',
                 'after'  => $USER->id,
-            ),
-            array (
+            ],
+            [
                 'before' => '%7Buserid%7D',
                 'after'  => $USER->id,
-            ),
-            array (
+            ],
+            [
                 'before' => '{idnumber}',
                 'after'  => $USER->idnumber,
-            ),
-            array (
+            ],
+            [
                 'before' => '{institution}',
                 'after'  => $USER->institution,
-            ),
-            array (
+            ],
+            [
                 'before' => '{department}',
                 'after'  => $USER->department,
-            ),
-            array (
+            ],
+            [
                 'before' => '{usercount}',
-                'after'  => $DB->count_records('user', array('deleted' => 0)) - 2,
-            ),
-            array (
+                'after'  => $DB->count_records('user', ['deleted' => 0]) - 2,
+            ],
+            [
                 'before' => '{usersactive}',
-                'after'  => $DB->count_records('user', array('deleted' => 0, 'suspended' => 0, 'confirmed' => 1)) - 2,
-            ),
-            array (
+                'after'  => $DB->count_records('user', ['deleted' => 0, 'suspended' => 0, 'confirmed' => 1]) - 2,
+            ],
+            [
                 'before' => '{courseid}',
                 'after'  => $PAGE->course->id,
-            ),
-            array (
+            ],
+            [
                 'before' => '{courseidnumber}',
                 'after'  => $PAGE->course->idnumber,
-            ),
-            array (
+            ],
+            [
                 'before' => '%7Bcourseid%7D',
                 'after'  => $PAGE->course->id,
-            ),
-            array (
+            ],
+            [
                 'before' => '{coursename}',
                 'after'  => $PAGE->course->fullname,
-            ),
-            array (
+            ],
+            [
                 'before' => '{courseshortname}',
                 'after'  => $PAGE->course->shortname,
-            ),
-            array (
+            ],
+            [
                 'before' => '{coursecount}',
-                'after'  => $DB->count_records('course', array()) - 1,
-            ),
-            array (
+                'after'  => $DB->count_records('course', []) - 1,
+            ],
+            [
                 'before' => '{coursesactive}',
-                'after'  => $DB->count_records('course', array('visible' => 1)) - 1,
-            ),
-            array (
+                'after'  => $DB->count_records('course', ['visible' => 1]) - 1,
+            ],
+            [
                 'before' => '{coursesummary}',
                 'after'  => $PAGE->course->summary,
-            ),
-            array (
+            ],
+            [
                 'before' => '{siteyear}',
                 'after'  => date('Y'),
-            ),
-            array (
+            ],
+            [
                 'before' => '{editingtoggle}',
                 'after'  => ($PAGE->user_is_editing() ? 'off' : 'on'),
-            ),
-            array (
+            ],
+            [
                 'before' => '{wwwroot}',
                 'after'  => $CFG->wwwroot,
-            ),
-            array (
+            ],
+            [
                 'before' => '{wwwcontactform}',
                 'after'  => $CFG->wwwroot . '/local/contact/index.php',
-            ),
-            array (
+            ],
+            [
                 'before' => '{protocol}',
                 'after'  => 'http' . (is_https() ? 's' : ''),
-            ),
-            array (
+            ],
+            [
                 'before' => '{pagepath}',
                 'after'  => '/?',
-            ),
-            array (
+            ],
+            [
                 'before' => '{ipaddress}',
                 'after'  => getremoteaddr(),
-            ),
-            array (
+            ],
+            [
                 'before' => '{sesskey}',
                 'after'  => sesskey(),
-            ),
-            array (
+            ],
+            [
                 'before' => '%7Bsesskey%7D',
                 'after'  => sesskey(),
-            ),
-            array (
+            ],
+            [
                 'before' => '{sectionid}',
                 'after'  => @$PAGE->cm->sectionnum,
-            ),
-            array (
+            ],
+            [
                 'before' => '%7Bsectionid%7D',
                 'after'  => @$PAGE->cm->sectionnum,
-            ),
-            array (
+            ],
+            [
                 'before' => '{readonly}',
                 'after'  => 'readonly="readonly"',
-            ),
-            array (
+            ],
+            [
                 'before' => '{fa fa-icon-name}',
                 'after'  => '<span class="fa fa-icon-name" aria-hidden="true"></span>',
-            ),
-            array (
+            ],
+            [
                 'before' => '{glyphicon glyphicon-name}',
                 'after'  => '<span class="glyphicon glyphicon-name" aria-hidden="true"></span>',
-            ),
-        );
+            ],
+        ];
 
         foreach ($tests as $test) {
             $this->assertEquals($test['after'], $this->filter->filter($test['before']));
