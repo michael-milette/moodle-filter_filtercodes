@@ -129,6 +129,10 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {diskfreespace} : Display amount of free disk space for application folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
 * {diskfreespacedata} : Display amount of free disk space for moodledata folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
 * {wwwroot} : Root URL of the Moodle site.
+* {supportname} : Support name as seen on Site Administration > Server > Support contact.
+* {supportemail} : Support email address as seen on Site Administration > Server > Support contact.
+* {supporturl} : Support page as seen on Site Administration > Server > Support contact.
+
 
 ### UI Elements
 
@@ -856,6 +860,9 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * [{courseimage}] : {courseimage}
 * Number of participants in the course [{courseparticipantcount}] : {courseparticipantcount}
 * The base (root) URL of your Moodle site [{wwwroot}]: {wwwroot}
+* Site support name [{supportname}]: {supportname}
+* Site support email address [{supportemail}]: {supportemail}
+* Site support web page [{supportpage}]: {supportpage}
 * WWW for Contact Form [{wwwcontactform}]: {wwwcontactform}
 * Page path [{pagepath}]: {pagepath}
 * This URL [{thisurl}]: {thisurl}

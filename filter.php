@@ -669,6 +669,24 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tags starting with: {support...}.
+        if (stripos($text, '{support') !== false) {
+            // Tag: {supportname}.
+            if (stripos($text, '{supportname}') !== false) {
+                $replace['/\{supportname\}/i'] = $CFG->supportname;
+            }
+
+            // Tag: {supportemail}.
+            if (stripos($text, '{supportemail}') !== false) {
+                $replace['/\{supportemail\}/i'] = $CFG->supportemail;
+            }
+
+            // Tag: {supportpage}.
+            if (stripos($text, '{supportpage}') !== false) {
+                $replace['/\{supportpage\}/i'] = $CFG->supportpage;
+            }
+        }
+
         if (get_config('filter_filtercodes', 'enable_scrape')) { // Must be enabled in FilterCodes settings.
             // Tag: {scrape url="" tag="" class="" id="" code=""}.
             if (stripos($text, '{scrape ') !== false) {

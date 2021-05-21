@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
 - New setting to hide completed courses in {mycoursesmenu} list.
 - New {menudev} tag.
 - New {ifprofile_field_...}{/ifprofile_field_...} tags.
+- New {supportname} tag.
+- New {supportemail} tag.
+- New {supportpage} tag.
 ### Updated
 - {coursesummary} can now include other FilterCodes.
 - {categorycards} titles now always display white.
