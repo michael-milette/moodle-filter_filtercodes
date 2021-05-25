@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.2.1] 2021-05-25
+### Updated
+- Corrections in some of the language strings.
+- Completed French translation.
+- Clarification for {coursecards} and {categorycards} documentation in this README.md file.
+- There is no new or changed functionality in this release.
+
 ## [2.2.0] 2021-05-22
 ### Added
 - New {courseteachers} tag (ALPHA).
