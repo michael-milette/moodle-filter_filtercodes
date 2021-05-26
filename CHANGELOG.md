@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.2.2] 2021-05-26 (DEV)
+### Added
+- New {ifnothome}{/ifnothome} tags.
+
 ## [2.2.1] 2021-05-25
 ### Updated
 - Corrections in some of the language strings.

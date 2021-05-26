@@ -2165,6 +2165,17 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{ifhome}(.*?)\{\/ifhome\}/ims'] = '';
                 }
             }
+            // Tag: {ifnothome}.
+            if (stripos($text, '{ifnothome}') !== false) {
+                if ($PAGE->pagetype != 'site-index') { // If front page.
+                    // Just remove the tags.
+                    $replace['/\{ifnothome\}/i'] = '';
+                    $replace['/\{\/ifnothome\}/i'] = '';
+                } else {
+                    // If not on the front page, remove the ifhome text.
+                    $replace['/\{ifnothome}(.*?)\{\/ifnothome\}/ims'] = '';
+                }
+            }
 
             // Tag: {ifdev}.
             if (stripos($text, '{ifdev}') !== false) {

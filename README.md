@@ -275,6 +275,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 
 * {ifdev}{/ifdev} : Will display the enclosed content only if the user is logged-in as an administrator and developer debugging mode is enabled.
 * {ifhome}{/ifhome} : Will display the enclosed content only if the user is on the Moodle Home Front Page.
+* {ifnothome}{/ifnothome} : Will not display the enclosed content if the user is on the Moodle Home Front Page.
 * {ifdashboard}{/ifdashboard} : Will display the enclosed content only if the user is on the Moodle Dashboard.
 * {ifcourserequests}{/ifcourserequests} : Will display enclosed contents only if the Request a Course feature is enabled.
 * {ifeditmode}{/ifeditmode} : Will display the enclosed content only if editing mode is turned on.
@@ -939,7 +940,8 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If Developer [{ifdev}]You are an administrator with debugging set to developer mode.[{/ifdev}]: {ifdev}You are an administrator.{/ifdev}
 * If user has a parent custom role [{ifcustomrole parent}]You have a parent custom role in this context[{/ifcustomrole}]: {ifcustomrole parent}You have a parent custom role in this context{/ifcustomrole}.
 * If user does not have a parent custom role [{ifnotcustomrole parent}]You do not have a parent custom role in this context[{/ifnotcustomrole}]: {ifnotcustomrole parent}You do not have a parent custom role in this context{/ifnotcustomrole}.
-* If on Home page: {ifhome}You are on the Home Front page.{/ifhome}
+* If on Home page [{ifhome}]You are on the Home Front page.[{/ifhome}]: {ifhome}You are on the Home Front page.{/ifhome}
+* If not on the Home page [{ifhome}]You are NOT on the Home Front page.[{/ifhome}]: {ifhome}You are NOT on the Home Front page.{/ifhome}
 * If on Dashboard [{ifdashboard}]You are on the Home Front page.[{/ifdashboard}]: {ifdashboard}You are on the Home Front page.{/ifdashboard}
 * If in a course [{ifincourse}]Yes[{/ifincourse}]? {ifincourse}Yes{/ifincourse}
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
