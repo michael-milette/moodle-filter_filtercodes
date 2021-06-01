@@ -82,7 +82,7 @@ $description = get_string('courseteachershowpic_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
-// Option to select link type for {teacher} tag.
+// Option to select link type for {courseteachers} tag.
 $default = ''; // Default is to not link the teachers name.
 $name = 'filter_filtercodes/courseteacherlinktype';
 $title = get_string('courseteacherlinktype', 'filter_filtercodes');
@@ -92,4 +92,12 @@ $choices = ['' => get_string('none'),
         'message' => get_string('message', 'message'),
         'profile' => get_string('profile')];
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+$settings->add($setting);
+
+// Option to show or hide background colour/pattern for {categorycards} tag.
+$default = 0; // Default is to not show colour/pattern.
+$name = 'filter_filtercodes/categorycardshowpic';
+$title = get_string('categorycardshowpic', 'filter_filtercodes');
+$description = get_string('categorycardshowpic_desc', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);

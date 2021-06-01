@@ -1599,6 +1599,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
 
                 $list = '';
+                $categoryshowpic = get_config('filter_filtercodes', 'categorycardshowpic');
                 foreach ($categories as $category) {
                     if (!core_course_category::can_view_category($category)) {
                         continue;
@@ -1609,21 +1610,25 @@ class filter_filtercodes extends moodle_text_filter {
                         $dimmed = 'opacity: 0.5;';
                     }
 
-                    $imgurl = $OUTPUT->get_generated_image_for_id($category->id + 65535);
-                    $list .= '
-                        <li class="card shadow mr-4 mb-4 ml-0" style="min-width:290px;max-width:290px;' . $dimmed . '">
-                            <a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id])
-                                . '" class="text-white h-100">
-                            <div class="card-img" style="background-image: url(' . $imgurl . ');height:100px;"></div>
-                            <div class="card-img-overlay card-title pt-1 pr-3 pb-1 pl-3 m-0" '
-                                . 'style="height:fit-content;top:auto;background-color:rgba(0,0,0,.4);color:#ffffff;'
-                                . 'text-shadow:-1px -1px 0 #767676, 1px -1px 0 #767676, -1px 1px 0 #767676, 1px 1px 0 #767676">'
-                                . $category->name . '</div>
-                            </a>
-                        </li>' . PHP_EOL;
+                    if ($categoryshowpic) {
+                        $imgurl = $OUTPUT->get_generated_image_for_id($category->id + 65535);
+                        $list .= '<li class="card shadow mr-4 mb-4 ml-0" style="min-width:290px;max-width:290px;' . $dimmed . '">
+                                <a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]);
+                        $list .= '" class="text-white h-100">
+                                <div class="card-img" style="background-image: url(' . $imgurl . ');height:100px;"></div>
+                                <div class="card-img-overlay card-title pt-1 pr-3 pb-1 pl-3 m-0" '
+                                    . 'style="height:fit-content;top:auto;background-color:rgba(0,0,0,.4);color:#ffffff;'
+                                    . 'text-shadow:-1px -1px 0 #767676, 1px -1px 0 #767676, -1px 1px 0 #767676, 1px 1px 0 #767676">'
+                                    . $category->name . '</div>';
+                    } else {
+                        $list .= '<li class="card shadow mr-4 mb-4 ml-0" style="min-width:350px;max-width:350px;' . $dimmed . '">
+                                <a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]);
+                        $list .= '" class="text-decoration-none h-100 p-4">' . $category->name;
+                    }
+                    $list .= '</a></li>' . PHP_EOL;
                 }
                 $categories->close();
-                $replace['/\{categorycards\}/i'] = !empty($list) ? '<ul class="card-deck mr-0">' . $list . '</ul>' : '';
+                $replace['/\{categorycards\}/i'] = !empty($list) ? '<ul class="fc-categorycards card-deck mr-0">' . $list . '</ul>' : '';
                 unset($categories);
                 unset($list);
             }

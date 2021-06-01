@@ -662,6 +662,10 @@ Enable or disable showing of teacher profile picture in {courseteachers} tag.
 
 Choose the type of link for the teacher\s link in the {courseteachers} tags. Choose none if you don't want the name to be a link.
 
+### Show {categorycards} background
+
+Enable or disable the background pattern/image for {categorycards}. You can also optionally configure the look of {categorycards} using CSS on the .fc-categorycards class.
+
 ### Global custom tags
 
 Define your own global tags, sometimes also called global blocks. This feature enables you to create your own tags that are prefixed by global_ . You can currently define up to 20 custom {global_...} tags.
