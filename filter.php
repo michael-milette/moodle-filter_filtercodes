@@ -2452,6 +2452,21 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {label}{/label}.
+        if (stripos($text, '{/label}') !== false) {
+            $newtext = preg_replace_callback('/\{label(\s\w*)?\}(.*?)\{\/label\}/is',
+            function($matches) {
+                // If alert <style> parameter is not included, default to alert-info.
+                $matches[1] = trim($matches[1]);
+                $matches[1] = empty($matches[1]) ? 'info' : $matches[1];
+                return '<span class="label label-' . $matches[1] . '">' . $matches[2] . '</span>';
+            }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+                $changed = true;
+            }
+        }
+
         // Tag: {help}{/help}.
         if (stripos($text, '{/help}') !== false) {
             static $help;

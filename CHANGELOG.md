@@ -1,9 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.2] 2021-06-01 (DEV)
+## [2.2.2] 2021-06-02 (DEV)
 ### Added
 - New {ifnothome}{/ifnothome} tags.
+- New {label}{/label} tags.
 - New setting to enable/disable {categorycards} background.
 - New fc-categorycards class to {categorycards} to make it easier to customize.
 ## [2.2.1] 2021-05-25

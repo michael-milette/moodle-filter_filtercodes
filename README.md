@@ -141,6 +141,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {categorycards}: (ALPHA) Display top level categories as cards using the current location as the top level category. For example, on the Front Page, it will display all top level categories. However, if you are inside the Miscellaneous category (e.g., in Miscellaneous > Your Course) , it will only display the next level of categories under the Miscellaneous category.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {courserequest} : Displays a Request a Course link.
+* {label type}{/label} : Display text over background colour. The Boost theme supports the following types: **info**, **important**, **secondary**, **success** and **warning**. Other themes may also support **primary**, **danger**, **light**, **dark** and more. Example: {label info}For your information{/label}. Actual foreground and background colours vary depending on the theme. If the type is not specified, it will default to **info**. If the type specified is not supported by your theme, it may default to secondary.
 
 ### For use in courses
 
@@ -869,6 +870,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Link to the request a course page (blank if not enabled) [{courserequest}]: {courserequest}
 * Request a course / Course request in top level menu [{courserequestmenu0}]: {courserequestmenu0}
 * Request a course / Course request in submenu [{courserequestmenu}]: {courserequestmenu}
+* Label [{label info}]Criteria for completion[{/label}]: {label info}Criteria for completion{/label}
 * Moodle Dev custom menu items [{menudev}]: {menudev}
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course category name (blank if not in a course) [{categoryname}]: {categoryname}
