@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 - New {label}{/label} tags.
 - New setting to enable/disable {categorycards} background.
 - New fc-categorycards class to {categorycards} to make it easier to customize.
+### Updated
+- Fixed undefined COMPLETION_ENABLED error on Dashboard.
+
 ## [2.2.1] 2021-05-25
 ### Updated
 - Corrections in some of the language strings.

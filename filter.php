@@ -1101,7 +1101,7 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{coursecompletiondate') !== false) {
                 if ($PAGE->course
                         && isset($CFG->enablecompletion)
-                        && $CFG->enablecompletion == COMPLETION_ENABLED
+                        && $CFG->enablecompletion == 1 // COMPLETION_ENABLED.
                         && $PAGE->course->enablecompletion) {
                     $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $PAGE->course->id]);
                     $incomplete = get_string('notcompleted', 'completion');
@@ -1331,7 +1331,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
 
                 // Remove completed courses from the list.
-                if (isset($CFG->enablecompletion) && $CFG->enablecompletion == COMPLETION_ENABLED
+                if (isset($CFG->enablecompletion) && $CFG->enablecompletion == 1 // COMPLETION_ENABLED.
                         && get_config('filter_filtercodes', 'hidecompletedcourses')) {
                     foreach ($mycourses as $key => $mycourse) {
                         $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $mycourse->id]);
