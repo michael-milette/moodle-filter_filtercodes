@@ -161,7 +161,8 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {coursecontextid} or %7Bcoursecontextid%7D : Display a course's context ID.
 * %7Bcoursemoduleid%7D : Display a course's activity module ID - for use in URLs. Only for use in course activity modules.
 * {courseidnumber} : Display a course's ID number.
-* {sectionid} : Display the section ID (not to be confused with the section number).
+* {sectionid} or %7Bsectionid%7D : Display the section ID (not to be confused with the section number).
+* {sectionname} : Display the section name in which the activity is located.
 * {courseteachers}: (ALPHA) List of course teachers linked to their profiles.
 
 Also see Courses section below.
@@ -862,6 +863,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course ID number [{courseidnumber}]: {courseidnumber}
 * Section ID [{sectionid}]: {sectionid}
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
+* Section Name [{sectionname}] : [{sectionname}]
 * Teachers in this course [{courseteachers}]: {courseteachers}
 * Available free application disk space [{diskfreespace}]: {diskfreespace}
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}

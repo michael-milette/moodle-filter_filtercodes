@@ -1715,6 +1715,15 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '%7Bsectionid%7D') !== false) {
             $replace['/\%7Bsectionid%7D/i'] = @$PAGE->cm->sectionnum;
         }
+        // Tag: {sectionname}.
+        if (stripos($text, '{sectionname}') !== false) {
+            // If in a course and section name.
+            if ($PAGE->course->id != $SITE->id && isset($PAGE->cm->sectionnum)) {
+                $replace['/\{sectionname\}/i'] = get_section_name($PAGE->course->id, $PAGE->cm->sectionnum);
+            } else {
+                $replace['/\{sectionname\}/i'] = '';
+            }
+        }
 
         // Tag: {recaptcha}.
         if (stripos($text, '{recaptcha}') !== false) {
