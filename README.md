@@ -294,6 +294,7 @@ If the condition is not met in the particular context, the specified tag and it'
 
 * {-} : Is substituted for &shy;, a soft hyphen that only appears when needed.
 * {nbsp} : Is substituted for a non-breaking space when displayed.
+* {hr} : Horizontal rule.
 * {details}{summary}{/summary}{/details} : An easy way to create an HTML 5 Details/Summary expandable section in your page. IMPORTANT: {details}{summary}{/summary} must all be on one line (it is ok if the line wraps). The rest of the details can be on multiple lines followed by the {/details}. This is an experimental feature which may result in invalid HTML but it works.
 * {langx xx}{/langx} : Tag specific text in a particular language by wrapping the text in a plain text pair of {langx xx} {/langx} or {langx xx-XX} {/langx} tags. This makes no visible changes to the content but wraps the content in an HTML <span lang="xx"></span> inline tag. As a result, screen readers will make use of this localization information to apply a particular pronunciation if the text is in a different language than the language of the rest of the page. This is required for compliance with W3C Web Content Accessibility Guidelines (WCAG 2.0)
 
@@ -908,6 +909,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Readonly (for form fields when logged-in) [{readonly}]: {readonly}
 * Soft hyphen [{-}]: AHyphenWillOnlyAppearHere{-}WhenThereIsNotEnoughSpace.
 * Non-breaking space [{nbsp}]: This{nbsp}: Is it! (view source code to see the non-breaking space)
+* Horizontal rule line [{hr}]: {hr}
 * English [{langx en}]Content[{/langx}]: {langx en}Content{/langx}
 * String with component [{getstring:filter_filtercodes}]filtername[{/getstring}]: {getstring:filter_filtercodes}filtername{/getstring}
 * String [{getstring}]Help[{/getstring}]: {getstring}help{/getstring}

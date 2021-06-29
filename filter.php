@@ -1810,6 +1810,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{nbsp\}/i'] = '&nbsp;';
         }
 
+        // Tag: {hr}.
+        if (stripos($text, '{hr}') !== false) {
+            $replace['/\{hr\}/i'] = '<hr>';
+        }
+
         // Tag: {lang}.
         if (stripos($text, '{lang}') !== false) {
             // Replace with 2-letter current primary language.
