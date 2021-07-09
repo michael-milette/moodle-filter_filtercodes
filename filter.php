@@ -539,12 +539,12 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{profilefullname}') !== false) {
                 $fullname = '';
                 if (isloggedin() && !isguestuser()) {
-                    $fullname = $USER->firstname . ' ' . $USER->lastname;
+                    $fullname = get_string('fullnamedisplay', null, $USER);
                     if ($PAGE->pagelayout == 'mypublic' && $PAGE->pagetype == 'user-profile') {
                         $userid = optional_param('userid', optional_param('user',
                                 optional_param('id', $USER->id, PARAM_INT), PARAM_INT), PARAM_INT);
                         if ($user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0])) {
-                            $fullname = $user->firstname . ' ' . $user->lastname;
+                            $fullname = get_string('fullnamedisplay', null, $user);
                         }
                     }
                 }
@@ -555,32 +555,31 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Substitutions.
 
-        if (isloggedin() && !isguestuser()) {
-            $firstname = $USER->firstname;
-            $lastname = $USER->lastname;
-        } else {
-            $firstname = get_string('defaultfirstname', 'filter_filtercodes');
-            $lastname = get_string('defaultsurname', 'filter_filtercodes');
+        $u = $USER;
+        if (!isloggedin() || isguestuser()) {
+            $u->firstname = get_string('defaultfirstname', 'filter_filtercodes');
+            $u->lastname = get_string('defaultsurname', 'filter_filtercodes');
         }
+        $u->fullname = trim(get_string('fullnamedisplay', null, $u));
 
         // Tag: {firstname}.
         if (stripos($text, '{firstname}') !== false) {
-            $replace['/\{firstname\}/i'] = $firstname;
+            $replace['/\{firstname\}/i'] = $u->firstname;
         }
 
         // Tag: {surname}.
         if (stripos($text, '{surname}') !== false) {
-            $replace['/\{surname\}/i'] = $lastname;
+            $replace['/\{surname\}/i'] = $u->lastname;
         }
 
         // Tag: {lastname} (same as surname... just easier to remember).
         if (stripos($text, '{lastname}') !== false) {
-            $replace['/\{lastname\}/i'] = $lastname;
+            $replace['/\{lastname\}/i'] = $u->lastname;
         }
 
         // Tag: {fullname}.
         if (stripos($text, '{fullname}') !== false) {
-            $replace['/\{fullname\}/i'] = trim($firstname . ' ' . $lastname);
+            $replace['/\{fullname\}/i'] = $u->fullname;
         }
 
         // Tag: {alternatename}.
@@ -589,7 +588,7 @@ class filter_filtercodes extends moodle_text_filter {
             if (isloggedin() && !isguestuser() && !empty(trim($USER->alternatename))) {
                 $replace['/\{alternatename\}/i'] = $USER->alternatename;
             } else {
-                $replace['/\{alternatename\}/i'] = $firstname;
+                $replace['/\{alternatename\}/i'] = $u->firstname;
             }
         }
 
@@ -763,7 +762,7 @@ class filter_filtercodes extends moodle_text_filter {
                 // Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
                 if (stripos($text, '{userpictureimg ') !== false) {
                     $url = $this->getprofilepictureurl($USER);
-                    $tag = '<img src="' . $url . '" alt="' . $firstname . ' ' . $lastname . '" class="userpicture">';
+                    $tag = '<img src="' . $url . '" alt="' . $u->fullname . '" class="userpicture">';
                     // Will substitute the $1 in URL with value of (\w+).
                     $newtext = preg_replace_callback('/\{userpictureimg\s+(\w+)\}/i',
                         function ($matches) {
@@ -896,7 +895,7 @@ class filter_filtercodes extends moodle_text_filter {
                     foreach ($userids as $teacher) {
                         $user = $DB->get_record('user', ['id' => $teacher->userid], $fields = '*', $strictness = IGNORE_MULTIPLE);
                         $url = str_replace('$1', '3', $this->getprofilepictureurl($user));
-                        $fullname = $user->firstname . ' ' . $user->lastname;
+                        $fullname = get_string('fullnamedisplay', null, $user);
                         if ($teachershowpic) {
                             $teachers .= '<img src="' . $url . '" alt="' . $fullname . '" class="img-fluid img-thumbnail"><br>';
                         }
