@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Updated
 - Fixed undefined COMPLETION_ENABLED error on Dashboard.
 - Full name now supports RTL languages.
+- Refactored the {coursecards} code. No longer displays empty list.
 
 ## [2.2.1] 2021-05-25
 ### Updated

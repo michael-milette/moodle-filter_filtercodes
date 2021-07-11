@@ -325,6 +325,53 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Render course cards for list of course ids.
+     *
+     * @param array $rcourseids Array of course ids.
+     * @return string HTML of course cars.
+     */
+    private function rendercoursecards($rcourseids) {
+        global $OUTPUT;
+        $content = '';
+        foreach ($rcourseids as $courseid) {
+            $course = get_course($courseid);
+
+            // Load image from course image. If none, generate a course image based on the course ID.
+            $context = context_course::instance($courseid);
+            if ($course instanceof stdClass) {
+                $course = new \core_course_list_element($course);
+            }
+            $coursefiles = $course->get_course_overviewfiles();
+            $imgurl = '';
+            foreach ($coursefiles as $file) {
+                if ($isimage = $file->is_valid_image()) {
+                    // The file_encode_url() function is deprecated as per MDL-31071 but still in wide use.
+                    $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/'
+                            . $file->get_component() . '/' . $file->get_filearea() . $file->get_filepath()
+                            . $file->get_filename(), !$isimage);
+                    $imgurl = new moodle_url($imgurl);
+                    break;
+                }
+            }
+            if (empty($imgurl)) {
+                $imgurl = $OUTPUT->get_generated_image_for_id($courseid);
+            }
+            $courseurl = new moodle_url('/course/view.php', ['id' => $courseid]);
+            $content .= '
+                <div class="card shadow mr-4 mb-4 ml-1" style="min-width:300px;max-width:300px;">
+                    <a href="' . $courseurl . '" class="text-normal h-100">
+                    <div class="card-img-top" style="background-image:url(' . $imgurl
+                            . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;'
+                            . 'background-repeat:no-repeat;background-position:center;"></div>
+                    <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0">' . $course->get_formatted_name() . '</div>
+                    </a>
+                </div>
+            ';
+        }
+        return $content;
+    }
+
+    /**
      * Main filter function called by Moodle.
      *
      * @param string $text   Content to be filtered.
@@ -1206,6 +1253,8 @@ class filter_filtercodes extends moodle_text_filter {
                 // Eliminate duplicate categories.
                 $categories = array_unique($matches[1]);
 
+                $header = '<div class="card-deck mr-0">';
+                $footer = '</div>';
                 foreach ($categories as $catid) {
                     try {
                         $coursecat = core_course_category::get($catid);
@@ -1218,51 +1267,15 @@ class filter_filtercodes extends moodle_text_filter {
                     }
 
                     $rcourseids = array_keys($courses);
-
-                    $header = '<div class="card-deck mr-0">';
-                    $footer = '</div>';
-                    $content = '';
                     if (count($rcourseids) > 0) {
-                        foreach ($rcourseids as $courseid) {
-                            $course = get_course($courseid);
-
-                            // Load image from course image. If none, generate a course image based on the course ID.
-                            $context = context_course::instance($courseid);
-                            if ($course instanceof stdClass) {
-                                $course = new \core_course_list_element($course);
-                            }
-                            $coursefiles = $course->get_course_overviewfiles();
-                            $imgurl = '';
-                            foreach ($coursefiles as $file) {
-                                if ($isimage = $file->is_valid_image()) {
-                                    // The file_encode_url() function is deprecated as per MDL-31071 but still in wide use.
-                                    $imgurl = file_encode_url("/pluginfile.php", '/' . $file->get_contextid() . '/'
-                                            . $file->get_component() . '/' . $file->get_filearea() . $file->get_filepath()
-                                            . $file->get_filename(), !$isimage);
-                                    $imgurl = new moodle_url($imgurl);
-                                    break;
-                                }
-                            }
-                            if (empty($imgurl)) {
-                                $imgurl = $OUTPUT->get_generated_image_for_id($courseid);
-                            }
-                            $courseurl = new moodle_url('/course/view.php', ['id' => $courseid]);
-                            $content .= '
-                                <div class="card shadow mr-4 mb-4 ml-1" style="min-width:300px;max-width:300px;">
-                                    <a href="' . $courseurl . '" class="text-normal h-100">
-                                    <div class="card-img-top" style="background-image:url(' . $imgurl
-                                            . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;'
-                                            . 'background-repeat:no-repeat;background-position:center;"></div>
-                                    <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0">' . $course->get_formatted_name() . '</div>
-                                    </a>
-                                </div>
-                            ';
-                        }
+                        $content = $this->rendercoursecards($rcourseids);
+                    } else {
+                        $content = '';
                     }
                     if ($catid == 0 && $nocat) {
-                        $replace['/\{coursecards\}/i'] = !empty($header) ? $header . $content . $footer : '';
+                        $replace['/\{coursecards\}/i'] = !empty($content) ? $header . $content . $footer : '';
                     }
-                    $replace['/\{coursecards ' . $catid . '\}/i'] = !empty($header) ? $header . $content . $footer : '';
+                    $replace['/\{coursecards ' . $catid . '\}/i'] = !empty($content) ? $header . $content . $footer : '';
                 }
             }
 
