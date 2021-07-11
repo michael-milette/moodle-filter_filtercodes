@@ -135,7 +135,8 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 
 ### UI Elements
 
-* Update documentation for {coursecards} or {coursecards categoryID}: (ALPHA) Display available courses as cards. You can optionally specify the ID number of a category. Example: {coursecards 1} will only display courses in the default Miscellaneous category. Note: The categoryID is not the "Category ID Number" field that you can optionally specify when creating a category.
+* {coursecards} or {coursecards categoryID}: (ALPHA) Display available courses as cards. You can optionally specify the ID number of a category. Example: {coursecards 1} will only display courses in the default Miscellaneous category. Note: The categoryID is not the "Category ID Number" field that you can optionally specify when creating a category.
+* {coursecardsbyenrol} (ALPHA): Display course cards for most popular courses based on enrolment. Maximum number of cards is configurable in the plugin settings.
 * {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
 * {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
 * {categorycards}: (ALPHA) Display top level categories as cards using the current location as the top level category. For example, on the Front Page, it will display all top level categories. However, if you are inside the Miscellaneous category (e.g., in Miscellaneous > Your Course) , it will only display the next level of categories under the Miscellaneous category.
@@ -852,6 +853,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course progress (ALPHA) [{courseprogress}]: {courseprogress}
 * Course progress bar (ALPHA) [{courseprogressbar}]: {courseprogressbar}
 * Course cards (ALPHA) [{coursecards}]: {coursecards}
+* Course cards by enrolment (ALPHA) [{{coursecardsbyenrol}}]: {{coursecardsbyenrol}}
 * Category cards (ALPHA) [{categorycards}]: {categorycards}
 * Total courses [{coursecount}]: {coursecount}
 * Institution [{institution}]: {institution}

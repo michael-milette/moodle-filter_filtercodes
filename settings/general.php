@@ -101,3 +101,12 @@ $title = get_string('categorycardshowpic', 'filter_filtercodes');
 $description = get_string('categorycardshowpic_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
+
+// Number of cards to show for {coursecardsbyenrol} tag.
+$default = 8; // Default is to not show colour/pattern.
+$name = 'filter_filtercodes/coursecardsbyenrol';
+$title = get_string('coursecardsbyenrol', 'filter_filtercodes');
+$choices = range(0, 20);
+$description = get_string('coursecardsbyenrol_desc', 'filter_filtercodes');
+$setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+$settings->add($setting);

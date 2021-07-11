@@ -51,6 +51,8 @@ $string['ifprofilefiedonlyvisible'] = '{ifprofile_field_} only visible.';
 $string['ifprofilefiedonlyvisible_desc'] = 'Restrict the {ifprofile_field_...} tag to only access visible profile fields. Hidden fields will behave as if the field was empty. If unchecked, this tag will be able to check hidden user fields.';
 $string['categorycardshowpic'] = 'Show {categorycards} background';
 $string['categorycardshowpic_desc'] = 'If enabled, will display a background colour/pattern for {categorycards} tag similar to the course images when no image was specified.';
+$string['coursecardsbyenrol'] = 'Maximum {coursecardsbyenrol} cards.';
+$string['coursecardsbyenrol_desc'] = 'Maximum number of course cards to display for {coursecardsbyenrol} tag. Set to zero for unlimited (not recommended).';
 
 $string['sizeb'] = 'B';
 $string['sizekb'] = 'KB';

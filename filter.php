@@ -1279,6 +1279,28 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {coursecardsbyenrol}.
+            // Display list of 10 most popular courses by enrolment count (tested with MySQL and PostgreSQL).
+            if ($catids = (stripos($text, '{coursecardsbyenrol}') !== false)) {
+                $sql = "SELECT c.id, c.fullname, COUNT(*) AS enrolments
+                        FROM {course} c
+                        JOIN (SELECT DISTINCT e.courseid, ue.id AS userid
+                                FROM {user_enrolments} ue
+                                JOIN {enrol} e ON e.id = ue.enrolid) ue ON ue.courseid = c.id
+                        GROUP BY c.id, c.fullname
+                        ORDER BY 3 DESC, c.fullname";
+                $courses = $DB->get_records_sql($sql, array(), 0, get_config('filter_filtercodes', 'coursecardsbyenrol'));
+                $rcourseids = array_keys($courses);
+                if (count($rcourseids) > 0) {
+                    $header = '<div class="card-deck mr-0">';
+                    $footer = '</div>';
+                    $content = $this->rendercoursecards($rcourseids);
+                } else {
+                    $content = '';
+                }
+                $replace['/\{coursecardsbyenrol\}/i'] = !empty($content) ? $header . $content . $footer : '';
+            }
+
             // Tag: {courserequest}. Link to Request a Course form.
             if (stripos($text, '{courserequest}') !== false) {
                 // Add request a course link.
