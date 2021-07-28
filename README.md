@@ -113,7 +113,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {department} : Display the name of the department from the user's profile.
 * {userpictureurl X} : Display the user's profile picture URL. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have a profile picture or is logged out, the default faceless profile photo URL will be shown instead.
 * {userpictureimg X} : Generates an <img> html tag containing the user's profile picture. X indicates the size and can be **sm** (small), **md** (medium) or **lg** (large). If the user does not have profile picture or is logged out, the default faceless profile photo will be used instead.
-* {profile_field_shortname} : Display's custom profile field. Replace "shortname" with the shortname of a custom profile field all in lowercase. NOTE: Will not display if custom profile field's settings are set to **Not Visible**.
+* {profile_field_shortname} : Display's custom user profile field. Replace "shortname" with the shortname of a custom user profile field all in lowercase. NOTE: Will not display if the custom user profile field's settings are set to **Not Visible**.
 * {profilefullname}: Similar to {fullname} except that it displays a profile owner's name when placed on the Profile page.
 * {firstaccessdate dateTimeFormat} : Date that the user first accessd the site. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 
@@ -282,7 +282,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 * {ifdashboard}{/ifdashboard} : Will display the enclosed content only if the user is on the Moodle Dashboard.
 * {ifcourserequests}{/ifcourserequests} : Will display enclosed contents only if the Request a Course feature is enabled.
 * {ifeditmode}{/ifeditmode} : Will display the enclosed content only if editing mode is turned on.
-* {ifprofile_field_shortname}{/ifprofile_field_shortname} : Will display the enclosed content if the custom profile field is not blank/zero.
+* {ifprofile_field_shortname}{/ifprofile_field_shortname} : Will display the enclosed content if the custom user profile field is not blank/zero.
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
@@ -926,12 +926,12 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * {alert}This is an example of an alert box.{/alert}
 * [{highlight}]This text is highlighted in yellow.[{/highlight}] : {highlight}This text is highlighted in yellow.{/highlight}
 * Current language [{lang}] : {lang}
-* Display content of custom profile field [{profile_field_learningstyle}] - assuming you have a custom profile field with a shortname called 'learningstyle': {profile_field_learningstyle}
+* Display content of custom user profile field [{profile_field_learningstyle}] - assuming you have a custom user profile field with a shortname called 'learningstyle': {profile_field_learningstyle}
 * Display profile owner's full name on profile pages [{profilefullname}]: This is the profile of {profilefullname}.
 * If you are logged-in as a different user [{ifloggedinas}] : {ifloggedinas}You are logged-in as a different user.{/ifloggedinas}
 * If you are NOT logged-in as a different user [{ifloggedinas}] : {ifnotloggedinas}You are logged-in as yourself.{/ifnotloggedinas}
 * If Editing mode activated (on) [{ifeditmode}]Don't forget to turn off editing mode![{/ifeditmode}]: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
-* If defined custom profile field with a shortname called "iswoman" is not blank or zero [{ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}]: {ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}
+* If defined custom user profile field with a shortname called "iswoman" is not blank or zero [{ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}]: {ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}
 * If Editing mode is deactivated (off) [{ifnoteditmode}]&lt;a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on"&gt;Turn edit mode on&lt;a/&gt;[{/ifnoteditmode}]: {ifnoteditmode}<a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on">Turn edit mode on</a>{/ifnoteditmode}
 * If Enrolled [{ifenrolled}]You are enrolled in this course.[{/ifenrolled}]: {ifenrolled}You are enrolled in this course.{/ifenrolled}
 * If Not Enrolled [{ifnotenrolled}]You are not enrolled in this course.[{/ifnotenrolled}]: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}

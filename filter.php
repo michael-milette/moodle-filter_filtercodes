@@ -1880,7 +1880,7 @@ class filter_filtercodes extends moodle_text_filter {
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
             // Tag: {ifprofile_field_...}.
-            // If Custom Profile Fields is not empty.
+            // If Custom User Profile Fields is not empty.
             if (stripos($text, '{ifprofile_field_') !== false) {
                 $isuser = (isloggedin() && !isguestuser());
                 // Cached the defined custom profile fields and data.

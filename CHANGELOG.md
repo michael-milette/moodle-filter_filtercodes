@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.4] 2021-07-11 (DEV)
+## [2.2.4] 2021-07-28 (DEV)
 ### Added
 - New {ifnothome}{/ifnothome} tags.
 - New {label}{/label} tags.
@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Fixed undefined COMPLETION_ENABLED error on Dashboard.
 - Full name now supports RTL languages.
 - Refactored the {coursecards} code. No longer displays empty list.
+- Clarified documentation for {ifprofile_field_...} tag.
 
 ## [2.2.1] 2021-05-25
 ### Updated
