@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Full name now supports RTL languages.
 - Refactored the {coursecards} code. No longer displays empty list.
 - Fixed {ifprofile_field_...} tag visibility and clarified documentation.
+- {coursecards} no longer displays hidden courses or those whose end-dates are past, unless you are an administrator.
 
 ## [2.2.1] 2021-05-25
 ### Updated

@@ -331,10 +331,15 @@ class filter_filtercodes extends moodle_text_filter {
      * @return string HTML of course cars.
      */
     private function rendercoursecards($rcourseids) {
-        global $OUTPUT;
+        global $OUTPUT, $PAGE;
         $content = '';
+        $isadmin = (is_siteadmin() && !is_role_switched($PAGE->course->id));
         foreach ($rcourseids as $courseid) {
             $course = get_course($courseid);
+            // Skip this course if end-date is past or course is not visible, unless you are an admin.
+            if (!$isadmin && !empty($course->enddate) && $course->enddate < time() && empty($course->visible)) {
+                continue;
+            }
 
             // Load image from course image. If none, generate a course image based on the course ID.
             $context = context_course::instance($courseid);
