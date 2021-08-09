@@ -123,6 +123,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {usercount} : Count total number of registered users on the site. Does not included deleted users, primary admin or guest.
 * {usersactive} : Count total number of registered users on the site. Does not included deleted users, disabled users, primary admin or guest.
 * {usersonline} : Total number of users who were online in the last 5 minutes.
+* {userscountrycount} : Total number of countries that users are from according to their profile.
 * {siteyear} : 4-digit current year.
 * {now dateTimeFormat} : Display's the current date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {coursecount} : Total number of courses on this Moodle site (not including Front Page).
@@ -843,6 +844,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Total number of registered users [{usercount}]: {usercount}
 * Total number of active users [{usersactive}]: {usersactive}
 * Total number of online users [{usersonline}]: {usersonline}
+* Total number of users [{userscountrycount}]: {userscountrycount}
 * Current 4-digit year [{siteyear}]: {siteyear}
 * You first accessed the site on [{firstaccessdate strftimedatetime}] : {firstaccessdate strftimedatetime}
 * Course or Site full name [{coursename}]: {coursename}

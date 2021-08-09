@@ -880,6 +880,11 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{usersonline\}/i'] = $usersonline;
             }
 
+            // Tag: {userscountrycount}.
+            if (stripos($text, '{userscountrycount}') !== false) {
+                $count = $DB->count_records_sql('SELECT COUNT(DISTINCT country) FROM {user} WHERE id > 2');
+                $replace['/\{userscountrycount\}/i'] = $count;
+            }
         }
 
         // Any {course*} or %7Bcourse*%7D tags.
@@ -1898,11 +1903,14 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 }
 
+                // Determine if allowed to evaluate "Not visible" fields.
+                $allowall = empty(get_config('filter_filtercodes', 'ifprofilefiedonlyvisible'));
+
+                // Process each custom of the available profile fields.
                 foreach ($profilefields as $field) {
                     $tag = 'ifprofile_field_' . $field->shortname;
 
-                    // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
-                    $allowall = empty(get_config('filter_filtercodes', 'ifprofilefiedonlyvisible'));
+                    // If the tag exists, user is logged-in and we are allowed to evaluate this field.
                     if (isset($profiledata[$field->id]) && $isuser && ($field->visible != '0' || $allowall)) {
                         $data = trim($profiledata[$field->id]);
                     } else {

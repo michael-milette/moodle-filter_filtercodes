@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.5] 2021-07-29 (DEV)
+## [2.2.5] 2021-08-09 (DEV)
 ### Added
 - New {ifnothome}{/ifnothome} tags.
 - New {label}{/label} tags.
@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - New {sectionname} tag.
 - New {hr} tag.
 - New {coursecardsbyenrol} tag.
+- New {userscountrycount} tag.
 ### Updated
 - Fixed undefined COMPLETION_ENABLED error on Dashboard.
 - Full name now supports RTL languages.
