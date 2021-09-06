@@ -127,8 +127,8 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {siteyear} : 4-digit current year.
 * {now dateTimeFormat} : Display's the current date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {coursecount} : Total number of courses on this Moodle site (not including Front Page).
-* {diskfreespace} : Display amount of free disk space for application folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
-* {diskfreespacedata} : Display amount of free disk space for moodledata folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabyte (YB) or failure to get size from operating system.
+* {diskfreespace} : Display amount of free disk space for application folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabytes (YB) or failure to get size from operating system.
+* {diskfreespacedata} : Display amount of free disk space for moodledata folder. Infinite symbol will be displayed if greater than about 84,703.29 Yottabytes (YB) or failure to get size from operating system.
 * {wwwroot} : Root URL of the Moodle site.
 * {supportname} : Support name as seen on Site Administration > Server > Support contact.
 * {supportemail} : Support email address as seen on Site Administration > Server > Support contact.
@@ -144,6 +144,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {courserequest} : Displays a Request a Course link.
 * {label type}{/label} : Display text over background colour. The Boost theme supports the following types: **info**, **important**, **secondary**, **success** and **warning**. Other themes may also support **primary**, **danger**, **light**, **dark** and more. Example: {label info}For your information{/label}. Actual foreground and background colours vary depending on the theme. If the type is not specified, it will default to **info**. If the type specified is not supported by your theme, it may default to secondary.
+* {button URL}Label{/button} : Create a clickable button link formatted like a primary button.
 
 ### For use in courses
 
@@ -878,6 +879,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Request a course / Course request in top level menu [{courserequestmenu0}]: {courserequestmenu0}
 * Request a course / Course request in submenu [{courserequestmenu}]: {courserequestmenu}
 * Label [{label info}]Criteria for completion[{/label}]: {label info}Criteria for completion{/label}
+* Button [{button https://moodle.org}]Go to Moodle.org{/button}]: [{button https://moodle.org.org}]Go to Moodle[{/button}]
 * Moodle Dev custom menu items [{menudev}]: {menudev}
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course category name (blank if not in a course) [{categoryname}]: {categoryname}

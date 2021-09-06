@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.5] 2021-08-09 (DEV)
+## [2.2.5] 2021-09-06 (DEV)
 ### Added
+- New {button}{/button} tags
 - New {ifnothome}{/ifnothome} tags.
 - New {label}{/label} tags.
 - New setting to enable/disable {categorycards} background.

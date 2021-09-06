@@ -1802,6 +1802,12 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {button}{/button}.
+        if (stripos($text, '{button ') !== false) {
+            $replace['/\{button\s+(.*?)\}(.*?)\{\/button\}/ims'] = '<a href="$1" class="btn btn-primary">$2</a>';
+        }
+
+
         // Tag: {now}.
         if (stripos($text, '{now}') !== false) {
             $replace['/\{now\}/i'] = userdate(time(), get_string('strftimedatefullshort'));
