@@ -890,6 +890,20 @@ class filter_filtercodes extends moodle_text_filter {
         // Any {course*} or %7Bcourse*%7D tags.
         if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
 
+            // Tag: {coursegrade} - Calculate and display current overall course grade.
+            if (stripos($text, '{coursegrade}') !== false) {
+                require_once($CFG->libdir . '/gradelib.php');
+                require_once($CFG->dirroot . '/grade/querylib.php');
+                $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
+                if (!empty($grademax = floatval($gradeobj->item->grademax))) {
+                    // Avoid divide by 0 error if no grades have been defined.
+                    $grade = (int) ($gradeobj->grade / floatval($grademax) * 100) ?? 0;
+                    $replace['/\{coursegrade\}/i'] = $grade;
+                } else {
+                    $replace['/\{coursegrade\}/i'] = '0';
+                }
+            }
+
             // Custom Course Fields - First implemented in Moodle 3.7.
             if ($CFG->branch >= 37) {
                 // Tag: {course_field_shortname}.
