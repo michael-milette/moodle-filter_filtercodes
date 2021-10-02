@@ -899,7 +899,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Request a course / Course request in top level menu [{courserequestmenu0}]: {courserequestmenu0}
 * Request a course / Course request in submenu [{courserequestmenu}]: {courserequestmenu}
 * Label [{label info}]Criteria for completion[{/label}]: {label info}Criteria for completion{/label}
-* Button [{button https://moodle.org}]Go to Moodle.org{/button}]: [{button https://moodle.org.org}]Go to Moodle[{/button}]
+* Button [{button https://moodle.org}]Go to Moodle.org{/button}]: {button https://moodle.org.org}Go to Moodle{/button}
 * Moodle Dev custom menu items [{menudev}]: {menudev}
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course category name (blank if not in a course) [{categoryname}]: {categoryname}
