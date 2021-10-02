@@ -167,6 +167,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {sectionid} or %7Bsectionid%7D : Display the section ID (not to be confused with the section number).
 * {sectionname} : Display the section name in which the activity is located.
 * {courseteachers}: (ALPHA) List of course teachers linked to their profiles.
+* {coursegradepercent}: Displays the current accumulated course grade of the student.
 
 Also see Courses section below.
 
@@ -889,6 +890,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
 * Section Name [{sectionname}] : [{sectionname}]
 * Teachers in this course [{courseteachers}]: {courseteachers}
+* You current grade in this course is [{coursegradepercent}]: {coursegradepercent}
 * Available free application disk space [{diskfreespace}]: {diskfreespace}
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}
 * My Enrolled Courses [{mycourses}]: {mycourses}
