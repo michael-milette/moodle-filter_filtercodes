@@ -813,6 +813,24 @@ When requesting a new tag, please provide:
 
 Be sure to check back on your issue as we may have further questions for you.
 
+### Why does the {button} tag not work?
+
+It works just fine. Here are 3 examples:
+
+{button https://www.tngconsulting.ca}TNG Consulting Inc.{/button}
+
+This one just creates a button called **TNG Consulting Inc.** that will take you to the website when clicked.
+
+{button https://google.ca" target="_blank}Google{/button}
+
+This one will create a button called "Google" which will open a new tab in your browser and then take you to the website.
+
+{button {wwwroot}/my}{getstring}myhome{/getstring}{/button}
+
+The last one will create a button called "Dashboard", using the Moodle language strings ({getstrings} is a FilterCode too). When clicked, it will take the user to your Moodle site's dashboard, regardless of where Moodle is installed (webroot or subdirectory).
+
+The trick is to make sure that Moodle doesn't convert the URL to a link in the editor. If it does (probably blue, underlined), you will need to use the Unlink tool to turn it back into plain text. Once saved, it will appear as a button. Alternatively, disable the **Convert URLs into links and images** filter in Site Administration > Plugins > Filters > Manage Filters and then re-enter the {button} FilterCode.
+
 ### Do you have examples, samples and ways to which tags are working in my version of FilterCodes?
 
 Create a Page on your Moodle site, preferably in a course, so that those tags work too, and include the following code:
