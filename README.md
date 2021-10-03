@@ -146,6 +146,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {label type}{/label} : Display text over background colour. The Boost theme supports the following types: **info**, **important**, **secondary**, **success** and **warning**. Other themes may also support **primary**, **danger**, **light**, **dark** and more. Example: {label info}For your information{/label}. Actual foreground and background colours vary depending on the theme. If the type is not specified, it will default to **info**. If the type specified is not supported by your theme, it may default to secondary.
 * {button URL}Label{/button} : Create a clickable button link formatted like a primary button.
 * {chart radial x} (ALPHA): Create a radial (circle) chart giving it a value of x between 0 and 100.
+* {chart progressbar x} (ALPHA): Create a horizontal progress bar chart giving it a value of x between 0 and 100.
 
 ### For use in courses
 
@@ -902,6 +903,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Label [{label info}]Criteria for completion[{/label}]: {label info}Criteria for completion{/label}
 * Button [{button https://moodle.org}]Go to Moodle.org{/button}]: {button https://moodle.org.org}Go to Moodle{/button}
 * 80% radial chart [{chart radial 80}]: {chart radial 80}
+* 75% progressbar chart [{chart progressbar 75}]: {chart radial 75}
 * Moodle Dev custom menu items [{menudev}]: {menudev}
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course category name (blank if not in a course) [{categoryname}]: {categoryname}
