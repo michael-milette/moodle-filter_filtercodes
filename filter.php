@@ -1360,11 +1360,11 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tag: {chart *} - Easily display a chart in one of several styles.
-        if (stripos($text, '{chart') !== false && $CFG->branch >= 32) {
+        if (stripos($text, '{chart ') !== false && $CFG->branch >= 32) {
             global $OUTPUT;
             $value = 40;$title = 'Test';
             // Tag: {chart radial} - Display a radial (circle) chart.
-            if (stripos($text, '{chart radial') !== false) {
+            if (stripos($text, '{chart radial ') !== false) {
                 $chart = new \core\chart_pie();
                 $chart->set_doughnut(true); // Calling set_doughnut(true) we display the chart as a doughnut.
                 $chart->set_title($title);
@@ -1375,6 +1375,15 @@ class filter_filtercodes extends moodle_text_filter {
                     $chart->set_legend_options(['display' => false]);  // Hide chart legend.
                 }
                 $replace['/\{chart radial ([0-9]+)\}/i'] =  $OUTPUT->render_chart($chart, false);
+            }
+            // Tag: {chart progress} - Display a horizontal progres bar.
+            if (stripos($text, '{chart progress ') !== false) {
+                $replace['/\{chart progress ([0-9]+)\}/i'] = '
+                <div class="progress">
+                    <div class="fc-progress progress-bar bar" role="progressbar" aria-valuenow="' . $value
+                        . '" style="width: ' . $value . '%" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>';
             }
         }
 
