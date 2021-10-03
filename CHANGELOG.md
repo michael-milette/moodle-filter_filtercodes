@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.5] 2021-10-02 (DEV)
 ### Added
+- New {chart radial x} tag (ALPHA).
 - New {coursegradepercent} tag.
 - New {button}{/button} tags
 - New {ifnothome}{/ifnothome} tags.
