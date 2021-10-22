@@ -1379,9 +1379,9 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 $replace['/\{chart radial ([0-9]+)\}/i'] =  $OUTPUT->render_chart($chart, false);
             }
-            // Tag: {chart progress} - Display a horizontal progres bar.
-            if (stripos($text, '{chart progress ') !== false) {
-                $replace['/\{chart progress ([0-9]+)\}/i'] = '
+            // Tag: {chart progressbar} - Display a horizontal progres bar.
+            if (stripos($text, '{chart progressbar ') !== false) {
+                $replace['/\{chart progressbar ([0-9]+)\}/i'] = '
                 <div class="progress">
                     <div class="fc-progress progress-bar bar" role="progressbar" aria-valuenow="' . $value
                         . '" style="width: ' . $value . '%" aria-valuemin="0" aria-valuemax="100">
