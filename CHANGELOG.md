@@ -16,6 +16,9 @@ All notable changes to this project will be documented in this file.
 - New {coursecardsbyenrol} tag.
 - New {userscountrycount} tag.
 ### Updated
+- Page Builder link now works in menudev.
+- Photo Editor link now works in menudev.
+- Screen Recorder link now works in menudev.
 - Fixed undefined COMPLETION_ENABLED error on Dashboard.
 - Full name now supports RTL languages.
 - Refactored the {coursecards} code. No longer displays empty list.
