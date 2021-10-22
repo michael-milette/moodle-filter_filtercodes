@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.5] 2021-10-02 (DEV)
+## [2.2.5] 2021-10-22 (DEV)
 ### Added
 - New {chart progressbar x} tag (ALPHA).
 - New {chart radial x} tag (ALPHA).
