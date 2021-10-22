@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - New {coursecardsbyenrol} tag.
 - New {userscountrycount} tag.
 ### Updated
+- Replaced Learn Moodle link with Moodle Academy in menudev.
 - Page Builder link now works in menudev.
 - Photo Editor link now works in menudev.
 - Screen Recorder link now works in menudev.
