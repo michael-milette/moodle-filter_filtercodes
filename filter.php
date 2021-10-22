@@ -499,8 +499,9 @@ class filter_filtercodes extends moodle_text_filter {
             $menu .= '-{getstring:filter_filtercodes}pagebuilder{/getstring}|{getstring:filtercodes}pagebuilderlink{/getstring}"'
                     . ' target="popup" onclick="window.open(\'{getstring:filtercodes}pagebuilderlink{/getstring}\''
                     . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
-            $menu .= '-{getstring:filter_filtercodes}photoeditor{/getstring}|{getstring:filtercodes}photoeditorlink{/getstring}"'
-                    . ' target="popup" onclick="window.open(\'{getstring:filtercodes}photoeditorlink{/getstring}\''
+            $menu .= '-{getstring:filter_filtercodes}photoeditor{/getstring}|'
+                    . '{getstring:filter_filtercodes}photoeditorlink{/getstring}"'
+                    . ' target="popup" onclick="window.open(\'{getstring:filter_filtercodes}photoeditorlink{/getstring}\''
                     . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
             $menu .= '-{getstring:filter_filtercodes}screenrec{/getstring}|{getstring:filtercodes}screenreclink{/getstring}"'
                     . ' target="popup" onclick="window.open(\'{getstring:filtercodes}screenreclink{/getstring}\''
