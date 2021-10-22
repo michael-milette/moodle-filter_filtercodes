@@ -518,7 +518,7 @@ class filter_filtercodes extends moodle_text_filter {
             $menu .= '-###' . PHP_EOL;
             $menu .= '-DevTuts|https://www.youtube.com/watch?v=UY_pcs4HdDM|{getstring}english{/getstring}' . PHP_EOL;
             $menu .= '-Moodle Development School|https://moodledev.moodle.school/|{getstring}english{/getstring}' . PHP_EOL;
-            $menu .= '-Learn Moodle|https://learn.moodle.org/|{getstring}english{/getstring}' . PHP_EOL;
+            $menu .= '-Moodle Academy|https://moodle.academy/|{getstring}english{/getstring}' . PHP_EOL;
             $replace['/\{menudev\}/i'] = $menu;
         }
 
