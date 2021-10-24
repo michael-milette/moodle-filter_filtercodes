@@ -724,6 +724,7 @@ Note that, once uninstalled, any tags and content normally handled by this plugi
 
 # Limitations
 
+* Be aware that enabling the Moodle "Download course content" feature may not process some tags correctly or at all through Moodle filters. As a result, tags may be displayed instead of content. This is a known Moodle issue [MDL-72894](https://tracker.moodle.org/browse/MDL-72894) which will hopefully be resolved in the near future.
 * Do not use [For use in courses](#for-use-in-courses) type tags inside your course summary. Course listings and course descriptions pages are not displayed within the context of a course. These only work properly within courses. Keep context in mind.
 * The {langx xx}{/langx} tag only supports inline text, not blocks of text.
 * Unpredictable results may occur if you interweave HTML code with {FilterCodesTag} tags.

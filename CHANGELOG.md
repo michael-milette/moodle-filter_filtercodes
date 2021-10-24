@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - New {hr} tag.
 - New {coursecardsbyenrol} tag.
 - New {userscountrycount} tag.
+- Added known limitation in README.md regarding Moodle's 'Download course content' feature.
 ### Updated
 - Replaced Learn Moodle link with Moodle Academy in menudev.
 - Page Builder link now works in menudev.
