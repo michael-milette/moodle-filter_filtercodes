@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New {chart progressbar x} tag (ALPHA).
 - New {chart radial x} tag (ALPHA).
+- New {marktext}{/marktext} tags.
 - New {coursegradepercent} tag.
 - New {button}{/button} tags
 - New {ifnothome}{/ifnothome} tags.
@@ -17,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - New {userscountrycount} tag.
 - Added known limitation in README.md regarding Moodle's 'Download course content' feature.
 ### Updated
+- The {highlight} tag now uses HTML5 mark tags instead of span tags.
 - Replaced Learn Moodle link with Moodle Academy in menudev.
 - Page Builder link now works in menudev.
 - Photo Editor link now works in menudev.

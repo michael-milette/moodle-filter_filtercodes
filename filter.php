@@ -1886,8 +1886,14 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {highlight}{/highlight}.
         if (stripos($text, '{/highlight}') !== false) {
-            $replace['/\{highlight\}/i'] = '<span style="background-color:#FFFF00;">';
-            $replace['/\{\/highlight\}/i'] = '</span>';
+            $replace['/\{highlight\}/i'] = '<mark style="background-color:#FFFF00;">';
+            $replace['/\{\/highlight\}/i'] = '</mark>';
+        }
+
+        // Tag: {marktext}{/marktext}.
+        if (stripos($text, '{/marktext}') !== false) {
+            $replace['/\{marktext\}/i'] = '<mark class="fcmarktext">';
+            $replace['/\{\/marktext\}/i'] = '</mark>';
         }
 
         // Tag: {note} - Used to add notes which appear when editing but not displayed.
