@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New {chart progressbar x} tag (ALPHA).
 - New {chart radial x} tag (ALPHA).
+- New {markborder}{/markborder} tags.
 - New {marktext}{/marktext} tags.
 - New {coursegradepercent} tag.
 - New {button}{/button} tags

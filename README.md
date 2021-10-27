@@ -217,7 +217,8 @@ Note: Filtering must be supported in custom menu by your theme.
 * {info}content{/info} : Enables you to create popup help icons just like the popup Help icons but with an "i" information icon.
 * {alert style}content{/alert}: (ALPHA) Creates an alert box containing the specified content. You can change the style by specifying an optional parameter. Example: **{alert primary}** or **{alert success}**. [List of styles](https://getbootstrap.com/docs/4.0/components/alerts/)
 * {highlight}{/highlight} : Highlight text like a highlighter in bright yellow. NOTE: Must only be used within a paragraph.
-* {marktext}{/marktext} : Highlight text using HTML5's mark tag. You can style this tag using CSS in your theme using a fcmarktext class.
+* {marktext}{/marktext} : Highlight text using HTML5's mark tag. You can style this tag using CSS in your theme using a fc-marktext class.
+* {markborder}{/markborder} : Surrounds text with a red dashed border. You can style this tag using CSS in your theme using a fc-markborder class (border and padding with !important to override).
 * {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
 * {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
 * {fa/fas/far/fal fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
@@ -956,6 +957,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * {alert}This is an example of an alert box.{/alert}
 * [{highlight}]This text is highlighted in yellow.[{/highlight}] : {highlight}This text is highlighted in yellow.{/highlight}
 * [{marktext}]This text is highlited in a different colour[{/marktext}] : {marktext}This text is highlited in a different colour{/marktext}
+* [{markborder}]This text has a red border around it[{/markborder}] : {markborder}This text has a red border around it{/markborder}
 * Current language [{lang}] : {lang}
 * Display content of custom user profile field [{profile_field_learningstyle}] - assuming you have a custom user profile field with a shortname called 'learningstyle': {profile_field_learningstyle}
 * Display profile owner's full name on profile pages [{profilefullname}]: This is the profile of {profilefullname}.
