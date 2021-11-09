@@ -474,6 +474,60 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{coursesummary\}/i'] = $PAGE->course->summary;
         }
 
+        // This tag: {menuadmin}.
+        if (stripos($text, '{menuadmin}') !== false) {
+            $theme = $PAGE->theme->name;
+            $menu = '';
+            $menu .= '{ifminteacher}' . PHP_EOL;
+            $menu .= '{fa fa-wrench} {getstring}admin{/getstring}' . PHP_EOL;
+            $menu .= '{/ifminteacher}' . PHP_EOL;
+            $menu .= '{ifmincreator}' . PHP_EOL;
+            $menu .= '-{getstring}administrationsite{/getstring}|/admin/search.php' . PHP_EOL;
+            $menu .= '-{toggleeditingmenu}' . PHP_EOL;
+            $menu .= '-Learn Moodle|https://learn.moodle.org/" target="_blank' . PHP_EOL;
+            $menu .= '-Moodle Academy|https://moodle.academy/" target="_blank' . PHP_EOL;
+            $menu .= '-###' . PHP_EOL;
+            $menu .= '{/ifmincreator}' . PHP_EOL;
+            $menu .= '{ifminmanager}' . PHP_EOL;
+            $menu .= '-{getstring}user{/getstring}: {getstring:admin}usermanagement{/getstring}|/admin/user.php' . PHP_EOL;
+            $menu .= '{ifminsitemanager}' . PHP_EOL;
+            $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' . PHP_EOL;
+            $menu .= '-###' . PHP_EOL;
+            $menu .= '{/ifminsitemanager}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring:admin}coursemgmt{/getstring}|/course/management.php' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php?category={coursecategoryid}&returnto=topcat' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}searchcourses{/getstring}|/course/search.php' . PHP_EOL;
+            $menu .= '{/ifminmanager}' . PHP_EOL;
+            $menu .= '{ifminteacher}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}restore{/getstring}|/backup/restorefile.php?contextid={coursecontextid}' . PHP_EOL;
+            $menu .= '{ifincourse}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}backup{/getstring}|/backup/backup.php?id={courseid}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/index.php?type={courseid}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}reports{/getstring}|/course/admin.php?courseid={courseid}#linkcoursereports' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring:enrol}enrolmentinstances{/getstring}|/enrol/instances.php?id={courseid}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}reset{/getstring}|/course/reset.php?id={courseid}' . PHP_EOL;
+            $menu .= '-Course: Layoutit|https://www.layoutit.com/build" target="popup" onclick="window.open(\'https://www.layoutit.com/build\',\'popup\',\'width=1340,height=700\'); return false;|Bootstrap Page Builder' . PHP_EOL;
+            $menu .= '{/ifincourse}' . PHP_EOL;
+            $menu .= '-###' . PHP_EOL;
+            $menu .= '{/ifminteacher}' . PHP_EOL;
+            $menu .= '{ifminmanager}' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring}reports{/getstring}|/admin/category.php?category=reports' . PHP_EOL;
+            $menu .= '{/ifminmanager}' . PHP_EOL;
+            $menu .= '{ifadmin}' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php?section=additionalhtml' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring:admin}frontpage{/getstring}|/admin/settings.php?section=frontpagesettings|Including site name' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring:admin}plugins{/getstring}|/admin/search.php#linkmodules' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php?section=supportcontact' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php?section=themesettings|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+            if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
+                $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+            }
+            $menu .= '-{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})|/admin/index.php' . PHP_EOL;
+            $menu .= '{/ifadmin}' . PHP_EOL;
+            $replace['/\{menuadmin\}/i'] = $menu;
+        }
+
         // This tag: {menudev}.
         if (stripos($text, '{menudev}') !== false) {
             $menu = '';

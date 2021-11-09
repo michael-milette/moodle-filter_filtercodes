@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.6] 2021-11-09 (DEV)
 ### Added
+- New {menuadmin} tag.
+- New fc-coursecontacts and fc-coursecontactroles classes for {coursecontacts} HTML.
 - New {coursecontacts} tag (formerly {courseteachers}).
 - New {chart progressbar x} tag (ALPHA).
 - New {chart radial x} tag (ALPHA).
@@ -18,11 +20,10 @@ All notable changes to this project will be documented in this file.
 - New {hr} tag.
 - New {coursecardsbyenrol} tag.
 - New {userscountrycount} tag.
-- Added known limitation in README.md regarding Moodle's 'Download course content' feature.
+- Known limitation in README.md regarding Moodle's 'Download course content' feature.
 ### Updated
 - Renamed {courseteachers} tag to {coursecontacts}. No longer ALPHA.
 - {coursecontacts} now display's based on role coursecontacts setting in Site Admin > Display > Courses.
-- Added new fc-coursecontacts and fc-coursecontactroles classes for {coursecontacts} HTML.
 - The {highlight} tag now uses HTML5 mark tags instead of span tags.
 - Replaced Learn Moodle link with Moodle Academy in menudev.
 - Page Builder link now works in menudev.
