@@ -34,7 +34,7 @@ FilterCodes filter plugin for Moodle
 
 # Basic Overview
 
-FilterCodes filter for Moodle enables content creators to easily customize and personalize Moodle sites and course content using over 135 plain text tags that can be used **almost** anywhere in Moodle.
+FilterCodes filter for Moodle enables content creators to easily customize and personalize Moodle sites and course content using over 135 plain text tags that can be used **almost** anywhere in Moodle. Support may also vary depending on the theme used.
 
 In addition, it also enables you to:
 
@@ -42,7 +42,7 @@ In addition, it also enables you to:
 * Inserting non-breaking spaces;
 * Tagging text as being in a different language;
 
-Usage of the FilterCodes tags requires no knowledge of HTML but might be important for sites wishing to comply with accessibility requirements.
+Usage of the FilterCodes tags requires no knowledge of HTML but could be important for sites wishing to comply with accessibility requirements.
 
 **IMPORTANT**: This STABLE release has been tested on many Moodle sites. Although we expect everything to work, if you find a problem, please help by reporting it in the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues).
 
@@ -168,7 +168,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courseidnumber} : Display a course's ID number.
 * {sectionid} or %7Bsectionid%7D : Display the section ID (not to be confused with the section number).
 * {sectionname} : Display the section name in which the activity is located.
-* {courseteachers}: (ALPHA) List of course teachers linked to their profiles.
+* {coursecontacts}: List of course contacts with links to their profiles, email address or messaging (there is a setting for this). Note: This tag was formerly called {courseteachers} in its ALPHA state.
 * {coursegradepercent}: Displays the current accumulated course grade of the student.
 
 Also see Courses section below.
@@ -665,13 +665,13 @@ Enable to filter out completed courses in {mycoursesmenu} tag listings. When che
 
 Enable or disable the {scrape} tag.
 
-### Show teacher picture
+### Show contact picture
 
-Enable or disable showing of teacher profile picture in {courseteachers} tag.
+Enable or disable showing of contact profile picture in {coursecontacts} tag.
 
-### Teacher link type
+### Contact link type
 
-Choose the type of link for the teacher\s link in the {courseteachers} tags. Choose none if you don't want the name to be a link.
+Choose the type of link for the teacher\s link in the {coursecontacts} tags. Profile, Messaging, Email address or None. Choose None if you don't want just the name witout a link.
 
 ### Show {categorycards} background
 
@@ -894,7 +894,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Section ID [{sectionid}]: {sectionid}
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
 * Section Name [{sectionname}] : [{sectionname}]
-* Teachers in this course [{courseteachers}]: {courseteachers}
+* Contacts in this course [{coursecontacts}]: {coursecontacts}
 * You current grade in this course is [{coursegradepercent}]: {coursegradepercent}
 * Available free application disk space [{diskfreespace}]: {diskfreespace}
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}

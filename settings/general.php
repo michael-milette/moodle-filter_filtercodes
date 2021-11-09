@@ -76,17 +76,17 @@ $settings->add($setting);
 
 // Option to show teachers profile picture.
 $default = 0; // Default is to not show profile picture.
-$name = 'filter_filtercodes/courseteachershowpic';
-$title = get_string('courseteachershowpic', 'filter_filtercodes');
-$description = get_string('courseteachershowpic_desc', 'filter_filtercodes');
+$name = 'filter_filtercodes/coursecontactshowpic';
+$title = get_string('coursecontactshowpic', 'filter_filtercodes');
+$description = get_string('coursecontactshowpic_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
-// Option to select link type for {courseteachers} tag.
+// Option to select link type for {coursecontacts} tag.
 $default = ''; // Default is to not link the teachers name.
-$name = 'filter_filtercodes/courseteacherlinktype';
-$title = get_string('courseteacherlinktype', 'filter_filtercodes');
-$description = get_string('courseteacherlinktype_desc', 'filter_filtercodes');
+$name = 'filter_filtercodes/coursecontactlinktype';
+$title = get_string('coursecontactlinktype', 'filter_filtercodes');
+$description = get_string('coursecontactlinktype_desc', 'filter_filtercodes');
 $choices = ['' => get_string('none'),
         'email' => get_string('issueremail', 'badges'),
         'message' => get_string('message', 'message'),

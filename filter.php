@@ -949,57 +949,87 @@ class filter_filtercodes extends moodle_text_filter {
 
             }
 
-            // Tag: {courseteachers}.
-            if (stripos($text, '{courseteachers') !== false) {
-                $teachers = '';
-                if ($PAGE->course->id) { // Courses, not site pages.
-                    $contextid = $DB->get_field('context', 'id', ['instanceid' => $PAGE->course->id, 'contextlevel' => 50],
-                            $strictness = IGNORE_MULTIPLE);
-                    $userids = $DB->get_records('role_assignments', ['roleid' => '3', 'contextid' => $contextid]);
-                    $teachershowpic = get_config('filter_filtercodes', 'courseteachershowpic');
-                    $teacherlinktype = get_config('filter_filtercodes', 'courseteacherlinktype');
-                    $linksr = ['' => '', 'email' => get_string('issueremail', 'badges'),
-                            'message' => get_string('message', 'message'), 'profile' => get_string('profile')];
-                    $iconclass = ['' => '',
-                            'email' => 'fa fa-envelope-o',
-                            'message' => 'fa fa-comment',
-                            'profile' => 'fa fa-info-circle'];
-                    $iconclass = '<i class="' . $iconclass[$teacherlinktype] . '" aria-hidden="true"></i> ';
+            // Tag: {coursecontacts}.
+            if (stripos($text, '{coursecontacts') !== false) {
+                $contacts = '';
+                // If course (not site pages) with contacts.
+                if ($PAGE->course->id) {
 
-                    foreach ($userids as $teacher) {
-                        $user = $DB->get_record('user', ['id' => $teacher->userid], $fields = '*', $strictness = IGNORE_MULTIPLE);
-                        $url = str_replace('$1', '3', $this->getprofilepictureurl($user));
-                        $fullname = get_string('fullnamedisplay', null, $user);
-                        if ($teachershowpic) {
-                            $teachers .= '<img src="' . $url . '" alt="' . $fullname . '" class="img-fluid img-thumbnail"><br>';
+                    $course = new core_course_list_element($PAGE->course);
+                    if ($course->has_course_contacts()) {
+
+                        // Get tag settings.
+                        $cshowpic = get_config('filter_filtercodes', 'coursecontactshowpic');
+                        $clinktype = get_config('filter_filtercodes', 'coursecontactlinktype');
+
+                        // Prepare some strings.
+                        $linksr = ['' => '',
+                                'email' => get_string('issueremail', 'badges'),
+                                'message' => get_string('message', 'message'),
+                                'profile' => get_string('profile')];
+                        $iconclass = ['' => '',
+                                'email' => 'fa fa-envelope-o',
+                                'message' => 'fa fa-comment',
+                                'profile' => 'fa fa-info-circle'];
+                        $iconclass = '<i class="' . $iconclass[$clinktype] . '" aria-hidden="true"></i> ';
+
+                        foreach ($course->get_course_contacts() as $coursecontact) {
+                            $contacts .= '<li class="mb-4">';
+
+                            // Get list of course contacts based on settings in Site Administration > Appearances > Courses.
+                            // Get liset of user's roles in the course.
+                            $rolenames = array_map(function ($role) {
+                                return $role->displayname;
+                            }, $coursecontact['roles']);
+
+                            // Retrieve contact's profile information.
+                            $user = $DB->get_record('user', ['id' => $coursecontact['user']->id],
+                                    $fields = '*', $strictness = IGNORE_MULTIPLE);
+                            $imgurl = str_replace('$1', '3', $this->getprofilepictureurl($user));
+                            $fullname = get_string('fullnamedisplay', null, $user);
+                            if ($cshowpic) {
+                                $contacts .= '<img src="' . $imgurl . '" alt="' . $fullname . '" class="img-fluid img-thumbnail">';
+                            }
+
+                            $contactsclose = '<span class="sr-only">' . $linksr[$clinktype] . ': </span>';
+                            $contactsclose .= $fullname . '</a>';
+
+                            $contacts .= '<span class="fc-coursecontactroles">' . implode(", ", $rolenames) . ': </span>';
+                            switch ($clinktype) {
+                                case 'email':
+                                    $contacts .= $iconclass . '<a href="mailto:' . $user->email . '">';
+                                    $contacts .= $contactsclose;
+                                    break;
+                                case 'message':
+                                    $contacts .= $iconclass . '<a href="' . new moodle_url('/message/index.php',
+                                            ['id' => $coursecontact['user']->id]
+                                            ) . '">';
+                                    $contacts .= $contactsclose;
+                                    break;
+                                case 'profile':
+                                    $contacts .= $iconclass . '<a href="' . new moodle_url('/user/profile.php',
+                                            ['id' => $coursecontact['user']->id, 'course' => $PAGE->course->id]
+                                            ) . '">';
+                                    $contacts .= $contactsclose;
+                                    break;
+                                default: // Default is no-link.
+                                    $contacts .= $fullname;
+                                    break;
+
+                            }
+                            $contacts .= '</li>';
+
                         }
-                        $teachers .= '<li class="mb-4">';
-                        $teacherclose = '<span class="sr-only">' . $linksr[$teacherlinktype] . ' : </span>'
-                                . $fullname . '</a><li>';
-                        switch ($teacherlinktype) {
-                            case 'email':
-                                $teachers .= $iconclass . '<a href="mailto:' . $user->email . '">';
-                                $teachers .= $teacherclose;
-                                break;
-                            case 'message':
-                                $teachers .= $iconclass . '<a href="' . $CFG->wwwroot . '/message/index.php?id=' . $user->id . '">';
-                                $teachers .= $teacherclose;
-                                break;
-                            case 'profile':
-                                $teachers .= $iconclass . '<a href="' . $CFG->wwwroot . '/user/profile.php?id=' . $user->id . '">';
-                                $teachers .= $teacherclose;
-                                break;
-                            default: // Default is no-link.
-                                $teachers .= $fullname . '</li>';
-                                break;
-                        }
+
                     }
+
                 }
-                if (empty($teachers)) {
-                    $replace['/\{courseteachers\}/i'] = get_string('noteachersyet');
+                if (empty($contacts)) {
+                    $replace['/\{coursecontacts\}/i'] = get_string('nocontacts', 'message');
                 } else {
-                    $replace['/\{courseteachers\}/i'] = '<ul class="fc-teachers list-unstyled ml-0 pl-0">' . $teachers . '</ul>';
+                    $replace['/\{coursecontacts\}/i'] = '<ul class="fc-coursecontacts list-unstyled ml-0 pl-0">' . $contacts . '</ul>';
                 }
+                unset($contacts, $contactsclose, $fullname, $url, $user, $rolenames, $iconclass, $linksr, $clinktype, $cshowpic);
             }
 
             // Tag: {courseparticipantcount}.
