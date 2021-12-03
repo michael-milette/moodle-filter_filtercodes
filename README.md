@@ -169,7 +169,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courseidnumber} : Display a course's ID number.
 * {sectionid} or %7Bsectionid%7D : Display the section ID (not to be confused with the section number).
 * {sectionname} : Display the section name in which the activity is located.
-* {coursecontacts}: List of course contacts with links to their profiles, email address or messaging (there is a setting for this). Note: This tag was formerly called {courseteachers} in its ALPHA state.
+* {coursecontacts}: List of course contacts with links to their profiles, email address or messaging or phone number, and their user description (there are settings for these). Note: This tag was formerly called {courseteachers}.
 * {coursegradepercent}: Displays the current accumulated course grade of the student.
 
 Also see Courses section below.
@@ -840,6 +840,28 @@ This one will create a button called "Google" which will open a new tab in your 
 The last one will create a button called "Dashboard", using the Moodle language strings ({getstrings} is a FilterCode too). When clicked, it will take the user to your Moodle site's dashboard, regardless of where Moodle is installed (webroot or subdirectory).
 
 The trick is to make sure that Moodle doesn't convert the URL to a link in the editor. If it does (probably blue, underlined), you will need to use the Unlink tool to turn it back into plain text. Once saved, it will appear as a button. Alternatively, disable the **Convert URLs into links and images** filter in Site Administration > Plugins > Filters > Manage Filters and then re-enter the {button} FilterCode.
+
+### How can I style the {coursecontacts} tag?
+
+Here is an example that reduces the image and places the information next to it. Just add this CSS to your site:
+
+    .fc-coursecontacts li {
+        clear:both;
+        font-size: 1.3rem;
+        line-height: initial;
+    }
+    .fc-coursecontacts img {
+        width: 40%;
+        float: left;
+    }
+    .fc-coursecontactroles {
+        display: block;
+    }
+    .fc-coursecontacts div {
+    border-top: 1px solid lightgrey;
+    margin-top: 5px;
+    padding-top: 5px
+    }
 
 ### Do you have examples, samples and ways to which tags are working in my version of FilterCodes?
 

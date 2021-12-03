@@ -1014,21 +1014,26 @@ class filter_filtercodes extends moodle_text_filter {
 
                         // Get tag settings.
                         $cshowpic = get_config('filter_filtercodes', 'coursecontactshowpic');
+                        $cshowdesc = get_config('filter_filtercodes', 'coursecontactshowdesc');
                         $clinktype = get_config('filter_filtercodes', 'coursecontactlinktype');
 
                         // Prepare some strings.
                         $linksr = ['' => '',
                                 'email' => get_string('issueremail', 'badges'),
                                 'message' => get_string('message', 'message'),
-                                'profile' => get_string('profile')];
+                                'profile' => get_string('profile'),
+                                'phone' => get_string('phone')];
                         $iconclass = ['' => '',
                                 'email' => 'fa fa-envelope-o',
-                                'message' => 'fa fa-comment',
-                                'profile' => 'fa fa-info-circle'];
-                        $iconclass = '<i class="' . $iconclass[$clinktype] . '" aria-hidden="true"></i> ';
+                                'message' => 'fa fa-comment-o',
+                                'profile' => 'fa fa-user-o',
+                                'phone' => 'fa fa-mobile'];
 
+                        $cnt = 0;
                         foreach ($course->get_course_contacts() as $coursecontact) {
-                            $contacts .= '<li class="mb-4">';
+                            $icon = '<i class="' . $iconclass[$clinktype] . '" aria-hidden="true"></i> ';
+
+                            $contacts .= '<li>';
 
                             // Get list of course contacts based on settings in Site Administration > Appearances > Courses.
                             // Get liset of user's roles in the course.
@@ -1042,34 +1047,44 @@ class filter_filtercodes extends moodle_text_filter {
                             $imgurl = str_replace('$1', '3', $this->getprofilepictureurl($user));
                             $fullname = get_string('fullnamedisplay', null, $user);
                             if ($cshowpic) {
-                                $contacts .= '<img src="' . $imgurl . '" alt="' . $fullname . '" class="img-fluid img-thumbnail">';
+                                $contacts .= '<img src="' . $imgurl . '" alt="' . $fullname
+                                    . '" class="img-fluid img-thumbnail' . (!empty($cnt) ? ' mt-4' : '') . '">';
+                                $cnt++;
                             }
 
                             $contactsclose = '<span class="sr-only">' . $linksr[$clinktype] . ': </span>';
                             $contactsclose .= $fullname . '</a>';
 
                             $contacts .= '<span class="fc-coursecontactroles">' . implode(", ", $rolenames) . ': </span>';
+
                             switch ($clinktype) {
                                 case 'email':
-                                    $contacts .= $iconclass . '<a href="mailto:' . $user->email . '">';
+                                    $contacts .= $icon . '<a href="mailto:' . $user->email . '">';
                                     $contacts .= $contactsclose;
                                     break;
                                 case 'message':
-                                    $contacts .= $iconclass . '<a href="' . new moodle_url('/message/index.php',
+                                    $contacts .= $icon . '<a href="' . new moodle_url('/message/index.php',
                                             ['id' => $coursecontact['user']->id]
                                             ) . '">';
                                     $contacts .= $contactsclose;
                                     break;
                                 case 'profile':
-                                    $contacts .= $iconclass . '<a href="' . new moodle_url('/user/profile.php',
+                                    $contacts .= $icon . '<a href="' . new moodle_url('/user/profile.php',
                                             ['id' => $coursecontact['user']->id, 'course' => $PAGE->course->id]
                                             ) . '">';
+                                    $contacts .= $contactsclose;
+                                    break;
+                                case 'phone1' && !empty($user->phone1):
+                                    $contacts .= $icon . '<a href="tel:' . $user->phone1 . '">';
                                     $contacts .= $contactsclose;
                                     break;
                                 default: // Default is no-link.
                                     $contacts .= $fullname;
                                     break;
 
+                            }
+                            if ($cshowdesc && !empty($user->description)) {
+                                $contacts .= '<div' . (empty($cshowpic) ? ' class="mb-4"' : '') . '>' . $user->description . '</div>';
                             }
                             $contacts .= '</li>';
 
@@ -1083,7 +1098,7 @@ class filter_filtercodes extends moodle_text_filter {
                 } else {
                     $replace['/\{coursecontacts\}/i'] = '<ul class="fc-coursecontacts list-unstyled ml-0 pl-0">' . $contacts . '</ul>';
                 }
-                unset($contacts, $contactsclose, $fullname, $url, $user, $rolenames, $iconclass, $linksr, $clinktype, $cshowpic);
+                unset($contacts, $contactsclose, $fullname, $url, $user, $rolenames, $icon, $iconclass, $linksr, $clinktype, $cshowpic);
             }
 
             // Tag: {courseparticipantcount}.

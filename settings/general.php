@@ -74,11 +74,19 @@ $description = get_string('enable_scrape_description', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
-// Option to show teachers profile picture.
+// Option to show contact's profile picture.
 $default = 0; // Default is to not show profile picture.
 $name = 'filter_filtercodes/coursecontactshowpic';
 $title = get_string('coursecontactshowpic', 'filter_filtercodes');
 $description = get_string('coursecontactshowpic_desc', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
+// Option to show contact's profile description.
+$default = 0; // Default is to not show profile description.
+$name = 'filter_filtercodes/coursecontactshowdesc';
+$title = get_string('coursecontactshowdesc', 'filter_filtercodes');
+$description =  get_string('coursecontactshowdesc_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
@@ -90,7 +98,8 @@ $description = get_string('coursecontactlinktype_desc', 'filter_filtercodes');
 $choices = ['' => get_string('none'),
         'email' => get_string('issueremail', 'badges'),
         'message' => get_string('message', 'message'),
-        'profile' => get_string('profile')];
+        'profile' => get_string('profile'),
+        'phone' => get_string('phone')];
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);
 

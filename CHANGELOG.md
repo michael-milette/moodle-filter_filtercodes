@@ -1,12 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.6] 2021-11-09 (DEV)
+## [2.2.8] 2021-12-05 (DEV)
 ### Added
 - New {menuadmin} tag.
 - New {mycoursescards} tag.
 - New fc-coursecontacts and fc-coursecontactroles classes for {coursecontacts} HTML.
 - New {coursecontacts} tag (formerly {courseteachers}).
+- {courseteachers} can now optionally display user profile description.
+- {courseteachers} can now optionally link to phone number.
 - New {chart progressbar x} tag (ALPHA).
 - New {chart radial x} tag (ALPHA).
 - New {markborder}{/markborder} tags.
