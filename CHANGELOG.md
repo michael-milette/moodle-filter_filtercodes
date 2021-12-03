@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [2.2.6] 2021-11-09 (DEV)
 ### Added
 - New {menuadmin} tag.
+- New {mycoursescards} tag.
 - New fc-coursecontacts and fc-coursecontactroles classes for {coursecontacts} HTML.
 - New {coursecontacts} tag (formerly {courseteachers}).
 - New {chart progressbar x} tag (ALPHA).

@@ -1474,7 +1474,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // These tags: {mycourses} and {mycoursesmenu}.
+        // These tags: {mycourses} and {mycoursesmenu} and {mycoursescards}.
         if (stripos($text, '{mycourses') !== false) {
             if (isloggedin() && !isguestuser()) {
 
@@ -1487,6 +1487,18 @@ class filter_filtercodes extends moodle_text_filter {
                 // Append the chosen sortorder.
                 $sortorder = $sortorder . ',' . $CFG->navsortmycoursessort . ' ASC';
                 $mycourses = enrol_get_my_courses('fullname,id', $sortorder);
+
+                // Remove completed courses from the list.
+                if (isset($CFG->enablecompletion) && $CFG->enablecompletion == 1 // COMPLETION_ENABLED.
+                        && get_config('filter_filtercodes', 'hidecompletedcourses')) {
+                    foreach ($mycourses as $key => $mycourse) {
+                        $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $mycourse->id]);
+                        if (!empty($ccompletion->timecompleted)) {
+                            // Remove completed course from the list.
+                            unset($mycourses[$key]);
+                        }
+                    }
+                }
 
                 // Tag: {mycourses}. An unordered list of links to enrolled course.
                 if (stripos($text, '{mycourses}') !== false) {
@@ -1503,18 +1515,6 @@ class filter_filtercodes extends moodle_text_filter {
                     unset($list);
                 }
 
-                // Remove completed courses from the list.
-                if (isset($CFG->enablecompletion) && $CFG->enablecompletion == 1 // COMPLETION_ENABLED.
-                        && get_config('filter_filtercodes', 'hidecompletedcourses')) {
-                    foreach ($mycourses as $key => $mycourse) {
-                        $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $mycourse->id]);
-                        if (!empty($ccompletion->timecompleted)) {
-                            // Remove completed course from the list.
-                            unset($mycourses[$key]);
-                        }
-                    }
-                }
-
                 // Tag: {mycoursesmenu}. A custom menu list of enrolled course names with links.
                 if (stripos($text, '{mycoursesmenu}') !== false) {
                     $list = '';
@@ -1529,11 +1529,28 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{mycoursesmenu\}/i'] = $list;
                     unset($list);
                 }
+
+                // Tag: {mycoursescards}. Generates course cards for each enrolled course.
+                if (stripos($text, '{mycoursescards}') !== false) {
+                    $courseids = [];
+                    foreach ($mycourses as $mycourse) {
+                        $courseids[] = $mycourse->id;
+                    }
+                    // If not enrolled in any courses.
+                    if (empty($courseids)) {
+                        $list = '';
+                    } else { // Otherwise, generate cards.
+                        $list = '<div class="card-deck mr-0 fc-mycoursescards">' . $this->rendercoursecards($courseids) . '</div>';
+                    }
+                    $replace['/\{mycoursescards\}/i'] = $list;
+                    unset($list);
+                }
                 unset($mycourses);
             } else { // Not logged in.
                 // Replace tags with message indicating that you need to be logged in.
                 $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';
                 $replace['/\{mycoursesmenu\}/i'] = '-' . get_string('loggedinnot') . PHP_EOL;
+                $replace['/\{mycoursescards\}/i'] = '';
             }
         }
 
