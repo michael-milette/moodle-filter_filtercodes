@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.8] 2021-12-05 (DEV)
+## [2.2.8] 2021-12-07 (DEV)
 ### Added
+- New {showmore}{/showmore} tags (ALPHA).
 - New {menuadmin} tag.
 - New {mycoursescards} tag.
 - New fc-coursecontacts and fc-coursecontactroles classes for {coursecontacts} HTML.

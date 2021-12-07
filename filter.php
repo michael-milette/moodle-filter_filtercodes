@@ -2018,6 +2018,33 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{\/markborder\}/i'] = '</mark>';
         }
 
+        // Tag: {showmore}{/showmore}.
+        if (stripos($text, '{/showmore}') !== false) {
+            $newtext = str_replace('{showmore}', '<span id="fc-showmore-tmp" class="fc-showmore hidden">', $text);
+            if (stripos($newtext, 'fc-showmore-tmp') !== false) {
+                $newtext = preg_replace_callback('/fc-showmore-tmp/', function($matches) {
+                        static $count = 0;
+                        return 'showmore-' . $count++;
+                    }, $newtext
+                );
+                $text = $newtext;
+                $changed = true;
+            }
+            $newtext = str_replace('{/showmore}', '</span> <a href="#" class="fc-showmore" style="white-space: nowrap;" ' .
+                    'onclick="m=document.getElementById(\'fc-showmore-tmp\').classList;m.toggle(\'hidden\');' .
+                    'this.text=(m.contains(\'hidden\')?\'' . get_string('showmore', 'form') . '\':\'' .
+                    get_string('showless', 'form') . '\');return false;">' . get_string('showmore', 'form') . '</a>', $newtext);
+            if (stripos($newtext, 'fc-showmore-tmp') !== false) {
+                $newtext = preg_replace_callback('/fc-showmore-tmp/', function($matches) {
+                        static $count = 0;
+                        return 'showmore-' . $count++;
+                    }, $newtext
+                );
+                $text = $newtext;
+                $changed = true;
+            }
+        }
+
         // Tag: {note} - Used to add notes which appear when editing but not displayed.
         if (stripos($text, '{note}') !== false) {
             // Remove the note content.

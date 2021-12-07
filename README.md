@@ -147,7 +147,8 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {label type}{/label} : Display text over background colour. The Boost theme supports the following types: **info**, **important**, **secondary**, **success** and **warning**. Other themes may also support **primary**, **danger**, **light**, **dark** and more. Example: {label info}For your information{/label}. Actual foreground and background colours vary depending on the theme. If the type is not specified, it will default to **info**. If the type specified is not supported by your theme, it may default to secondary.
 * {button URL}Label{/button} : Create a clickable button link formatted like a primary button.
 * {chart radial x} (ALPHA): Create a radial (circle) chart giving it a value of x between 0 and 100.
-* {chart progressbar x} (ALPHA): Create a horizontal progress bar chart giving it a value of x between 0 and 100.
+* {chart progressbar x} (ALPHA) : Create a horizontal progress bar chart giving it a value of x between 0 and 100.
+* {showmore}{/showmore} (ALPHA) : Toggle showing content between opening and closing more tags. Limitations: Can only be used inline with text. Must now weave into other opening and closing tags.
 
 ### For use in courses
 
@@ -986,6 +987,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * [{highlight}]This text is highlighted in yellow.[{/highlight}] : {highlight}This text is highlighted in yellow.{/highlight}
 * [{marktext}]This text is highlited in a different colour[{/marktext}] : {marktext}This text is highlited in a different colour{/marktext}
 * [{markborder}]This text has a red border around it[{/markborder}] : {markborder}This text has a red border around it{/markborder}
+* This is a course description. [{showmore}]These are the details.[{/showmore}] : This is a course description. {showmore}These are the details.{/showmore}
 * Current language [{lang}] : {lang}
 * Display content of custom user profile field [{profile_field_learningstyle}] - assuming you have a custom user profile field with a shortname called 'learningstyle': {profile_field_learningstyle}
 * Display profile owner's full name on profile pages [{profilefullname}]: This is the profile of {profilefullname}.
