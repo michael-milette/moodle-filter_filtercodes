@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file.
 - New {userscountrycount} tag.
 - Known limitation in README.md regarding Moodle's 'Download course content' feature.
 ### Updated
+- Experimental build-in option to enable filtercodes in custom menu of Moodle 3.2 to 3.4 is no longer supported.
+- Replaced requirement for core patch MDL-63219 or theme patch with moodle-local_filtermenu to make FilterCodes work in custom menu in Moodle 3.2 and later.
 - Renamed {courseteachers} tag to {coursecontacts}. No longer ALPHA.
 - {coursecontacts} now display's based on role coursecontacts setting in Site Admin > Display > Courses.
 - The {highlight} tag now uses HTML5 mark tags instead of span tags.

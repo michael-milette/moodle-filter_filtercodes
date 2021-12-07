@@ -34,6 +34,7 @@ $string['defaultsurname'] = '';
 $string['defaultusername'] = '';
 $string['defaultemail'] = '';
 $string['enable_customnav'] = 'Custom navigation support';
+$string['enable_customnav_info'] = 'To enable support for FilterCodes tags in the Moodle custom navigation menus, you must install the moodle-local_filtermenu plugin.';
 $string['enable_customnav_description'] = '<strong>Experimental</strong>: Enable support for FilterCode tags in Moodle custom navigation menu.
 Note: Is known to be compatible with Clean and Boost based themes in Moodle 3.2 to 3.4 only. Does not filter tags on the Moodle Theme Settings page.';
 $string['disabled_customnav_description'] = '<strong>Note regarding support for custom menu</strong> - To enable support for FilterCodes in your Moodle site\'s custom menu, you may need to customize your theme or Moodle core. <a href="https://github.com/michael-milette/moodle-filter_filtercodes#can-i-use-filtercodes-in-moodles-custom-menus">Information on how to add FilterCodes support in custom menus</a>.';
