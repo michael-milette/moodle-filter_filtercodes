@@ -1461,32 +1461,61 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {chart *} - Easily display a chart in one of several styles.
+        // Tag: {chart <type> <value> <title>} - Easily display a chart in one of several styles.
         if (stripos($text, '{chart ') !== false && $CFG->branch >= 32) {
             global $OUTPUT;
-            $value = 40;$title = 'Test';
-            // Tag: {chart radial} - Display a radial (circle) chart.
-            if (stripos($text, '{chart radial ') !== false) {
-                $chart = new \core\chart_pie();
-                $chart->set_doughnut(true); // Calling set_doughnut(true) we display the chart as a doughnut.
-                $chart->set_title($title);
-                $series = new \core\chart_series('Percentage', [min($value, 100), 100 - min($value, 100)]);
-                $chart->add_series($series);
-                $chart->set_labels(['Completed', 'Remaining']);
-                if ($CFG->branch >= 39) {
-                    $chart->set_legend_options(['display' => false]);  // Hide chart legend.
+            preg_match_all('/\{chart\s(\w+)\s([0-9]+)\s(.*)\}/i', $text, $matches, PREG_SET_ORDER);
+            foreach($matches as $match) {
+                $type = $match[1]; // Chart type: radial, pie or progressbar.
+                $value = $match[2]; // Value between 0 and 100.
+                $title = $match[3]; // Text label.
+                $percent = get_string('percents', '', $value);
+                switch($type) { // Type of chart.
+                    case 'radial': // Tag: {chart radial} - Display a radial (circle) chart.
+                        $chart = new \core\chart_pie();
+                        $chart->set_doughnut(true); // Calling set_doughnut(true) we display the chart as a doughnut.
+                        $chart->set_title($title);
+                        $series = new \core\chart_series('Percentage', [min($value, 100), 100 - min($value, 100)]);
+                        $chart->add_series($series);
+                        $chart->set_labels(['Completed', 'Remaining']);
+                        if ($CFG->branch >= 39) {
+                            $chart->set_legend_options(['display' => false]);  // Hide chart legend.
+                        }
+                        $html =  $OUTPUT->render_chart($chart, false);
+                        break;
+                    case 'pie': // Tag: {chart pie} - Display a pie chart.
+                        $chart = new \core\chart_pie();
+                        $chart->set_doughnut(false); // Calling set_doughnut(true) we display the chart as a doughnut.
+                        $chart->set_title($title);
+                        $series = new \core\chart_series('Percentage', [min($value, 100), 100 - min($value, 100)]);
+                        $chart->add_series($series);
+                        $chart->set_labels(['Completed', 'Remaining']);
+                        if ($CFG->branch >= 39) {
+                            $chart->set_legend_options(['display' => false]);  // Hide chart legend.
+                        }
+                        $html =  $OUTPUT->render_chart($chart, false);
+                        break;
+                    case 'progressbar': // Tag: {chart progressbar} - Display a horizontal progres bar.
+                        $html = '
+                        <div class="progress mb-0">
+                            <div class="fc-progress progress-bar bar" role="progressbar" aria-valuenow="' . $value
+                                . '" style="width: ' . $value . '%" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                        <div class="small">';
+                        if ($CFG->branch >= 310) {
+                            $html .= get_string('labelvalue', 'moodle', ['label' => $title, 'value' => $percent]);
+                        } else {
+                            $html .= $title . ' : ' . $percent;
+                        }
+                        $html .= '</div>';
+                        break;
+                    default:
+                        $html = '';
                 }
-                $replace['/\{chart radial ([0-9]+)\}/i'] =  $OUTPUT->render_chart($chart, false);
+                $replace['/\{chart ' . $type . ' ' . $value . ' ' . $title . '\}/i'] = $html;
             }
-            // Tag: {chart progressbar} - Display a horizontal progres bar.
-            if (stripos($text, '{chart progressbar ') !== false) {
-                $replace['/\{chart progressbar ([0-9]+)\}/i'] = '
-                <div class="progress">
-                    <div class="fc-progress progress-bar bar" role="progressbar" aria-valuenow="' . $value
-                        . '" style="width: ' . $value . '%" aria-valuemin="0" aria-valuemax="100">
-                    </div>
-                </div>';
-            }
+            unset($chart, $matches, $html, $value, $title);
         }
 
         // These tags: {mycourses} and {mycoursesmenu} and {mycoursescards}.
