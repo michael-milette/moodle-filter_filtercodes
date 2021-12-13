@@ -140,7 +140,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {coursecardsbyenrol} (ALPHA): Display course cards for most popular courses based on enrolment. Maximum number of cards is configurable in the plugin settings.
 * {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
 * {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
-* {categorycards}: (ALPHA) Display top level categories as cards using the current location as the top level category. For example, on the Front Page, it will display all top level categories. However, if you are inside the Miscellaneous category (e.g., in Miscellaneous > Your Course) , it will only display the next level of categories under the Miscellaneous category.
+* {categorycards} or {categorycards id}: (ALPHA) Display top level categories as cards using the current location as the top level category. For example, on the Front Page, it will display all top level categories. However, if you are inside the Miscellaneous category (e.g., in Miscellaneous > Your Course) , it will only display the next level of categories under the Miscellaneous category. You can optionally specify a category in the tag.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursescards} : Displays a series of cards for my enrolled courses.
 * {courserequest} : Displays a Request a Course link.
@@ -910,6 +910,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course cards (ALPHA) [{coursecards}]: {coursecards}
 * Course cards by enrolment (ALPHA) [{{coursecardsbyenrol}}]: {{coursecardsbyenrol}}
 * Category cards (ALPHA) [{categorycards}]: {categorycards}
+* Category 1 cards (ALPHA) [{categorycards 1}]: Sub-categories of Miscellaneous category include {categorycards 1}
 * Total courses [{coursecount}]: {coursecount}
 * Institution [{institution}]: {institution}
 * Department [{department}]: {department}

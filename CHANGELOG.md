@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - New {label}{/label} tags.
 - New setting to enable/disable {categorycards} background.
 - New fc-categorycards class to {categorycards} to make it easier to customize.
+- New fc-categorycard-ID# class to {categorycards} to make it possible to customize background of card.
 - New {sectionname} tag.
 - New {hr} tag.
 - New {coursecardsbyenrol} tag.
