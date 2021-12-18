@@ -1012,11 +1012,13 @@ class filter_filtercodes extends moodle_text_filter {
                             }
                         }
                     }
+                    $coursecontext = context_course::instance($PAGE->course->id);
                     foreach ($coursefields as $field => $value) {
                         $shortname = strtolower($field);
                         // If the tag exists and it is not hidden in the custom course field's settings.
                         if (stripos($text, '{course_field_' . $shortname . '}') !== false) {
-                            $replace['/\{course_field_' . $shortname . '\}/i'] = $value;
+                            $replace['/\{course_field_' . $shortname . '\}/i'] = format_text($value, FORMAT_HTML,
+                                    ['context' => $coursecontext]);
                         }
                     }
                 }
@@ -1030,9 +1032,11 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     if ($thiscourse->has_custom_fields()) {
                         $handler = \core_course\customfield\course_handler::create();
+                        //$x = $handler->display_custom_fields_data($thiscourse->get_custom_fields()); echo '<pre>'; var_dump($x);die;
                         $customfields = $handler->display_custom_fields_data($thiscourse->get_custom_fields());
                     }
-                    $replace['/\{course_fields\}/i'] = $customfields;
+                    $coursecontext = context_course::instance($PAGE->course->id);
+                    $replace['/\{course_fields\}/i'] = format_text($customfields, FORMAT_HTML, ['context' => $coursecontext]);
                 }
 
             }

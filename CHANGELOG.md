@@ -40,6 +40,7 @@ All notable changes to this project will be documented in this file.
 - Refactored the {coursecards} code. No longer displays empty list.
 - Fixed {ifprofile_field_...} tag visibility and clarified documentation.
 - {coursecards} no longer displays hidden courses or those whose end-dates are past, unless you are an administrator.
+- Results fron {course_field_shortname} and {course_fields} are now both processed through Moodle filters.
 
 ## [2.2.1] 2021-05-25
 ### Updated
