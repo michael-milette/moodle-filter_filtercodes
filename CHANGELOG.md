@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - Fixed {ifprofile_field_...} tag visibility and clarified documentation.
 - {coursecards} no longer displays hidden courses or those whose end-dates are past, unless you are an administrator.
 - Results fron {course_field_shortname} and {course_fields} are now both processed through Moodle filters.
+- Updated copyright notice to include 2022.
 
 ## [2.2.1] 2021-05-25
 ### Updated
@@ -78,6 +79,7 @@ All notable changes to this project will be documented in this file.
 - {filtercodes} tag now works on all pages but only for users who have course:update capability.
 - Custom menu tags should not be processed through the "URL to Link" (urltolink) filter. See README.md to update your theme.
 - Documentation in this README.md file.
+- Tested to be compatible up to and including Moodle 3.11.
 - Copyright notice for 2021.
 
 ## [2.1.0] 2020-11-23
