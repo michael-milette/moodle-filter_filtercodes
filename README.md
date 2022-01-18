@@ -266,6 +266,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 * {ifinsection}{/ifinsection} : Will display the enclosed content only if the user is in a section of a course which is not the Front Page.
 * {ifnotinsection}{/ifnotinsection} : Will display the enclosed content only if the user is not in a section of a course.
 * {ifingroup id|idnumber}{/ifingroup} : Display content if the user is part of the specified course group ID or group ID number.
+* {ifnotvisible}{/ifnotvisible} : Display content if the course visibility is set to Hide.
 
 #### Roles
 
@@ -1029,6 +1030,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Is this Moodle Workplace? [{ifworkplace}]Yes[{/ifworkplace}] : {ifworkplace}Yes{/ifworkplace}
 * This is FilterCodes version [{filtercodes}] : {filtercodes} Note: Will be blank if you do not have the ability to edit this tag.
 * Are you a member of the ATEAM group [{ifingroup ATEAM}]Yes[{/ifingroup}] ? : {ifingroup ATEAM}Yes{/ifingroup} Note: Only works in courses.
+* [{ifnotvisible}]Warning: Course visibility is set to Hide.[{/ifnotvisible}] : {ifnotvisible}Warning: Course visibility is set to Hide.{/ifnotvisible}
 * It is now [{now}] : {now}
 * It is now [{now backupnameformat}] : {now backupnameformat}
 * It is now [{now strftimedate}] : {now strftimedate}

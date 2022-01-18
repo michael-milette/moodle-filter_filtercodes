@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.8] 2021-12-10 (DEV)
+## [2.2.8] 2022-01-18 (DEV)
 ### Added
+- New {ifnotvisible}{/ifnotvisible}
 - New {showmore}{/showmore} tags (ALPHA).
 - New {menuadmin} tag.
 - New {mycoursescards} tag.

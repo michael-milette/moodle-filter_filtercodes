@@ -2244,6 +2244,20 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifnotvisible}.
+            if (stripos($text, '{ifnotvisible}') !== false) {
+                // If the course visibility is set to hide...
+                global $COURSE;
+                if ($COURSE->id != 1 && empty($COURSE->visible)) { // Visibility set to Hide.
+                    // Just remove the tags.
+                    $replace['/\{ifnotvisible\}/i'] = '';
+                    $replace['/\{\/ifnotvisible\}/i'] = '';
+                } else { // Visibility set to Show.
+                    // Remove the if not visible tags and contained content.
+                    $replace['/\{ifnotvisible}(.*?)\{\/ifnotvisible\}/ims'] = '';
+                }
+            }
+
             // Tag: {ifincohort idname|idnumber}.
             if (stripos($text, '{ifincohort ') !== false) {
                 static $mycohorts;
