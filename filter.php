@@ -1357,8 +1357,15 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {coursesactive}. The total visible courses.
             if (stripos($text, '{coursesactive}') !== false) {
-                // Count visible courses excluding front page.
-                $cnt = $DB->count_records('course', ['visible' => 1]) - 1;
+                // Count current courses (between start and end date, if any) set to Show - excluding front page.
+                $today = time();
+                $sql = "SELECT COUNT(id)
+                        FROM {course}
+                        WHERE visible = 1
+                            AND startdate <= :today
+                            AND (enddate > :today2 OR enddate = 0);";
+                // Subtract one for site course id = 1).
+                $cnt = $DB->count_records_sql($sql, ['today' => $today, 'today2' => $today]) - 1;
                 $replace['/\{coursesactive\}/i'] = $cnt;
             }
 

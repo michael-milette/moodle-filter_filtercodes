@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.8] 2022-01-18 (DEV)
+## [2.2.8] 2022-02-01 (DEV)
 ### Added
 - New {ifnotvisible}{/ifnotvisible}
 - New {showmore}{/showmore} tags (ALPHA).
@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - New {userscountrycount} tag.
 - Known limitation in README.md regarding Moodle's 'Download course content' feature.
 ### Updated
+- {coursesactive} no longer count courses that are before start date or after end date, if any.
 - Renamed {courseteachers} tag to {coursecontacts}. No longer ALPHA.
 - {coursecontacts} now display's based on role coursecontacts setting in Site Admin > Display > Courses.
 - The {highlight} tag now uses HTML5 mark tags instead of span tags.
