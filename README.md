@@ -929,28 +929,28 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Available free application disk space [{diskfreespace}]: {diskfreespace}
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}
 * My Enrolled Courses [{mycourses}]: {mycourses}
-* My Enrolled Courses menu [{mycoursesmenu}]: {mycoursesmenu}
-* My Enrolled Courses as cards [{mycoursescards}]: {mycoursescards}
+* My Enrolled Courses menu [{mycoursesmenu}]: <br><pre>{mycoursesmenu}</pre>
+* My Enrolled Courses as cards [{mycoursescards}]: <br>{mycoursescards}
 * Link to the request a course page (blank if not enabled) [{courserequest}]: {courserequest}
-* Request a course / Course request in top level menu [{courserequestmenu0}]: {courserequestmenu0}
-* Request a course / Course request in submenu [{courserequestmenu}]: {courserequestmenu}
+* Request a course / Course request in top level menu [{courserequestmenu0}]: <br><pre>{courserequestmenu0}</pre>
+* Request a course / Course request in submenu [{courserequestmenu}]: <br><pre>{courserequestmenu}</pre>
 * Label [{label info}]Criteria for completion[{/label}]: {label info}Criteria for completion{/label}
 * Button [{button https://moodle.org}]Go to Moodle.org{/button}]: {button https://moodle.org.org}Go to Moodle{/button}
 * 80% radial chart [{chart radial 80 Are you over 70%?}]: {chart radial 80 Are you over 70%?}
 * 60% pie chart [{chart pie 60 Are you over 70%?}]: {chart radial 60 Are you over 70%?}
 * 75% progressbar chart [{chart progressbar 75 Are you over 70%?}]: {chart radial 75 Are you over 70%?}
-* Moodle Admin custom menu items [{menuadmin}]: {menuadmin}
-* Moodle Dev custom menu items [{menudev}]: {menudev}
+* Moodle Admin custom menu items [{menuadmin}]: <br><pre>{menuadmin}</pre>
+* Moodle Dev custom menu items [{menudev}]: <br><pre>{menudev}</pre>
 * Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course category name (blank if not in a course) [{categoryname}]: {categoryname}
 * Course category number (blank if not in a course) [{categorynumber}]: {categorynumber}
 * Course category description (blank if not in a course) [{categorydescription}]: {categorydescription}
 * Course categories [{categories}]: {categories}
-* Course categories menu [{categoriesmenu}]: {categoriesmenu}
+* Course categories menu [{categoriesmenu}]: <br><pre>{categoriesmenu}</pre>
 * Top level course categories [{categories0}]: {categories0}
-* Top level course categories menu [{categories0menu}]: {categories0menu}
+* Top level course categories menu [{categories0menu}]: <br><pre>{categories0menu}</pre>
 * Other course categories in this category [{categoriesx}]: {categoriesx}
-* Other course categories in this categories menu [{categoriesxmenu}]: {categoriesxmenu}
+* Other course categories in this categories menu [{categoriesxmenu}]: <br><pre>{categoriesxmenu}</pre>
 * List of custom course fields [{course_fields}]: {course_fields}
 * Course custom fields [{course_field_location}] (assumes you have created a custom course field called "location"): {course_field_location}
 * Course description [{coursesummary}] : {coursesummary}
@@ -1016,7 +1016,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If Manager (minimum) [{ifminmanager}]You are a manager or administrator.[{/ifminmanager}]: {ifminmanager}You are a manager or administrator.{/ifminmanager}
 * If Site Manager (minimum) [{ifminsitemanager}]You are a site manager or administrator.[{/ifminsitemanager}]: {ifminsitemanager}You are a site manager or administrator.{/ifminsitemanager}
 * If Admin [{ifadmin}]You are an administrator.[{/ifadmin}]: {ifadmin}You are an administrator.{/ifadmin}
-* If Developer [{ifdev}]You are an administrator with debugging set to developer mode.[{/ifdev}]: {ifdev}You are an administrator.{/ifdev}
+* If Developer [{ifdev}]You are an administrator with debugging set to developer mode.[{/ifdev}]: {ifdev}You are an administrator with debugging set to developer mode.{/ifdev}
 * If user has a parent custom role [{ifcustomrole parent}]You have a parent custom role in this context[{/ifcustomrole}]: {ifcustomrole parent}You have a parent custom role in this context{/ifcustomrole}.
 * If user does not have a parent custom role [{ifnotcustomrole parent}]You do not have a parent custom role in this context[{/ifnotcustomrole}]: {ifnotcustomrole parent}You do not have a parent custom role in this context{/ifnotcustomrole}.
 * If on Home page [{ifhome}]You are on the Home Front page.[{/ifhome}]: {ifhome}You are on the Home Front page.{/ifhome}
