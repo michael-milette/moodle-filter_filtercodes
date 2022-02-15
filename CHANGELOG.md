@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - New {userscountrycount} tag.
 - Known limitation in README.md regarding Moodle's 'Download course content' feature.
 ### Updated
+- Fix-166,168,191 multiple instances of date/time related tags (firstaccessdate, coursestartdate, courseenddate, coursecompletiondate, now)
 - {coursesactive} no longer count courses that are before start date or after end date, if any.
 - Renamed {courseteachers} tag to {coursecontacts}. No longer ALPHA.
 - {coursecontacts} now display's based on role coursecontacts setting in Site Admin > Display > Courses.

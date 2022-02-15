@@ -803,11 +803,8 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Replace {firstaccessdate dateTimeFormat} tag and parameters with formatted date.
                 if (stripos($text, '{firstaccessdate ') !== false) {
-                    $newtext = preg_replace_callback('/\{firstaccessdate\s+(.+)\}/i',
+                    $newtext = preg_replace_callback('/\{firstaccessdate\s+(.+)\}/imU',
                         function ($matches) use ($USER) {
-                            // Hack to remove everything after the closing }, if it is still there.
-                            // TODO: Improve regex above to support PHP strftime strings.
-                            $matches[1] = strtok($matches[1], '}');
                             // Check if this is a built-in Moodle date/time format.
                             if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
                                 // It is! Get the strftime string.
@@ -1247,11 +1244,8 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Replace {coursestartdate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{coursestartdate ') !== false) {
-                        $newtext = preg_replace_callback('/\{coursestartdate\s+(.+)\}/i',
+                        $newtext = preg_replace_callback('/\{coursestartdate\s+(.*)\}/imU',
                             function ($matches) use ($PAGE) {
-                                // Hack to remove everything after the closing }, if it is still there.
-                                // TODO: Improve regex above to support PHP strftime strings.
-                                $matches[1] = strtok($matches[1], '}');
                                 // Check if this is a built-in Moodle date/time format.
                                 if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
                                     // It is! Get the strftime string.
@@ -1267,7 +1261,7 @@ class filter_filtercodes extends moodle_text_filter {
                         }
                     }
                 } else {
-                    $replace['/\{coursestartdate(.*)\}/i'] = get_string('notyetstarted', 'completion');
+                    $replace['/\{coursestartdate(.*)\}/imU'] = get_string('notyetstarted', 'completion');
                 }
             }
 
@@ -1283,11 +1277,8 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Replace {courseenddate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{courseenddate ') !== false) {
-                        $newtext = preg_replace_callback('/\{courseenddate\s+(.+)\}/i',
+                        $newtext = preg_replace_callback('/\{courseenddate\s+(.*)\}/imU',
                             function ($matches) use ($PAGE) {
-                                // Hack to remove everything after the closing }, if it is still there.
-                                // TODO: Improve regex above to support PHP strftime strings.
-                                $matches[1] = strtok($matches[1], '}');
                                 // Check if this is a built-in Moodle date/time format.
                                 if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
                                     // It is! Get the strftime string.
@@ -1326,11 +1317,8 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Replace {coursecompletiondate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{coursecompletiondate ') !== false) {
-                        $newtext = preg_replace_callback('/\{coursecompletiondate\s+(.+)\}/i',
+                        $newtext = preg_replace_callback('/\{coursecompletiondate\s+(.+)\}/imU',
                             function($matches) use ($ccompletion) {
-                                // Hack to remove everything after the closing }, if it is still there.
-                                // TODO: Improve regex above to support PHP strftime strings.
-                                $matches[1] = strtok($matches[1], '}');
                                 // Check if this is a built-in Moodle date/time format.
                                 if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
                                     // It is! Get the strftime string.
@@ -1662,11 +1650,8 @@ class filter_filtercodes extends moodle_text_filter {
             }
             // Replace {now dateTimeFormat} tag and parameters with formatted date.
             if (stripos($text, '{now ') !== false) {
-                $newtext = preg_replace_callback('/\{now\s+(.+)\}/im',
+                $newtext = preg_replace_callback('/\{now\s+(.+)\}/imU',
                     function ($matches) use ($now) {
-                        // Hack to remove everything after the closing }, if it is still there.
-                        // TODO: Improve regex above to support PHP strftime strings.
-                        $matches[1] = strtok($matches[1], '}');
                         // Check if this is a built-in Moodle date/time format.
                         if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
                             // It is! Get the strftime string.
@@ -2053,12 +2038,6 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {button}{/button}.
         if (stripos($text, '{button ') !== false) {
             $replace['/\{button\s+(.*?)\}(.*?)\{\/button\}/ims'] = '<a href="$1" class="btn btn-primary">$2</a>';
-        }
-
-
-        // Tag: {now}.
-        if (stripos($text, '{now}') !== false) {
-            $replace['/\{now\}/i'] = userdate(time(), get_string('strftimedatefullshort'));
         }
 
         // Tag: {fa fa-icon-name}.
