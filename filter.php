@@ -1509,7 +1509,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {chart <type> <value> <title>} - Easily display a chart in one of several styles.
         if (stripos($text, '{chart ') !== false && $CFG->branch >= 32) {
             global $OUTPUT;
-            preg_match_all('/\{chart\s(\w+)\s([0-9]+)\s(.*)\}/i', $text, $matches, PREG_SET_ORDER);
+            preg_match_all('/\{chart\s(\w+)\s([0-9]+)\s(.*)\}/imU', $text, $matches, PREG_SET_ORDER);
             $matches = array_unique($matches, SORT_REGULAR);
             foreach($matches as $match) {
                 $type = $match[1]; // Chart type: radial, pie or progressbar.
@@ -1559,7 +1559,7 @@ class filter_filtercodes extends moodle_text_filter {
                     default:
                         $html = '';
                 }
-                $replace['/\{chart ' . $type . ' ' . $value . ' ' . $title . '\}/i'] = $html;
+                $replace['/\{chart ' . $type . ' ' . $value . ' ' . preg_quote($title) . '\}/imU'] = $html;
             }
             unset($chart, $matches, $html, $value, $title);
         }
