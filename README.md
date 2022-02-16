@@ -941,10 +941,10 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * 75% progressbar chart [{chart progressbar 75 Are you over 70%?}]: {chart radial 75 Are you over 70%?}
 * Moodle Admin custom menu items [{menuadmin}]: <br><pre>{menuadmin}</pre>
 * Moodle Dev custom menu items [{menudev}]: <br><pre>{menudev}</pre>
-* Course category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
-* Course category name (blank if not in a course) [{categoryname}]: {categoryname}
-* Course category number (blank if not in a course) [{categorynumber}]: {categorynumber}
-* Course category description (blank if not in a course) [{categorydescription}]: {categorydescription}
+* Course's category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
+* Course's category name (blank if not in a course) [{categoryname}]: {categoryname}
+* Course's category number (blank if not in a course) [{categorynumber}]: {categorynumber}
+* Course's category description (blank if not in a course) [{categorydescription}]: {categorydescription}
 * Course categories [{categories}]: {categories}
 * Course categories menu [{categoriesmenu}]: <br><pre>{categoriesmenu}</pre>
 * Top level course categories [{categories0}]: {categories0}
@@ -1020,8 +1020,8 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If user has a parent custom role [{ifcustomrole parent}]You have a parent custom role in this context[{/ifcustomrole}]: {ifcustomrole parent}You have a parent custom role in this context{/ifcustomrole}.
 * If user does not have a parent custom role [{ifnotcustomrole parent}]You do not have a parent custom role in this context[{/ifnotcustomrole}]: {ifnotcustomrole parent}You do not have a parent custom role in this context{/ifnotcustomrole}.
 * If on Home page [{ifhome}]You are on the Home Front page.[{/ifhome}]: {ifhome}You are on the Home Front page.{/ifhome}
-* If not on the Home page [{ifhome}]You are NOT on the Home Front page.[{/ifhome}]: {ifhome}You are NOT on the Home Front page.{/ifhome}
-* If on Dashboard [{ifdashboard}]You are on the Home Front page.[{/ifdashboard}]: {ifdashboard}You are on the Home Front page.{/ifdashboard}
+* If not on the Home page [{ifnothome}]You are NOT on the Home Front page.[{/ifnothome}]: {ifnothome}You are NOT on the Home Front page.{/ifnothome}
+* If on Dashboard [{ifdashboard}]You are on the Dashboard page.[{/ifdashboard}]: {ifdashboard}You are on the Dashboard page.{/ifdashboard}
 * If in a course [{ifincourse}]Yes[{/ifincourse}]? {ifincourse}Yes{/ifincourse}
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}

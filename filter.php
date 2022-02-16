@@ -350,8 +350,9 @@ class filter_filtercodes extends moodle_text_filter {
                         . 'text-shadow:-1px -1px 0 #767676, 1px -1px 0 #767676, -1px 1px 0 #767676, 1px 1px 0 #767676">'
                         . $category->name . '</div>';
         } else {
-            $html = '<li class="card shadow mr-4 mb-4 ml-0 fc-categorycard-' . $category->id . '" style="min-width:350px;max-width:350px;' . $dimmed . '">
-                    <a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]);
+            $html = '<li class="card shadow mr-4 mb-4 ml-0 fc-categorycard-' . $category->id .
+                    '" style="min-width:350px;max-width:350px;' . $dimmed . '">' .
+                    '<a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]);
             $html .= '" class="text-decoration-none h-100 p-4">' . $category->name;
         }
         $html .= '</a></li>' . PHP_EOL;
@@ -529,19 +530,26 @@ class filter_filtercodes extends moodle_text_filter {
             $menu .= '-###' . PHP_EOL;
             $menu .= '{/ifminsitemanager}' . PHP_EOL;
             $menu .= '-{getstring}course{/getstring}: {getstring:admin}coursemgmt{/getstring}|/course/management.php' . PHP_EOL;
-            $menu .= '-{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php?category={coursecategoryid}&returnto=topcat' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php' .
+                    '?category={coursecategoryid}&returnto=topcat' . PHP_EOL;
             $menu .= '-{getstring}course{/getstring}: {getstring}searchcourses{/getstring}|/course/search.php' . PHP_EOL;
             $menu .= '{/ifminmanager}' . PHP_EOL;
             $menu .= '{ifminteacher}' . PHP_EOL;
-            $menu .= '-{getstring}course{/getstring}: {getstring}restore{/getstring}|/backup/restorefile.php?contextid={coursecontextid}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}restore{/getstring}|/backup/restorefile.php' .
+                    '?contextid={coursecontextid}' . PHP_EOL;
             $menu .= '{ifincourse}' . PHP_EOL;
             $menu .= '-{getstring}course{/getstring}: {getstring}backup{/getstring}|/backup/backup.php?id={courseid}' . PHP_EOL;
             $menu .= '-{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}' . PHP_EOL;
-            $menu .= '-{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/index.php?type={courseid}' . PHP_EOL;
-            $menu .= '-{getstring}course{/getstring}: {getstring}reports{/getstring}|/course/admin.php?courseid={courseid}#linkcoursereports' . PHP_EOL;
-            $menu .= '-{getstring}course{/getstring}: {getstring:enrol}enrolmentinstances{/getstring}|/enrol/instances.php?id={courseid}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/index.php' .
+                    '?type={courseid}' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring}reports{/getstring}|/course/admin.php' .
+                    '?courseid={courseid}#linkcoursereports' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring:enrol}enrolmentinstances{/getstring}|/enrol/instances.php' .
+                    '?id={courseid}' . PHP_EOL;
             $menu .= '-{getstring}course{/getstring}: {getstring}reset{/getstring}|/course/reset.php?id={courseid}' . PHP_EOL;
-            $menu .= '-Course: Layoutit|https://www.layoutit.com/build" target="popup" onclick="window.open(\'https://www.layoutit.com/build\',\'popup\',\'width=1340,height=700\'); return false;|Bootstrap Page Builder' . PHP_EOL;
+            $menu .= '-Course: Layoutit|https://www.layoutit.com/build" target="popup" ' .
+                    'onclick="window.open(\'https://www.layoutit.com/build\',\'popup\',\'width=1340,height=700\'); return false;' .
+                    '|Bootstrap Page Builder' . PHP_EOL;
             $menu .= '{/ifincourse}' . PHP_EOL;
             $menu .= '-###' . PHP_EOL;
             $menu .= '{/ifminteacher}' . PHP_EOL;
@@ -549,15 +557,21 @@ class filter_filtercodes extends moodle_text_filter {
             $menu .= '-{getstring}site{/getstring}: {getstring}reports{/getstring}|/admin/category.php?category=reports' . PHP_EOL;
             $menu .= '{/ifminmanager}' . PHP_EOL;
             $menu .= '{ifadmin}' . PHP_EOL;
-            $menu .= '-{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php?section=additionalhtml' . PHP_EOL;
-            $menu .= '-{getstring}site{/getstring}: {getstring:admin}frontpage{/getstring}|/admin/settings.php?section=frontpagesettings|Including site name' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php' .
+                    '?section=additionalhtml' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring:admin}frontpage{/getstring}|/admin/settings.php' .
+                    '?section=frontpagesettings|Including site name' . PHP_EOL;
             $menu .= '-{getstring}site{/getstring}: {getstring:admin}plugins{/getstring}|/admin/search.php#linkmodules' . PHP_EOL;
-            $menu .= '-{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php?section=supportcontact' . PHP_EOL;
-            $menu .= '-{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php?section=themesettings|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php' .
+                    '?section=supportcontact' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php' .
+                    '?section=themesettings|Including custom menus, designer mode, theme in URL' . PHP_EOL;
             if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
-                $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|/admin/settings.php' .
+                        '?section=themesetting' . $theme . PHP_EOL;
             }
-            $menu .= '-{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})|/admin/index.php' . PHP_EOL;
+            $menu .= '-{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})' .
+                    '|/admin/index.php' . PHP_EOL;
             $menu .= '{/ifadmin}' . PHP_EOL;
             $replace['/\{menuadmin\}/i'] = $menu;
         }
@@ -806,7 +820,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Replace {firstaccessdate dateTimeFormat} tag and parameters with formatted date.
                 if (stripos($text, '{firstaccessdate ') !== false) {
-                    $newtext = preg_replace_callback('/\{firstaccessdate\s+(.+)\}/imU',
+                    $newtext = preg_replace_callback('/\{firstaccessdate\s+(.+)\}/imsU',
                         function ($matches) use ($USER) {
                             // Check if this is a built-in Moodle date/time format.
                             if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -1050,7 +1064,6 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     if ($thiscourse->has_custom_fields()) {
                         $handler = \core_course\customfield\course_handler::create();
-                        //$x = $handler->display_custom_fields_data($thiscourse->get_custom_fields()); echo '<pre>'; var_dump($x);die;
                         $customfields = $handler->display_custom_fields_data($thiscourse->get_custom_fields());
                     }
                     $coursecontext = context_course::instance($PAGE->course->id);
@@ -1140,7 +1153,8 @@ class filter_filtercodes extends moodle_text_filter {
 
                             }
                             if ($cshowdesc && !empty($user->description)) {
-                                $contacts .= '<div' . (empty($cshowpic) ? ' class="mb-4"' : '') . '>' . $user->description . '</div>';
+                                $contacts .= '<div' . (empty($cshowpic) ? ' class="mb-4"' : '') . '>' .
+                                        $user->description . '</div>';
                             }
                             $contacts .= '</li>';
 
@@ -1152,9 +1166,11 @@ class filter_filtercodes extends moodle_text_filter {
                 if (empty($contacts)) {
                     $replace['/\{coursecontacts\}/i'] = get_string('nocontacts', 'message');
                 } else {
-                    $replace['/\{coursecontacts\}/i'] = '<ul class="fc-coursecontacts list-unstyled ml-0 pl-0">' . $contacts . '</ul>';
+                    $replace['/\{coursecontacts\}/i'] = '<ul class="fc-coursecontacts list-unstyled ml-0 pl-0">' .
+                            $contacts . '</ul>';
                 }
-                unset($contacts, $contactsclose, $fullname, $url, $user, $rolenames, $icon, $iconclass, $linksr, $clinktype, $cshowpic);
+                unset($contacts, $contactsclose, $fullname, $url, $user, $rolenames, $icon, $iconclass,
+                        $linksr, $clinktype, $cshowpic);
             }
 
             // Tag: {courseparticipantcount}.
@@ -1187,11 +1203,11 @@ class filter_filtercodes extends moodle_text_filter {
                 $coursecontextid = isset($PAGE->course->id) ? $context->id : 1;
                 $replace['/\{coursecontextid\}/i'] = $coursecontextid;
             }
-            // Alternative Tag: %coursecontextid%7D (for encoded URLs).
-            if (stripos($text, '%coursecontextid%7D') !== false) {
+            // Alternative Tag:  %7Bcoursecontextid%7D (for encoded URLs).
+            if (stripos($text, '%7Bcoursecontextid%7D') !== false) {
                 $context = context_course::instance($PAGE->course->id);
                 $coursecontextid = isset($PAGE->course->id) ? $context->id : 1;
-                $replace['/%coursecontextid%7D/i'] = $coursecontextid;
+                $replace['/%7Bcoursecontextid%7D/i'] = $coursecontextid;
             }
 
             // Tag: %7Bcoursemoduleid%7D (escaped).
@@ -1265,7 +1281,7 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Replace {coursestartdate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{coursestartdate ') !== false) {
-                        $newtext = preg_replace_callback('/\{coursestartdate\s+(.*)\}/imU',
+                        $newtext = preg_replace_callback('/\{coursestartdate\s+(.*)\}/imsU',
                             function ($matches) use ($PAGE) {
                                 // Check if this is a built-in Moodle date/time format.
                                 if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -1282,7 +1298,7 @@ class filter_filtercodes extends moodle_text_filter {
                         }
                     }
                 } else {
-                    $replace['/\{coursestartdate(.*)\}/imU'] = get_string('notyetstarted', 'completion');
+                    $replace['/\{coursestartdate(.*)\}/imsU'] = get_string('notyetstarted', 'completion');
                 }
             }
 
@@ -1298,7 +1314,7 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Replace {courseenddate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{courseenddate ') !== false) {
-                        $newtext = preg_replace_callback('/\{courseenddate\s+(.*)\}/imU',
+                        $newtext = preg_replace_callback('/\{courseenddate\s+(.*)\}/imsU',
                             function ($matches) use ($PAGE) {
                                 // Check if this is a built-in Moodle date/time format.
                                 if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -1338,7 +1354,7 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Replace {coursecompletiondate dateTimeFormat} tag and parameters with formatted date.
                     if (stripos($text, '{coursecompletiondate ') !== false) {
-                        $newtext = preg_replace_callback('/\{coursecompletiondate\s+(.+)\}/imU',
+                        $newtext = preg_replace_callback('/\{coursecompletiondate\s+(.+)\}/imsU',
                             function($matches) use ($ccompletion) {
                                 // Check if this is a built-in Moodle date/time format.
                                 if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -1353,7 +1369,7 @@ class filter_filtercodes extends moodle_text_filter {
                         }
                     }
                 } else {
-                    $replace['/\{coursecompletiondate(.*)\}/i'] = $incomplete;
+                    $replace['/\{coursecompletiondate(.*)\}/imsU'] = $incomplete;
                 }
             }
 
@@ -1455,7 +1471,7 @@ class filter_filtercodes extends moodle_text_filter {
                     if ($catid == 0 && $nocat) {
                         $replace['/\{coursecards\}/i'] = !empty($content) ? $header . $content . $footer : '';
                     }
-                    $replace['/\{coursecards ' . $catid . '\}/i'] = !empty($content) ? $header . $content . $footer : '';
+                    $replace['/\{coursecards ' . $catid . '\}/imsU'] = !empty($content) ? $header . $content . $footer : '';
                 }
             }
 
@@ -1518,7 +1534,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {chart <type> <value> <title>} - Easily display a chart in one of several styles.
         if (stripos($text, '{chart ') !== false && $CFG->branch >= 32) {
             global $OUTPUT;
-            preg_match_all('/\{chart\s(\w+)\s([0-9]+)\s(.*)\}/imU', $text, $matches, PREG_SET_ORDER);
+            preg_match_all('/\{chart\s(\w+)\s([0-9]+)\s(.*)\}/imsU', $text, $matches, PREG_SET_ORDER);
             $matches = array_unique($matches, SORT_REGULAR);
             foreach($matches as $match) {
                 $type = $match[1]; // Chart type: radial, pie or progressbar.
@@ -1568,7 +1584,7 @@ class filter_filtercodes extends moodle_text_filter {
                     default:
                         $html = '';
                 }
-                $replace['/\{chart ' . $type . ' ' . $value . ' ' . preg_quote($title) . '\}/imU'] = $html;
+                $replace['/\{chart ' . $type . ' ' . $value . ' ' . preg_quote($title) . '\}/imsU'] = $html;
             }
             unset($chart, $matches, $html, $value, $title);
         }
@@ -1671,7 +1687,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
             // Replace {now dateTimeFormat} tag and parameters with formatted date.
             if (stripos($text, '{now ') !== false) {
-                $newtext = preg_replace_callback('/\{now\s+(.+)\}/imU',
+                $newtext = preg_replace_callback('/\{now\s+(.+)\}/imsU',
                     function ($matches) use ($now) {
                         // Check if this is a built-in Moodle date/time format.
                         if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -1923,10 +1939,10 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{categorycards\}/i'] = $html;
                         // If a tag with this category ID was also specified, replace it too.
                         if (stripos($text, '{categorycards  ' . $catid . '}') !== false) {
-                            $replace['/\{categorycards ' . $catid . '\}/i'] = $html;
+                            $replace['/\{categorycards ' . $catid . '\}/imsU'] = $html;
                         }
                     } else {
-                        $replace['/\{categorycards ' . $catid . '\}/i'] = $html;
+                        $replace['/\{categorycards ' . $catid . '\}/imsU'] = $html;
                     }
                 }
             }
@@ -2058,7 +2074,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {button}{/button}.
         if (stripos($text, '{button ') !== false) {
-            $replace['/\{button\s+(.*?)\}(.*?)\{\/button\}/ims'] = '<a href="$1" class="btn btn-primary">$2</a>';
+            $replace['/\{button\s+(.*?)\}(.*?)\{\/button\}/imsU'] = '<a href="$1" class="btn btn-primary">$2</a>';
         }
 
         // Tag: {fa fa-icon-name}.
@@ -2135,7 +2151,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {note} - Used to add notes which appear when editing but not displayed.
         if (stripos($text, '{note}') !== false) {
             // Remove the note content.
-            $replace['/\{note\}(.*?)\{\/note\}/ims'] = '';
+            $replace['/\{note\}(.*?)\{\/note\}/imsU'] = '';
         }
 
         //
@@ -2160,7 +2176,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {langx xx}.
         if (stripos($text, '{langx ') !== false) {
-            $replace['/\{langx\s+(.*?)\}(.*?)\{\/langx\}/ims'] = '<span lang="$1">$2</span>';
+            $replace['/\{langx\s+(.*?)\}(.*?)\{\/langx\}/imsU'] = '<span lang="$1">$2</span>';
         }
 
         // Tag: {-} - Soft hyphen.
@@ -2212,7 +2228,7 @@ class filter_filtercodes extends moodle_text_filter {
 
                     // If the value is empty or zero, remove the all of the tags and their contents for that field shortname.
                     if (empty($data)) {
-                        $replace['/\{' . $tag . '(.*?)\}(.*?)\{\/' . $tag . '\}/ims'] = '';
+                        $replace['/\{' . $tag . '(.*?)\}(.*?)\{\/' . $tag . '\}/imsU'] = '';
                         continue;
                     }
 
@@ -2234,7 +2250,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifloggedinas\}/i'] = '';
                 } else {
                     // If logged in as another user, remove the ifloggedinas tags and contained content.
-                    $replace['/\{ifloggedinas}(.*?)\{\/ifloggedinas\}/ims'] = '';
+                    $replace['/\{ifloggedinas}(.*?)\{\/ifloggedinas\}/imsU'] = '';
                 }
             }
 
@@ -2247,7 +2263,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifnotloggedinas\}/i'] = '';
                 } else {
                     // If logged in as another user, remove the if not loggedinas tags and contained content.
-                    $replace['/\{ifnotloggedinas}(.*?)\{\/ifnotloggedinas\}/ims'] = '';
+                    $replace['/\{ifnotloggedinas}(.*?)\{\/ifnotloggedinas\}/imsU'] = '';
                 }
             }
 
@@ -2261,7 +2277,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifnotvisible\}/i'] = '';
                 } else { // Visibility set to Show.
                     // Remove the if not visible tags and contained content.
-                    $replace['/\{ifnotvisible}(.*?)\{\/ifnotvisible\}/ims'] = '';
+                    $replace['/\{ifnotvisible}(.*?)\{\/ifnotvisible\}/imsU'] = '';
                 }
             }
 
@@ -2306,7 +2322,7 @@ class filter_filtercodes extends moodle_text_filter {
                 // If editing mode is activated...
                 if ($PAGE->user_is_editing()) {
                     // If editing mode is enabled, remove the ifnoteditmode tags and contained content.
-                    $replace['/\{ifnoteditmode}(.*?)\{\/ifnoteditmode\}/ims'] = '';
+                    $replace['/\{ifnoteditmode}(.*?)\{\/ifnoteditmode\}/imsU'] = '';
                 } else {
                     // Just remove the tags.
                     $replace['/\{ifnoteditmode\}/i'] = '';
@@ -2324,7 +2340,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifcourserequests\}/i'] = '';
                 } else {
                     // If Request a Course is not enabled, remove the ifcourserequests tags and contained content.
-                    $replace['/\{ifcourserequests}(.*?)\{\/ifcourserequests\}/ims'] = '';
+                    $replace['/\{ifcourserequests}(.*?)\{\/ifcourserequests\}/imsU'] = '';
                 }
             }
 
@@ -2339,15 +2355,15 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Remove the ifnotenrolled strings.
                 if (stripos($text, '{ifnotenrolled}') !== false) {
-                    $replace['/\{ifnotenrolled\}(.*?)\{\/ifnotenrolled\}/ims'] = '';
+                    $replace['/\{ifnotenrolled\}(.*?)\{\/ifnotenrolled\}/imsU'] = '';
                 }
                 // Remove the {ifincourse} strings if not in a course or on the Front Page.
                 if (stripos($text, '{ifincourse}') !== false) {
-                    $replace['/\{ifincourse\}(.*?)\{\/ifincourse\}/ims'] = '';
+                    $replace['/\{ifincourse\}(.*?)\{\/ifincourse\}/imsU'] = '';
                 }
                 // Remove the {ifinsection} strings if not in a section of a course or are on the Front Page.
                 if (stripos($text, '{ifinsection}') !== false) {
-                    $replace['/\{ifinsection\}(.*?)\{\/ifinsection\}/ims'] = '';
+                    $replace['/\{ifinsection\}(.*?)\{\/ifinsection\}/imsU'] = '';
                 }
             } else {
                 if ($this->hasarchetype('student')) { // If user is enrolled in the course.
@@ -2358,12 +2374,12 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Remove the ifnotenrolled strings.
                     if (stripos($text, '{ifnotenrolled}') !== false) {
-                        $replace['/\{ifnotenrolled\}(.*?)\{\/ifnotenrolled\}/ims'] = '';
+                        $replace['/\{ifnotenrolled\}(.*?)\{\/ifnotenrolled\}/imsU'] = '';
                     }
                 } else {
                     // Otherwise, remove the ifenrolled strings.
                     if (stripos($text, '{ifenrolled}') !== false) {
-                        $replace['/\{ifenrolled\}(.*?)\{\/ifenrolled\}/ims'] = '';
+                        $replace['/\{ifenrolled\}(.*?)\{\/ifenrolled\}/imsU'] = '';
                     }
                     // And remove the ifnotenrolled tags.
                     if (stripos($text, '{ifnotenrolled}') !== false) {
@@ -2384,7 +2400,7 @@ class filter_filtercodes extends moodle_text_filter {
                     } else {
                         // Remove the ifinsection strings.
                         if (stripos($text, '{ifinsection}') !== false) {
-                            $replace['/\{ifinsection\}(.*?)\{\/ifinsection\}/ims'] = '';
+                            $replace['/\{ifinsection\}(.*?)\{\/ifinsection\}/imsU'] = '';
                         }
                     }
                 }
@@ -2397,7 +2413,7 @@ class filter_filtercodes extends moodle_text_filter {
                 } else {
                     // Remove the ifnotinsection strings.
                     if (stripos($text, '{ifnotinsection}') !== false) {
-                        $replace['/\{ifnotinsection\}(.*?)\{\/ifnotinsection\}/ims'] = '';
+                        $replace['/\{ifnotinsection\}(.*?)\{\/ifnotinsection\}/imsU'] = '';
                     }
                 }
             }
@@ -2414,7 +2430,7 @@ class filter_filtercodes extends moodle_text_filter {
             } else {
                 // And remove the ifstudent strings.
                 if (stripos($text, '{ifstudent}') !== false) {
-                    $replace['/\{ifstudent\}(.*?)\{\/ifstudent\}/ims'] = '';
+                    $replace['/\{ifstudent\}(.*?)\{\/ifstudent\}/imsU'] = '';
                 }
             }
 
@@ -2427,7 +2443,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Remove the ifloggedout strings.
                 if (stripos($text, '{ifloggedout}') !== false) {
-                    $replace['/\{ifloggedout\}(.*?)\{\/ifloggedout\}/ims'] = '';
+                    $replace['/\{ifloggedout\}(.*?)\{\/ifloggedout\}/imsU'] = '';
                 }
             } else { // If logged-out.
                 // Remove the ifloggedout tags.
@@ -2437,7 +2453,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Remove ifloggedin strings.
                 if (stripos($text, '{ifloggedin}') !== false) {
-                    $replace['/\{ifloggedin\}(.*?)\{\/ifloggedin\}/ims'] = '';
+                    $replace['/\{ifloggedin\}(.*?)\{\/ifloggedin\}/imsU'] = '';
                 }
             }
 
@@ -2462,7 +2478,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifassistant\}/i'] = '';
                 } else {
                     // Remove the ifassistant strings.
-                    $replace['/\{ifassistant\}(.*?)\{\/ifassistant\}/ims'] = '';
+                    $replace['/\{ifassistant\}(.*?)\{\/ifassistant\}/imsU'] = '';
                 }
             }
 
@@ -2474,7 +2490,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifteacher\}/i'] = '';
                 } else {
                     // Remove the ifteacher strings.
-                    $replace['/\{ifteacher\}(.*?)\{\/ifteacher\}/ims'] = '';
+                    $replace['/\{ifteacher\}(.*?)\{\/ifteacher\}/imsU'] = '';
                 }
             }
 
@@ -2486,7 +2502,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifcreator\}/i'] = '';
                 } else {
                     // Remove the iscreator strings.
-                    $replace['/\{ifcreator\}(.*?)\{\/ifcreator\}/ims'] = '';
+                    $replace['/\{ifcreator\}(.*?)\{\/ifcreator\}/imsU'] = '';
                 }
             }
 
@@ -2498,7 +2514,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifmanager\}/i'] = '';
                 } else {
                     // Remove the ifmanager strings.
-                    $replace['/\{ifmanager\}(.*?)\{\/ifmanager\}/ims'] = '';
+                    $replace['/\{ifmanager\}(.*?)\{\/ifmanager\}/imsU'] = '';
                 }
             }
 
@@ -2511,7 +2527,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifadmin\}/i'] = '';
                 } else {
                     // Remove the ifadmin strings.
-                    $replace['/\{ifadmin\}(.*?)\{\/ifadmin\}/ims'] = '';
+                    $replace['/\{ifadmin\}(.*?)\{\/ifadmin\}/imsU'] = '';
                 }
             }
 
@@ -2523,7 +2539,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifdashboard\}/i'] = '';
                 } else {
                     // If not on the dashboard page, remove the ifdashboard text.
-                    $replace['/\{ifdashboard}(.*?)\{\/ifdashboard\}/ims'] = '';
+                    $replace['/\{ifdashboard}(.*?)\{\/ifdashboard\}/imsU'] = '';
                 }
             }
 
@@ -2546,7 +2562,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifnothome\}/i'] = '';
                 } else {
                     // If not on the front page, remove the ifhome text.
-                    $replace['/\{ifnothome}(.*?)\{\/ifnothome\}/ims'] = '';
+                    $replace['/\{ifnothome}(.*?)\{\/ifnothome\}/imsU'] = '';
                 }
             }
 
@@ -2559,7 +2575,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifdev\}/i'] = '';
                 } else {
                     // If not a developer with debugging set to DEVELOPER mode, remove the ifdev tags and contained content.
-                    $replace['/\{ifdev}(.*?)\{\/ifdev\}/ims'] = '';
+                    $replace['/\{ifdev}(.*?)\{\/ifdev\}/imsU'] = '';
                 }
             }
 
@@ -2649,7 +2665,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{\/ifworkplace\}/i'] = '';
                 } else {
                     // If not Moodle Workplace, remove the ifworkplace tags and text.
-                    $replace['/\{ifworkplace}(.*?)\{\/ifworkplace\}/ims'] = '';
+                    $replace['/\{ifworkplace}(.*?)\{\/ifworkplace\}/imsU'] = '';
                 }
             }
 
@@ -2702,7 +2718,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifminassistant\}/i'] = '';
                     } else {
                         // Remove the ifminassistant strings.
-                        $replace['/\{ifminassistant\}(.*?)\{\/ifminassistant\}/ims'] = '';
+                        $replace['/\{ifminassistant\}(.*?)\{\/ifminassistant\}/imsU'] = '';
                     }
                 }
 
@@ -2714,7 +2730,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifminteacher\}/i'] = '';
                     } else {
                         // Remove the ifminteacher strings.
-                        $replace['/\{ifminteacher\}(.*?)\{\/ifminteacher\}/ims'] = '';
+                        $replace['/\{ifminteacher\}(.*?)\{\/ifminteacher\}/imsU'] = '';
                     }
                 }
 
@@ -2726,7 +2742,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifmincreator\}/i'] = '';
                     } else {
                         // Remove the iscreator strings.
-                        $replace['/\{ifmincreator\}(.*?)\{\/ifmincreator\}/ims'] = '';
+                        $replace['/\{ifmincreator\}(.*?)\{\/ifmincreator\}/imsU'] = '';
                     }
                 }
 
@@ -2738,7 +2754,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifminmanager\}/i'] = '';
                     } else {
                         // Remove the ifminmanager strings.
-                        $replace['/\{ifminmanager\}(.*?)\{\/ifminmanager\}/ims'] = '';
+                        $replace['/\{ifminmanager\}(.*?)\{\/ifminmanager\}/imsU'] = '';
                     }
                 }
 
@@ -2762,7 +2778,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifminsitemanager\}/i'] = '';
                     } else {
                         // Remove the ifminsitemanager strings.
-                        $replace['/\{ifminsitemanager\}(.*?)\{\/ifminsitemanager\}/ims'] = '';
+                        $replace['/\{ifminsitemanager\}(.*?)\{\/ifminsitemanager\}/imsU'] = '';
                     }
                 }
 
