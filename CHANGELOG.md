@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - New {hr} tag.
 - New {coursecardsbyenrol} tag.
 - New {userscountrycount} tag.
+- Missing support for {supportname}, {supportemail} and {supportpage} tags.
 - Known limitation in README.md regarding Moodle's 'Download course content' feature.
 ### Updated
 - Fix-166,168,191 multiple instances of date/time related tags (firstaccessdate, coursestartdate, courseenddate, coursecompletiondate, now)
