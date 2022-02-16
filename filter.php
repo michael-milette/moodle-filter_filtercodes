@@ -582,6 +582,9 @@ class filter_filtercodes extends moodle_text_filter {
             if (file_exists(dirname(__FILE__) . '/../../admin/tool/pluginskel/index.php')) {
                 $menu .= '-{getstring:tool_pluginskel}pluginname{/getstring}|/admin/tool/pluginskel' . PHP_EOL;
             }
+            if (file_exists(dirname(__FILE__) . '/../../local/tinyfilemanager/index.php')) {
+                $menu .= '-{getstring:local_tinyfilemanager}pluginname{/getstring}|/local/tinyfilemanager' . PHP_EOL;
+            }
             $menu .= '-{getstring}phpinfo{/getstring}|/admin/phpinfo.php' . PHP_EOL;
             $menu .= '-###' . PHP_EOL;
             $menu .= '-{getstring:filter_filtercodes}pagebuilder{/getstring}|'
