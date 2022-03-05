@@ -449,7 +449,9 @@ class filter_filtercodes extends moodle_text_filter {
             $escapedtagsenc = false;
         }
 
+        // ===============================================================.
         // START: Process tags that may end up containing other tags first.
+        // ===============================================================.
 
         // This tag: {form...}.
         if (stripos($text, '{form') !== false) {
@@ -529,9 +531,10 @@ class filter_filtercodes extends moodle_text_filter {
             $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' . PHP_EOL;
             $menu .= '-###' . PHP_EOL;
             $menu .= '{/ifminsitemanager}' . PHP_EOL;
-            $menu .= '-{getstring}course{/getstring}: {getstring:admin}coursemgmt{/getstring}|/course/management.php' . PHP_EOL;
+            $menu .= '-{getstring}course{/getstring}: {getstring:admin}coursemgmt{/getstring}|/course/management.php' .
+                    '?categoryid={categoryid}' . PHP_EOL;
             $menu .= '-{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php' .
-                    '?category={coursecategoryid}&returnto=topcat' . PHP_EOL;
+                    '?category={categoryid}&returnto=topcat' . PHP_EOL;
             $menu .= '-{getstring}course{/getstring}: {getstring}searchcourses{/getstring}|/course/search.php' . PHP_EOL;
             $menu .= '{/ifminmanager}' . PHP_EOL;
             $menu .= '{ifminteacher}' . PHP_EOL;
@@ -638,7 +641,9 @@ class filter_filtercodes extends moodle_text_filter {
         }
         $replace = [];
 
+        // =============================================================.
         // END: Process tags that may end up containing other tags first.
+        // =============================================================.
 
         //
         // FilterCodes extended (future feature).
