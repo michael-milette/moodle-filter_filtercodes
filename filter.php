@@ -412,6 +412,38 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Generate a user link of a specified if logged-in.
+     *
+     * @param string $clinktype Type of link to generate. Options include: email, message, profile, phone1.
+     * @param object $user A user object.
+     * @param string $name The name to be displayed.
+     *
+     * @return string Generated link.
+     */
+    function userlink($clinktype, $user, $name) {
+        if (!isloggedin() || isguestuser()) {
+            $clinktype = ''; // No link, only name.
+        }
+        switch ($clinktype) {
+            case 'email':
+                $link = '<a href="mailto:'. $user->email . '">'  . $name . '</a>';
+                break;
+            case 'message':
+                $link = '<a href="' . new moodle_url('/message/index.php', ['id' => $user->id]) . '">' . $name . '</a>';
+                break;
+            case 'profile':
+                $link = '<a href="' . new moodle_url('/user/profile.php', ['id' => $user->id]) . '">' . $name . '</a>';
+                break;
+            case 'phone1' && !empty($user->phone1):
+                $link = '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
+                break;
+            default:
+                $link = $name;
+        }
+        return $link;
+    }
+
+    /**
      * Main filter function called by Moodle.
      *
      * @param string $text   Content to be filtered.
@@ -643,10 +675,10 @@ class filter_filtercodes extends moodle_text_filter {
             $cards = '';
             if (count($users)) {
                 $clinktype = get_config('filter_filtercodes', 'teamcardslinktype');
-                $descstyle = get_config('filter_filtercodes', 'teamcardsdesc');
+                $cardformat = get_config('filter_filtercodes', 'teamcardsformat');
                 $narrowpage = get_config('filter_filtercodes', 'narrowpage');
 
-                switch($descstyle) { // Show as info icon.
+                switch($cardformat) { // Show as info icon.
                     case 'infoicon':
                         $info = get_string('info');
                         $prewrap = '<a class="btn btn-link p-0 m-0 align-baseline" role="button" data-container="body"'
@@ -654,12 +686,14 @@ class filter_filtercodes extends moodle_text_filter {
                         $postwrap = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
                                 . ' fa fa-info-circle text-info fa-fw " title="' . $info . '" aria-label="' . $info . '"></i></a>';
                         break;
-                    case 'show': // Show as text.
+                    case 'brief': // Show as text.
                         $prewrap = '<br><p class="smaller">';
                         $postwrap = '</p>';
                         break;
+                    case 'verbose': // Show as text.
+                        break;
                     default: // Don't show user description.
-                        $prewrap = '';
+                        $cardformat = '';
                 }
 
                 // Prepare some strings.
@@ -669,42 +703,34 @@ class filter_filtercodes extends moodle_text_filter {
                         'profile' => get_string('profile'),
                         'phone' => get_string('phone')
                 ];
-                $cards .= '<div class="row" id="fc_teamcards" style="width:99%;">';
-                foreach ($users as $user) {
-                    $cards .= '<div class="col-sm-6 col-md-4 col-lg-3 col-xl-' . (empty($narrowpage) ? 4 : 3) . ' mt-3">';
-                    $cards .= $OUTPUT->user_picture($user, ['size' => '250', 'class' => 'img-fluid', 'link' => false,
-                            'visibletoscreenreaders' => false]);
-                    $name = '<br><h3 class="h5 font-weight-bold d-inline">' . get_string('fullnamedisplay', null, $user) . '</h3>';
-                    if (!isloggedin() || isguestuser()) {
-                        $cards .= $name;
-                    } else {
-                        switch ($clinktype) {
-                            case 'email':
-                                $cards .= '<a href="mailto:'. $user->email . '">'  . $name . '</a>';
-                                break;
-                            case 'message':
-                                $cards .= '<a href="' . new moodle_url('/message/index.php',
-                                        ['id' => $user->id]) . '">' . $name . '</a>';
-                                break;
-                            case 'profile':
-                                $cards .= '<a href="' . new moodle_url('/user/profile.php',
-                                        ['id' => $user->id]) . '">' . $name . '</a>';
-                                break;
-                            case 'phone1' && !empty($user->phone1):
-                                $cards .= '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
-                            default:
-                                $cards .= $name;
-                        }
+                if ($cardformat == 'verbose') {
+                    foreach ($users as $user) {
+                        $cards .= '<div class="clearfix mb-4">';
+                        $name = '<h3 class="h4">' . get_string('fullnamedisplay', null, $user) . '</h3>';
+                        $cards .= $this->userlink($clinktype, $user, $name);
+                        $cards .= $OUTPUT->user_picture($user, ['size' => '150', 'class' => 'img-fluid pull-left p-1 border mr-4', 'link' => false,
+                                'visibletoscreenreaders' => false]);
+                        $cards .= format_string($user->description);
+                        $cards .= '</div><hr>';
                     }
-                    if (!empty($user->description) && !empty($prewrap)) {
-                        $cards .= $prewrap . format_string($user->description) . $postwrap;
+                } else {
+                    $cards .= '<div class="row" id="fc_teamcards" style="width:99%;">';
+                    foreach ($users as $user) {
+                        $cards .= '<div class="col-sm-6 col-md-4 col-lg-3 col-xl-' . (empty($narrowpage) ? 4 : 3) . ' mt-3">';
+                        $cards .= $OUTPUT->user_picture($user, ['size' => '250', 'class' => 'img-fluid', 'link' => false,
+                                'visibletoscreenreaders' => false]);
+                        $name = '<br><h3 class="h5 font-weight-bold d-inline">' . get_string('fullnamedisplay', null, $user) . '</h3>';
+                        $cards .= $this->userlink($clinktype, $user, $name);
+                        if (!empty($user->description) && !empty($cardformat)) {
+                            $cards .= $prewrap . format_string($user->description) . $postwrap;
+                        }
+                        $cards .= '</div>';
                     }
                     $cards .= '</div>';
                 }
-                $cards .= '</div>';
             }
             $replace['/\{teamcards\}/i'] = $cards;
-            unset($cards, $users, $sql, $info, $prewrap, $postwrap, $descstyle);
+            unset($cards, $users, $sql, $info, $prewrap, $postwrap, $cardformat);
         }
 
         // Apply all of the filtercodes so far.

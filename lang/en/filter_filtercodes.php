@@ -55,8 +55,16 @@ $string['categorycardshowpic'] = 'Show {categorycards} background';
 $string['categorycardshowpic_desc'] = 'If enabled, will display a background colour/pattern for {categorycards} tag similar to the course images when no image was specified.';
 $string['coursecardsbyenrol'] = 'Maximum {coursecardsbyenrol} cards.';
 $string['coursecardsbyenrol_desc'] = 'Maximum number of course cards to display for {coursecardsbyenrol} tag. Set to zero for unlimited (not recommended).';
-$string['teamcardsdesc'] = 'Team descriptions';
-$string['teamcardsdesc_desc'] = 'Choose how the user description will appear for team member in the {teamcards} tag.';
+$string['teamcardsformat'] = 'Team cards format';
+$string['teamcardsformat_desc'] = 'Choose how the team members will appear in the {teamcards} tag.<br>
+<ul>
+<li>None: Displays just the picture and name as a card without the user description.</li>
+<li>Icon: Same as none except that the user description appears in an information popup bubble.</li>
+<li>Brief: Same as none but displays the description below the user picture and name.</li>
+<li>Verbose: List format. Recommended if your team members tends to have long user descriptions.</li>
+</ul>';
+$string['brief'] = 'Brief';
+$string['verbose'] = 'Verbose';
 $string['teamcardslinktype'] = 'Team link type';
 $string['teamcardslinktype_desc'] = 'Choose the type of link for the team member\'s link in the {teamcards} tag. Note: Photo will automatically be linked to profile when the user is logged-in regardless of your choice here.';
 $string['narrowpage'] = 'Narrow page';

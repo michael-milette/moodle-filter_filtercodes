@@ -129,12 +129,13 @@ $settings->add($setting);
 
 // Option to select how to display user description for {teamcards} tag.
 $default = ''; // Default is to not display the description field.
-$name = 'filter_filtercodes/teamcardsdesc';
-$title = get_string('teamcardsdesc', 'filter_filtercodes');
-$description = get_string('teamcardsdesc_desc', 'filter_filtercodes');
+$name = 'filter_filtercodes/teamcardsformat';
+$title = get_string('teamcardsformat', 'filter_filtercodes');
+$description = get_string('teamcardsformat_desc', 'filter_filtercodes');
 $choices = ['' => get_string('none'),
         'infoicon' => get_string('icon'),
-        'show' => get_string('display', 'form')];
+        'brief' => get_string('brief', 'filter_filterCodes'),
+        'verbose' => get_string('verbose', 'filter_filterCodes')];
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);
 
