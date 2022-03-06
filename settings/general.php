@@ -42,6 +42,14 @@ if ($CFG->branch >= 32 && $CFG->branch <= 34) { // Only supported in Moodle 3.2 
 }
 $settings->add($setting);
 
+// Option to optimize display if your theme uses narrow page width (e.g., Moodle 4.0 Boost).
+$default = 0; // Default is to not show colour/pattern.
+$name = 'filter_filtercodes/narrowpage';
+$title = get_string('narrowpage', 'filter_filtercodes');
+$description = get_string('narrowpage_desc', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
 // Option to use alternative braces to escape tags.
 $default = '1';
 $name = 'filter_filtercodes/escapebraces';
@@ -86,7 +94,7 @@ $settings->add($setting);
 $default = 0; // Default is to not show profile description.
 $name = 'filter_filtercodes/coursecontactshowdesc';
 $title = get_string('coursecontactshowdesc', 'filter_filtercodes');
-$description =  get_string('coursecontactshowdesc_desc', 'filter_filtercodes');
+$description = get_string('coursecontactshowdesc_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
@@ -109,6 +117,25 @@ $name = 'filter_filtercodes/categorycardshowpic';
 $title = get_string('categorycardshowpic', 'filter_filtercodes');
 $description = get_string('categorycardshowpic_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
+// Option to select link type for {teamcards} tag.
+$default = ''; // Default is to not link the teachers name.
+$name = 'filter_filtercodes/teamcardslinktype';
+$title = get_string('teamcardslinktype', 'filter_filtercodes');
+$description = get_string('teamcardslinktype_desc', 'filter_filtercodes');
+$setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+$settings->add($setting);
+
+// Option to select how to display user description for {teamcards} tag.
+$default = ''; // Default is to not display the description field.
+$name = 'filter_filtercodes/teamcardsdesc';
+$title = get_string('teamcardsdesc', 'filter_filtercodes');
+$description = get_string('teamcardsdesc_desc', 'filter_filtercodes');
+$choices = ['' => get_string('none'),
+        'infoicon' => get_string('icon'),
+        'show' => get_string('display', 'form')];
+$setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);
 
 // Number of cards to show for {coursecardsbyenrol} tag.

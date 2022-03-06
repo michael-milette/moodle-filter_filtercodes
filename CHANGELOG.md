@@ -1,16 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.8] 2022-02-15 (DEV)
+## [2.2.8] 2022-03-05 (DEV)
 ### Added
+- New {teamcards} (ALPHA) tag.
 - New {ifnotvisible}{/ifnotvisible}
 - New {showmore}{/showmore} tags (ALPHA).
 - New {menuadmin} tag.
 - New {mycoursescards} tag.
 - New fc-coursecontacts and fc-coursecontactroles classes for {coursecontacts} HTML.
 - New {coursecontacts} tag (formerly {courseteachers}).
-- {courseteachers} can now optionally display user profile description.
-- {courseteachers} can now optionally link to phone number.
+- {coursecontacts} can now optionally display user profile description.
+- {coursecontacts} can now optionally link to phone number.
 - New {chart progressbar x Title text} tag (ALPHA).
 - New {chart radial x Title text} tag (ALPHA).
 - New {chart pie x Title text} tag (ALPHA).

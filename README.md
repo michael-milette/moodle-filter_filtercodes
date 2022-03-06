@@ -136,6 +136,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 
 ### UI Elements
 
+* {teamcards}: Displays photos, name (optionally linked) and optional description of user's who are teachers. Not for use in side-blocks.
 * {coursecards} or {coursecards categoryID}: (ALPHA) Display available courses as cards. You can optionally specify the ID number of a category. Example: {coursecards 1} will only display courses in the default Miscellaneous category. Note: The categoryID is not the "Category ID Number" field that you can optionally specify when creating a category.
 * {coursecardsbyenrol} (ALPHA): Display course cards for most popular courses based on enrolment. Maximum number of cards is configurable in the plugin settings.
 * {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
@@ -909,7 +910,8 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course progress (ALPHA) [{courseprogress}]: {courseprogress}
 * Course progress bar (ALPHA) [{courseprogressbar}]: {courseprogressbar}
 * Course cards (ALPHA) [{coursecards}]: {coursecards}
-* Course cards by enrolment (ALPHA) [{{coursecardsbyenrol}}]: {{coursecardsbyenrol}}
+* Course cards by enrolment (ALPHA) [{coursecardsbyenrol}]: {coursecardsbyenrol}
+* Team cards Our faculty team [{teamcards}]: Our faculty team<br>{teamcards}
 * Category cards (ALPHA) [{categorycards}]: {categorycards}
 * Category 1 cards (ALPHA) [{categorycards 1}]: Sub-categories of Miscellaneous category include {categorycards 1}
 * Total courses [{coursecount}]: {coursecount}

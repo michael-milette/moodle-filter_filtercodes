@@ -449,9 +449,7 @@ class filter_filtercodes extends moodle_text_filter {
             $escapedtagsenc = false;
         }
 
-        // ===============================================================.
         // START: Process tags that may end up containing other tags first.
-        // ===============================================================.
 
         // This tag: {form...}.
         if (stripos($text, '{form') !== false) {
@@ -630,6 +628,85 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{menudev\}/i'] = $menu;
         }
 
+        // This tag: {teamcards}.
+        if (stripos($text, '{teamcards}') !== false) {
+            global $DB, $OUTPUT;
+
+            $sql = 'SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
+                    u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1
+                    FROM {course} c, {role_assignments} ra, {user} u, {context} ct
+                    WHERE c.id = ct.instanceid AND ra.roleid = 3 AND ra.userid = u.id AND ct.id = ra.contextid
+                        AND u.suspended = 0 AND u.deleted = 0
+                    ORDER BY u.lastname desc, u.firstname';
+            $users = $DB->get_records_sql($sql);
+
+            $cards = '';
+            if (count($users)) {
+                $clinktype = get_config('filter_filtercodes', 'teamcardslinktype');
+                $descstyle = get_config('filter_filtercodes', 'teamcardsdesc');
+                $narrowpage = get_config('filter_filtercodes', 'narrowpage');
+
+                switch($descstyle) { // Show as info icon.
+                    case 'infoicon':
+                        $info = get_string('info');
+                        $prewrap = '<a class="btn btn-link p-0 m-0 align-baseline" role="button" data-container="body"'
+                                . ' data-toggle="popover" data-placement="right" data-content="<div class=&quot;no-overflow&quot;><p>';
+                        $postwrap = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
+                                . ' fa fa-info-circle text-info fa-fw " title="' . $info . '" aria-label="' . $info . '"></i></a>';
+                        break;
+                    case 'show': // Show as text.
+                        $prewrap = '<br><p class="smaller">';
+                        $postwrap = '</p>';
+                        break;
+                    default: // Don't show user description.
+                        $prewrap = '';
+                }
+
+                // Prepare some strings.
+                $linksr = ['' => '',
+                        'email' => get_string('issueremail', 'badges'),
+                        'message' => get_string('message', 'message'),
+                        'profile' => get_string('profile'),
+                        'phone' => get_string('phone')
+                ];
+                $cards .= '<div class="row" id="fc_teamcards" style="width:99%;">';
+                foreach ($users as $user) {
+                    $cards .= '<div class="col-sm-6 col-md-4 col-lg-3 col-xl-' . (empty($narrowpage) ? 4 : 3) . ' mt-3">';
+                    $cards .= $OUTPUT->user_picture($user, ['size' => '250', 'class' => 'img-fluid', 'link' => false,
+                            'visibletoscreenreaders' => false]);
+                    $name = '<br><h3 class="h5 font-weight-bold d-inline">' . get_string('fullnamedisplay', null, $user) . '</h3>';
+                    if (!isloggedin() || isguestuser()) {
+                        $cards .= $name;
+                    } else {
+                        switch ($clinktype) {
+                            case 'email':
+                                $cards .= '<a href="mailto:'. $user->email . '">'  . $name . '</a>';
+                                break;
+                            case 'message':
+                                $cards .= '<a href="' . new moodle_url('/message/index.php',
+                                        ['id' => $user->id]) . '">' . $name . '</a>';
+                                break;
+                            case 'profile':
+                                $cards .= '<a href="' . new moodle_url('/user/profile.php',
+                                        ['id' => $user->id]) . '">' . $name . '</a>';
+                                break;
+                            case 'phone1' && !empty($user->phone1):
+                                $cards .= '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
+                            default:
+                                $cards .= $name;
+                        }
+                    }
+                    if (!empty($user->description) && !empty($prewrap)) {
+                        $cards .= $prewrap . format_string($user->description) . $postwrap;
+                    }
+                    $cards .= '</div>';
+                }
+                $cards .= '</div>';
+            }
+            $replace['/\{teamcards\}/i'] = $cards;
+            unset($cards, $users, $sql, $info, $prewrap, $postwrap, $descstyle);
+        }
+
         // Apply all of the filtercodes so far.
         $newtext = null;
         if (count($replace) > 0) {
@@ -641,9 +718,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
         $replace = [];
 
-        // =============================================================.
         // END: Process tags that may end up containing other tags first.
-        // =============================================================.
 
         //
         // FilterCodes extended (future feature).
@@ -1541,7 +1616,7 @@ class filter_filtercodes extends moodle_text_filter {
             global $OUTPUT;
             preg_match_all('/\{chart\s(\w+)\s([0-9]+)\s(.*)\}/imsU', $text, $matches, PREG_SET_ORDER);
             $matches = array_unique($matches, SORT_REGULAR);
-            foreach($matches as $match) {
+            foreach ($matches as $match) {
                 $type = $match[1]; // Chart type: radial, pie or progressbar.
                 $value = $match[2]; // Value between 0 and 100.
                 $title = $match[3]; // Text label.
@@ -1557,7 +1632,7 @@ class filter_filtercodes extends moodle_text_filter {
                         if ($CFG->branch >= 39) {
                             $chart->set_legend_options(['display' => false]);  // Hide chart legend.
                         }
-                        $html =  $OUTPUT->render_chart($chart, false);
+                        $html = $OUTPUT->render_chart($chart, false);
                         break;
                     case 'pie': // Tag: {chart pie} - Display a pie chart.
                         $chart = new \core\chart_pie();
@@ -1569,7 +1644,7 @@ class filter_filtercodes extends moodle_text_filter {
                         if ($CFG->branch >= 39) {
                             $chart->set_legend_options(['display' => false]);  // Hide chart legend.
                         }
-                        $html =  $OUTPUT->render_chart($chart, false);
+                        $html = $OUTPUT->render_chart($chart, false);
                         break;
                     case 'progressbar': // Tag: {chart progressbar} - Display a horizontal progres bar.
                         $html = '
@@ -1916,7 +1991,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
 
                 // For each tag's category ID.
-                foreach($categoryids as $catid) {
+                foreach ($categoryids as $catid) {
                     $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
                             FROM {course_categories} cc
                             WHERE cc.parent = $catid
@@ -2133,8 +2208,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $newtext = preg_replace_callback('/fc-showmore-tmp/', function($matches) {
                         static $count = 0;
                         return 'showmore-' . $count++;
-                    }, $newtext
-                );
+                }, $newtext);
                 $text = $newtext;
                 $changed = true;
             }
@@ -2146,8 +2220,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $newtext = preg_replace_callback('/fc-showmore-tmp/', function($matches) {
                         static $count = 0;
                         return 'showmore-' . $count++;
-                    }, $newtext
-                );
+                }, $newtext);
                 $text = $newtext;
                 $changed = true;
             }

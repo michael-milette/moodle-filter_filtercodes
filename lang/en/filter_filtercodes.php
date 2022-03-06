@@ -55,7 +55,12 @@ $string['categorycardshowpic'] = 'Show {categorycards} background';
 $string['categorycardshowpic_desc'] = 'If enabled, will display a background colour/pattern for {categorycards} tag similar to the course images when no image was specified.';
 $string['coursecardsbyenrol'] = 'Maximum {coursecardsbyenrol} cards.';
 $string['coursecardsbyenrol_desc'] = 'Maximum number of course cards to display for {coursecardsbyenrol} tag. Set to zero for unlimited (not recommended).';
-
+$string['teamcardsdesc'] = 'Team descriptions';
+$string['teamcardsdesc_desc'] = 'Choose how the user description will appear for team member in the {teamcards} tag.';
+$string['teamcardslinktype'] = 'Team link type';
+$string['teamcardslinktype_desc'] = 'Choose the type of link for the team member\'s link in the {teamcards} tag. Note: Photo will automatically be linked to profile when the user is logged-in regardless of your choice here.';
+$string['narrowpage'] = 'Narrow page';
+$string['narrowpage_desc'] = 'Enable this option to optimize display of information if Moodle is using a theme with limited page width (e.g., Boost in Moodle 4.0).';
 $string['sizeb'] = 'B';
 $string['sizekb'] = 'KB';
 $string['sizemb'] = 'MB';
