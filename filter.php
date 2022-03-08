@@ -947,6 +947,36 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {lastlogindate} or {lastlogindate dateTimeFormat}.
+        if (stripos($text, '{lastlogindate') !== false) {
+            if (isloggedin() && !isguestuser() && !empty($USER->lastlogin)) {
+                // Replace {lastlogindate} tag with formatted date.
+                if (stripos($text, '{lastlogindate}') !== false) {
+                    $replace['/\{lastlogindate\}/i'] = userdate($USER->lastlogin, get_string('strftimedatetimeshort'));
+                }
+                // Replace {lastlogindate dateTimeFormat} tag and parameters with formatted date.
+                if (stripos($text, '{lastlogindate ') !== false) {
+                    $newtext = preg_replace_callback('/\{lastlogindate\s+(.+)\}/imsU',
+                        function ($matches) use ($USER) {
+                            // Check if this is a built-in Moodle date/time format.
+                            if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                                // It is! Get the strftime string.
+                                $matches[1] = get_string($matches[1], 'langconfig');
+                            }
+                            return userdate($USER->lastlogin, $matches[1]);
+                        },
+                        $text
+                    );
+                    if ($newtext !== false) {
+                        $text = $newtext;
+                        $changed = true;
+                    }
+                }
+            } else {
+                $replace['/\{lastlogindate(.*)\}/i'] = get_string('never');
+            }
+        }
+
         // Tags starting with: {support...}.
         if (stripos($text, '{support') !== false) {
             // Tag: {supportname}.
