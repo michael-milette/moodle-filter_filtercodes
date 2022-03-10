@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.8] 2022-03-05 (DEV)
 ### Added
+- New {mygroups} tag.
 - New {teamcards} (ALPHA) tag.
 - New {ifnotvisible}{/ifnotvisible}
 - New {showmore}{/showmore} tags (ALPHA).

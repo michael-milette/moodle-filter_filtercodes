@@ -174,6 +174,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {sectionname} : Display the section name in which the activity is located.
 * {coursecontacts}: List of course contacts with links to their profiles, email address or messaging or phone number, and their user description (there are settings for these). Note: This tag was formerly called {courseteachers}.
 * {coursegradepercent}: Displays the current accumulated course grade of the student.
+* {mygroups}: Displays a list of groups to which you are a member, separated by a commas+space.
 
 Also see Courses section below.
 
@@ -927,6 +928,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
 * Section Name [{sectionname}] : [{sectionname}]
 * Contacts in this course [{coursecontacts}]: {coursecontacts}
+* Please help other members of [{mygroups}] who might be struggling : Please help other members of {mygroups} who might be struggling.
 * You current grade in this course is [{coursegradepercent}]: {coursegradepercent}
 * Available free application disk space [{diskfreespace}]: {diskfreespace}
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}

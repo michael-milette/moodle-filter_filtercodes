@@ -2055,6 +2055,22 @@ class filter_filtercodes extends moodle_text_filter {
             unset($categories, $catid, $thiscategorycard, $catids, $categoryids, $matches, $html, $categoryshowpic);
         }
 
+        // Tag: {mygroups}.
+        if (stripos($text, '{mygroups}') !== false) {
+            static $mygroups;
+
+            if (!isset($mygroups)) { // Fetch my groups.
+                $context = context_course::instance($PAGE->course->id);
+                $groups = groups_get_all_groups($PAGE->course->id, $USER->id);
+                $mygroups = '';
+                foreach ($groups as $group) {
+                    $mygroups .= format_string($group->name, true, ['context' => $context]) . ', ';
+                }
+                $mygroups = trim($mygroups, ', ');
+            }
+            $replace['/\{mygroups\}/i'] = $mygroups;
+        }
+
         // Tag: {referer}.
         if (stripos($text, '{refer') !== false) {
             if (stripos($text, '{referer}') !== false) {
