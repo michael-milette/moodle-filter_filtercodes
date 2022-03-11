@@ -116,7 +116,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {profile_field_shortname} : Display's custom user profile field. Replace "shortname" with the shortname of a custom user profile field all in lowercase. NOTE: Will not display if the custom user profile field's settings are set to **Not Visible**.
 * {profilefullname}: Similar to {fullname} except that it displays a profile owner's name when placed on the Profile page.
 * {firstaccessdate dateTimeFormat} : Date that the user first accessd the site. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
-* {lastlogindate dateTimeFormat} : Date that the user last logged into the site. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
+* {lastlogin dateTimeFormat} : Date that the user last logged into the site. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 
 ### System Information
 
@@ -904,6 +904,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Total number of users [{userscountrycount}]: {userscountrycount}
 * Current 4-digit year [{siteyear}]: {siteyear}
 * You first accessed the site on [{firstaccessdate strftimedatetime}] : {firstaccessdate strftimedatetime}
+* You last logged-in on [{lastlogin strftimedatetime}] : {lastlogin strftimedatetime}
 * Course or Site full name [{coursename}]: {coursename}
 * Course or Site short name [{courseshortname}]: {courseshortname}
 * Course start date [{coursestartdate strftimedatetime}]: {coursestartdate strftimedatetime}

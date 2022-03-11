@@ -947,16 +947,16 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {lastlogindate} or {lastlogindate dateTimeFormat}.
-        if (stripos($text, '{lastlogindate') !== false) {
+        // Tag: {lastlogin} or {lastlogin dateTimeFormat}.
+        if (stripos($text, '{lastlogin') !== false) {
             if (isloggedin() && !isguestuser() && !empty($USER->lastlogin)) {
-                // Replace {lastlogindate} tag with formatted date.
-                if (stripos($text, '{lastlogindate}') !== false) {
-                    $replace['/\{lastlogindate\}/i'] = userdate($USER->lastlogin, get_string('strftimedatetimeshort'));
+                // Replace {lastlogin} tag with formatted date.
+                if (stripos($text, '{lastlogin}') !== false) {
+                    $replace['/\{lastlogin\}/i'] = userdate($USER->lastlogin, get_string('strftimedatetimeshort'));
                 }
-                // Replace {lastlogindate dateTimeFormat} tag and parameters with formatted date.
-                if (stripos($text, '{lastlogindate ') !== false) {
-                    $newtext = preg_replace_callback('/\{lastlogindate\s+(.+)\}/imsU',
+                // Replace {lastlogin dateTimeFormat} tag and parameters with formatted date.
+                if (stripos($text, '{lastlogin ') !== false) {
+                    $newtext = preg_replace_callback('/\{lastlogin\s+(.+)\}/imsU',
                         function ($matches) use ($USER) {
                             // Check if this is a built-in Moodle date/time format.
                             if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
@@ -973,7 +973,7 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 }
             } else {
-                $replace['/\{lastlogindate(.*)\}/i'] = get_string('never');
+                $replace['/\{lastlogin(.*)\}/i'] = get_string('never');
             }
         }
 
