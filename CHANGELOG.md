@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - Known limitation in README.md regarding Moodle's 'Download course content' feature.
 - Compatible with Moodle 4.0 (ALPHA) - Note: Custom menu patch does not work in 4.0 yet.
 ### Updated
+- Fixed {coursecards catid}.
 - Many tags that didn't work if it contained a line break now work correctly.
 - Tag %7Bcoursecontextid%7D now works.
 - Fix-166,168,191 multiple instances of date/time related tags (firstaccessdate, coursestartdate, courseenddate, coursecompletiondate, now)

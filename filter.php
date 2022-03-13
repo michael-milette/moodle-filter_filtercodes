@@ -2074,7 +2074,7 @@ class filter_filtercodes extends moodle_text_filter {
                     if ($catid == $thiscategorycard) {
                         $replace['/\{categorycards\}/i'] = $html;
                         // If a tag with this category ID was also specified, replace it too.
-                        if (stripos($text, '{categorycards  ' . $catid . '}') !== false) {
+                        if (stripos($text, '{categorycards ' . $catid . '}') !== false) {
                             $replace['/\{categorycards ' . $catid . '\}/isuU'] = $html;
                         }
                     } else {
