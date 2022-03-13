@@ -928,7 +928,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course ID number [{courseidnumber}]: {courseidnumber}
 * Section ID [{sectionid}]: {sectionid}
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
-* Section Name [{sectionname}] : [{sectionname}]
+* Section Name [{sectionname}] : {sectionname}
 * Contacts in this course [{coursecontacts}]: {coursecontacts}
 * Please help other members of [{mygroups}] who might be struggling : Please help other members of {mygroups} who might be struggling.
 * You current grade in this course is [{coursegradepercent}]: {coursegradepercent}
