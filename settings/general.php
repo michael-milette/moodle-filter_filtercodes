@@ -134,7 +134,7 @@ $title = get_string('teamcardsformat', 'filter_filtercodes');
 $description = get_string('teamcardsformat_desc', 'filter_filtercodes');
 $choices = ['' => get_string('none'),
         'infoicon' => get_string('icon'),
-        'brief' => get_string('brief', 'filter_filtecodes'),
+        'brief' => get_string('brief', 'filter_filtercodes'),
         'verbose' => get_string('verbose', 'filter_filtercodes')];
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);
