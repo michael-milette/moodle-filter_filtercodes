@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.8] 2022-03-17 (DEV)
 ### Added
+- Support for optional course ID parameter in the {coursesummary} tag.
 - New {qrcode}{/qrcode} tags.
 - New {lastlogin} tag.
 - New {mygroups} tag.

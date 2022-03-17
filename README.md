@@ -166,6 +166,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display's custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
 * {coursesummary} : Display's the course summary. If placed in a site page, displays the site summary.
+* {coursesummary ID} : Display's the course summary of the course with the specified course ID number.
 * {courseimage} : Display's the course image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
 * {courseid} or %7Bcourseid%7D : Display a course's ID.
@@ -961,6 +962,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * List of custom course fields [{course_fields}]: {course_fields}
 * Course custom fields [{course_field_location}] (assumes you have created a custom course field called "location"): {course_field_location}
 * Course description [{coursesummary}] : {coursesummary}
+* Course description [{coursesummary 2}] : {coursesummary 2} (only works if you have a course with a course id of 2 that has a ssummary for this example)
 * [{courseimage}] : {courseimage}
 * Number of participants in the course [{courseparticipantcount}] : {courseparticipantcount}
 * The base (root) URL of your Moodle site [{wwwroot}]: {wwwroot}

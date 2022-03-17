@@ -561,8 +561,24 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tag: {coursesummary}.
-        if (stripos($text, '{coursesummary}') !== false) {
-            $replace['/\{coursesummary\}/i'] = $PAGE->course->summary;
+        if (stripos($text, '{coursesummary') !== false) {
+            if (stripos($text, '{coursesummary}') !== false) {
+                // No course ID specified.
+                $replace['/\{coursesummary\}/i'] = $PAGE->course->summary;
+            }
+            if (stripos($text, '{coursesummary ') !== false) {
+                // Course ID was specified.
+                preg_match_all('/\{coursesummary ([0-9]+)\}/', $text, $matches);
+                // Eliminate course IDs.
+                $courseids = array_unique($matches[1]);
+                foreach ($courseids as $id) {
+                    $course = $DB->get_record('course', ['id' => $id]);
+                    if (!empty($course)) {
+                        $replace['/\{coursesummary ' . $course->id . '\}/isuU'] = $course->summary;
+                    }
+                }
+                unset($matches, $course, $courseids, $id);
+            }
         }
 
         // This tag: {menuadmin}.
