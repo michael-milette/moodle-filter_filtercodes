@@ -152,6 +152,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {chart pie x Title text} (ALPHA) : Create a pie chart given a value of x between 0 and 100 and a title.
 * {chart progressbar x Title text} (ALPHA) : Create a horizontal progress bar chart giving it a value of x between 0 and 100 and a title.
 * {showmore}{/showmore} (ALPHA) : Toggle showing content between opening and closing more tags. Limitations: Can only be used inline with text. Must now weave into other opening and closing tags.
+* {qrcode}{/qrcode} : Generate and display a QR Code for the content between the tags.
 
 ### For use in courses
 
@@ -998,6 +999,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * [{marktext}]This text is highlited in a different colour[{/marktext}] : {marktext}This text is highlited in a different colour{/marktext}
 * [{markborder}]This text has a red border around it[{/markborder}] : {markborder}This text has a red border around it{/markborder}
 * This is a course description. [{showmore}]These are the details.[{/showmore}] : This is a course description. {showmore}These are the details.{/showmore}
+* QR Code the URL to site's home page [{qrcode}][{wwwroot}][{/qrcode}] : {qrcode}{wwwroot}{/qrcode}
 * Current language [{lang}] : {lang}
 * Display content of custom user profile field [{profile_field_learningstyle}] - assuming you have a custom user profile field with a shortname called 'learningstyle': {profile_field_learningstyle}
 * Display profile owner's full name on profile pages [{profilefullname}]: This is the profile of {profilefullname}.

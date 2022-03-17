@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<libraries>
+  <library>
+    <location>thirdparty/QrCode</location>
+    <name>QR Code Generator</name>
+    <license>MIT</license>
+    <version>v1.5.7</version>
+    <licenseversion>1</licenseversion>
+  </library>
+</libraries>

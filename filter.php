@@ -29,6 +29,7 @@ use block_online_users\fetcher;
 use core_table\local\filter\integer_filter;
 use core_user\table\participants_filterset;
 use core_user\table\participants_search;
+use Endroid\QrCode\QrCode;
 
 require_once($CFG->dirroot . '/course/renderer.php');
 
@@ -441,6 +442,29 @@ class filter_filtercodes extends moodle_text_filter {
                 $link = $name;
         }
         return $link;
+    }
+
+    /**
+     * Generate base64 encoded data img of QR Code.
+     *
+     * @param string $string Text to be encoded.
+     * @return string Base64 encoded data image.
+     */
+    function qrcode($text, $label = '') {
+        if (empty($text)) {
+            return '';
+        }
+        global $CFG;
+        require_once($CFG->dirroot . '/filter/filtercodes/thirdparty/QrCode/src/QrCode.php');
+        $code = new QrCode();
+        $code->setText($text);
+        $code->setErrorCorrection('high');
+        $code->setPadding(0);
+        $code->setSize(480);
+        $code->setLabelFontSize(16);
+        $code->setLabel($label);
+        $src = 'data:image/png;base64,' . base64_encode($code->get('png'));
+        return $src;
     }
 
     /**
@@ -2954,6 +2978,21 @@ class filter_filtercodes extends moodle_text_filter {
             $newtext = preg_replace_callback('/\{urlencode\}(.*)\{\/urlencode\}/isuU',
                 function($matches) {
                     return urlencode($matches[1]);
+                }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+                $changed = true;
+            }
+        }
+
+        // Tag: {qrcode}{/qrcode}.
+        if (stripos($text, '{qrcode}') !== false) {
+            // Remove {qrcode}{/qrcode} tags and turn content between the tags into a QR code.
+            $newtext = preg_replace_callback('/\{qrcode\}(.*)\{\/qrcode\}/isuU',
+                function($matches) {
+                    $src = $this->qrcode(html_to_text($matches[1]));
+                    $src = '<img src="' . $src . '" style="width:100%;max-width:480px;height:auto;" class="fc-qrcode">';
+                    return $src;
                 }, $text);
             if ($newtext !== false) {
                 $text = $newtext;
