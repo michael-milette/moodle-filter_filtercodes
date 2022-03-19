@@ -157,6 +157,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 ### For use in courses
 
 * {coursename} : Display the full name of the current course or the site name if not in a course.
+* {coursename ID} : Display the full name of the course specified by the course ID.
 * {courseshortname} : Display the short name of t he current course or the site short name if not in a course.
 * {coursestartdate dateTimeFormat} : Course star t date. Will display "Open event" if there is no start date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {courseenddate dateTimeFormat} : Course end date. Will display "Open event" if there is no end date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
@@ -871,7 +872,7 @@ Here is an example that reduces the image and places the information next to it.
     padding-top: 5px
     }
 
-### Do you have examples, samples and ways to which tags are working in my version of FilterCodes?
+### Do you have examples/samples of how tags work in my version of FilterCodes?
 
 Create a Page on your Moodle site, preferably in a course, so that those tags work too, and include the following code:
 
@@ -908,6 +909,9 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * You first accessed the site on [{firstaccessdate strftimedatetime}] : {firstaccessdate strftimedatetime}
 * You last logged-in on [{lastlogin strftimedatetime}] : {lastlogin strftimedatetime}
 * Course or Site full name [{coursename}]: {coursename}
+* Course or Site description/Summary [{coursesummary}] : {coursesummary}
+* The description for course "[{coursename 2}]" is [{coursesummary 2}]: The summary for course "[{coursename 2}]" is [{coursesummary 2}] (note: only works if you have a course with a course id of 2 that has a summary for this example).
+* [{courseimage}] : {courseimage}
 * Course or Site short name [{courseshortname}]: {courseshortname}
 * Course start date [{coursestartdate strftimedatetime}]: {coursestartdate strftimedatetime}
 * Course end date [{courseenddate strftimedatetime}]: {courseenddate strftimedatetime}
@@ -961,9 +965,6 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Other course categories in this categories menu [{categoriesxmenu}]: <br><pre>{categoriesxmenu}</pre>
 * List of custom course fields [{course_fields}]: {course_fields}
 * Course custom fields [{course_field_location}] (assumes you have created a custom course field called "location"): {course_field_location}
-* Course description [{coursesummary}] : {coursesummary}
-* Course description [{coursesummary 2}] : {coursesummary 2} (only works if you have a course with a course id of 2 that has a ssummary for this example)
-* [{courseimage}] : {courseimage}
 * Number of participants in the course [{courseparticipantcount}] : {courseparticipantcount}
 * The base (root) URL of your Moodle site [{wwwroot}]: {wwwroot}
 * Site support name [{supportname}]: {supportname}

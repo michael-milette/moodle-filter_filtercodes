@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.8] 2022-03-17 (DEV)
 ### Added
+- Support for optional course ID parameter in the {coursename} tag.
 - Support for optional course ID parameter in the {coursesummary} tag.
 - New {qrcode}{/qrcode} tags.
 - New {lastlogin} tag.
@@ -36,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - Known limitation in README.md regarding Moodle's 'Download course content' feature.
 - Compatible with Moodle 4.0 (ALPHA) - Note: Custom menu patch does not work in 4.0 yet.
 ### Updated
+- {coursesummary} tag is now processed through Moodle filters for multi-language support.
 - Fixed {coursecards catid}.
 - Many tags that didn't work if it contained a line break now work correctly.
 - Tag %7Bcoursecontextid%7D now works.

@@ -564,17 +564,21 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{coursesummary') !== false) {
             if (stripos($text, '{coursesummary}') !== false) {
                 // No course ID specified.
-                $replace['/\{coursesummary\}/i'] = $PAGE->course->summary;
+                $coursecontext = context_course::instance($PAGE->course->id);
+                $replace['/\{coursesummary\}/i'] = format_text($PAGE->course->summary, FORMAT_HTML,
+                        ['context' => $coursecontext]);
             }
             if (stripos($text, '{coursesummary ') !== false) {
                 // Course ID was specified.
                 preg_match_all('/\{coursesummary ([0-9]+)\}/', $text, $matches);
                 // Eliminate course IDs.
                 $courseids = array_unique($matches[1]);
+                $coursecontext = context_course::instance($PAGE->course->id);
                 foreach ($courseids as $id) {
                     $course = $DB->get_record('course', ['id' => $id]);
                     if (!empty($course)) {
-                        $replace['/\{coursesummary ' . $course->id . '\}/isuU'] = $course->summary;
+                        $replace['/\{coursesummary ' . $course->id . '\}/isuU'] = format_text($course->summary, FORMAT_HTML,
+                                ['context' => $coursecontext]);;
                     }
                 }
                 unset($matches, $course, $courseids, $id);
@@ -1396,14 +1400,35 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{courseidnumber\}/i'] = $PAGE->course->idnumber;
             }
 
-            // Tag: {coursename}. The full name of this course.
-            if (stripos($text, '{coursename}') !== false) {
-                $course = $PAGE->course;
-                if ($course->id == $SITE->id) { // Front page - use site name.
-                    $replace['/\{coursename\}/i'] = format_string($SITE->fullname);
-                } else { // In a course - use course full name.
-                    $coursecontext = context_course::instance($course->id);
-                    $replace['/\{coursename\}/i'] = format_string($course->fullname, true, ['context' => $coursecontext]);
+            // Tag: {coursename}. The full name of a course or the site name.
+            if (stripos($text, '{coursename') !== false) {
+                if (stripos($text, '{coursename}') !== false) {
+                    // No course ID was specified.
+                    $course = $PAGE->course;
+                    if ($course->id == $SITE->id) { // If not in a course, use the site name.
+                        $coursecontext = context_system::instance();
+                        $replace['/\{coursename\}/i'] = format_string($SITE->fullname, true,
+                                ['context' => $coursecontext]);
+                    } else { // If in a course - use course full name.
+                        $coursecontext = context_course::instance($course->id);
+                        $replace['/\{coursename\}/i'] = format_string($course->fullname, true,
+                                ['context' => $coursecontext]);
+                    }
+                }
+                if (stripos($text, '{coursename ') !== false) {
+                    // Course ID was specified.
+                    preg_match_all('/\{coursename ([0-9]+)\}/', $text, $matches);
+                    // Eliminate course IDs.
+                    $courseids = array_unique($matches[1]);
+                    $coursecontext = context_system::instance();
+                    foreach ($courseids as $id) {
+                        $course = $DB->get_record('course', ['id' => $id]);
+                        if (!empty($course)) {
+                            $replace['/\{coursename ' . $course->id . '\}/isuU'] = format_string($course->fullname, true,
+                                    ['context' => $coursecontext]);
+                        }
+                    }
+                    unset($matches, $course, $courseids, $id);
                 }
             }
 
