@@ -1,15 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.8] 2022-03-17 (DEV)
+## [2.2.8] 2022-03-25 (DEV)
 ### Added
+- New {ifactivitycompleted id}{/ifactivitycompleted} tags.
 - Support for optional course ID parameter in the {coursename} tag.
 - Support for optional course ID parameter in the {coursesummary} tag.
 - New {qrcode}{/qrcode} tags.
 - New {lastlogin} tag.
 - New {mygroups} tag.
 - New {teamcards} (ALPHA) tag.
-- New {ifnotvisible}{/ifnotvisible}
+- New {ifnotvisible}{/ifnotvisible} tags.
 - New {showmore}{/showmore} tags (ALPHA).
 - New {menuadmin} tag.
 - New {mycoursescards} tag.

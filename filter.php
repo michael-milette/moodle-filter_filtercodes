@@ -2413,6 +2413,34 @@ class filter_filtercodes extends moodle_text_filter {
 
         if (strpos($text, '{if') !== false) { // If there are conditional tags.
 
+            require_once($CFG->libdir.'/completionlib.php');
+
+            // Tag: {ifactivitycompleted id}{/ifactivitycompleted}.
+            if (stripos($text, '{/ifactivitycompleted}') !== false) {
+                global $PAGE;
+                $course = $PAGE->course;
+                $completion = new completion_info($course);
+                if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
+                    $activities = $completion->get_activities();
+
+                    $re = '/{ifactivitycompleted\s+([0-9]+)\}(.*)\{\/ifactivitycompleted\}/isuU';
+                    $found = preg_match_all($re, $text, $matches);
+                    if ($found > 0) {
+                        foreach ($matches[1] as $modid) {
+                            if (array_key_exists($modid, $activities)) {
+                                $mod = $completion->get_data($activities[$modid], true, $USER->id);
+                                $key = '/{ifactivitycompleted\s+' . $modid . '\}(.*)\{\/ifactivitycompleted\}/isuU';
+                                if ($mod->completionstate) { // Activity completed by user. Just remove the tags, keep content.
+                                    $replace[$key] = "$1";
+                                } else { // Activity not completed. Remove tags and content.
+                                    $replace[$key] = '';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             // Tag: {ifprofile_field_...}.
             // If Custom User Profile Fields is not empty.
             if (stripos($text, '{ifprofile_field_') !== false) {
