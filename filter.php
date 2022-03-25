@@ -2441,6 +2441,32 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifnotactivitycompleted id}{/ifnotactivitycompleted}.
+            if (stripos($text, '{/ifnotactivitycompleted}') !== false) {
+                global $PAGE;
+                $course = $PAGE->course;
+                $completion = new completion_info($course);
+                if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
+                    $activities = $completion->get_activities();
+
+                    $re = '/{ifnotactivitycompleted\s+([0-9]+)\}(.*)\{\/ifnotactivitycompleted\}/isuU';
+                    $found = preg_match_all($re, $text, $matches);
+                    if ($found > 0) {
+                        foreach ($matches[1] as $modid) {
+                            if (array_key_exists($modid, $activities)) {
+                                $mod = $completion->get_data($activities[$modid], true, $USER->id);
+                                $key = '/{ifnotactivitycompleted\s+' . $modid . '\}(.*)\{\/ifnotactivitycompleted\}/isuU';
+                                if ($mod->completionstate) { // Activity completed. Remove tags and content.
+                                    $replace[$key] = '';
+                                } else { // Activity NOT completed by user. Just remove the tags, keep content.
+                                    $replace[$key] = "$1";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             // Tag: {ifprofile_field_...}.
             // If Custom User Profile Fields is not empty.
             if (stripos($text, '{ifprofile_field_') !== false) {

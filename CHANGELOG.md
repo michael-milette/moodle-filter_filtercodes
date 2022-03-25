@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.8] 2022-03-25 (DEV)
 ### Added
+- New {ifnotactivitycompleted id}{/ifnotactivitycompleted} tags.
 - New {ifactivitycompleted id}{/ifactivitycompleted} tags.
 - Support for optional course ID parameter in the {coursename} tag.
 - Support for optional course ID parameter in the {coursesummary} tag.
