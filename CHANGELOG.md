@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.8] 2022-03-25 (DEV)
+## [2.2.8] 2022-03-27 (DEV)
 ### Added
+- New {ifnotinactivity}{/ifnotinactivity} tags.
 - New {ifinactivity}{/ifinactivity} tags.
 - New {ifnotactivitycompleted id}{/ifnotactivitycompleted} tags.
 - New {ifactivitycompleted id}{/ifactivitycompleted} tags.

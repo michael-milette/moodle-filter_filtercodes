@@ -2426,6 +2426,17 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifnotinactivity}
+            if (stripos($text, '{/ifnotinactivity}') !== false) {
+                global $PAGE;
+                if (substr($PAGE->pagetype, 0, 4) != 'mod-') {
+                    $replace['/\{ifnotinactivity\}/isu'] = '';
+                    $replace['/\{\/ifnotinactivity\}/isu'] = '';
+                } else {
+                    $replace['/\{ifnotinactivity\}(.*){\/ifnotinactivity\}/isuU'] = '';
+                }
+            }
+
             // Tag: {ifactivitycompleted id}{/ifactivitycompleted}.
             if (stripos($text, '{/ifactivitycompleted}') !== false) {
                 global $PAGE;

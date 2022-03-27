@@ -274,6 +274,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 * {ifingroup id|idnumber}{/ifingroup} : Display content if the user is part of the specified course group ID or group ID number.
 * {ifnotvisible}{/ifnotvisible} : Display content if the course visibility is set to Hide.
 * {ifinactivity}{/ifinactivity} : Display content only in course activities.
+* {ifnotinactivity}{/ifnotinactivity} : Display content only when not in a course activity.
 * {ifactivitycompleted id}{/ifactivitycompleted} : Display content if the activity module specified by the id (see the activity's URL id= parameter), has been completed. Requires that completion be enabled for the site, the course and configured in the specified activity. Note: Activity IDs change when you copy or restore a course. In such cases, you will need to manually edit and correct the IDs in the tags to reflect the new activity id numbers so as to restore their functionality.
 * {ifnotactivitycompleted id}{/ifnotactivitycompleted} : Display content if the activity module specified by the id (see the activity's URL id= parameter), has NOT been completed. Requires that completion be enabled for the site, the course and configured in the specified activity. Note: Activity IDs change when you copy or restore a course. In such cases, you will need to manually edit and correct the IDs in the tags to reflect the new activity id numbers so as to restore their functionality.
 
@@ -1045,7 +1046,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * This is FilterCodes version [{filtercodes}] : {filtercodes} Note: Will be blank if you do not have the ability to edit this tag.
 * Are you a member of the ATEAM group [{ifingroup ATEAM}]Yes[{/ifingroup}] ? : {ifingroup ATEAM}Yes{/ifingroup} Note: Only works in courses.
 * [{ifnotvisible}]Warning: Course visibility is set to Hide.[{/ifnotvisible}] : {ifnotvisible}Warning: Course visibility is set to Hide.{/ifnotvisible}
-* Are you in an activity? [{ifinactivity}]Yes[{/ifinactivity}]: {ifinactivity}Yes{/ifinactivity}
+* Are you in an activity? [{ifinactivity}]Yes[{/ifinactivity}][{ifnotinactivity}]No[{/ifnotinactivity}]: {ifinactivity}Yes{/ifinactivity}{ifnotinactivity}No{/ifnotinactivity}
 * [{ifactivitycompleted 2}]You have completed activity with ID 2.[{/ifactivitycompleted}] : {ifactivitycompleted id}You have completed activity with ID 2.{/ifactivitycompleted} (example assumes you have an activity in your course with an ID of 2)
 * [{ifnotactivitycompleted 2}]You have NOT completed activity with ID 2.[{/ifnotactivitycompleted}] : {ifnotactivitycompleted id}You have completed activity with ID 2.{/ifnotactivitycompleted} (example assumes you have an activity in your course with an ID of 2)
 * It is now [{now}] : {now}
