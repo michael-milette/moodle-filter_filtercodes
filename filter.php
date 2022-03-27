@@ -2415,6 +2415,17 @@ class filter_filtercodes extends moodle_text_filter {
 
             require_once($CFG->libdir.'/completionlib.php');
 
+            // Tag: {ifinactivity}
+            if (stripos($text, '{/ifinactivity}') !== false) {
+                global $PAGE;
+                if (substr($PAGE->pagetype, 0, 4) == 'mod-') {
+                    $replace['/\{ifinactivity\}/isu'] = '';
+                    $replace['/\{\/ifinactivity\}/isu'] = '';
+                } else {
+                    $replace['/\{ifinactivity\}(.*){\/ifinactivity\}/isuU'] = '';
+                }
+            }
+
             // Tag: {ifactivitycompleted id}{/ifactivitycompleted}.
             if (stripos($text, '{/ifactivitycompleted}') !== false) {
                 global $PAGE;
