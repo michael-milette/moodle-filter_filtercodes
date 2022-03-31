@@ -308,6 +308,9 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 
 If the condition is not met in the particular context, the specified tag and it's content will be removed.
 
+#### Conditionally display content filters (For Moodle Mobile app and Web services)
+* {ifmobile}{/ifmobile} : Will display content if accessed from a web service such as the Moodle mobile app.
+* {ifnotmobile}{/ifnotmobile} : Will display content if not accessed from a web service such as a web browser.
 #### Conditionally display content filters (For Moodle Workplace)
 
 * {iftenant idnumber|tenantid}{/iftenant} : (ALPHA) Will display the content if a tenant idnumber or tenant id is specified. Only {iftenant 1} will work in Moodle classic.
@@ -1041,6 +1044,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
 * Are you a member of the "moodlers" cohort [{ifincohort moodlers}]Yes[{/ifincohort}]? {ifincohort moodlers}Yes{/ifincohort} (will be blank of not a member of cohort)
+* Viewing in: [{ifmobile}]Browser[{/ifmobile}][{ifmobile}]Mobile App[{/ifmobile}] : Viewing in: {ifmobile}Browser{/ifmobile}{ifmobile}Mobile App{/ifmobile}
 * Is your tenant id 1? [{iftenant 1}]Yes[{/iftenant}] : {iftenant 1}Yes{/iftenant} Note: In Moodle classic, tenant id is assumed to be 1.
 * Is this Moodle Workplace? [{ifworkplace}]Yes[{/ifworkplace}] : {ifworkplace}Yes{/ifworkplace}
 * This is FilterCodes version [{filtercodes}] : {filtercodes} Note: Will be blank if you do not have the ability to edit this tag.

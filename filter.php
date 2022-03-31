@@ -214,6 +214,18 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Determine if access is from a web service.
+     *
+     * @return boolean true if a web service, false if web browser.
+     */
+    private function iswebservice() {
+        global $ME;
+        // If this is a web service or the Moodle mobile app...
+        $isws = (WS_SERVER || (strpos($ME, "webservice/") !== false && optional_param('token', '', PARAM_ALPHANUM)));
+        return $isws;
+    }
+
+    /**
      * Generates HTML code for a reCAPTCHA.
      *
      * @return string HTML Code for reCAPTCHA or blank if logged-in or Moodle reCAPTCHA is not configured.
@@ -2529,6 +2541,32 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{' . $tag . '\}/isu'] = '';
                         $replace['/\{\/' . $tag . '\}/isu'] = '';
                     }
+                }
+            }
+
+            // Tag: {ifmobile}.
+            if (stripos($text, '{/ifmobile}') !== false) {
+                // If this is a web service or the Moodle mobile app...
+                if ($this->iswebservice()) {
+                    // Yes, just remove the tags.
+                    $replace['/\{ifmobile\}/i'] = '';
+                    $replace['/\{\/ifmobile\}/i'] = '';
+                } else {
+                    // Not from web services, remove tags and content.
+                    $replace['/\{ifmobile\}(.*)\{\/ifmobile\}/isuU'] = '';
+                }
+            }
+
+            // Tag: {ifnotmobile}.
+            if (stripos($text, '{/ifnotmobile}') !== false) {
+                // If this is a web service or the Moodle mobile app...
+                if (!$this->iswebservice()) {
+                    // Yes, just remove the tags.
+                    $replace['/\{ifnotmobile\}/i'] = '';
+                    $replace['/\{\/ifnotmobile\}/i'] = '';
+                } else {
+                    // Not from web services, remove tags and content.
+                    $replace['/\{ifnotmobile\}(.*)\{\/ifnotmobile\}/isuU'] = '';
                 }
             }
 
