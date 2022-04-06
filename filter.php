@@ -607,8 +607,7 @@ class filter_filtercodes extends moodle_text_filter {
             if ($this->hasminarchetype('coursecreator')) { // If a course creator or above.
                 $menu .= '-{getstring}administrationsite{/getstring}|/admin/search.php' . PHP_EOL;
                 $menu .= '-{toggleeditingmenu}' . PHP_EOL;
-                $menu .= '-Learn Moodle|https://learn.moodle.org/" target="_blank' . PHP_EOL;
-                $menu .= '-Moodle Academy|https://moodle.academy/" target="_blank' . PHP_EOL;
+                $menu .= '-Moodle Academy|https://moodle.academy/' . PHP_EOL;
                 $menu .= '-###' . PHP_EOL;
             }
             if ($this->hasminarchetype('manager')) { // If a manager or above.
@@ -712,7 +711,7 @@ class filter_filtercodes extends moodle_text_filter {
             $menu .= '-###' . PHP_EOL;
             $menu .= '-DevTuts|https://www.youtube.com/watch?v=UY_pcs4HdDM|{getstring}english{/getstring}' . PHP_EOL;
             $menu .= '-Moodle Development School|https://moodledev.moodle.school/|{getstring}english{/getstring}' . PHP_EOL;
-            $menu .= '-Moodle Academy|https://moodle.academy/|{getstring}english{/getstring}' . PHP_EOL;
+            $menu .= '-Moodle Dev Academy|https://moodle.academy/course/index.php?categoryid=4|{getstring}english{/getstring}' . PHP_EOL;
             $replace['/\{menudev\}/i'] = $menu;
         }
 
