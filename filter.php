@@ -788,6 +788,31 @@ class filter_filtercodes extends moodle_text_filter {
             unset($cards, $users, $sql, $info, $prewrap, $postwrap, $cardformat);
         }
 
+        // Tag: {lang}.
+        if (stripos($text, '{lang}') !== false) {
+            // Replace with 2-letter current primary language.
+            $replace['/\{lang\}/i'] = substr(current_language(), 0, 2);
+        }
+
+        // Tag: {idnumber}.
+        if (stripos($text, '{idnumber}') !== false) {
+            $replace['/\{idnumber\}/i'] = isloggedin() && !isguestuser() ? $USER->idnumber : '';
+        }
+
+        // Tag: {coursegradepercent} - Calculate and display current overall course grade as a percentage.
+        if (stripos($text, '{coursegradepercent}') !== false) {
+            require_once($CFG->libdir . '/gradelib.php');
+            require_once($CFG->dirroot . '/grade/querylib.php');
+            $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
+            if (!empty($grademax = floatval($gradeobj->item->grademax))) {
+                // Avoid divide by 0 error if no grades have been defined.
+                $grade = (int) ($gradeobj->grade / floatval($grademax) * 100) ?? 0;
+            } else {
+                $grade = 0;
+            }
+            $replace['/\{coursegradepercent\}/i'] = $grade;
+        }
+
         // Apply all of the filtercodes so far.
         $newtext = null;
         if (count($replace) > 0) {
@@ -965,11 +990,6 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {department}.
         if (stripos($text, '{department}') !== false) {
             $replace['/\{department\}/i'] = isloggedin() && !isguestuser() ? $USER->department : '';
-        }
-
-        // Tag: {idnumber}.
-        if (stripos($text, '{idnumber}') !== false) {
-            $replace['/\{idnumber\}/i'] = isloggedin() && !isguestuser() ? $USER->idnumber : '';
         }
 
         // Tag: {firstaccessdate} or {firstaccessdate dateTimeFormat}.
@@ -1203,20 +1223,6 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Any {course*} or %7Bcourse*%7D tags.
         if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
-
-            // Tag: {coursegradepercent} - Calculate and display current overall course grade as a percentage.
-            if (stripos($text, '{coursegradepercent}') !== false) {
-                require_once($CFG->libdir . '/gradelib.php');
-                require_once($CFG->dirroot . '/grade/querylib.php');
-                $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
-                if (!empty($grademax = floatval($gradeobj->item->grademax))) {
-                    // Avoid divide by 0 error if no grades have been defined.
-                    $grade = (int) ($gradeobj->grade / floatval($grademax) * 100) ?? 0;
-                } else {
-                    $grade = 0;
-                }
-                $replace['/\{coursegradepercent\}/i'] = $grade;
-            }
 
             // Custom Course Fields - First implemented in Moodle 3.7.
             if ($CFG->branch >= 37) {
@@ -2392,12 +2398,6 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {hr}.
         if (stripos($text, '{hr}') !== false) {
             $replace['/\{hr\}/i'] = '<hr>';
-        }
-
-        // Tag: {lang}.
-        if (stripos($text, '{lang}') !== false) {
-            // Replace with 2-letter current primary language.
-            $replace['/\{lang\}/i'] = substr(current_language(), 0, 2);
         }
 
         // Tag: {langx xx}.
