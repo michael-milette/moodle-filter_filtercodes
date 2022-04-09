@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.8] 2022-04-08 (DEV)
 ### Added
+- New {courseprogresspercent} tag.
 - New {ifmobile}{/ifmobile} tags.
 - New {ifnotmobile}{/ifnotmobile} tags.
 - New {ifnotinactivity}{/ifnotinactivity} tags.

@@ -55,6 +55,7 @@ $string['categorycardshowpic'] = 'Show {categorycards} background';
 $string['categorycardshowpic_desc'] = 'If enabled, will display a background colour/pattern for {categorycards} tag similar to the course images when no image was specified.';
 $string['coursecardsbyenrol'] = 'Maximum {coursecardsbyenrol} cards.';
 $string['coursecardsbyenrol_desc'] = 'Maximum number of course cards to display for {coursecardsbyenrol} tag. Set to zero for unlimited (not recommended).';
+$string['chartprogressbarlabel'] = '{$a->label}: {$a->value}';
 $string['teamcardsformat'] = 'Team cards format';
 $string['teamcardsformat_desc'] = 'Choose how the team members will appear in the {teamcards} tag.<br>
 <ul>

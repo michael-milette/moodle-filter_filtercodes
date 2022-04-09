@@ -141,6 +141,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {coursecards} or {coursecards categoryID}: (ALPHA) Display available courses as cards. You can optionally specify the ID number of a category. Example: {coursecards 1} will only display courses in the default Miscellaneous category. Note: The categoryID is not the "Category ID Number" field that you can optionally specify when creating a category.
 * {coursecardsbyenrol} (ALPHA): Display course cards for most popular courses based on enrolment. Maximum number of cards is configurable in the plugin settings.
 * {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
+* {courseprogresspercent}: Displays course progress percentage as a number without percentage symbol. Only works within a course.
 * {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
 * {categorycards} or {categorycards id}: (ALPHA) Display top level categories as cards using the current location as the top level category. For example, on the Front Page, it will display all top level categories. However, if you are inside the Miscellaneous category (e.g., in Miscellaneous > Your Course) , it will only display the next level of categories under the Miscellaneous category. You can optionally specify a category in the tag.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
@@ -148,9 +149,9 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courserequest} : Displays a Request a Course link.
 * {label type}{/label} : Display text over background colour. The Boost theme supports the following types: **info**, **important**, **secondary**, **success** and **warning**. Other themes may also support **primary**, **danger**, **light**, **dark** and more. Example: {label info}For your information{/label}. Actual foreground and background colours vary depending on the theme. If the type is not specified, it will default to **info**. If the type specified is not supported by your theme, it may default to secondary.
 * {button URL}Label{/button} : Create a clickable button link formatted like a primary button.
-* {chart radial x Title text} (ALPHA): Create a radial (circle / doughnut) chart given it a value of x between 0 and 100 and a title.
-* {chart pie x Title text} (ALPHA) : Create a pie chart given a value of x between 0 and 100 and a title.
-* {chart progressbar x Title text} (ALPHA) : Create a horizontal progress bar chart giving it a value of x between 0 and 100 and a title.
+* {chart radial x caption text} (ALPHA): Create a radial (circle / doughnut) chart given it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the Heading text.
+* {chart pie x caption text} (ALPHA) : Create a pie chart given a value of x between 0 and 100 and an optional title. If you do not want a caption, just specify a blank space instead of the caption text.
+* {chart progressbar x caption text} (ALPHA) : Create a horizontal progress bar chart giving it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the caption text.
 * {showmore}{/showmore} (ALPHA) : Toggle showing content between opening and closing more tags. Limitations: Can only be used inline with text. Must now weave into other opening and closing tags.
 * {qrcode}{/qrcode} : Generate and display a QR Code for the content between the tags.
 
@@ -924,6 +925,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course end date [{courseenddate strftimedatetime}]: {courseenddate strftimedatetime}
 * Completion date [{coursecompletiondate strftimedatetime}]: {coursecompletiondate strftimedatetime}
 * Course progress (ALPHA) [{courseprogress}]: {courseprogress}
+* Course progress percent number [{courseprogresspercent}]: {courseprogresspercent}
 * Course progress bar (ALPHA) [{courseprogressbar}]: {courseprogressbar}
 * Course cards (ALPHA) [{coursecards}]: {coursecards}
 * Course cards by enrolment (ALPHA) [{coursecardsbyenrol}]: {coursecardsbyenrol}
