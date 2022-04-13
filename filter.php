@@ -338,6 +338,27 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Correctly format a list as "A, B and C".
+     *
+     * @param array $list An array of numbers or strings.
+     * @return string The formatted string.
+     */
+    function formatlist($list) {
+        // Save and remove last item in list from array.
+        $last = array_pop($list);
+        if ($list) {
+            // Combine list using language list separator.
+            $list = implode(get_string('listsep', 'langconfig') . ' ', $list);
+            // Add last item separated by " and ".
+            $string = get_string('and', 'moodle', ['one' => $list, 'two' => $last]);
+        } else {
+            // Only one item in the list. No formatting required.
+            $string = $last;
+        }
+        return $string;
+    }
+
+    /**
      * Render cards for provided category.
      *
      * @param object $category.
@@ -2205,14 +2226,17 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{mygroups}') !== false) {
             static $mygroups;
 
-            if (!isset($mygroups)) { // Fetch my groups.
+            if (!isset($mygroups)) {
+                // Fetch my groups.
                 $context = context_course::instance($PAGE->course->id);
                 $groups = groups_get_all_groups($PAGE->course->id, $USER->id);
-                $mygroups = '';
+                // Process group names through Moodle filters in case they are multi-language.
+                $mygroups = [];
                 foreach ($groups as $group) {
-                    $mygroups .= format_string($group->name, true, ['context' => $context]) . ', ';
+                    $mygroups[] = format_string($group->name, true, ['context' => $context]);
                 }
-                $mygroups = trim($mygroups, ', ');
+                // Format groups into a language string.
+                $mygroups = $this->formatlist($mygroups);
             }
             $replace['/\{mygroups\}/i'] = $mygroups;
         }

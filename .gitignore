@@ -12,6 +12,9 @@ ehthumbs_vista.db
 # Windows shortcuts
 *.lnk
 
+# Test file.
+test.php
+
 # KDE directory preferences
 .directory
 

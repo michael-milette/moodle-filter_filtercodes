@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.8] 2022-04-08 (DEV)
+## [2.2.8] 2022-04-13 (DEV)
 ### Added
 - New {courseprogresspercent} tag.
 - New {ifmobile}{/ifmobile} tags.
