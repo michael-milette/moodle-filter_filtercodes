@@ -44,6 +44,7 @@ All notable changes to this project will be documented in this file.
 - Known limitation in README.md regarding Moodle's 'Download course content' feature.
 - Compatible with Moodle 4.0 (ALPHA) - Note: Custom menu patch does not work in 4.0 yet.
 ### Updated
+- Improve parsing of {scrape} tag. Improper syntax will no longer make Moodle crash, the tag just won't work properly.
 - {lang}, {idnumber} and {coursegradepercent} tags can now be used within other tags for example.
 - {coursesummary} tag is now processed through Moodle filters for multi-language support.
 - Fixed {coursecards catid}.

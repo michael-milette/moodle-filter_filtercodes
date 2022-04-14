@@ -359,6 +359,27 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Convert string containg one or more attribute="value" pairs into an associative array.
+     *
+     * @param string $attribs One or more attribute="value" pairs.
+     * @return array Associative array of attributes and values.
+     */
+    function attribstoarray($attrs) {
+        $arr = [];
+
+        if (preg_match_all('/\s*(?:([a-z0-9-]+)\s*=\s*"([^"]*)")|(?:\s+([a-z0-9-]+)(?=\s*|>|\s+[a..z0-9]+))/i', $attrs, $matches)) {
+            // For each attribute in the string, add associated value to the array.
+            for ($i = 0; $i < count($matches[0]); $i++) {
+                if ($matches[3][$i])
+                    $arr[$matches[3][$i]] = null;
+                else
+                    $arr[$matches[1][$i]] = $matches[2][$i];
+            }
+        }
+        return $arr;
+    }
+
+    /**
      * Render cards for provided category.
      *
      * @param object $category.
@@ -1127,19 +1148,22 @@ class filter_filtercodes extends moodle_text_filter {
         if (get_config('filter_filtercodes', 'enable_scrape')) { // Must be enabled in FilterCodes settings.
             // Tag: {scrape url="" tag="" class="" id="" code=""}.
             if (stripos($text, '{scrape ') !== false) {
-                // Replace {scrape} tag and parameters with retrieved content.
+                // Replace {scrape} tag and its attributes with retrieved content.
                 $newtext = preg_replace_callback('/\{scrape\s+(.*)\}/isuU',
                     function ($matches) {
-                        $scrape = '<' . substr($matches[0], 1, -1) . '/>';
-                        $scrape = new SimpleXMLElement($scrape);
-                        $url = (string) $scrape->attributes()->url;
-                        $tag = (string) $scrape->attributes()->tag;
-                        $class = (string) $scrape->attributes()->class;
-                        $id = (string) $scrape->attributes()->id;
-                        $code = (string) $scrape->attributes()->code;
+                        // Parse the scrape tag's atributes.
+                        $attribs = substr($matches[0], 1, -1);
+                        $scrape = $this->attribstoarray($attribs);
+                        $url = isset($scrape['url']) ? $scrape['url'] : '';
+                        $tag = isset($scrape['tag']) ? $scrape['tag'] : '';
+                        $class = isset($scrape['class']) ? $scrape['class'] : '';
+                        $id = isset($scrape['id']) ? $scrape['id'] : '';
+                        $code = isset($scrape['code']) ? $scrape['code'] : '';
+                        // If nothing else, we must have a URL parameter.
                         if (empty($url)) {
-                            return "SCRAPE error: Missing required URL parameter.";
+                            return "SCRAPE error: Missing or invalid required URL parameter.";
                         }
+                        // Replace {scrape} tag and its attributes with retrieved content.
                         return $this->scrapehtml($url, $tag, $class, $id, $code);
                     }, $text);
                 if ($newtext !== false) {

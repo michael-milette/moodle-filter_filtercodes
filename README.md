@@ -636,7 +636,13 @@ As of version 0.4.7, you can now use FileterCodes to scrape content from another
 
 {scrape url="..." tag="..." class="..." id="..." code="..."}
 
-Tip: When adding this tag in one of Moodle's WYSIWYG editors like Atto or TinyMCE, the tag may end up embedded in a set of HTML paragraph tags. If this happens, the content you are scraping may not result in valid HTML. To fix the problem, you will need to go into the source code view of the editor and replace the P (paragraph) tags with div and then save. Alternatively, if there is nothing else in the editor, you can remove everything before and after the tag and save.
+Example:
+
+{scrape url="https://example.com" tag="h1"}
+
+When adding this tag in one of Moodle's WYSIWYG editors like Atto or TinyMCE, the tag may end up embedded in a set of HTML paragraph tags. If this happens, the content you are scraping may not result in valid HTML. To fix the problem, you will need to go into the source code view of the editor and replace the opening and closing P (paragraph) tags with div tags and then save. Alternatively, if there is nothing else in the editor, you can remove everything before and after the tag and save.
+
+Another potential issue that could result in the message "Content is missing. Please notify the webmaster." appearing is if the editor converts the URL parameter's value into a link. If this happens, simply use the editor's **Unlink** tool to remove the hyperlink from inside the tag's URL parameter.
 
 Parameters:
 
@@ -644,11 +650,11 @@ Parameters:
 * tag = The HTML tag you want to capture.
 * class = Optional. Default is blank (class is irrelevant). Class attribute of the HTML tag you want to capture. Must be an exact match for everything between the quotation marks.
 * id = Optional. Default is blank (id is irrelevant). id tag of the HTML tag you want to capture.
-* code = Optional. Default is blank (no code). This is URL encoded code that you want to insert after the content. Will be decoded before being inserted into the page. Can be things like JavaScript for example. Be careful with this one. If not encoded, will result in error.
+* code = Optional. Default is blank (no code). This is URL encoded code that you want to insert after the content. Will be decoded before being inserted into the page. It can even be things like JavaScript for example. Be careful with this one. If not encoded, will result in an error.
 
 If the URL fails to produce any content (broken link for example), a message will be displayed on the page encouraging the visitor to contact the webmaster. This message can be customized through the Moodle Language editor.
 
-If a matching tag, class and/or id can't be found, will return all of the page content without being filtered.
+If the matching tag, class and/or id cannot be found, will return all of the page content without being filtered.
 
 ## Back to section / Back to course
 
