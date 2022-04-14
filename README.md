@@ -478,21 +478,84 @@ Even better, try out the dynamic **{menudev}** tag. It includes all of the above
 
 ## FilterCodes in custom menus
 
-Note: The source code in this section was updated in May 2021.
+Note: The source code in this section was last updated in March 2022 for Moodle 4.0.
 
 FilterCodes can work in custom menus but, unfortunately, only if the theme supports it or you patched Moodle. If it does not work for you, contact the theme's developer and request that they add support for Moodle filters. See the instructions included below.
 
-**Note:** In version 1.0.0 of FilterCodes, an experimental setting was added included for the Clean and Boost themes but is only compatible and visible in Moodle 3.2 to 3.4. Unfortunately, things changed in Moodle 3.5 and it has since no longer been possible for FilterCodes to do this on its own without patching the Moodle core or the Moodle theme.
+**Note:** In version 1.0.0 of FilterCodes, an experimental FilterCodes setting was created for the Clean and Boost themes but was only compatible and visible in Moodle 3.2 to 3.4. Unfortunately, things changed in Moodle 3.5 and it has since no longer been possible for FilterCodes to do this on its own without patching the Moodle core or the Moodle theme.
 
 If you are using Moodle 3.5 or later, there are two ways to make FilterCodes work in Moodle's custom menu (also called primary menu in Moodle 4.0+):
 
-1. Add a few lines of code to your Moodle theme. Even better, ask your theme's developer/maintainer to add this change to their themes.
+1. Patch your instance of Moodle. Even better, encourage Moodle HQ to enable this functionality in future releases of Moodle. For more information and to vote for this functionality, see
+   https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 .
+
+To patch Moodle to handle this properly for most Moodle themes, apply the following patch to Moodle:
+
+* Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-63219-M37
+* Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-63219-M38
+* Moodle 3.9: https://github.com/michael-milette/moodle/tree/MDL-63219-M39
+* Moodle 3.10: https://github.com/michael-milette/moodle/tree/MDL-63219-M310
+* Moodle 3.11: https://github.com/michael-milette/moodle/tree/MDL-63219-M311
+* Moodle 4.0: https://github.com/michael-milette/moodle/tree/MDL-63219-M400
+* Moodle master: https://github.com/michael-milette/moodle/tree/MDL-63219-master
+
+Note: While it should do no harm, we have noticed that this patch may not work with some premium Moodle themes. Those themes will need to be fixed in order to make FilterCodes tags work in the primary/custom menu.
+
+2. Alternatively, add a few lines of code to your Moodle theme or ask your theme's developer/maintainer to add this change to their themes.
+
+### For themes based on **boost** (Moodle 4.0 and later)
+
+As more 3rd party/contributed Moodle 4.0 themes become available, this section will be updated. Until then, there is no tested patch available for 3rd party Moodle 4.0 themes. It is recommended to use Moodle core patch above which is known to work.
+
+Classic-based themes for Moodle 4.0 may simply require the theme patch for **Moodle 3.2 and late** included below.
+
+The follow ALPHA code is based on information available in the Boost theme for Moodle 4.0. You may also need to apply the theme patch for **Moodle 3.2 and late** included below.
+
+Add this code to the core_renderer section (probably located in /theme/yourtheme/classes/navigation/output/primary.php) of your theme. Note: Your theme may even already have such a class (they often do):
+
+    use filter_manager;
+
+    class primary extends core\navigation\output\primary {
+        /**
+        * Custom menu items reside on the same level as the original nodes.
+        * Fetch and convert the nodes to a standardised array.
+        *
+        * @param renderer_base $output
+        * @return array
+        */
+        protected function get_custom_menu(renderer_base $output): array {
+            global $CFG;
+
+            // Early return if a custom menu does not exists.
+            if (empty($CFG->custommenuitems)) {
+                return [];
+            }
+
+            $custommenuitems = $CFG->custommenuitems;
+
+            // Filter custom menu items but don't apply auto-linking filters.
+            $skipfilters = array('activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink');
+            $filteroptions = array('originalformat' => FORMAT_HTML, 'noclean' => true);
+            $filtermanager = filter_manager::instance();
+            $context = \context_system::instance();
+            $custommenuitems = $filtermanager->filter_text($custommenuitems, $context, $filteroptions, $skipfilters);
+
+            $currentlang = current_language();
+            $custommenunodes = custom_menu::convert_text_to_menu_nodes($custommenuitems, $currentlang);
+            $nodes = [];
+            foreach ($custommenunodes as $node) {
+                $nodes[] = $node->export_for_template($output);
+            }
+
+            return $nodes;
+        }
+    }
 
 ### For themes based on **boost** (Moodle 3.2 and later)
 
 Note: Supported in Moodle 3.2 and later.
 
-Add the following code to core_renderer section of your theme. Note: Your theme may even already have such a class (they often do):
+Add the following code to core_renderer section (often found in /theme/yourtheme/classes/output/core_renderer.php) of your theme. Note: Your theme may even already have such a class (they often do):
 
     use filter_manager;
 
@@ -514,7 +577,7 @@ Add the following code to core_renderer section of your theme. Note: Your theme 
             // Filter custom user menu.
             // Don't filter custom user menu on the settings page. Otherwise it ends up
             // filtering the edit field itself resulting in a loss of the tag.
-            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
+            if ($PAGE->pagetype != 'admin-setting-themesettings') {
                 $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
                         $filteroptions, $skipfilters);
             }
@@ -523,9 +586,7 @@ Add the following code to core_renderer section of your theme. Note: Your theme 
             if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
                 $custommenuitems = $CFG->custommenuitems;
             }
-            if (stripos($custommenuitems, '{') !== false) {
-                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
-            }
+            $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
             $custommenu = new custom_menu($custommenuitems, current_language());
             return $this->render_custom_menu($custommenu);
         }
@@ -546,9 +607,7 @@ Add the following code to core_renderer section of your theme. Note: Your theme 
             if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
                 $custommenuitems = $CFG->custommenuitems;
             }
-            if (stripos($custommenuitems, '{') !== false) {
-                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
-            }
+            $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
             $custommenu = new custom_menu($custommenuitems, current_language());
             $langs = get_string_manager()->get_list_of_translations();
             $haslangmenu = $this->lang_menu() != '';
@@ -598,7 +657,7 @@ Add the following code to core_renderer section of your theme for Moodle 2.7 to 
             // Filter custom user menu.
             // Don't filter custom user menu on the theme settings page. Otherwise it ends up
             // filtering the edit field itself resulting in a loss of tags.
-            if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->customusermenuitems, '{') !== false) {
+            if ($PAGE->pagetype != 'admin-setting-themesettings') {
                 $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
                         $filteroptions, $skipfilters);
             }
@@ -607,25 +666,11 @@ Add the following code to core_renderer section of your theme for Moodle 2.7 to 
             if (empty($custommenuitems) && !emty($CFG->custommenuitems)) {
                 $custommenuitems = $CFG->custommenuitems;
             }
-            if (stripos($custommenuitems, '{') !== false) {
-                $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
-            }
+            $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
             $custommenu = new custom_menu($custommenuitems, current_language());
             return $this->render_custom_menu($custommenu);
         }
     }
-
-2. Patch your instance of Moodle. Even better, encourage Moodle HQ to enable this functionality in future releases of Moodle. For more information and to vote for this functionality, see
-   https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 .
-
-To patch Moodle to handle this properly for most Moodle themes, apply the following patch to Moodle:
-
-* Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-63219-M37
-* Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-63219-M38
-* Moodle 3.9: https://github.com/michael-milette/moodle/tree/MDL-63219-M39
-* Moodle 3.10: https://github.com/michael-milette/moodle/tree/MDL-63219-M310
-* Moodle 3.11: https://github.com/michael-milette/moodle/tree/MDL-63219-M311
-* Moodle master: https://github.com/michael-milette/moodle/tree/MDL-63219-master
 
 ## Scrape'ing content
 

@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.8] 2022-04-13 (DEV)
 ### Added
+- Sample ALPHA code in the documentation to patch Moodle 4.0 themes for support in the custom menu.
 - New {courseprogresspercent} tag.
 - New {ifmobile}{/ifmobile} tags.
 - New {ifnotmobile}{/ifnotmobile} tags.

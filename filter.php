@@ -467,7 +467,7 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
-     * Generate a user link of a specified if logged-in.
+     * Generate a user link of a specified type if logged-in.
      *
      * @param string $clinktype Type of link to generate. Options include: email, message, profile, phone1.
      * @param object $user A user object.
