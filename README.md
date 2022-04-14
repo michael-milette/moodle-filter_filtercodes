@@ -1192,6 +1192,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* alexmorrisnz: {lastlogin} and fixing issue with {teamcardsformat} setting (2022).
 * 3iPunt and abertranb: New {ifcustomrole} tag (2020).
 * 3iPunt and abertranb: New {ifnotcustomrole} tag (2020).
 * andrewhancox: Enhanced {coursecards} tag (2020).
