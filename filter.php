@@ -175,6 +175,44 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Determine if the specified user has the specified role anywhere in the system.
+     *
+     * @param string $roleshortname Role shortname.
+     * @param integer $userid The user's ID.
+     * @return boolean True if the user has the role, false if they do not.
+     */
+    function hasarole($roleshortname, $userid) {
+        // Cache list of user's roles.
+        static $list;
+
+        if (!isset($list)) {
+            // Not cached yet? We can take care of that.
+            $list = [];
+            if (isloggedin() && !isguestuser()) {
+                // We only track logged-in roles.
+                global $DB;
+                // Retrieve list of role names.
+                $rolenames = $DB->get_records('role');
+                // Retrieve list of my roles across all contexts.
+                $userroles = $DB->get_records('role_assignments', array('userid' => $userid));
+                // For each of my roles, add the roll name to the list.
+                foreach ($userroles as $role) {
+                    if (!empty($rolenames[$role->roleid]->shortname)) {
+                        // There should always be a role name for each role id but you can't be too careful these days.
+                        $list[] = $rolenames[$role->roleid]->shortname;
+                    }
+                }
+                $list = array_unique($list);
+                if (is_siteadmin()) {
+                    // Admin is not an actual role, but we can use our imagination for convenience.
+                    $list[] = 'administrator';
+                }
+            }
+        }
+        return in_array(strtolower($roleshortname), $list);
+    }
+
+    /**
      * Retrieves the URL for the user's profile picture, if one is available.
      *
      * @param object $user The Moodle user object for which we want a photo.
@@ -3098,6 +3136,24 @@ class filter_filtercodes extends moodle_text_filter {
                             $replace[$key] = '$1';
                         } else {
                             // Remove the ifnotcustomrole strings.
+                            $replace[$key] = '';
+                        }
+                    }
+                }
+            }
+
+            // Tag: {ifhasarolename roleshortname}{/ifhasarolename}.
+            if (stripos($text, '{ifhasarolename') !== false) {
+                $re = '/{ifhasarolename\s+(.*)\}(.*)\{\/ifhasarolename\}/isuU';
+                $found = preg_match_all($re, $text, $matches);
+                if ($found > 0) {
+                    foreach ($matches[1] as $roleshortname) {
+                        $key = '/{ifhasarolename\s+' . $roleshortname . '\}(.*)\{\/ifhasarolename\}/isuU';
+                        if ($this->hasarole($roleshortname, $USER->id)) {
+                            // Just remove the tags.
+                            $replace[$key] = '$1';
+                        } else {
+                            // Remove the ifhasarolename strings.
                             $replace[$key] = '';
                         }
                     }

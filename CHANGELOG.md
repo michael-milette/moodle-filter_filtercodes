@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.8] 2022-04-13 (DEV)
+## [2.2.8] 2022-04-15 (DEV)
 ### Added
+- New {ifhasarolename roleshortname}{/ifhasarolename} tags.
 - Sample ALPHA code in the documentation to patch Moodle 4.0 themes for support in the custom menu.
 - New {courseprogresspercent} tag.
 - New {ifmobile}{/ifmobile} tags.
