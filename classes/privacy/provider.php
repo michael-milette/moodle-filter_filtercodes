@@ -25,8 +25,6 @@
 
 namespace filter_filtercodes\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Privacy Subsystem for filter_filtercodes implementing null_provider.
  *

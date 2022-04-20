@@ -181,7 +181,7 @@ class filter_filtercodes extends moodle_text_filter {
      * @param integer $userid The user's ID.
      * @return boolean True if the user has the role, false if they do not.
      */
-    function hasarole($roleshortname, $userid) {
+    private function hasarole($roleshortname, $userid) {
         // Cache list of user's roles.
         static $list;
 
@@ -381,7 +381,7 @@ class filter_filtercodes extends moodle_text_filter {
      * @param array $list An array of numbers or strings.
      * @return string The formatted string.
      */
-    function formatlist($list) {
+    private function formatlist($list) {
         // Save and remove last item in list from array.
         $last = array_pop($list);
         if ($list) {
@@ -399,19 +399,20 @@ class filter_filtercodes extends moodle_text_filter {
     /**
      * Convert string containg one or more attribute="value" pairs into an associative array.
      *
-     * @param string $attribs One or more attribute="value" pairs.
+     * @param string $attrs One or more attribute="value" pairs.
      * @return array Associative array of attributes and values.
      */
-    function attribstoarray($attrs) {
+    private function attribstoarray($attrs) {
         $arr = [];
 
         if (preg_match_all('/\s*(?:([a-z0-9-]+)\s*=\s*"([^"]*)")|(?:\s+([a-z0-9-]+)(?=\s*|>|\s+[a..z0-9]+))/i', $attrs, $matches)) {
             // For each attribute in the string, add associated value to the array.
             for ($i = 0; $i < count($matches[0]); $i++) {
-                if ($matches[3][$i])
+                if ($matches[3][$i]) {
                     $arr[$matches[3][$i]] = null;
-                else
+                } else {
                     $arr[$matches[1][$i]] = $matches[2][$i];
+                }
             }
         }
         return $arr;
@@ -420,7 +421,8 @@ class filter_filtercodes extends moodle_text_filter {
     /**
      * Render cards for provided category.
      *
-     * @param object $category.
+     * @param object $category Category object.
+     * @param boolean $categoryshowpic Set to true to display a category image. False displays no image.
      * @return string HTML rendering of category cars.
      */
     private function rendercategorycard($category, $categoryshowpic) {
@@ -513,7 +515,7 @@ class filter_filtercodes extends moodle_text_filter {
      *
      * @return string Generated link.
      */
-    function userlink($clinktype, $user, $name) {
+    private function userlink($clinktype, $user, $name) {
         if (!isloggedin() || isguestuser()) {
             $clinktype = ''; // No link, only name.
         }
@@ -539,10 +541,11 @@ class filter_filtercodes extends moodle_text_filter {
     /**
      * Generate base64 encoded data img of QR Code.
      *
-     * @param string $string Text to be encoded.
+     * @param string $text Text to be encoded.
+     * @param string $label Label to display below QR code.
      * @return string Base64 encoded data image.
      */
-    function qrcode($text, $label = '') {
+    private function qrcode($text, $label = '') {
         if (empty($text)) {
             return '';
         }
@@ -564,7 +567,7 @@ class filter_filtercodes extends moodle_text_filter {
      *
      * @return int completion progress percentage
      */
-    function completionprogress() {
+    private function completionprogress() {
         static $progresspercent;
         if (!isset($progresspercent)) {
             global $PAGE;
@@ -715,7 +718,8 @@ class filter_filtercodes extends moodle_text_filter {
             if ($this->hasminarchetype('manager')) { // If a manager or above.
                 $menu .= '-{getstring}user{/getstring}: {getstring:admin}usermanagement{/getstring}|/admin/user.php' . PHP_EOL;
                 $menu .= '{ifminsitemanager}' . PHP_EOL;
-                $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' . PHP_EOL;
+                $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' .
+                        PHP_EOL;
                 $menu .= '-###' . PHP_EOL;
                 $menu .= '{/ifminsitemanager}' . PHP_EOL;
                 $menu .= '-{getstring}course{/getstring}: {getstring:admin}coursemgmt{/getstring}|/course/management.php' .
@@ -728,8 +732,10 @@ class filter_filtercodes extends moodle_text_filter {
                 $menu .= '-{getstring}course{/getstring}: {getstring}restore{/getstring}|/backup/restorefile.php' .
                     '?contextid={coursecontextid}' . PHP_EOL;
                 $menu .= '{ifincourse}' . PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring}backup{/getstring}|/backup/backup.php?id={courseid}' . PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}' . PHP_EOL;
+                $menu .= '-{getstring}course{/getstring}: {getstring}backup{/getstring}|/backup/backup.php?id={courseid}' .
+                        PHP_EOL;
+                $menu .= '-{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}' .
+                        PHP_EOL;
                 $menu .= '-{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/index.php' .
                         '?type={courseid}' . PHP_EOL;
                 $menu .= '-{getstring}course{/getstring}: {getstring}reports{/getstring}|/course/admin.php' .
@@ -738,20 +744,22 @@ class filter_filtercodes extends moodle_text_filter {
                         '?id={courseid}' . PHP_EOL;
                 $menu .= '-{getstring}course{/getstring}: {getstring}reset{/getstring}|/course/reset.php?id={courseid}' . PHP_EOL;
                 $menu .= '-Course: Layoutit|https://www.layoutit.com/build" target="popup" ' .
-                        'onclick="window.open(\'https://www.layoutit.com/build\',\'popup\',\'width=1340,height=700\'); return false;' .
-                        '|Bootstrap Page Builder' . PHP_EOL;
+                        'onclick="window.open(\'https://www.layoutit.com/build\',\'popup\',\'width=1340,height=700\');' .
+                        ' return false;|Bootstrap Page Builder' . PHP_EOL;
                 $menu .= '{/ifincourse}' . PHP_EOL;
                 $menu .= '-###' . PHP_EOL;
             }
             if ($this->hasminarchetype('manager')) { // If a manager or above.
-                $menu .= '-{getstring}site{/getstring}: {getstring}reports{/getstring}|/admin/category.php?category=reports' . PHP_EOL;
+                $menu .= '-{getstring}site{/getstring}: {getstring}reports{/getstring}|/admin/category.php?category=reports' .
+                        PHP_EOL;
             }
             if (is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If an administrator.
                 $menu .= '-{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php' .
                         '?section=additionalhtml' . PHP_EOL;
                 $menu .= '-{getstring}site{/getstring}: {getstring:admin}frontpage{/getstring}|/admin/settings.php' .
                         '?section=frontpagesettings|Including site name' . PHP_EOL;
-                $menu .= '-{getstring}site{/getstring}: {getstring:admin}plugins{/getstring}|/admin/search.php#linkmodules' . PHP_EOL;
+                $menu .= '-{getstring}site{/getstring}: {getstring:admin}plugins{/getstring}|/admin/search.php#linkmodules' .
+                        PHP_EOL;
                 $menu .= '-{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php' .
                         '?section=supportcontact' . PHP_EOL;
                 $menu .= '-{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php' .
@@ -805,15 +813,16 @@ class filter_filtercodes extends moodle_text_filter {
                     . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
             $menu .= '-###' . PHP_EOL;
             $menu .= '-MoodleDev docs|https://moodle.org/development|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
-            $menu .= '-MoodleDev forum|https://moodle.org/mod/forum/view.php?id=55|Moodle.org ({getstring}english{/getstring})'
-                    . PHP_EOL;
+            $menu .= '-MoodleDev forum|https://moodle.org/mod/forum/view.php?id=55|Moodle.org ({getstring}english{/getstring})' .
+                    PHP_EOL;
             $menu .= '-Tracker|https://tracker.moodle.org/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
             $menu .= '-AMOS|https://lang.moodle.org/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
             $menu .= '-WCAG 2.1|https://www.w3.org/WAI/WCAG21/quickref/|W3C ({getstring}english{/getstring})' . PHP_EOL;
             $menu .= '-###' . PHP_EOL;
             $menu .= '-DevTuts|https://www.youtube.com/watch?v=UY_pcs4HdDM|{getstring}english{/getstring}' . PHP_EOL;
             $menu .= '-Moodle Development School|https://moodledev.moodle.school/|{getstring}english{/getstring}' . PHP_EOL;
-            $menu .= '-Moodle Dev Academy|https://moodle.academy/course/index.php?categoryid=4|{getstring}english{/getstring}' . PHP_EOL;
+            $menu .= '-Moodle Dev Academy|https://moodle.academy/course/index.php?categoryid=4|{getstring}english{/getstring}' .
+                    PHP_EOL;
             $replace['/\{menudev\}/i'] = $menu;
         }
 
@@ -839,7 +848,8 @@ class filter_filtercodes extends moodle_text_filter {
                     case 'infoicon':
                         $info = get_string('info');
                         $prewrap = '<a class="btn btn-link p-0 m-0 align-baseline" role="button" data-container="body"'
-                                . ' data-toggle="popover" data-placement="right" data-content="<div class=&quot;no-overflow&quot;><p>';
+                                . ' data-toggle="popover" data-placement="right" data-content="<div class=&quot;no-overflow&quot;>'
+                                . '<p>';
                         $postwrap = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
                                 . ' fa fa-info-circle text-info fa-fw " title="' . $info . '" aria-label="' . $info . '"></i></a>';
                         break;
@@ -865,8 +875,8 @@ class filter_filtercodes extends moodle_text_filter {
                         $cards .= '<div class="clearfix mb-4">';
                         $name = '<h3 class="h4">' . get_string('fullnamedisplay', null, $user) . '</h3>';
                         $cards .= $this->userlink($clinktype, $user, $name);
-                        $cards .= $OUTPUT->user_picture($user, ['size' => '150', 'class' => 'img-fluid pull-left p-1 border mr-4', 'link' => false,
-                                'visibletoscreenreaders' => false]);
+                        $cards .= $OUTPUT->user_picture($user, ['size' => '150', 'class' => 'img-fluid pull-left p-1 border mr-4',
+                                'link' => false, 'visibletoscreenreaders' => false]);
                         $cards .= format_string($user->description);
                         $cards .= '</div><hr>';
                     }
@@ -876,7 +886,8 @@ class filter_filtercodes extends moodle_text_filter {
                         $cards .= '<div class="col-sm-6 col-md-4 col-lg-3 col-xl-' . (empty($narrowpage) ? 4 : 3) . ' mt-3">';
                         $cards .= $OUTPUT->user_picture($user, ['size' => '250', 'class' => 'img-fluid', 'link' => false,
                                 'visibletoscreenreaders' => false]);
-                        $name = '<br><h3 class="h5 font-weight-bold d-inline">' . get_string('fullnamedisplay', null, $user) . '</h3>';
+                        $name = '<br><h3 class="h5 font-weight-bold d-inline">' . get_string('fullnamedisplay', null, $user) .
+                                '</h3>';
                         $cards .= $this->userlink($clinktype, $user, $name);
                         if (!empty($user->description) && !empty($cardformat)) {
                             $cards .= $prewrap . format_string($user->description) . $postwrap;
@@ -1714,7 +1725,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{coursecount\}/i'] = $cnt;
             }
 
-            // Tag: {coursesactive}. The total visible courses.
+            // Tag: {coursesactive}. Display's the total visible courses.
             if (stripos($text, '{coursesactive}') !== false) {
                 // Count current courses (between start and end date, if any) set to Show - excluding front page.
                 $today = time();
@@ -1723,12 +1734,12 @@ class filter_filtercodes extends moodle_text_filter {
                         WHERE visible = 1
                             AND startdate <= :today
                             AND (enddate > :today2 OR enddate = 0);";
-                // Subtract one for site course id = 1).
+                // Subtract one for site course, where id = 1.
                 $cnt = $DB->count_records_sql($sql, ['today' => $today, 'today2' => $today]) - 1;
                 $replace['/\{coursesactive\}/i'] = $cnt;
             }
 
-            // Tag: {courseprogress} and {courseprogressbar}.
+            // Tag: {courseprogress} and {courseprogressbar}. Display course progress percentage and a course progress bar.
             if (stripos($text, '{courseprogress') !== false) {
                 $progress = $this->completionprogress();
 
@@ -2546,7 +2557,7 @@ class filter_filtercodes extends moodle_text_filter {
 
             require_once($CFG->libdir.'/completionlib.php');
 
-            // Tag: {ifinactivity}
+            // Tag: {ifinactivity}.
             if (stripos($text, '{/ifinactivity}') !== false) {
                 global $PAGE;
                 if (substr($PAGE->pagetype, 0, 4) == 'mod-') {
@@ -2557,7 +2568,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {ifnotinactivity}
+            // Tag: {ifnotinactivity}.
             if (stripos($text, '{/ifnotinactivity}') !== false) {
                 global $PAGE;
                 if (substr($PAGE->pagetype, 0, 4) != 'mod-') {

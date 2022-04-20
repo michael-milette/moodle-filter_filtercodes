@@ -479,7 +479,7 @@ Even better, try out the dynamic **{menudev}** tag. It includes all of the above
 
 ## FilterCodes in custom menus
 
-Note: The source code in this section was last updated in March 2022 for Moodle 4.0.
+Note: The source code in this section was last updated in April 2022 for Moodle 4.0.
 
 FilterCodes can work in custom menus but, unfortunately, only if the theme supports it or you patched Moodle. If it does not work for you, contact the theme's developer and request that they add support for Moodle filters. See the instructions included below.
 
@@ -487,10 +487,13 @@ FilterCodes can work in custom menus but, unfortunately, only if the theme suppo
 
 If you are using Moodle 3.5 or later, there are two ways to make FilterCodes work in Moodle's custom menu (also called primary menu in Moodle 4.0+):
 
-1. Patch your instance of Moodle. Even better, encourage Moodle HQ to enable this functionality in future releases of Moodle. For more information and to vote for this functionality, see
-   https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 .
+**Technique A**: The preferred method is to patch your instance of Moodle using Git. If you did not install Moodle using Git, you can still apply the changes but you will need to do so manually. FYI: The patches for Moodle 3.7 to 3.11 are identical.
 
-To patch Moodle to handle this properly for most Moodle themes, apply the following patch to Moodle:
+Even better, encourage Moodle HQ to enable this functionality in future releases of Moodle. For more information and to vote for this functionality, see:
+
+   https://tracker.moodle.org/browse/MDL-63219.
+
+To patch Moodle to handle this properly for most Moodle themes, cherry-pick the following patch to your Moodle site:
 
 * Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-63219-M37
 * Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-63219-M38
@@ -500,17 +503,20 @@ To patch Moodle to handle this properly for most Moodle themes, apply the follow
 * Moodle 4.0: https://github.com/michael-milette/moodle/tree/MDL-63219-M400
 * Moodle master: https://github.com/michael-milette/moodle/tree/MDL-63219-master
 
-Note: While it should do no harm, we have noticed that this patch may not work with some premium Moodle themes. Those themes will need to be fixed in order to make FilterCodes tags work in the primary/custom menu.
+Example: To apply the patch for Moodle using git (change the "M400" for other versions):
 
-2. Alternatively, add a few lines of code to your Moodle theme or ask your theme's developer/maintainer to add this change to their themes.
+    git fetch https://github.com/michael-milette/moodle/tree/MDL-63219-M400 master
+    git cherry-pick FETCH_HEAD
+
+This is usually enough to make the filters work in the custom menu. However, we have noticed it may not work with some Moodle themes, most notably premium themes. Those themes will need to be patched using the technique B.
+
+**Technique B**: If technique A does not work for you, you will need to integrate a few lines of code into your Moodle theme, or ask your theme's developer/maintainer to apply this change for you. Be sure to follow the correct instructions for your version of Moodle.
 
 ### For themes based on **boost** (Moodle 4.0 and later)
 
 As more 3rd party/contributed Moodle 4.0 themes become available, this section will be updated. Until then, there is no tested patch available for 3rd party Moodle 4.0 themes. It is recommended to use Moodle core patch above which is known to work.
 
-Classic-based themes for Moodle 4.0 may simply require the theme patch for **Moodle 3.2 and late** included below.
-
-The follow ALPHA code is based on information available in the Boost theme for Moodle 4.0. You may also need to apply the theme patch for **Moodle 3.2 and late** included below.
+The follow ALPHA code is based on information available in the Boost theme for Moodle 4.0. You will **also need** to apply the theme patch **For themes based on boost (Moodle 3.2 and later)** included below.
 
 Add this code to the core_renderer section (probably located in /theme/yourtheme/classes/navigation/output/primary.php) of your theme. Note: Your theme may even already have such a class (they often do):
 
@@ -554,7 +560,7 @@ Add this code to the core_renderer section (probably located in /theme/yourtheme
 
 ### For themes based on **boost** (Moodle 3.2 and later)
 
-Note: Supported in Moodle 3.2 and later.
+Note: Supported in Moodle 3.2 and later. If you are using Moodle 4.0 or later, you **must also** integrate the patch **For themes based on boost (Moodle 4.0 and later)** above.
 
 Add the following code to core_renderer section (often found in /theme/yourtheme/classes/output/core_renderer.php) of your theme. Note: Your theme may even already have such a class (they often do):
 
@@ -562,53 +568,48 @@ Add the following code to core_renderer section (often found in /theme/yourtheme
 
     class core_renderer extends \theme_boost\output\core_renderer {
         /**
-         * Applies Moodle filters to the custom menu and custom user menu.
-         *
-         * @param string $custommenuitems Current custom menu object.
-         * @return Rendered custom_menu that has been filtered.
-         */
+        * Applies Moodle filters to the custom menu and returns the custom menu if one has been set.
+        *
+        * @param string $custommenuitems - custom menuitems set by theme instead of global theme settings.
+        * @return string Rendered custom_menu after filters have been applied.
+        */
         public function custom_menu($custommenuitems = '') {
-            global $CFG, $PAGE;
+            global $CFG;
 
-            // Don't apply auto-linking filters.
-            $filtermanager = filter_manager::instance();
-            $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
-            $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink'];
-
-            // Filter custom user menu.
-            // Don't filter custom user menu on the settings page. Otherwise it ends up
-            // filtering the edit field itself resulting in a loss of the tag.
-            if ($PAGE->pagetype != 'admin-setting-themesettings') {
-                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
-                        $filteroptions, $skipfilters);
-            }
-
-            // Filter custom menu.
             if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
                 $custommenuitems = $CFG->custommenuitems;
             }
-            $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
+
+            // Filter custom menu items without applying auto-linking filters.
+            $context = \context_system::instance();
+            $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink'];
+            $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
+            $filtermanager = filter_manager::instance();
+            $custommenuitems = $filtermanager->filter_text($custommenuitems, $context, $filteroptions, $skipfilters);
+
             $custommenu = new custom_menu($custommenuitems, current_language());
             return $this->render_custom_menu($custommenu);
         }
 
         /**
-         * We want to show the custom menus as a list of links in the footer on small screens.
-         * Just return the menu object exported so we can render it differently.
-         */
+        * We want to show the custom menus as a list of links in the footer on small screens.
+        * Just return the menu object exported so we can render it differently.
+        */
         public function custom_menu_flat() {
-            global $CFG, $PAGE;
+            global $CFG;
             $custommenuitems = '';
-
-            // Don't apply auto-linking filters.
-            $filtermanager = filter_manager::instance();
-            $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
-            $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink'];
 
             if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
                 $custommenuitems = $CFG->custommenuitems;
             }
-            $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
+
+            // Filter custom menu items without applying auto-linking filters.
+            $context = \context_system::instance();
+            $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink'];
+            $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
+            $filtermanager = filter_manager::instance();
+            $custommenuitems = $filtermanager->filter_text($custommenuitems, $context, $filteroptions, $skipfilters);
+
             $custommenu = new custom_menu($custommenuitems, current_language());
             $langs = get_string_manager()->get_list_of_translations();
             $haslangmenu = $this->lang_menu() != '';

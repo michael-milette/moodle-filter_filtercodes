@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.2.8] 2022-04-15 (DEV)
+## [2.3.0] 2022-04-19
 ### Added
 - New {ifhasarolename roleshortname}{/ifhasarolename} tags.
 - Sample ALPHA code in the documentation to patch Moodle 4.0 themes for support in the custom menu.
@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file.
 - New {userscountrycount} tag.
 - Missing support for {supportname}, {supportemail} and {supportpage} tags.
 - Known limitation in README.md regarding Moodle's 'Download course content' feature.
-- Compatible with Moodle 4.0 (ALPHA) - Note: Custom menu patch does not work in 4.0 yet.
+- Compatibility with Moodle 4.0
 ### Updated
 - Improve parsing of {scrape} tag. Improper syntax will no longer make Moodle crash, the tag just won't work properly.
 - {lang}, {idnumber} and {coursegradepercent} tags can now be used within other tags for example.
@@ -68,6 +68,7 @@ All notable changes to this project will be documented in this file.
 - {coursecards} no longer displays hidden courses or those whose end-dates are past, unless you are an administrator.
 - Results from {course_field_shortname} and {course_fields} are now processed through Moodle filters.
 - Updated the documentation and fix typos.
+- Tested to be compatible up to and including Moodle 4.0.
 - Updated copyright notice to include 2022.
 
 ## [2.2.1] 2021-05-25
