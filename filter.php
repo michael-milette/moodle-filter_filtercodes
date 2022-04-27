@@ -122,7 +122,7 @@ class filter_filtercodes extends moodle_text_filter {
                 // Ignore site admin status if we have switched roles.
                 return true;
             } else {
-                return is_siteadmin();
+                return !is_siteadmin();
             }
         }
         return false;
