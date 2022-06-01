@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="MoodleCore">
+  <rule ref="moodle"/>
+  <exclude-pattern>thirdparty</exclude-pattern>
+  <exclude-pattern>vendor</exclude-pattern>
+  <exclude-pattern>test.php</exclude-pattern>
+</ruleset>
