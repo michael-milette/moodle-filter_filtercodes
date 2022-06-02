@@ -3040,9 +3040,9 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifingroup id|idnumber}.
             if (stripos($text, '{ifingroup') !== false) {
-                static $mygroups;
-                if (!isset($mygroups)) { // Fetch my groups.
-                    $mygroups = groups_get_all_groups($PAGE->course->id, $USER->id);
+                static $mygroupslist;
+                if (!isset($mygroupslist)) { // Fetch my groups.
+                    $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
                 }
                 $re = '/{ifingroup\s+(.*)\}(.*)\{\/ifingroup\}/isuU';
                 $found = preg_match_all($re, $text, $matches);
@@ -3050,7 +3050,7 @@ class filter_filtercodes extends moodle_text_filter {
                     foreach ($matches[1] as $groupid) {
                         $key = '/{ifingroup\s+' . $groupid . '\}(.*)\{\/ifingroup\}/isuU';
                         $ismember = false;
-                        foreach ($mygroups as $group) {
+                        foreach ($mygroupslist as $group) {
                             if ($groupid == $group->id || $groupid == $group->idnumber) {
                                 $ismember = true;
                                 break;
