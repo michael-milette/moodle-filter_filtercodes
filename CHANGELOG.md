@@ -1,12 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.1] 2022-06-02
+## [2.3.1] 2022-06-07
 ### Added
-phpcs.xml.cont.dist file.
+- phpcs.xml.cont.dist file.
 ### Updated
-.gitignore file.
-Fix-221: Resolved conflict between {mygroups} amd {ifingroup} tags when used at the same time.
+- .gitignore file.
+- Fix-221: Resolved conflict between {mygroups} amd {ifingroup} tags when used at the same time.
+- Fix-222: Fixed PHPUnit v9.5 compatibility.
+
 ## [2.3.0] 2022-04-19
 ### Added
 - New {ifhasarolename roleshortname}{/ifhasarolename} tags.

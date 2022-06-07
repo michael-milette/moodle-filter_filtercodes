@@ -23,10 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/filter/filtercodes/filter.php');
+namespace filter_filtercodes;
 
 /**
  * Unit tests for FilterCodes filter.
@@ -37,22 +34,22 @@ require_once($CFG->dirroot . '/filter/filtercodes/filter.php');
  * @copyright  2017-2022 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class filter_filtercodes_testcase extends advanced_testcase {
+class filter_test extends \advanced_testcase {
 
     /**
-     * @var filter_filtercode $filter Instance of filtercodes.
+     * Tests setup
      */
-    protected $filter;
-
-    /**
-     * Setup the test framework
-     *
-     * @return void
-     */
-    protected function setUp() {
+    public function setUp() : void {
+        global $PAGE;
         parent::setUp();
+
         $this->resetAfterTest(true);
-        $this->filter = new filter_filtercodes(context_system::instance(), []);
+        $this->setAdminUser();
+
+        // Enable FilterCodes filter at top level.
+        filter_set_global_state('filtercodes', TEXTFILTER_ON);
+
+        $PAGE->set_url(new \moodle_url('/'));
     }
 
     /**
@@ -60,15 +57,12 @@ class filter_filtercodes_testcase extends advanced_testcase {
      *
      * @return void
      */
-    public function test_filter_filtercodes() {
-        global $CFG, $USER, $DB, $PAGE, $SITE;
+    public function test_filtercodes() {
+        global $CFG, $USER, $DB, $PAGE;
 
-        $PAGE->set_url(new moodle_url('/'));
-
-        $this->setadminuser();
+        // Create a test course.
         $course = $this->getDataGenerator()->create_course();
-        $context = context_course::instance($course->id);
-        filter_set_local_state('filtercodes', $context->id, TEXTFILTER_ON);
+        $context = \context_course::instance($course->id);
 
         $tests = [
             [
@@ -290,7 +284,8 @@ class filter_filtercodes_testcase extends advanced_testcase {
         ];
 
         foreach ($tests as $test) {
-            $this->assertEquals($test['after'], $this->filter->filter($test['before']));
+            $filtered = format_text($test['before'], FORMAT_HTML, array('context' => \context_system::instance()));
+            $this->assertEquals($test['after'], $filtered);
         }
     }
 }
