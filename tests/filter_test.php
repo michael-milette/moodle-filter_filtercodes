@@ -21,6 +21,7 @@
  * @copyright  2017-2022 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers filter_filtercodes
  */
 
 namespace filter_filtercodes;

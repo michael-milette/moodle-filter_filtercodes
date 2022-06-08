@@ -1,12 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.2] 2022-06-08 (dev)
+### Updated
+- Fix-217: You can now have up to 50 global tags.
+
 ## [2.3.1] 2022-06-07
 ### Added
 - phpcs.xml.cont.dist file.
 ### Updated
 - .gitignore file.
-- Fix-221: Resolved conflict between {mygroups} amd {ifingroup} tags when used at the same time.
+- Fix-221: Resolved conflict between {mygroups} and {ifingroup} tags when used at the same time.
 - Fix-222: Fixed PHPUnit v9.5 compatibility.
 
 ## [2.3.0] 2022-04-19

@@ -39,7 +39,7 @@ $title = get_string('globaltagcount', $name);
 $description = get_string('globaltagcountdesc', $name);
 $default = 0;
 $choices = [];
-for ($i = 0; $i <= 20; $i++) {
+for ($i = 0; $i <= 50; $i++) {
     $choices[$i] = $i;
 }
 $settings->add(new admin_setting_configselect($name . '/globaltagcount', $title, $description, $default, $choices));
