@@ -3065,6 +3065,33 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifnotingroup id|idnumber}.
+            if (stripos($text, '{ifnotingroup') !== false) {
+                static $mygroupslist;
+                if (!isset($mygroupslist)) { // Fetch my groups.
+                    $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
+                }
+                $re = '/{ifnotingroup\s+(.*)\}(.*)\{\/ifnotingroup\}/isuU';
+                $found = preg_match_all($re, $text, $matches);
+                if ($found > 0) {
+                    foreach ($matches[1] as $groupid) {
+                        $key = '/{ifnotingroup\s+' . $groupid . '\}(.*)\{\/ifnotingroup\}/isuU';
+                        $ismember = false;
+                        foreach ($mygroupslist as $group) {
+                            if ($groupid == $group->id || $groupid == $group->idnumber) {
+                                $ismember = true;
+                                break;
+                            }
+                        }
+                        if ($ismember) { // Remove the ifnotingroup tags and content.
+                            $replace[$key] = '';
+                        } else { // Just remove the tags and keep the content.
+                            $replace[$key] = '$1';
+                        }
+                    }
+                }
+            }
+
             // Tag: {iftenant idnumber|tenantid}. Only for Moodle Workplace.
             if (stripos($text, '{iftenant') !== false) {
                 if (class_exists('tool_tenant\tenancy')) {

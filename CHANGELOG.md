@@ -1,7 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.2] 2022-06-08 (dev)
+## [2.3.2] 2022-07-20 (dev)
+### Added
+- New {ifnotingroup}{/ifnotingroup} tags.
 ### Updated
 - Fix-217: You can now have up to 50 global tags.
 
