@@ -506,7 +506,7 @@ To patch Moodle to handle this properly for most Moodle themes, cherry-pick the 
 
 Example: To apply the patch for Moodle using git (change the "M400" for other versions):
 
-    git fetch https://github.com/michael-milette/moodle/tree/MDL-63219-M400 master
+    git fetch https://github.com/michael-milette/moodle MDL-63219-M400
     git cherry-pick FETCH_HEAD
 
 This is usually enough to make the filters work in the custom menu. However, we have noticed it may not work with some Moodle themes, most notably premium themes. Those themes will need to be patched using the technique B.
