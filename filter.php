@@ -33,6 +33,8 @@ use Endroid\QrCode\QrCode;
 
 require_once($CFG->dirroot . '/course/renderer.php');
 
+
+
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *
@@ -66,6 +68,7 @@ class filter_filtercodes extends moodle_text_filter {
             $this->archetypes[$archetype] = (object) ['level' => $level, 'roleids' => $roleids];
         }
     }
+  
 
     /**
      * Determine if any of the user's roles includes specified archetype.
@@ -584,6 +587,9 @@ class filter_filtercodes extends moodle_text_filter {
         return $progresspercent;
     }
 
+
+
+
     /**
      * Main filter function called by Moodle.
      *
@@ -827,7 +833,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // This tag: {teamcards}.
-        if (stripos($text, '{teamcards}') !== false) {
+        if (stripos($text, '{teamcards}') !== false ) {
             global $DB, $OUTPUT;
 
             $sql = 'SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
@@ -1223,10 +1229,22 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tag: {diskfreespace} - free space of Moodle application volume.
-        if (stripos($text, '{diskfreespace}') !== false) {
-            $bytes = @disk_free_space('.');
-            $replace['/\{diskfreespace\}/i'] = $this->humanbytes($bytes);
-        }
+        
+            if (stripos($text, '{diskfreespace}') !== false) {
+                $disk ="{diskfreespace}";
+                if (!restricttag($disk)){
+                    $bytes = @disk_free_space('.');
+                    $replace['/\{diskfreespace\}/i'] = $this->humanbytes($bytes);
+                }else {
+                    $replace['/\{diskfreespace\}/i'] = "<div class=\"alert alert-warning\">
+                    <strong>{diskfreespace}</strong> This tag is not enabled. </div>";
+               
+                }
+               
+            }
+
+        
+      
 
         // Tag: {diskfreespacedata} - free space of Moodledata volume.
         if (stripos($text, '{diskfreespacedata}') !== false) {
@@ -1397,7 +1415,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {coursecontacts}.
-            if (stripos($text, '{coursecontacts') !== false) {
+            if (stripos($text, '{coursecontacts') !== false ) {
                 $contacts = '';
                 // If course (not site pages) with contacts.
                 if ($PAGE->course->id) {
@@ -1406,6 +1424,8 @@ class filter_filtercodes extends moodle_text_filter {
                     if ($course->has_course_contacts()) {
 
                         // Get tag settings.
+                       
+                       
                         $cshowpic = get_config('filter_filtercodes', 'coursecontactshowpic');
                         $cshowdesc = get_config('filter_filtercodes', 'coursecontactshowdesc');
                         $clinktype = get_config('filter_filtercodes', 'coursecontactlinktype');
@@ -2310,8 +2330,14 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 // Format groups into a language string.
                 $mygroups = $this->formatlist($mygroups);
+               
             }
             $replace['/\{mygroups\}/i'] = $mygroups;
+            if (!$mygroups) {
+                $replace['/\{mygroups\}/i'] = "<div class=\"alert alert-info\">
+                <strong>Note:</strong> You are not currently associated with a group in this course.
+              </div>";
+            }
         }
 
         // Tag: {referer}.
@@ -2332,11 +2358,23 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        if (stripos($text, '{www') !== false) {
+        if (stripos($text, '{www') !== false ) {
             // Tag: {wwwroot}.
-            if (stripos($text, '{wwwroot}') !== false) {
-                $replace['/\{wwwroot\}/i'] = $CFG->wwwroot;
-            }
+            
+           
+                if (stripos($text, '{wwwroot}') !== false)  {
+                    $root = "{wwwroot}";
+                    if (!restricttag($root)){
+                    $replace['/\{wwwroot\}/i'] = $CFG->wwwroot;
+                    }else {
+                        $replace['/\{wwwroot\}/i'] = "<div class=\"alert alert-warning\"> 
+                        <strong>{wwwroot}</strong> This tag is not enabled </div>";
+                
+                    }
+                }
+
+            
+           
 
             // Tag: {wwwcontactform}.
             if (stripos($text, '{wwwcontactform') !== false) {
@@ -3390,4 +3428,26 @@ class filter_filtercodes extends moodle_text_filter {
 
         return $text;
     }
+
+
+
+}
+
+function restricttag($text) {
+ 
+    $restricted = get_config('filter_filtercodes', 'restrictedtags');
+    $cleanstr = preg_replace("/,/", " ", $restricted);
+    //print_r($restricted);
+    $result = explode(' ',$cleanstr);
+
+            foreach ($result as  $x => $restval) {
+              
+                if ($restval == $text) {
+                        return true;
+                }
+
+            }
+            
+    return false;
+
 }

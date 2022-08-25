@@ -147,3 +147,39 @@ $choices = range(0, 20);
 $description = get_string('coursecardsbyenrol_desc', 'filter_filtercodes');
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);
+
+// Option to select how to display user description for {teamcards} tag.
+$default = ''; // Default is to not display the description field.
+$name = 'filter_filtercodes/restrictedtags';
+$title = get_string('restrictedtags', 'filter_filtercodes');
+$description = get_string('restrictedtags_desc', 'filter_filtercodes');
+
+$choices = ['' => get_string('none'),
+//system
+'{diskfreespace}' => get_string('diskfreespace', 'filter_filtercodes'),
+'{wwwroot}' => get_string('wwwroot', 'filter_filtercodes'),
+'{filtercodes}' => get_string('filtercodes', 'filter_filtercodes'),
+'{usercount}' => get_string('usercount', 'filter_filtercodes'),
+'{userscountrycount}' => get_string('userscountrycount', 'filter_filtercodes'),
+'{diskfreespacedata}' => get_string('diskfreespacedata', 'filter_filtercodes'),
+//menu
+'{toggleeditingmenu}' => get_string('toggleeditingmenu', 'filter_filtercodes'),
+'{mycoursesmenu}' => get_string('mycoursesmenu', 'filter_filtercodes'),
+'{courserequestmenu0}' => get_string('courserequestmenu0', 'filter_filtercodes'),
+'{courserequestmenu}' => get_string('courserequestmenu', 'filter_filtercodes'),
+'{menudev}' => get_string('menudev', 'filter_filtercodes'),
+'{menuadmin}' => get_string('menuadmin', 'filter_filtercodes'),
+ //url
+ '{pagepath}' => get_string('pagepath', 'filter_filtercodes'),
+ '{ipaddress}' => get_string('ipaddress', 'filter_filtercodes'),
+ '{referrer}' => get_string('referrer', 'filter_filtercodes'),
+ '{protocol}' => get_string('protocol', 'filter_filtercodes'),
+ '{sesskey}' => get_string('sesskey', 'filter_filtercodes'),
+ '{wwwcontactform}' => get_string('wwwcontactform', 'filter_filtercodes'),
+
+];
+
+
+$setting = new admin_setting_configmultiselect($name, $title, $description, $default, $choices);
+$settings->add($setting);
+

@@ -64,6 +64,45 @@ $string['teamcardsformat_desc'] = 'Choose how the team members will appear in th
 <li>Brief: Same as none but displays the description below the user picture and name.</li>
 <li>Verbose: List format. Recommended if your team members tends to have long user descriptions.</li>
 </ul>';
+//uofr hack dapiawej
+$string['restrictedtags'] = 'Restricted tags';
+$string['restrictedtags_desc'] = 'If enabled, tags that are selected in the listbox will be disabled when they are used ';
+
+//system
+$string['wwwroot'] = '{wwwroot}';
+$string['diskfreespace'] = '{diskfreespace}';
+$string['diskfreespacedata'] = '{diskfreespacedata}';
+$string['filtercodes'] = '{filtercodes}';
+$string['usercount'] = '{usercount}';
+$string['userscountrycount'] = '{userscountrycount}';
+$string['userscountrycount'] = '{userscountrycount}';
+
+//menu
+$string['toggleeditingmenu'] = '{toggleeditingmenu}';
+$string['mycoursesmenu'] = '{mycoursesmenu}';
+$string['courserequestmenu0'] = '{courserequestmenu0}';
+$string['courserequestmenu'] = '{courserequestmenu}';
+$string['menudev'] = '{menudev}';
+$string['menuadmin'] = '{menuadmin}';
+
+//url
+$string['pagepath'] = '{pagepath}';
+$string['ipaddress'] = '{ipaddress}';
+$string['referrer'] = '{referrer}';
+$string['protocol'] = '{protocol}';
+$string['courserequestmenu'] = '{courserequestmenu}';
+$string['sesskey'] = '{sesskey}';
+$string['wwwcontactform'] = '{wwwcontactform}';
+
+// contactform
+$string['formquickquestion'] = '{formquickquestion}';
+$string['formcontactus'] = '{formcontactus}';
+$string['referrer'] = '{referrer}';
+$string['formcourserequest'] = '{formcourserequest}';
+$string['formcheckin'] = '{formcheckin}';
+
+//end of hack
+
 $string['brief'] = 'Brief';
 $string['verbose'] = 'Verbose';
 $string['teamcardslinktype'] = 'Team link type';
