@@ -64,9 +64,10 @@ $string['teamcardsformat_desc'] = 'Choose how the team members will appear in th
 <li>Brief: Same as none but displays the description below the user picture and name.</li>
 <li>Verbose: List format. Recommended if your team members tends to have long user descriptions.</li>
 </ul>';
+
 //uofr hack dapiawej
 $string['restrictedtags'] = 'Restricted tags';
-$string['restrictedtags_desc'] = 'If enabled, tags that are selected in the listbox will be disabled when they are used ';
+$string['restrictedtags_desc'] = 'If enabled, tags that are selected in the listbox will be disabled when they are used. ';
 
 //system
 $string['wwwroot'] = '{wwwroot}';
@@ -74,7 +75,6 @@ $string['diskfreespace'] = '{diskfreespace}';
 $string['diskfreespacedata'] = '{diskfreespacedata}';
 $string['filtercodes'] = '{filtercodes}';
 $string['usercount'] = '{usercount}';
-$string['userscountrycount'] = '{userscountrycount}';
 $string['userscountrycount'] = '{userscountrycount}';
 
 //menu
@@ -84,22 +84,32 @@ $string['courserequestmenu0'] = '{courserequestmenu0}';
 $string['courserequestmenu'] = '{courserequestmenu}';
 $string['menudev'] = '{menudev}';
 $string['menuadmin'] = '{menuadmin}';
+$string['categoriesmenu'] = '{categoriesmenu}';
+$string['categories0menu'] = '{categories0menu}';
+$string['categoriesxmenu'] = '{categoriesxmenu}';
 
 //url
 $string['pagepath'] = '{pagepath}';
 $string['ipaddress'] = '{ipaddress}';
 $string['referrer'] = '{referrer}';
+$string['referer'] = '{referer}';
 $string['protocol'] = '{protocol}';
-$string['courserequestmenu'] = '{courserequestmenu}';
 $string['sesskey'] = '{sesskey}';
 $string['wwwcontactform'] = '{wwwcontactform}';
+$string['urlencode'] = '{urlencode}';
+$string['thisurl_enc'] = '{thisurl_enc}';
+$string['thisurl'] = '{thisurl}';
+$string['%7Bsesskey%7D'] = '%7Bsesskey%7D';
 
 // contactform
-$string['formquickquestion'] = '{formquickquestion}';
-$string['formcontactus'] = '{formcontactus}';
-$string['referrer'] = '{referrer}';
-$string['formcourserequest'] = '{formcourserequest}';
-$string['formcheckin'] = '{formcheckin}';
+$string['formquickquestions'] = '{formquickquestion}';
+$string['formcontactuss'] = '{formcontactus}';
+$string['formcourserequests'] = '{formcourserequest}';
+$string['formcheckins'] = '{formcheckin}';
+$string['formsupports'] = '{formsupport}';
+$string['formsesskey'] = '{formsesskey}';
+$string['editingtoggle'] = '{editingtoggle}';
+$string['recaptcha'] = '{recaptcha}';
 
 //end of hack
 

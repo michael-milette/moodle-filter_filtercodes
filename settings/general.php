@@ -155,28 +155,49 @@ $title = get_string('restrictedtags', 'filter_filtercodes');
 $description = get_string('restrictedtags_desc', 'filter_filtercodes');
 
 $choices = ['' => get_string('none'),
-//system
+
+//system tags
 '{diskfreespace}' => get_string('diskfreespace', 'filter_filtercodes'),
 '{wwwroot}' => get_string('wwwroot', 'filter_filtercodes'),
 '{filtercodes}' => get_string('filtercodes', 'filter_filtercodes'),
 '{usercount}' => get_string('usercount', 'filter_filtercodes'),
 '{userscountrycount}' => get_string('userscountrycount', 'filter_filtercodes'),
 '{diskfreespacedata}' => get_string('diskfreespacedata', 'filter_filtercodes'),
-//menu
+
+//menu tags
 '{toggleeditingmenu}' => get_string('toggleeditingmenu', 'filter_filtercodes'),
 '{mycoursesmenu}' => get_string('mycoursesmenu', 'filter_filtercodes'),
 '{courserequestmenu0}' => get_string('courserequestmenu0', 'filter_filtercodes'),
 '{courserequestmenu}' => get_string('courserequestmenu', 'filter_filtercodes'),
 '{menudev}' => get_string('menudev', 'filter_filtercodes'),
 '{menuadmin}' => get_string('menuadmin', 'filter_filtercodes'),
- //url
+'{categoriesmenu}' => get_string('categoriesmenu', 'filter_filtercodes'),
+'{categories0menu}' => get_string('categories0menu', 'filter_filtercodes'),
+'{categoriesxmenu}' => get_string('categoriesxmenu', 'filter_filtercodes'),
+ 
+//url
  '{pagepath}' => get_string('pagepath', 'filter_filtercodes'),
  '{ipaddress}' => get_string('ipaddress', 'filter_filtercodes'),
  '{referrer}' => get_string('referrer', 'filter_filtercodes'),
+ '{referer}' => get_string('referer', 'filter_filtercodes'),
  '{protocol}' => get_string('protocol', 'filter_filtercodes'),
- '{sesskey}' => get_string('sesskey', 'filter_filtercodes'),
+ '{urlencode}' => get_string('urlencode', 'filter_filtercodes'),
+  '{thisurl_enc}' => get_string('thisurl_enc', 'filter_filtercodes'),
+  '{thisurl}' => get_string('thisurl', 'filter_filtercodes'),
+  '{sesskey}' => get_string('sesskey', 'filter_filtercodes'),
+  '%7Bsesskey%7D' => get_string('%7Bsesskey%7D', 'filter_filtercodes'),
+  
+ //contactform
  '{wwwcontactform}' => get_string('wwwcontactform', 'filter_filtercodes'),
-
+ '{formquickquestion}' => get_string('formquickquestions', 'filter_filtercodes'),
+ '{formcontactus}' => get_string('formcontactuss', 'filter_filtercodes'),
+ '{formcourserequest}' => get_string('formcourserequests', 'filter_filtercodes'),
+ '{formcheckin}' => get_string('formcheckins', 'filter_filtercodes'),
+ '{formsupport}' => get_string('formsupports', 'filter_filtercodes'),
+ '{recaptcha}' => get_string('recaptcha', 'filter_filtercodes'),
+ '{editingtoggle}' => get_string('editingtoggle', 'filter_filtercodes'),
+ '{formsesskey}' => get_string('formsesskey', 'filter_filtercodes'),
+ 
 ];
 
 

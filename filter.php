@@ -638,19 +638,40 @@ class filter_filtercodes extends moodle_text_filter {
             // These require that you already be logged-in.
             foreach (['formquickquestion', 'formcheckin'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
-                    if (isloggedin() && !isguestuser()) {
-                        $formcode = get_string($form, 'filter_filtercodes');
-                        $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . get_string($form, 'filter_filtercodes') . $post;
-                    } else {
-                        $replace['/\{' . $form . '\}/i'] = '';
+                   
+                    $formq ='{'.$form.'}';
+                    if (!restricttag($formq)){
+                            if (isloggedin() && !isguestuser()) {
+                                $formcode = get_string($form, 'filter_filtercodes');
+                                $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . get_string($form, 'filter_filtercodes') . $post;
+                            } else {
+                                $replace['/\{' . $form . '\}/i'] = '';
+                            }
+                    }else {
+                        $replace['/\{' . $form . '\}/i'] = "<div class=\"alert alert-warning\">
+                        <strong>{{$form}}</strong> This tag is not enabled. </div>";
+                   
                     }
+  
+                    
                 }
+               
             }
             // These work regardless of whether you are logged-in or not.
             foreach (['formcontactus', 'formcourserequest', 'formsupport'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
-                    $formcode = get_string($form, 'filter_filtercodes');
-                    $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . $formcode . $post;
+                    
+                    $contactus ='{'.$form.'}';
+                    if (!restricttag($contactus)){
+                        $formcode = get_string($form, 'filter_filtercodes');
+                        $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . $formcode . $post;
+                    }else {
+                        $replace['/\{' . $form . '\}/i'] = "<div class=\"alert alert-warning\">
+                        <strong>{{$form}}</strong>  This tag is not enabled. </div>";
+                   
+                    }
+
+                    
                 } else {
                     $replace['/\{' . $form . '\}/i'] = '';
                 }
@@ -658,8 +679,16 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {formsesskey}.
             if (stripos($text, '{formsesskey}') !== false) {
-                $replace['/\{formsesskey\}/i'] = '<input type="hidden" id="sesskey" name="sesskey" value="">';
-                $replace['/\{formsesskey\}/i'] .= '<script>document.getElementById(\'sesskey\').value = M.cfg.sesskey;</script>';
+                $formskey ="{formsesskey}";
+                if (!restricttag($formskey)){
+                    $replace['/\{formsesskey\}/i'] = '<input type="hidden" id="sesskey" name="sesskey" value="">';
+                    $replace['/\{formsesskey\}/i'] .= '<script>document.getElementById(\'sesskey\').value = M.cfg.sesskey;</script>';
+                }else {
+                    $replace['/\{formsesskey\}/i'] = "<div class=\"alert alert-warning\">
+                    <strong>{formsesskey}</strong> This tag is not enabled. </div>";
+            
+                }
+              
             }
         }
 
@@ -710,6 +739,8 @@ class filter_filtercodes extends moodle_text_filter {
 
         // This tag: {menuadmin}.
         if (stripos($text, '{menuadmin}') !== false) {
+            $menadmin = "{menuadmin}";
+            if (!restricttag($menadmin)){
             $theme = $PAGE->theme->name;
             $menu = '';
             if ($this->hasminarchetype('editingteacher')) {
@@ -778,10 +809,19 @@ class filter_filtercodes extends moodle_text_filter {
                         '|/admin/index.php' . PHP_EOL;
             }
             $replace['/\{menuadmin\}/i'] = $menu;
+            
+            }else {
+            $replace['/\{menuadmin\}/i'] = "<div class=\"alert alert-warning\">
+            <strong>{menuadmin}</strong> This tag is not enabled. </div>";
+    
+             }
         }
 
         // This tag: {menudev}.
         if (stripos($text, '{menudev}') !== false) {
+            $mendev = "{menudev}";
+            if (!restricttag($mendev)){
+              
             $menu = '';
             $menu .= '-{getstring:tool_installaddon}installaddons{/getstring}|/admin/tool/installaddon' . PHP_EOL;
             $menu .= '-###' . PHP_EOL;
@@ -830,6 +870,11 @@ class filter_filtercodes extends moodle_text_filter {
             $menu .= '-Moodle Dev Academy|https://moodle.academy/course/index.php?categoryid=4|{getstring}english{/getstring}' .
                     PHP_EOL;
             $replace['/\{menudev\}/i'] = $menu;
+            }else {
+                $replace['/\{menudev\}/i'] = "<div class=\"alert alert-warning\">
+                <strong>{menudev}</strong> This tag is not enabled. </div>";
+        
+            }
         }
 
         // This tag: {teamcards}.
@@ -1248,8 +1293,16 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {diskfreespacedata} - free space of Moodledata volume.
         if (stripos($text, '{diskfreespacedata}') !== false) {
-            $bytes = @disk_free_space($CFG->dataroot);
-            $replace['/\{diskfreespacedata\}/i'] = $this->humanbytes($bytes);
+            $disk ="{diskfreespacedata}";
+            if (!restricttag($disk)){
+                $bytes = @disk_free_space($CFG->dataroot);
+                $replace['/\{diskfreespacedata\}/i'] = $this->humanbytes($bytes);
+            }else {
+                $replace['/\{diskfreespacedata\}/i'] = "<div class=\"alert alert-warning\">
+                <strong>{diskfreespacedata}</strong> This tag is not enabled. </div>";
+           
+            }
+           
         }
 
         // Any {user*} tags.
@@ -1323,8 +1376,17 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{usercount}') !== false) {
                 // Count total number of current users on the site.
                 // Exclude deleted users, admin and guest.
-                $cnt = $DB->count_records('user', ['deleted' => 0]) - 2;
-                $replace['/\{usercount\}/i'] = $cnt;
+                $userc ="{usercount}";
+                if (!restricttag($userc)){
+                    $cnt = $DB->count_records('user', ['deleted' => 0]) - 2;
+                    $replace['/\{usercount\}/i'] = $cnt;
+                    
+                }else {
+                    $replace['/\{usercount\}/i'] = "<div class=\"alert alert-warning\">
+                    <strong>{usercount}</strong> This tag is not enabled. </div>";
+               
+                }
+                
             }
 
             // Tag: {usersactive}.
@@ -1361,8 +1423,17 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {userscountrycount}.
             if (stripos($text, '{userscountrycount}') !== false) {
-                $count = $DB->count_records_sql('SELECT COUNT(DISTINCT country) FROM {user} WHERE id > 2');
-                $replace['/\{userscountrycount\}/i'] = $count;
+                $usercountry ="{userscountrycount}";
+                if (!restricttag($usercountry)){
+                    $count = $DB->count_records_sql('SELECT COUNT(DISTINCT country) FROM {user} WHERE id > 2');
+                    $replace['/\{userscountrycount\}/i'] = $count;
+                    
+                }else {
+                    $replace['/\{userscountrycount\}/i'] = "<div class=\"alert alert-warning\">
+                    <strong>{userscountrycount}</strong> This tag is not enabled. </div>";
+               
+                }
+               
             }
         }
 
@@ -1998,7 +2069,10 @@ class filter_filtercodes extends moodle_text_filter {
 
                 // Tag: {mycoursesmenu}. A custom menu list of enrolled course names with links.
                 if (stripos($text, '{mycoursesmenu}') !== false) {
-                    $list = '';
+
+                    $mycoursemen ="{mycoursesmenu}";
+                    if (!restricttag($mycoursemen)){
+                        $list = '';
                     foreach ($mycourses as $mycourse) {
                         $list .= '-' . $mycourse->fullname . '|' .
                             (new moodle_url('/course/view.php', ['id' => $mycourse->id])) . PHP_EOL;
@@ -2009,6 +2083,14 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     $replace['/\{mycoursesmenu\}/i'] = $list;
                     unset($list);
+                        
+                    }else {
+                        $replace['/\{mycoursesmenu\}/i'] = "<div class=\"alert alert-warning\">
+                        <strong>{mycoursesmenu}</strong> This tag is not enabled. </div>";
+                   
+                    }
+
+                   
                 }
 
                 // Tag: {mycoursescards}. Generates course cards for each enrolled course.
@@ -2074,20 +2156,40 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {editingmode}. Is "off" if in edit page mode. Otherwise "on". Useful for creating Turn Editing On/Off links.
         if (stripos($text, '{editingtoggle}') !== false) {
+            $editon ="{editingtoggle}";
+            if (!restricttag($editon)){
             $replace['/\{editingtoggle\}/i'] = ($PAGE->user_is_editing() ? 'off' : 'on');
+            }else {
+                $replace['/\{editingtoggle\}/i'] = "<div class=\"alert alert-warning\">
+                <strong>{editingtoggle}</strong> This tag is not enabled. </div>";
+        
+            }
+
         }
 
         // Tag: {toggleeditingmenu}. Creates menu link to toggle editing on and off.
         if (stripos($text, '{toggleeditingmenu}') !== false) {
+            $toggleme ="{toggleeditingmenu}";
+            if (!restricttag($toggleme)){
+
             $editmode = ($PAGE->user_is_editing() ? 'off' : 'on');
             $edittext = get_string('turnediting' . $editmode);
-            if ($PAGE->bodyid == 'page-site-index' && $PAGE->pagetype == 'site-index') { // Front page.
-                $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url('/course/view.php',
-                        ['id' => $PAGE->course->id, 'sesskey' => sesskey(), 'edit' => $editmode]));
-            } else { // All other pages.
-                $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url($PAGE->url,
-                        ['edit' => $editmode, 'adminedit' => $editmode, 'sesskey' => sesskey()])) . PHP_EOL;
+           
+                if ($PAGE->bodyid == 'page-site-index' && $PAGE->pagetype == 'site-index') { // Front page.
+                    $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url('/course/view.php',
+                            ['id' => $PAGE->course->id, 'sesskey' => sesskey(), 'edit' => $editmode]));
+                } else { // All other pages.
+                    $replace['/\{toggleeditingmenu\}/i'] = $edittext . '|' . (new moodle_url($PAGE->url,
+                            ['edit' => $editmode, 'adminedit' => $editmode, 'sesskey' => sesskey()])) . PHP_EOL;
+                }
+                
+            }else {
+                $replace['/\{toggleeditingmenu\}/i'] = "<div class=\"alert alert-warning\">
+                <strong>{toggleeditingmenu}</strong> This tag is not enabled. </div>";
+           
             }
+
+            
         }
 
         // Tags starting with: {categor...}.
@@ -2166,19 +2268,29 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {categoriesmenu}. An unordered list of links to categories.
             if (stripos($text, '{categoriesmenu}') !== false) {
                 // Retrieve list of all categories.
-                if ($CFG->branch >= 36) { // Moodle 3.6+.
-                    $categories = core_course_category::make_categories_list();
-                } else {
-                    require_once($CFG->libdir. '/coursecatlib.php');
-                    $categories = coursecat::make_categories_list();
+                
+                $catmenu ="{categoriesmenu}";
+                if (!restricttag($catmenu)){
+                    if ($CFG->branch >= 36) { // Moodle 3.6+.
+                        $categories = core_course_category::make_categories_list();
+                    } else {
+                        require_once($CFG->libdir. '/coursecatlib.php');
+                        $categories = coursecat::make_categories_list();
+                    }
+                    $list = '';
+                    foreach ($categories as $id => $name) {
+                        $list .= '-' . $name . '|/course/index.php?categoryid=' . $id . PHP_EOL;
+                    }
+                    $replace['/\{categoriesmenu\}/i'] = $list;
+                    unset($tag);
+                    unset($list);
+                    
+                }else {
+                    $replace['/\{categoriesmenu\}/i'] = "<div class=\"alert alert-warning\">
+                    <strong>{categoriesmenu}</strong> This tag is not enabled. </div>";
+               
                 }
-                $list = '';
-                foreach ($categories as $id => $name) {
-                    $list .= '-' . $name . '|/course/index.php?categoryid=' . $id . PHP_EOL;
-                }
-                $replace['/\{categoriesmenu\}/i'] = $list;
-                unset($tag);
-                unset($list);
+                
             }
 
             // Tag: {categories0}. An unordered list of links to top level categories.
@@ -2201,7 +2313,10 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {categories0menu}. A custom menu list of top level categories with links.
             if (stripos($text, '{categories0menu}') !== false) {
-                $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
+               
+                $cattopmenu ="{categories0menu}";
+                if (!restricttag($cattopmenu)){
+                    $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
                         FROM {course_categories} cc
                         WHERE cc.parent = 0 AND cc.visible = 1
                         ORDER BY cc.sortorder";
@@ -2213,6 +2328,13 @@ class filter_filtercodes extends moodle_text_filter {
                 $categories->close();
                 $replace['/\{categories0menu\}/i'] = $list;
                 unset($list);
+                    
+                }else {
+                    $replace['/\{categories0menu\}/i'] = "<div class=\"alert alert-warning\">
+                    <strong>{categories0menu}</strong> This tag is not enabled. </div>";
+               
+                }
+                
             }
 
             // Tag: {categoriesx}. An unordered list of links to current level categories.
@@ -2221,32 +2343,41 @@ class filter_filtercodes extends moodle_text_filter {
                         FROM {course_categories} cc
                         WHERE cc.parent = $catid AND cc.visible = 1
                         ORDER BY cc.sortorder";
-                $list = '';
-                $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
-                foreach ($categories as $category) {
-                    $list .= '<li><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]) . '">'
-                            . $category->name . '</a></li>' . PHP_EOL;
-                }
-                $list = !empty($list) ? '<ul>' . $list . '</ul>' : '';
-                $categories->close();
-                $replace['/\{categoriesx\}/i'] = $list;
-                unset($list);
+                        $list = '';
+                        $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
+                        foreach ($categories as $category) {
+                            $list .= '<li><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id]) . '">'
+                                    . $category->name . '</a></li>' . PHP_EOL;
+                        }
+                        $list = !empty($list) ? '<ul>' . $list . '</ul>' : '';
+                        $categories->close();
+                        $replace['/\{categoriesx\}/i'] = $list;
+                        unset($list);
             }
 
             // Tag: {categoriesxmenu}. A custom menu list of current categories with links.
             if (stripos($text, '{categoriesxmenu}') !== false) {
-                $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
-                        FROM {course_categories} cc
-                        WHERE cc.parent = $catid AND cc.visible = 1
-                        ORDER BY cc.sortorder";
-                $list = '';
-                $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
-                foreach ($categories as $category) {
-                    $list .= '-' . $category->name . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                $catxmenu ="{categoriesxmenu}";
+                if (!restricttag($catxmenu)){
+                    $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
+                    FROM {course_categories} cc
+                    WHERE cc.parent = $catid AND cc.visible = 1
+                    ORDER BY cc.sortorder";
+                    $list = '';
+                    $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
+                    foreach ($categories as $category) {
+                        $list .= '-' . $category->name . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                    }
+                    $categories->close();
+                    $replace['/\{categoriesxmenu\}/i'] = $list;
+                    unset($list);
+                    
+                }else {
+                    $replace['/\{categoriesxmenu\}/i'] = "<div class=\"alert alert-warning\">
+                    <strong>{categoriesxmenu}</strong> This tag is not enabled. </div>";
+               
                 }
-                $categories->close();
-                $replace['/\{categoriesxmenu\}/i'] = $list;
-                unset($list);
+               
             }
 
             // Tag: {categorycards} and {categorycards id}. Course categories presented as card tiles.
@@ -2343,25 +2474,41 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {referer}.
         if (stripos($text, '{refer') !== false) {
             if (stripos($text, '{referer}') !== false) {
-                if ($CFG->branch >= 28) {
-                    $replace['/\{referer\}/i'] = get_local_referer(false);
-                } else {
-                    $replace['/\{referer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
-                }
+                $refurl = "{referer}";
+                    if (!restricttag($refurl)){
+                        if ($CFG->branch >= 28) {
+                            $replace['/\{referer\}/i'] = get_local_referer(false);
+                        } else {
+                            $replace['/\{referer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+                        }
+                    }else {
+                        $replace['/\{referer\}/i'] = "<div class=\"alert alert-warning\"> 
+                        <strong>{referer}</strong> This tag is not enabled </div>";
+                
+                    }
+                
             }
+
             if (stripos($text, '{referrer}') !== false) {
-                if ($CFG->branch >= 28) {
-                    $replace['/\{referrer\}/i'] = get_local_referer(false);
-                } else {
-                    $replace['/\{referrer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
-                }
+                $refalias = "{referrer}";
+                    if (!restricttag($refalias)){
+                        if ($CFG->branch >= 28) {
+                            $replace['/\{referrer\}/i'] = get_local_referer(false);
+                        } else {
+                            $replace['/\{referrer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+                        }
+                    }else {
+                        $replace['/\{referrer\}/i'] = "<div class=\"alert alert-warning\"> 
+                        <strong>{referrer}</strong> This tag is not enabled </div>";
+                
+                    }
+               
             }
         }
 
         if (stripos($text, '{www') !== false ) {
             // Tag: {wwwroot}.
             
-           
                 if (stripos($text, '{wwwroot}') !== false)  {
                     $root = "{wwwroot}";
                     if (!restricttag($root)){
@@ -2384,11 +2531,20 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {pagepath}.
         if (stripos($text, '{pagepath}') !== false) {
-            $url = (is_object($PAGE->url) ? $PAGE->url->out_as_local_url() : '');
-            if (strpos($url, '?') === false && strpos($url, '#') === false) {
-                $url .= '?';
+            $pagep = "{pagepath}";
+            if (!restricttag($pagep)){
+                $url = (is_object($PAGE->url) ? $PAGE->url->out_as_local_url() : '');
+                if (strpos($url, '?') === false && strpos($url, '#') === false) {
+                    $url .= '?';
+                }
+                $replace['/\{pagepath\}/i'] = $url;
+            
+        }else {
+                $replace['/\{pagepath\}/i'] = "<div class=\"alert alert-warning\"> 
+                <strong>{pagepath}</strong> This tag is not enabled </div>";
+        
             }
-            $replace['/\{pagepath\}/i'] = $url;
+            
         }
 
         if (stripos($text, '{thisurl') !== false) {
@@ -2396,32 +2552,87 @@ class filter_filtercodes extends moodle_text_filter {
                     "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
             // Tag: {thisurl}.
             if (stripos($text, '{thisurl}') !== false) {
-                $replace['/\{thisurl\}/i'] = $url;
+                $uri = "{thisurl}";
+                if (!restricttag($uri)){
+                    $replace['/\{thisurl\}/i'] = $url;
+                }else {
+                    $replace['/\{thisurl\}/i'] = "<div class=\"alert alert-warning\"> 
+                    <strong>{thisurl}</strong> This tag is not enabled </div>";
+            
+                }
+               
             }
             // Tag: {thisurl_enc}.
             if (stripos($text, '{thisurl_enc}') !== false) {
-                $replace['/\{thisurl_enc\}/i'] = urlencode($url);
+                $uril = "{thisurl_enc}";
+                if (!restricttag($uril)){
+                    $replace['/\{thisurl_enc\}/i'] = urlencode($url);
+                }else {
+                    $replace['/\{thisurl_enc\}/i'] = "<div class=\"alert alert-warning\"> 
+                    <strong>{thisurl_enc}</strong> This tag is not enabled </div>";
+            
+                }
+                
             }
         }
 
         // Tag: {protocol}.
         if (stripos($text, '{protocol}') !== false) {
-            $replace['/\{protocol\}/i'] = 'http' . ($this->ishttps() ? 's' : '');
+            $proto = "{protocol}";
+            if (!restricttag($proto)){
+                $replace['/\{protocol\}/i'] = 'http' . ($this->ishttps() ? 's' : '');
+            
+        }else {
+                $replace['/\{protocol\}/i'] = "<div class=\"alert alert-warning\"> 
+                <strong>{protocol}</strong> This tag is not enabled </div>";
+        
+            }
+           
         }
 
         // Tag: {ipaddress}.
         if (stripos($text, '{ipaddress}') !== false) {
-            $replace['/\{ipaddress\}/i'] = getremoteaddr();
+
+            $ipadd = "{ipaddress}";
+            if (!restricttag($ipadd)){
+                $replace['/\{ipaddress\}/i'] = getremoteaddr();
+            
+            }else {
+                $replace['/\{ipaddress\}/i'] = "<div class=\"alert alert-warning\"> 
+                <strong>{ipaddress}</strong> This tag is not enabled </div>";
+        
+            }
+
+
+           
         }
 
         // Any {sesskey} or %7Bsesskey%7D tags.
         // Tag: {sesskey}.
         if (stripos($text, '{sesskey}') !== false) {
-            $replace['/\{sesskey\}/i'] = sesskey();
+            $sessk = "{sesskey}";
+            if (!restricttag($sessk)){
+                $replace['/\{sesskey\}/i'] = sesskey();
+            
+            }else {
+                $replace['/\{sesskey\}/i'] = "<div class=\"alert alert-warning\"> 
+                <strong>{sesskey}</strong> This tag is not enabled </div>";
+        
+            }
+            
         }
         // Alternative Tag: %7Bsesskey%7D (for encoded URLs).
         if (stripos($text, '%7Bsesskey%7D') !== false) {
-            $replace['/%7Bsesskey%7D/i'] = sesskey();
+              $sessk = "%7Bsesskey%7D";
+            if (!restricttag($sessk)){
+                $replace['/%7Bsesskey%7D/i'] = sesskey();
+            
+            }else {
+                $replace['/%7Bsesskey%7D/i'] = "<div class=\"alert alert-warning\"> 
+                <strong>{%7Bsesskey%7D}</strong> This tag is not enabled </div>";
+        
+            }
+           
         }
 
         // Tag: {sectionid}.
@@ -2444,7 +2655,16 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {recaptcha}.
         if (stripos($text, '{recaptcha}') !== false) {
-            $replace['/\{recaptcha\}/i'] = $this->getrecaptcha();
+            
+            $recap ="{recaptcha}";
+                    if (!restricttag($recap)){
+                        $replace['/\{recaptcha\}/i'] = $this->getrecaptcha();
+                    }else {
+                        $replace['/\{recaptcha\}/i'] = "<div class=\"alert alert-warning\">
+                        <strong>{recaptcha}</strong> This tag is not enabled. </div>";
+                   
+                    }
+          
         }
 
         // Tag: {readonly}.
@@ -3290,16 +3510,24 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {filtercodes}. Show version of FilterCodes, but only if you have permission to add the tag.
         if (stripos($text, '{filtercodes}') !== false) {
             // If you have the ability to edit the content.
+
             if (has_capability('moodle/course:update', $PAGE->context)) {
                 // Show the version of the FilterCodes plugin.
-                $plugin = new stdClass();
-                require($CFG->dirroot . '/filter/filtercodes/version.php');
-                $replace['/\{filtercodes\}/i'] = "$plugin->release ($plugin->version)";
-            } else {
-                $replace['/\{filtercodes\}/i'] = '';
+                $fcode ="{filtercodes}";
+                if (!restricttag($fcode)){
+                    $plugin = new stdClass();
+                    require($CFG->dirroot . '/filter/filtercodes/version.php');
+                    $replace['/\{filtercodes\}/i'] = "$plugin->release ($plugin->version)";
+                }else {
+                    $replace['/\{filtercodes\}/i'] = "<div class=\"alert alert-warning\">
+                    <strong>{filtercodes}</strong> This tag is not enabled. </div>";
+               
+                }
+               
+           } else {
+              $replace['/\{filtercodes\}/i'] = '';
             }
         }
-
         //
         // Apply all of the filtercodes at once.
         //
@@ -3315,15 +3543,23 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {urlencode}content{/urlencode}.
         if (stripos($text, '{urlencode}') !== false) {
-            // Replace {urlencode} tags and content with encoded content.
-            $newtext = preg_replace_callback('/\{urlencode\}(.*)\{\/urlencode\}/isuU',
-                function($matches) {
-                    return urlencode($matches[1]);
-                }, $text);
-            if ($newtext !== false) {
-                $text = $newtext;
-                $changed = true;
+            $uricode ="{urlencode}";
+            if (!restricttag($uricode)){
+                // Replace {urlencode} tags and content with encoded content.
+                    $newtext = preg_replace_callback('/\{urlencode\}(.*)\{\/urlencode\}/isuU',
+                    function($matches) {
+                        return urlencode($matches[1]);
+                    }, $text);
+                    if ($newtext !== false) {
+                        $text = $newtext;
+                        $changed = true;
+                    }
+            }else {
+                $replace['/\{urlencode\}/i'] = "<div class=\"alert alert-warning\">
+                <strong>{urlencode}</strong> This tag is not enabled. </div>";
+           
             }
+           
         }
 
         // Tag: {qrcode}{/qrcode}.
@@ -3437,7 +3673,7 @@ function restricttag($text) {
  
     $restricted = get_config('filter_filtercodes', 'restrictedtags');
     $cleanstr = preg_replace("/,/", " ", $restricted);
-    //print_r($restricted);
+   //print_r($restricted);
     $result = explode(' ',$cleanstr);
 
             foreach ($result as  $x => $restval) {
