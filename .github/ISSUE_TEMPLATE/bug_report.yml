@@ -1,0 +1,162 @@
+name: Bug report
+description: Report an issue to help us improve this plugin.
+title: "[BUG]"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thank you for taking the time to fill out this bug report.
+        Sorry to hear that you are experiencing an issue. In order to help us help you, please complete this form to the best of your ability. The more information you can provide, the easier it will be to for us to help you.<br>
+        ***In a hurry for support?*** Contact us directly for premium support and development at [TNG Consulting Inc.](https://www.tngconsulting.ca/contact).
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please answer the following questions before submitting an issue.
+      options:
+        - label: I'm reporting the issue to the correct repository.
+          required: true
+        - label: I am running the latest version of this plugin (if not, please upgrade first).
+          required: true
+        - label: I checked the [README.md](../blob/master/README.md) and [Wiki](../wiki) documentation but found no answer.
+          required: true
+        - label: I searched to make sure that this issue has not already been reported.
+          required: true
+        - label: I have, or I know someone who has, the ability and willingness to test the fix on a Moodle LMS-based site.
+        - label: I agree to submit one bug report per issue ticket (do not submit multiple bugs in one issue ticket).
+          required: true
+        - label: I understand that support is provided by volunteer(s).
+          required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What happened?
+      description: A clear and concise description of what you think the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: expectation
+    attributes:
+      label: What do you think should have happened?
+      description: Include a clear and concise description of what you expected to happen.
+      value: I expected '...'
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Please provide clearly ordered steps to reproduce the issue.
+      value: |
+        1. Login as '...' (specify user role)
+        2. Go to '...'
+        3. Click on '....'
+        4. Scroll down to '....'
+        5. See error or issue.
+        You get it?
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots. It really helps us understand your issue.
+  - type: input
+    id: moodle
+    attributes:
+      label: Moodle version
+      placeholder: e.g. Moodle 4.0.4+ (Build 20220919)
+    validations:
+      required: true
+  - type: checkboxes
+    id: language
+    attributes:
+      label: Installed Moodle UI Language packs.
+      description: You can find the Moodle version by navigating as a site administrator to **Site Administration > General or Site Administration (tab) > Notifications** and scrolling to the bottom of the page.
+      options:
+        - label: English
+        - label: More than one language/regional dialect
+        - label: Other
+    validations:
+      required: true
+  - type: input
+    id: other-language
+    attributes:
+      label: If other language(s), please specify
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Workaround
+      description: Are you currently able to work around this issue? If so, how?
+  - type: textarea
+    id: moreinfo
+    attributes:
+      label: Additional information
+      description: Add any other information about the problem here. For example, other installed plugins, logs for example. If you know where the problem is in the source code, we would appreciated it if you would be so kind as to let us know. Even better, feel free to submit a pull request (PR) if you can. Problems that include solutions get fixed faster.
+  - type: markdown
+    attributes:
+      value: Depending on the issue, you may be asked to provide additional information (optional).
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device type
+      options:
+        - Desktop
+        - iPhone or iPad
+        - Android phone or tablet
+        - Other
+  - type: dropdown
+    id: client-os
+    attributes:
+      label: Device OS
+      options:
+        - Windows
+        - Linux
+        - Mac OS
+        - Android
+        - iOS
+        - Other
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Web Browser
+      options:
+        - Chrome
+        - Edge
+        - Firefox
+        - Safari
+        - Moodle Mobile App
+        - Other
+  - type: dropdown
+    id: server-os
+    attributes:
+      label: Server OS
+      options:
+        - Windows
+        - Linux
+        - Mac OS
+        - Other
+  - type: dropdown
+    id: webserver
+    attributes:
+      label: Web Server
+      options:
+        - Apache
+        - NGINX
+        - IIS
+        - Other
+  - type: dropdown
+    id: php
+    attributes:
+      label: PHP version
+      options:
+        - 7.3
+        - 7.4
+        - 8.x
+        - Other
+  - type: checkboxes
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I have read and agree to the project's <a href="../blob/master/CODE_OF_CONDUCT.md" target="_blank">code of conduct</a>.
+          required: true
