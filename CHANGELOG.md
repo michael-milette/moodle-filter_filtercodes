@@ -1,9 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.2] 2022-10-01 (dev)
+## [2.3.2] 2022-10-02 (dev)
 ### Added
+- New {coursegrade} tag.
 - New {ifnotingroup}{/ifnotingroup} tags.
+- GitHub bug and feature request issue templates
+- Code of Conduct guidelines.
 ### Updated
 - Fix-217: You can now have up to 50 global tags.
 - Fix-231: Updated documentation for {coursecards} tag.
