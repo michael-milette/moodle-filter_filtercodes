@@ -1739,7 +1739,20 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{coursesactive\}/i'] = $cnt;
             }
 
-            // Tag: {courseprogress} and {courseprogressbar}. Display course progress percentage and a course progress bar.
+            // Tag: {coursegrade}. Overall grade in a courses.
+            if (stripos($text, '{coursegrade}') !== false) {
+                require_once($CFG->libdir . '/gradelib.php');
+                require_once($CFG->dirroot . '/grade/querylib.php');
+                $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
+                $grade = 0;
+                if (!empty($grademax = floatval($gradeobj->item->grademax))) {
+                    $grade = (int)($gradeobj->grade / floatval($grademax) * 100) ?? 0;
+                }
+                $replace['/\{coursegrade\}/i'] = $grade;
+            }
+
+            // Tag: {courseprogress} and {courseprogressbar}.
+            // Course progress percentage as text.
             if (stripos($text, '{courseprogress') !== false) {
                 $progress = $this->completionprogress();
 

@@ -163,7 +163,8 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {coursestartdate dateTimeFormat} : Course star t date. Will display "Open event" if there is no start date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {courseenddate dateTimeFormat} : Course end date. Will display "Open event" if there is no end date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {coursecompletiondate dateTimeFormat} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
-* {courseprogress}: (ALPHA) Displays course progress status in words.
+* {coursegrade} : Display course grade.
+* {courseprogress} : (ALPHA) Displays course progress status in words.
 * {courseprogressbar}: (ALPHA) Displays course progress status as a status bar.
 * {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
 * {course_field_shortname} : Display custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
@@ -986,6 +987,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course start date [{coursestartdate strftimedatetime}]: {coursestartdate strftimedatetime}
 * Course end date [{courseenddate strftimedatetime}]: {courseenddate strftimedatetime}
 * Completion date [{coursecompletiondate strftimedatetime}]: {coursecompletiondate strftimedatetime}
+* Your grade in this course is [{coursegrade}]: Your grade in this course is {coursegrade}
 * Course progress (ALPHA) [{courseprogress}]: {courseprogress}
 * Course progress percent number [{courseprogresspercent}]: {courseprogresspercent}
 * Course progress bar (ALPHA) [{courseprogressbar}]: {courseprogressbar}
