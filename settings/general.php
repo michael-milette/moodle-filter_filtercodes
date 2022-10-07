@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 // Option to enable experimental support for filtercodes in custom navigation menu.
-if ($CFG->branch >= 32 && $CFG->branch <= 34) { // Only supported in Moodle 3.2 to 3.4.
+if (isset($CFG->branch) && $CFG->branch >= 32 && $CFG->branch <= 34) { // Only supported in Moodle 3.2 to 3.4.
     // See https://github.com/michael-milette/moodle-filter_filtercodes/issues/67 for details.
     $default = 0;
     $name = 'filter_filtercodes/enable_customnav';
