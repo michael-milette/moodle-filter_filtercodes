@@ -1,6 +1,6 @@
 name: Bug report
 description: Report an issue to help us improve this plugin.
-title: "[BUG]"
+title: "Bug: "
 body:
   - type: markdown
     attributes:
@@ -18,12 +18,12 @@ body:
           required: true
         - label: I am running the latest version of this plugin (if not, please upgrade first).
           required: true
-        - label: I checked the [README.md](../blob/master/README.md) and [Wiki](../wiki) documentation but found no answer.
+        - label: I checked the [README.md](../blob/master/README.md) and [Wiki](../wiki) documentation but did not find my answer.
           required: true
-        - label: I searched to make sure that this issue has not already been reported.
+        - label: I searched to make sure that this issue had not already been reported.
           required: true
         - label: I have, or I know someone who has, the ability and willingness to test the fix on a Moodle LMS-based site.
-        - label: I agree to submit one bug report per issue ticket (do not submit multiple bugs in one issue ticket).
+        - label: I am submitting no more than one bug report per issue ticket (please do not submit multiple bugs in one issue ticket).
           required: true
         - label: I understand that support is provided by volunteer(s).
           required: true
@@ -74,8 +74,8 @@ body:
       label: Installed Moodle UI Language packs.
       description: You can find the Moodle version by navigating as a site administrator to **Site Administration > General or Site Administration (tab) > Notifications** and scrolling to the bottom of the page.
       options:
-        - label: English
-        - label: More than one language/regional dialect
+        - label: English only
+        - label: One or more other languages/regional dialects (specify below)
         - label: Other
     validations:
       required: true
@@ -93,67 +93,18 @@ body:
     attributes:
       label: Additional information
       description: Add any other information about the problem here. For example, other installed plugins, logs for example. If you know where the problem is in the source code, we would appreciated it if you would be so kind as to let us know. Even better, feel free to submit a pull request (PR) if you can. Problems that include solutions get fixed faster.
-  - type: markdown
+  - type: textarea
+    id: sysinfo
     attributes:
-      value: Depending on the issue, you may be asked to provide additional information (optional).
-  - type: dropdown
-    id: device
-    attributes:
-      label: Device type
-      options:
-        - Desktop
-        - iPhone or iPad
-        - Android phone or tablet
-        - Other
-  - type: dropdown
-    id: client-os
-    attributes:
-      label: Device OS
-      options:
-        - Windows
-        - Linux
-        - Mac OS
-        - Android
-        - iOS
-        - Other
-  - type: dropdown
-    id: browser
-    attributes:
-      label: Web Browser
-      options:
-        - Chrome
-        - Edge
-        - Firefox
-        - Safari
-        - Moodle Mobile App
-        - Other
-  - type: dropdown
-    id: server-os
-    attributes:
-      label: Server OS
-      options:
-        - Windows
-        - Linux
-        - Mac OS
-        - Other
-  - type: dropdown
-    id: webserver
-    attributes:
-      label: Web Server
-      options:
-        - Apache
-        - NGINX
-        - IIS
-        - Other
-  - type: dropdown
-    id: php
-    attributes:
-      label: PHP version
-      options:
-        - 7.3
-        - 7.4
-        - 8.x
-        - Other
+      label: System information
+      description: Depending on the issue, you may be asked to provide additional system information.
+      value: |
+        Client Device type: (e.g. Desktop, iPhone or iPad, Android phone or tablet, Other - specify)
+        Client Operating System: (e.g. Windows, Linux, Mac OS, Android, iOS, Other - specify)
+        Client Web Browser: (e.g. Chrome, Edge, Firefox, Safari, Safe Exam Browser, Moodle Mobile App)
+        Server Operating System: (e.g. Windows, Linux, Mac OS, Other - specify)
+        Server Webserver: (e.g. Apache, Nginx, IIS, Other - specify)
+        Server PHP: (e.g. 7.3, 7.4, 8.x, Other - specify)
   - type: checkboxes
     attributes:
       label: Code of Conduct

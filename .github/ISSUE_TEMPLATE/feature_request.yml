@@ -1,6 +1,6 @@
 name: Feature request
 description: Share your ideas for this project.
-title: "[FEATURE REQUEST]"
+title: "Feature Request: "
 body:
   - type: markdown
     attributes:
@@ -16,7 +16,7 @@ body:
       options:
         - label: I am requesting the new feature to the correct repository.
           required: true
-        - label: I checked the version here on GitHub and the [README.md](../blob/master/README.md) documentation to make sure that this functionality does not already exist.
+        - label: I checked the latest version on GitHub and the [README.md](../blob/master/README.md) documentation to ensure that this functionality does not already exist.
           required: true
         - label: I searched to make sure that this feature has not already been requested.
           required: true
