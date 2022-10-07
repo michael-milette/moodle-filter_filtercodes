@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.2] 2022-10-02 (dev)
+## [2.3.2] 2022-10-06 (dev)
 ### Added
 - New {coursegrade} tag.
 - New {ifnotingroup}{/ifnotingroup} tags.
@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Updated
 - Fix-217: You can now have up to 50 global tags.
 - Fix-231: Updated documentation for {coursecards} tag.
+- Fix-236: Fixed bug which appeared during installation of Moodle with FilterCodes pre-installed.
 
 ## [2.3.1] 2022-06-07
 ### Added
