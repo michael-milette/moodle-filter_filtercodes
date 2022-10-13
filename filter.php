@@ -2555,6 +2555,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tag: {details}{/details}.
+        // Tag: {details style1}{/details}.
         // Tag: {summary}{/summary}.
         if (stripos($text, '{/details}') !== false) {
             $replace['/\{details\}/i'] = '<details>';
@@ -2562,6 +2563,11 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{\/details\}/i'] = '</details>';
             $replace['/\{summary\}/i'] = '<summary>';
             $replace['/\{\/summary\}/i'] = '</summary>';
+            if (preg_match_all('/\{details ([a-zA-Z0-9-_ ]+)\}/', $text, $matches) !== 0) {
+                foreach ($matches[1] as $cssclass) {
+                    $replace['/\{details ' . $cssclass . '\}/i'] = '<details class="' . $cssclass . '">';
+                }
+            }
         }
 
         // Conditional block tags.
