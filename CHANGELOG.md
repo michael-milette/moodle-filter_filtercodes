@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.2] 2022-10-06 (dev)
+## [2.3.2] 2022-10-30 (dev)
 ### Added
+- CSS class support for details tag
 - New {coursegrade} tag.
 - New {ifnotingroup}{/ifnotingroup} tags.
 - GitHub bug and feature request issue templates

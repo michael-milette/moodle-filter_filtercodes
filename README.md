@@ -325,7 +325,7 @@ If the condition is not met in the particular context, the specified tag and its
 * {-} : Is substituted for &shy;, a soft hyphen that only appears when needed.
 * {nbsp} : Is substituted for a non-breaking space when displayed.
 * {hr} : Horizontal rule.
-* {details}{summary}{/summary}{/details} : An easy way to create an HTML 5 Details/Summary expandable section in your page. IMPORTANT: {details}{summary}{/summary} must all be on one line (it is ok if the line wraps). The rest of the details can be on multiple lines followed by the {/details}. This is an experimental feature that may result in invalid HTML but it works.
+* {details}{summary}{/summary}{/details} : An easy way to create an HTML 5 Details/Summary expandable section in your page. IMPORTANT: {details}{summary}{/summary} must all be on one line (it is ok if the line wraps). The rest of the details can be on multiple lines followed by the {/details}. This is an experimental feature that may result in invalid HTML but it works. You can optionally add a CSS class name to the opening details tag. Example: {details faq-class}
 * {langx xx}{/langx} : Tag specific text in a particular language by wrapping the text in a plain text pair of {langx xx} {/langx} or {langx xx-XX} {/langx} tags. This makes no visible changes to the content but wraps the content in an HTML <span lang="xx"></span> inline tag. As a result, screen readers will make use of this localization information to apply a particular pronunciation if the text is in a different language than the language of the rest of the page. This is required for compliance with W3C Web Content Accessibility Guidelines (WCAG 2.0)
 
 The opening {langx xx} tag should include two [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code abbreviation letters in lowercase associated with the language's name. French, for example, has the code **fr**:
@@ -1251,6 +1251,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* alexmorrisnz: Add CSS class support for {details} tag (2022).
 * alexmorrisnz: {lastlogin} and fixing issue with {teamcardsformat} setting (2022).
 * 3iPunt and abertranb: New {ifcustomrole} tag (2020).
 * 3iPunt and abertranb: New {ifnotcustomrole} tag (2020).
