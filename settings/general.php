@@ -66,6 +66,14 @@ $description = get_string('hidecompletedcourses_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
+// Show hidden custom profile fields.
+$default = '0';
+$name = 'filter_filtercodes/showhiddenprofilefields';
+$title = get_string('showhiddenprofilefields', 'filter_filtercodes');
+$description = get_string('showhiddenprofilefields_desc', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
 // Restrict {ifprofilefied} tag to only access to visible fields.
 $default = '0';
 $name = 'filter_filtercodes/ifprofilefiedonlyvisible';
