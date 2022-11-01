@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.2] 2022-10-30 (dev)
+## [2.3.2] 2022-10-31 (dev)
 ### Added
+- Setting to show hidden profile fields using the {profile_field_...} tag.
 - CSS class support for details tag
 - New {coursegrade} tag.
 - New {ifnotingroup}{/ifnotingroup} tags.

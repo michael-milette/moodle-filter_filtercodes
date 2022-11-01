@@ -981,11 +981,12 @@ class filter_filtercodes extends moodle_text_filter {
                         $profiledata = $DB->get_records_menu('user_info_data', ['userid' => $USER->id], '', 'fieldid, data');
                     }
                 }
+                $showhidden = get_config('filter_filtercodes', 'showhiddenprofilefields');
                 foreach ($profilefields as $field) {
                     // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
                     if ($isuser
                             && stripos($text, '{profile_field_' . $field->shortname . '}') !== false
-                            && $field->visible != '0') {
+                            && ($field->visible != '0' || !empty($showhidden))) {
                         $data = isset($profiledata[$field->id]) ? trim($profiledata[$field->id]) : '' . PHP_EOL;
                         switch ($field->datatype) { // Format data for some field types.
                             case 'datetime':

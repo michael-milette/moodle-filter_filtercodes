@@ -746,6 +746,14 @@ Enable or disable the {scrape} tag.
 
 Enable or disable the display of a contact's profile picture in {coursecontacts} tag.
 
+### Show contact's profile description
+
+If enabled, will display the contact's profile description in {coursecontacts} tags.
+
+### Show hidden profile fields
+
+If enabled, custom profile fields that are hidden from the user will be displayed by the {profile_field_...} tag.
+
 ### Contact link type
 
 Choose the type of link for the teacher\s link in the {coursecontacts} tags. Profile, Messaging, Email address or None. Choose None if you don't want just the name without a link.
