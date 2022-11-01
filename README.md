@@ -172,6 +172,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {coursesummary ID} : Display the course summary of the course with the specified course ID number.
 * {courseimage} : Display's the course image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
+* {coursecount students} : Displays the number of students enrolled in a course.
 * {courseid} or %7Bcourseid%7D : Display a course's ID.
 * {coursecontextid} or %7Bcoursecontextid%7D : Display a course's context ID.
 * %7Bcoursemoduleid%7D : Display a course's activity module ID - for use in URLs. Only for use in course activity modules.
@@ -1047,6 +1048,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * List of custom course fields [{course_fields}]: {course_fields}
 * Course custom fields [{course_field_location}] (assumes you have created a custom course field called "location"): {course_field_location}
 * Number of participants in the course [{courseparticipantcount}]: {courseparticipantcount}
+* Number of students enrolled in the course {{coursecount students}}: {coursecount students}
 * The base (root) URL of your Moodle site [{wwwroot}]: {wwwroot}
 * Site support name [{supportname}]: {supportname}
 * Site support email address [{supportemail}]: {supportemail}

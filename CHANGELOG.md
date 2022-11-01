@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.3.2] 2022-10-31 (dev)
 ### Added
+- New {coursecount students} tag.
 - Setting to show hidden profile fields using the {profile_field_...} tag.
 - CSS class support for details tag
 - New {coursegrade} tag.
