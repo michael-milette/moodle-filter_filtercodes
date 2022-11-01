@@ -1513,6 +1513,20 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{courseparticipantcount\}/i'] = $cnt;
             }
 
+            // Tag: {coursecount students}.
+            if (stripos($text, '{coursecount students}') !== false) {
+                if ($CFG->branch >= 32) {
+                    $coursecontext = context_course::instance($PAGE->course->id);
+                    $role = $DB->get_record('role', array('shortname' => 'student'));
+                    $students = get_role_users($role->id, $coursecontext);
+                    $cnt = count($students);
+                    unset($students);
+                } else {
+                    $cnt = '';
+                }
+                $replace['/\{coursecount students\}/i'] = $cnt;
+            }
+
             // Tag: {courseid}.
             if (stripos($text, '{courseid}') !== false) {
                 $replace['/\{courseid\}/i'] = $PAGE->course->id;
