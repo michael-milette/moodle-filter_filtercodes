@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.2] 2022-10-31 (dev)
+## [2.3.2] 2022-11-09 (dev)
 ### Added
 - New {coursecount students} tag.
 - Setting to show hidden profile fields using the {profile_field_...} tag.
@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Fix-217: You can now have up to 50 global tags.
 - Fix-231: Updated documentation for {coursecards} tag.
 - Fix-236: Fixed bug which appeared during installation of Moodle with FilterCodes pre-installed.
+- Fix-240: Corrected documentation for {supportpage} tag. (thanks dinism!)
 
 ## [2.3.1] 2022-06-07
 ### Added
