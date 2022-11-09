@@ -133,7 +133,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {wwwroot} : Root URL of the Moodle site.
 * {supportname} : Support name as seen on Site Administration > Server > Support contact.
 * {supportemail} : Support email address as seen on Site Administration > Server > Support contact.
-* {supporturl} : Support page as seen on Site Administration > Server > Support contact.
+* {supportpage} : Support page URL as seen on Site Administration > Server > Support contact.
 
 ### UI Elements
 
