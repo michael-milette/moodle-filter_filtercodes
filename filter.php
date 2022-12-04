@@ -212,6 +212,18 @@ class filter_filtercodes extends moodle_text_filter {
         return in_array(strtolower($roleshortname), $list);
     }
 
+    private function getblankavatarurl($size) {
+        global $PAGE, $CFG;
+        $img = 'u/' . ($size > 100 ? 'f3' : ($size > 35 ? 'f1' : 'f2'));
+        $renderer = $PAGE->get_renderer('core');
+        if ($CFG->branch >= 33) {
+            $url = $renderer->image_url($img);
+        } else {
+            $url = $renderer->pix_url($img); // Deprecated as of Moodle 3.3.
+        }
+        return new moodle_url($url);
+    }
+
     /**
      * Retrieves the URL for the user's profile picture, if one is available.
      *
@@ -871,21 +883,36 @@ class filter_filtercodes extends moodle_text_filter {
                         'phone' => get_string('phone')
                 ];
                 if ($cardformat == 'verbose') {
+                    if (empty($CFG->enablegravatar)) {
+                        $blankavatarurl = $this->getblankavatarurl(150);
+                    }
                     foreach ($users as $user) {
                         $cards .= '<div class="clearfix mb-4">';
                         $name = '<h3 class="h4">' . get_string('fullnamedisplay', null, $user) . '</h3>';
                         $cards .= $this->userlink($clinktype, $user, $name);
-                        $cards .= $OUTPUT->user_picture($user, ['size' => '150', 'class' => 'img-fluid pull-left p-1 border mr-4',
-                                'link' => false, 'visibletoscreenreaders' => false]);
+                        if (empty($user->picture) && empty($CFG->enablegravatar)) {
+                            $cards .= '<img src="' . $blankavatarurl . '" class="img-fluid" width="150" height="150" alt="">';
+                        } else {
+                            $cards .= $OUTPUT->user_picture($user, ['size' => '150',
+                                    'class' => 'img-fluid pull-left p-1 border mr-4',
+                                    'link' => false, 'visibletoscreenreaders' => false]);
+                        }
                         $cards .= format_string($user->description);
                         $cards .= '</div><hr>';
                     }
                 } else {
+                    if (empty($CFG->enablegravatar)) {
+                        $blankavatarurl = $this->getblankavatarurl(250);
+                    }
                     $cards .= '<div class="row" id="fc_teamcards" style="width:99%;">';
                     foreach ($users as $user) {
                         $cards .= '<div class="col-sm-6 col-md-4 col-lg-3 col-xl-' . (empty($narrowpage) ? 4 : 3) . ' mt-3">';
-                        $cards .= $OUTPUT->user_picture($user, ['size' => '250', 'class' => 'img-fluid', 'link' => false,
-                                'visibletoscreenreaders' => false]);
+                        if (empty($user->picture) && empty($CFG->enablegravatar)) {
+                            $cards .= '<img src="' . $blankavatarurl . '" class="img-fluid" width="250" height="250" alt="">';
+                        } else {
+                            $cards .= $OUTPUT->user_picture($user, ['size' => '250', 'class' => 'img-fluid',
+                                    'link' => false, 'visibletoscreenreaders' => false]);
+                        }
                         $name = '<br><h3 class="h5 font-weight-bold d-inline">' . get_string('fullnamedisplay', null, $user) .
                                 '</h3>';
                         $cards .= $this->userlink($clinktype, $user, $name);
