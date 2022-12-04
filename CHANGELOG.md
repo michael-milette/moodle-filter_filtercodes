@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.2] 2022-11-09 (dev)
+## [2.3.3] 2022-12-04 (dev)
 ### Added
 - New {coursecount students} tag.
 - Setting to show hidden profile fields using the {profile_field_...} tag.
@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - GitHub bug and feature request issue templates
 - Code of Conduct guidelines.
 ### Updated
+- Fix-244: Blank avatars now appear in {coursecards} regardless of whether Gravatars are enabled.
 - Fix-217: You can now have up to 50 global tags.
 - Fix-231: Updated documentation for {coursecards} tag.
 - Fix-236: Fixed bug which appeared during installation of Moodle with FilterCodes pre-installed.
