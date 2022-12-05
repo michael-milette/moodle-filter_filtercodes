@@ -2492,6 +2492,28 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {courseunenrolurl}.
+        if (stripos($text, '{courseunenrolurl}') !== false) {
+            require_once($CFG->libdir . '/enrollib.php');
+            $course = $PAGE->course;
+            $coursecontext = context_course::instance($course->id);
+            $replace['/\{courseunenrolurl\}/i'] = '';
+            if ($course->id != SITEID && isloggedin() && !isguestuser() && is_enrolled($coursecontext)) {
+                $plugins   = enrol_get_plugins(true);
+                $instances = enrol_get_instances($course->id, true);
+                foreach ($instances as $instance) {
+                    if (!isset($plugins[$instance->enrol])) {
+                        continue;
+                    }
+                    $plugin = $plugins[$instance->enrol];
+                    if ($unenrollink = $plugin->get_unenrolself_link($instance)) {
+                        $replace['/\{courseunenrolurl\}/i'] = $unenrollink;
+                        break;
+                    }
+                }
+            }
+        }
+
         // Tag: {button}{/button}.
         if (stripos($text, '{button ') !== false) {
             $replace['/\{button\s+(.*)\}(.*)\{\/button\}/isuU'] = '<a href="$1" class="btn btn-primary">$2</a>';

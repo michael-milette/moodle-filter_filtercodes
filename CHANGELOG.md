@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.3.3] 2022-12-04 (dev)
 ### Added
+- New {courseunenrolurl} tag.
 - New {coursecount students} tag.
 - Setting to show hidden profile fields using the {profile_field_...} tag.
 - CSS class support for details tag
