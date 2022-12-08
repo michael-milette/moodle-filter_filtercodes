@@ -2,8 +2,8 @@
 
 FilterCodes filter plugin for Moodle
 ====================================
-![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3%2F%20v7.4-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v4.0-orange.svg)
+![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3%2F%20v7.4%2F%20v8.0-blue.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v4.1-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -482,7 +482,7 @@ Even better, try out the dynamic **{menudev}** tag. It includes all of the above
 
 ## FilterCodes in custom menus
 
-Note: The source code in this section was last updated in April 2022 for Moodle 4.0.
+Note: The source code in this section was last updated in April 2022 for Moodle 4.0 and last tested in December 2022 for Moodle 4.1 compatibility.
 
 FilterCodes can work in custom menus but, unfortunately, only if the theme supports it or you patched Moodle. If it does not work for you, contact the theme's developer and request that they add support for Moodle filters. See the instructions included below.
 
@@ -504,11 +504,12 @@ To patch Moodle to handle this properly for most Moodle themes, cherry-pick the 
 * Moodle 3.10: https://github.com/michael-milette/moodle/tree/MDL-63219-M310
 * Moodle 3.11: https://github.com/michael-milette/moodle/tree/MDL-63219-M311
 * Moodle 4.0: https://github.com/michael-milette/moodle/tree/MDL-63219-M400
+* Moodle 4.1: https://github.com/michael-milette/moodle/tree/MDL-63219-M401
 * Moodle master: https://github.com/michael-milette/moodle/tree/MDL-63219-master
 
 Example: To apply the patch for Moodle using git (change the "M400" for other versions):
 
-    git fetch https://github.com/michael-milette/moodle MDL-63219-M400
+    git fetch https://github.com/michael-milette/moodle MDL-63219-M401
     git cherry-pick FETCH_HEAD
 
 This is usually enough to make the filters work in the custom menu. However, we have noticed it may not work with some Moodle themes, most notably premium themes. Those themes will need to be patched using the technique B.
@@ -517,9 +518,9 @@ This is usually enough to make the filters work in the custom menu. However, we 
 
 ### For themes based on **boost** (Moodle 4.0 and later)
 
-As more 3rd party/contributed Moodle 4.0 themes become available, this section will be updated. Until then, there is no tested patch available for 3rd party Moodle 4.0 themes. It is recommended to use Moodle core patch above which is known to work.
+As more 3rd party/contributed Moodle 4.0/4.1 themes become available, this section will be updated. Until then, there is no tested patch available for 3rd party Moodle 4.0 themes. It is recommended to use Moodle core patch above which is known to work.
 
-The follow ALPHA code is based on information available in the Boost theme for Moodle 4.0. You will **also need** to apply the theme patch **For themes based on boost (Moodle 3.2 and later)** included below.
+The follow ALPHA code is based on information available in the Boost theme for Moodle 4.0/4.1. You will **also need** to apply the theme patch **For themes based on boost (Moodle 3.2 and later)** included below.
 
 Add this code to the core_renderer section (probably located in /theme/yourtheme/classes/navigation/output/primary.php) of your theme. Note: Your theme may even already have such a class (they often do):
 

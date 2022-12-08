@@ -1,16 +1,19 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.4] 2022-12-07 (dev)
+## [2.3.4] 2022-12-11 (dev)
 ### Added
 - New {courseunenrolurl} tag.
 - New {coursecount students} tag.
 - Setting to show hidden profile fields using the {profile_field_...} tag.
-- CSS class support for details tag
+- CSS class support for details tag.
 - New {coursegrade} tag.
 - New {ifnotingroup}{/ifnotingroup} tags.
-- GitHub bug and feature request issue templates
+- New setting to disable {sesskey} tag globally.
+- GitHub bug and feature request issue templates.
 - Code of Conduct guidelines.
+- Compatibility with Moodle 4.1.
+- Compatibility with PHP 8.0.
 ### Updated
 - Fix-218: You can now use the {profile_field_...} tag inside the {chart} tag.
 - Fix-244: Blank avatars now appear in {coursecards} regardless of whether Gravatars are enabled.
@@ -18,6 +21,8 @@ All notable changes to this project will be documented in this file.
 - Fix-231: Updated documentation for {coursecards} tag.
 - Fix-236: Fixed bug which appeared during installation of Moodle with FilterCodes pre-installed.
 - Fix-240: Corrected documentation for {supportpage} tag. (thanks dinism!)
+- Most tags are compatible with Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 4.0 and now 4.1.
+- Tested to be compatible with PHP 7.4 and 8.0.
 
 ## [2.3.1] 2022-06-07
 ### Added

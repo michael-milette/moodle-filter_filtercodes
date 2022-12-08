@@ -15,16 +15,16 @@ Keep in mind that the maintainers get final say on whether new features will be 
 
 Style Guides
 -------------------
-1. Write in UTF-8 in PHP 5.6, 7.0, 7.1, 7.2, 7.3 and 7.4.
+1. Write in UTF-8 in PHP 5.6, 7.0, 7.1, 7.2, 7.3, 7.4 and 8.0.
 2. Follow the official[Moodle Coding Style Guide](https://docs.moodle.org/dev/Coding_style).
-3. Fully test your code's functionality with Moodle **Debug Messages** setting set to **DEVELOPER: extra Moodle debug messages for developers** and **Display debug messages** setting checked. There are no errors or warnings at all!
+3. Fully test your code with Moodle **Debug Messages** setting set to **DEVELOPER: extra Moodle debug messages for developers** and **Display debug messages** setting checked. Ensure that there are no errors or warnings at all.
 4. Test your code using the [Moodle Code Checker](https://moodle.org/plugins/local_codechecker) and [Moodle PHPdoc check](https://moodle.org/plugins/local_moodlecheck) plugins. Ensure that there are no errors or warnings at all.
 5. Look at the existing style and adhere accordingly.
 
 Fork the Repository
 -------------------
 
-Be sure to add the relevant tests before making the pull request. The documentation will be updated automatically when we merge to ****master**, but you should also build the documentation yourself and make sure it is readable.
+Be sure to add the relevant tests before making the pull request. The documentation will be updated automatically when we merge to the **master** branch, but you should also build the documentation yourself and make sure it is readable.
 
 Make a Pull Request
 -------------------

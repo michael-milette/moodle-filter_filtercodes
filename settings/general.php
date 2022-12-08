@@ -90,6 +90,14 @@ $description = get_string('enable_scrape_description', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
+// Option to enable sesskey tag globally.
+$default = 1; // Default is enabled.
+$name = 'filter_filtercodes/enable_sesskey';
+$title = get_string('enable_sesskey', 'filter_filtercodes');
+$description = get_string('enable_sesskey_description', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
 // Option to show contact's profile picture.
 $default = 0; // Default is to not show profile picture.
 $name = 'filter_filtercodes/coursecontactshowpic';

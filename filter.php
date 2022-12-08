@@ -212,6 +212,12 @@ class filter_filtercodes extends moodle_text_filter {
         return in_array(strtolower($roleshortname), $list);
     }
 
+    /**
+     * Returns the URL of a blank Avatar as a square image.
+     *
+     * @param integer $size Width of desired image in pixels.
+     * @return MOODLE_URL URL to image of avatar image.
+     */
     private function getblankavatarurl($size) {
         global $PAGE, $CFG;
         $img = 'u/' . ($size > 100 ? 'f3' : ($size > 35 ? 'f1' : 'f2'));
@@ -2372,14 +2378,19 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{ipaddress\}/i'] = getremoteaddr();
         }
 
-        // Any {sesskey} or %7Bsesskey%7D tags.
         // Tag: {sesskey}.
-        if (stripos($text, '{sesskey}') !== false) {
-            $replace['/\{sesskey\}/i'] = sesskey();
-        }
-        // Alternative Tag: %7Bsesskey%7D (for encoded URLs).
-        if (stripos($text, '%7Bsesskey%7D') !== false) {
-            $replace['/%7Bsesskey%7D/i'] = sesskey();
+        if (get_config('filter_filtercodes', 'enable_sesskey')) {
+            global $PAGE;
+            if (@$PAGE->cm->modname != 'forum' && $PAGE->pagetype != 'admin-cron') {
+                if (stripos($text, '{sesskey}') !== false) {
+                    // Tag: {sesskey}.
+                    $replace['/\{sesskey\}/i'] = sesskey();
+                }
+                // Tag: %7Bsesskey%7D (for encoded URLs).
+                if (stripos($text, '%7Bsesskey%7D') !== false) {
+                    $replace['/%7Bsesskey%7D/i'] = sesskey();
+                }
+            }
         }
 
         // Tag: {sectionid}.
