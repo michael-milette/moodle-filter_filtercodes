@@ -1931,65 +1931,6 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {chart <type> <value> <title>} - Easily display a chart in one of several styles.
-        if (stripos($text, '{chart ') !== false && $CFG->branch >= 32) {
-            global $OUTPUT;
-            preg_match_all('/\{chart\s(\w+)\s([0-9]+)\s(.*)\}/isuU', $text, $matches, PREG_SET_ORDER);
-            $matches = array_unique($matches, SORT_REGULAR);
-            foreach ($matches as $match) {
-                $type = $match[1]; // Chart type: radial, pie or progressbar.
-                $value = $match[2]; // Value between 0 and 100.
-                $title = $match[3]; // Text label.
-                $percent = get_string('percents', '', $value);
-                switch($type) { // Type of chart.
-                    case 'radial': // Tag: {chart radial 99 Label to be displayed} - Display a radial (circle) chart.
-                        $chart = new \core\chart_pie();
-                        $chart->set_doughnut(true); // Calling set_doughnut(true) we display the chart as a doughnut.
-                        if (!empty($title)) {
-                            $chart->set_title($title);
-                        }
-                        $series = new \core\chart_series('Percentage', [min($value, 100), 100 - min($value, 100)]);
-                        $chart->add_series($series);
-                        $chart->set_labels(['Completed', 'Remaining']);
-                        if ($CFG->branch >= 39) {
-                            $chart->set_legend_options(['display' => false]);  // Hide chart legend.
-                        }
-                        $html = $OUTPUT->render_chart($chart, false);
-                        break;
-                    case 'pie': // Tag: {chart pie 99 Label to be displayed} - Display a pie chart.
-                        $chart = new \core\chart_pie();
-                        $chart->set_doughnut(false); // Calling set_doughnut(true) we display the chart as a doughnut.
-                        if (!empty($title)) {
-                            $chart->set_title($title);
-                        }
-                        $series = new \core\chart_series('Percentage', [min($value, 100), 100 - min($value, 100)]);
-                        $chart->add_series($series);
-                        $chart->set_labels(['Completed', 'Remaining']);
-                        if ($CFG->branch >= 39) {
-                            $chart->set_legend_options(['display' => false]);  // Hide chart legend.
-                        }
-                        $html = $OUTPUT->render_chart($chart, false);
-                        break;
-                    case 'progressbar': // Tag: {chart progressbar 99 Label to be displayed} - Display a horizontal progres bar.
-                        $html = '
-                        <div class="progress mb-0">
-                            <div class="fc-progress progress-bar bar" role="progressbar" aria-valuenow="' . $value
-                                . '" style="width: ' . $value . '%" aria-valuemin="0" aria-valuemax="100">
-                            </div>
-                        </div>';
-                        if (!empty($title)) {
-                            $html .= '<div class="small">' . get_string('chartprogressbarlabel', 'filter_filtercodes',
-                                    ['label' => $title, 'value' => $percent]) . '</div>';
-                        }
-                        break;
-                    default:
-                        $html = '';
-                }
-                $replace['/\{chart ' . $type . ' ' . $value . ' ' . preg_quote($title) . '\}/isuU'] = $html;
-            }
-            unset($chart, $matches, $html, $value, $title);
-        }
-
         // These tags: {mycourses} and {mycoursesmenu} and {mycoursescards}.
         if (stripos($text, '{mycourses') !== false) {
             if (isloggedin() && !isguestuser()) {
@@ -3379,10 +3320,75 @@ class filter_filtercodes extends moodle_text_filter {
         $newtext = null;
         if (count($replace) > 0) {
             $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
+            $replace = [];
         }
         if (!is_null($newtext)) {
             $text = $newtext;
             $changed = true;
+        }
+
+        // Tag: {chart <type> <value> <title>} - Easily display a chart in one of several styles.
+        if (stripos($text, '{chart ') !== false && $CFG->branch >= 32) {
+            global $OUTPUT;
+            preg_match_all('/\{chart\s(\w+)\s([0-9]+)\s(.*)\}/isuU', $text, $matches, PREG_SET_ORDER);
+            $matches = array_unique($matches, SORT_REGULAR);
+            foreach ($matches as $match) {
+                $type = $match[1]; // Chart type: radial, pie or progressbar.
+                $value = $match[2]; // Value between 0 and 100.
+                $title = $match[3]; // Text label.
+                $percent = get_string('percents', '', $value);
+                switch($type) { // Type of chart.
+                    case 'radial': // Tag: {chart radial 99 Label to be displayed} - Display a radial (circle) chart.
+                        $chart = new \core\chart_pie();
+                        $chart->set_doughnut(true); // Calling set_doughnut(true) we display the chart as a doughnut.
+                        if (!empty($title)) {
+                            $chart->set_title($title);
+                        }
+                        $series = new \core\chart_series('Percentage', [min($value, 100), 100 - min($value, 100)]);
+                        $chart->add_series($series);
+                        $chart->set_labels(['Completed', 'Remaining']);
+                        if ($CFG->branch >= 39) {
+                            $chart->set_legend_options(['display' => false]);  // Hide chart legend.
+                        }
+                        $html = $OUTPUT->render_chart($chart, false);
+                        break;
+                    case 'pie': // Tag: {chart pie 99 Label to be displayed} - Display a pie chart.
+                        $chart = new \core\chart_pie();
+                        $chart->set_doughnut(false); // Calling set_doughnut(true) we display the chart as a doughnut.
+                        if (!empty($title)) {
+                            $chart->set_title($title);
+                        }
+                        $series = new \core\chart_series('Percentage', [min($value, 100), 100 - min($value, 100)]);
+                        $chart->add_series($series);
+                        $chart->set_labels(['Completed', 'Remaining']);
+                        if ($CFG->branch >= 39) {
+                            $chart->set_legend_options(['display' => false]);  // Hide chart legend.
+                        }
+                        $html = $OUTPUT->render_chart($chart, false);
+                        break;
+                    case 'progressbar': // Tag: {chart progressbar 99 Label to be displayed} - Display a horizontal progres bar.
+                        $html = '
+                        <div class="progress mb-0">
+                            <div class="fc-progress progress-bar bar" role="progressbar" aria-valuenow="' . $value
+                                . '" style="width: ' . $value . '%" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>';
+                        if (!empty($title)) {
+                            $html .= '<div class="small">' . get_string('chartprogressbarlabel', 'filter_filtercodes',
+                                    ['label' => $title, 'value' => $percent]) . '</div>';
+                        }
+                        break;
+                    default:
+                        $html = '';
+                }
+                $replace['/\{chart ' . $type . ' ' . $value . ' ' . preg_quote($title) . '\}/isuU'] = $html;
+                $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
+                if (!is_null($newtext)) {
+                    $text = $newtext;
+                    $changed = true;
+                }
+            }
+            unset($chart, $matches, $html, $value, $title);
         }
 
         // Tag: {urlencode}content{/urlencode}.

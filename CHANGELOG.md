@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.3] 2022-12-04 (dev)
+## [2.3.4] 2022-12-07 (dev)
 ### Added
 - New {courseunenrolurl} tag.
 - New {coursecount students} tag.
@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - GitHub bug and feature request issue templates
 - Code of Conduct guidelines.
 ### Updated
+- Fix-218: You can now use the {profile_field_...} tag inside the {chart} tag.
 - Fix-244: Blank avatars now appear in {coursecards} regardless of whether Gravatars are enabled.
 - Fix-217: You can now have up to 50 global tags.
 - Fix-231: Updated documentation for {coursecards} tag.
