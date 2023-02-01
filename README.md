@@ -274,6 +274,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 #### Courses
 
 * {ifenrolpage}{/ifenrolpage} : Will only display the encclosed content if the user **is** on a course enrolment page.
+* {ifnotenrolpage}{/ifnotenrolpage} : Will only display the encclosed content if the user **is not** on a course enrolment page.
 * {ifenrolled}{/ifenrolled} : Will only display the enclosed content if the user **is** enrolled as **a student** in the current course. This tag ignores all other roles.
 * {ifnotenrolled}{/ifnotenrolled} : Will only display the enclosed content if the user is **not** enrolled as **a student** in the current course. This tag ignores all other roles.
 * {ifincourse}{/ifincourse} : Will only display the enclosed content if the user is in a course other than the Frontpage.
