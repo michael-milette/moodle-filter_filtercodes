@@ -3101,6 +3101,19 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tags: {ifenrolpage}.
+            if (stripos($text, '{ifenrolpage}') !== false) {
+                // If on a course enrolment page.
+                if ($PAGE->pagetype == 'enrol-index') {
+                    // Remove the ifenrolpage tags.
+                    $replace['/\{ifenrolpage\}/i'] = '';
+                    $replace['/\{\/ifenrolpage\}/i'] = '';
+                } else {
+                    // Remove the ifenrolpage strings.
+                    $replace['/\{ifenrolpage\}(.*)\{\/ifenrolpage\}/isuU'] = '';
+                }
+            }
+
             // Tags: {ifenrolled}. and {ifnotenrolled}.
             // Tags: {ifincourse} and {ifinsection}.
             if ($PAGE->course->id == $SITE->id) { // If frontpage course.

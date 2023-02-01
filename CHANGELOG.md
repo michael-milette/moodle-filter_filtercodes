@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.3.5] 2023-01-31
 ### Added
+- New {ifenrolpage} tag.
 - {courseid} tag now resolves to course id on enrolment pages.
 
 ## [2.3.4] 2022-12-11

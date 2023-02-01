@@ -273,6 +273,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 
 #### Courses
 
+* {ifenrolpage}{/ifenrolpage} : Will only display the encclosed content if the user **is** on a course enrolment page.
 * {ifenrolled}{/ifenrolled} : Will only display the enclosed content if the user **is** enrolled as **a student** in the current course. This tag ignores all other roles.
 * {ifnotenrolled}{/ifnotenrolled} : Will only display the enclosed content if the user is **not** enrolled as **a student** in the current course. This tag ignores all other roles.
 * {ifincourse}{/ifincourse} : Will only display the enclosed content if the user is in a course other than the Frontpage.
@@ -1135,6 +1136,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If Editing mode activated (on) [{ifeditmode}]Don't forget to turn off editing mode![{/ifeditmode}]: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
 * If defined custom user profile field with a shortname called "iswoman" is not blank or zero [{ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}]: {ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}
 * If Editing mode is deactivated (off) [{ifnoteditmode}]&lt;a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on"&gt;Turn edit mode on&lt;a/&gt;[{/ifnoteditmode}]: {ifnoteditmode}<a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on">Turn edit mode on</a>{/ifnoteditmode}
+* If on the course enrolment page? [{ifenrolpage}]Yes[{/ifenrolpage}]: {ifenrolpage}Yes{/ifenrolpage}
 * If Enrolled [{ifenrolled}]You are enrolled in this course.[{/ifenrolled}]: {ifenrolled}You are enrolled in this course.{/ifenrolled}
 * If Not Enrolled [{ifnotenrolled}]You are not enrolled in this course.[{/ifnotenrolled}]: {ifnotenrolled}You are not enrolled in this course.{/ifnotenrolled}
 * If LoggedIn [{ifloggedin}]You are logged in.[{/ifloggedin}]: {ifloggedin}You are logged in.{/ifloggedin}
