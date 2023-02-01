@@ -178,7 +178,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courseimage} : Display's the course image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
 * {coursecount students} : Displays the number of students enrolled in a course. (Requires Moodle 3.2 or later)
-* {courseid} or %7Bcourseid%7D : Display a course's ID.
+* {courseid} or %7Bcourseid%7D : Display a course's ID within a course and on the course enrolment page. Set to site ID (1) if outside a course.
 * {coursecontextid} or %7Bcoursecontextid%7D : Display a course's context ID.
 * {coursemoduleid} or %7Bcoursemoduleid%7D : Display a course's activity module ID (activity id) - for use in URLs. Only for use in course activity modules.
 * {courseidnumber} : Display a course's ID number.

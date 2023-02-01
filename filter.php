@@ -1695,13 +1695,22 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{coursecount students\}/i'] = $cnt;
             }
 
-            // Tag: {courseid}.
-            if (stripos($text, '{courseid}') !== false) {
-                $replace['/\{courseid\}/i'] = $PAGE->course->id;
-            }
-            // Alternative Tag: %7Bcourseid%7D (for encoded URLs).
-            if (stripos($text, '%7Bcourseid%7D') !== false) {
-                $replace['/%7Bcourseid%7D/i'] = $PAGE->course->id;
+            // Tag: {courseid} and %7Bcourseid%7D.
+            if (stripos($text, 'courseid') !== false) {
+                $courseid = 1;
+                if ($PAGE->pagetype == 'enrol-index') {
+                    $courseid = optional_param('id', 1, PARAM_INT);
+                } else {
+                    $courseid = $PAGE->course->id;
+                }
+                // Tag: {courseid} and %7Bcourseid%7D.
+                if (stripos($text, '{courseid}') !== false) {
+                    $replace['/\{courseid\}/i'] = $courseid;
+                }
+                // Alternative Tag: %7Bcourseid%7D (for encoded URLs).
+                if (stripos($text, '%7Bcourseid%7D') !== false) {
+                    $replace['/%7Bcourseid%7D/i'] = $PAGE->course->id;
+                }
             }
 
             // Tag: {coursecontextid}.

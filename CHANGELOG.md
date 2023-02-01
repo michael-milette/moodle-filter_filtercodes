@@ -1,6 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+<<<<<<< HEAD
 ## [2.3.7] 2023-06-20 (rc only)
 ### Added
 - New {supportservicespage} tag (for Moodle 4.2 and later).
@@ -27,6 +28,10 @@ All notable changes to this project will be documented in this file.
 - Copyright notice to include 2023.
 - Compatibility with Moodle 4.2.
 - Compatibility with PHP 8.1.
+
+## [2.3.5] 2023-01-31
+### Added
+- {courseid} tag now resolves to course id on enrolment pages.
 
 ## [2.3.4] 2022-12-11
 ### Added
