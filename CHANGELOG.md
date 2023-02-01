@@ -1,7 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.4] 2022-12-11 (dev)
+## [2.3.5] 2023-01-31 (dev)
+### Updated
+- Copyright notice to include 2023.
+
+## [2.3.4] 2022-12-11
 ### Added
 - New {courseunenrolurl} tag.
 - New {coursecount students} tag.

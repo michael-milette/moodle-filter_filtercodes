@@ -646,7 +646,7 @@ Add the following code to core_renderer section of your theme for Moodle 2.7 to 
         /**
          * Applies Moodle filters to the custom menu and custom user menu.
          *
-         * Copyright: 2017-2022 TNG Consulting Inc.
+         * Copyright: 2017-2023 TNG Consulting Inc.
          * License:   GNU GPL v3+.
          *
          * @param string $custommenuitems Current custom menu object.
@@ -1309,7 +1309,7 @@ https://github.com/michael-milette/moodle-filter_filtercodes
 
 # License
 
-Copyright © 2017-2022 TNG Consulting Inc. - https://www.tngconsulting.ca/
+Copyright © 2017-2023 TNG Consulting Inc. - https://www.tngconsulting.ca/
 
 This file is part of FilterCodes for Moodle - https://moodle.org/
 
