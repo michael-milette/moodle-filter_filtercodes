@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.5] 2023-01-31 (dev)
+## [2.3.5] 2023-05-07
 ### Updated
+- Partial fix for sizing issue of radial and pie charts in Moodle 4.1 and 4.2.
 - Copyright notice to include 2023.
 
 ## [2.3.4] 2022-12-11

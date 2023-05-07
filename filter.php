@@ -3363,7 +3363,7 @@ class filter_filtercodes extends moodle_text_filter {
                         if ($CFG->branch >= 39) {
                             $chart->set_legend_options(['display' => false]);  // Hide chart legend.
                         }
-                        $html = $OUTPUT->render_chart($chart, false);
+                        $html = '<div class="fc-chart-pie">' . $OUTPUT->render_chart($chart, false) . '</div>';
                         break;
                     case 'pie': // Tag: {chart pie 99 Label to be displayed} - Display a pie chart.
                         $chart = new \core\chart_pie();
@@ -3377,7 +3377,7 @@ class filter_filtercodes extends moodle_text_filter {
                         if ($CFG->branch >= 39) {
                             $chart->set_legend_options(['display' => false]);  // Hide chart legend.
                         }
-                        $html = $OUTPUT->render_chart($chart, false);
+                        $html = '<div class="fc-chart-pie">' . $OUTPUT->render_chart($chart, false) . '</div>';
                         break;
                     case 'progressbar': // Tag: {chart progressbar 99 Label to be displayed} - Display a horizontal progres bar.
                         $html = '
