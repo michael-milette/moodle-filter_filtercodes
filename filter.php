@@ -350,16 +350,16 @@ class filter_filtercodes extends moodle_text_filter {
         if (empty($tag)) {
             $tag .= '*'; // Match any tag.
         }
-        $query = "//${tag}";
+        $query = "//{$tag}";
 
         // If a class was specified.
         if (!empty($class)) {
-            $query .= "[@class=\"${class}\"]";
+            $query .= "[@class=\"{$class}\"]";
         }
 
         // If an id was specified.
         if (!empty($id)) {
-            $query .= "[@id=\"${id}\"]";
+            $query .= "[@id=\"{$id}\"]";
         }
 
         $tag = $xpath->query($query);

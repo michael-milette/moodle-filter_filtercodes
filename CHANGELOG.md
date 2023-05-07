@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ### Updated
 - Partial fix for sizing issue of radial and pie charts in Moodle 4.1 and 4.2.
 - Copyright notice to include 2023.
+- Compatibility with Moodle 4.2.
+- Compatibility with PHP 8.1.
 
 ## [2.3.4] 2022-12-11
 ### Added
