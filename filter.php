@@ -2784,7 +2784,7 @@ class filter_filtercodes extends moodle_text_filter {
                     require_once($CFG->dirroot.'/cohort/lib.php');
                     $mycohorts = cohort_get_user_cohorts($USER->id);
                 }
-                $newtext = preg_replace_callback('/\{ifincohort (\w*)\}(.*)\{\/ifincohort\}/isuU',
+                $newtext = preg_replace_callback('/\{ifincohort ([\w\-]*)\}(.*)\{\/ifincohort\}/isuU',
                     function ($matches) use($mycohorts) {
                         foreach ($mycohorts as $cohort) {
                             if ($cohort->idnumber == $matches[1] || $cohort->id == $matches[1]) {

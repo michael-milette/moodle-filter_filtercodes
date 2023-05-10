@@ -1,7 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.5] 2023-05-07
+## [2.3.7] 2023-05-10 (dev only)
+### Updated
+- Fix-253: Cohort names can now contain a dash in {ifincohort} tag.
+
+## [2.3.6] 2023-05-07
 ### Updated
 - Partial fix for sizing issue of radial and pie charts in Moodle 4.1 and 4.2.
 - Copyright notice to include 2023.
