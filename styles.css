@@ -1,3 +1,53 @@
 .fc-chart-pie .chart-area .chart-image {
     width: auto;
 }
+
+@property --percent{
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+
+  .fc-progress-pie {
+    --color:purple;
+    --percent:0;
+    --size:150px;
+    --border:20px;
+    --bgcolor:#f0f0f0;
+
+    width:var(--size);
+    aspect-ratio:1;
+    position:relative;
+    display:inline-grid;
+    margin:5px;
+    place-content:center;
+    font-size:1.5rem;
+    font-weight:bold;
+  }
+  .fc-progress-pie:before,
+  .fc-progress-pie:after {
+    content:"";
+    position:absolute;
+    border-radius:50%;
+  }
+  .fc-progress-pie:before {
+    inset:0;
+    background:radial-gradient(farthest-side,var(--color) 98%,#0000) top/var(--border) var(--border) no-repeat,conic-gradient(var(--color) calc(var(--percent)*1%),#0000 0);
+    -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--border)),#000 calc(100% - var(--border)));
+    mask:radial-gradient(farthest-side,#0000 calc(99% - var(--border)),#000 calc(100% - var(--border)));
+    background-color:var(--bgcolor);
+    background-size:0 0,auto;
+
+  }
+  .fc-progress-pie:after {
+    inset:calc(50% - var(--border)/2);
+    background:var(--color);
+    transform:rotate(calc(var(--percent)*3.6deg)) translateY(calc(50% - var(--size)/2));
+    content:none;
+  }
+  .fc-progress-pie.animate {
+    animation:fc-progress-pie-percent 1s .5s both;
+  }
+  @keyframes fc-progress-pie-percent {
+    from{--percent:0}
+  }

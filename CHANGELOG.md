@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [2.3.7] 2023-05-10 (dev only)
+### Added
+- New {chart progresspie} tag.
 ### Updated
 - Fix-253: Cohort names can now contain a dash in {ifincohort} tag.
 - {timezone} now works correctly if user's timezone is set to system timezone.

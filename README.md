@@ -149,10 +149,11 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courserequest} : Displays a Request a Course link.
 * {label type}{/label} : Display text over background colour. The Boost theme supports the following types: **info**, **important**, **secondary**, **success** and **warning**. Other themes may also support **primary**, **danger**, **light**, **dark** and more. Example: {label info}For your information{/label}. Actual foreground and background colours vary depending on the theme. If the type is not specified, it will default to **info**. If the type specified is not supported by your theme, it may default to secondary.
 * {button URL}Label{/button} : Create a clickable button link formatted like a primary button.
-* {chart radial x caption text} (ALPHA): Create a radial (circle / doughnut) chart given it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the Heading text.
-* {chart pie x caption text} (ALPHA) : Create a pie chart given a value of x between 0 and 100 and an optional title. If you do not want a caption, just specify a blank space instead of the caption text.
-* {chart progressbar x caption text} (ALPHA) : Create a horizontal progress bar chart giving it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the caption text.
-* {showmore}{/showmore} (ALPHA) : Toggle showing content between opening and closing more tags. Limitations: Can only be used inline with text. Must now weave into other opening and closing tags.
+* (ALPHA) {chart radial x caption text} : Create a radial (circle / doughnut) chart given it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the Heading text.
+* (ALPHA) {chart pie x caption text} : Create a pie chart given a value of x between 0 and 100 and an optional title. If you do not want a caption, just specify a blank space instead of the caption text.
+* (ALPHA) {chart progressbar x caption text} : Create a horizontal progress bar chart giving it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the caption text.
+* (ALPHA) {chart progresspie x --size:150px --border:20px --color:purple --bgcolor:#f0f0f0 --title:caption text}Create a (circle / doughnut) progress chart giving it a value of x between 0 and 100. You can specify the height/width (size) and the thickness (border) of the line in *px* as well as the color and background color by name or by RGB value. You can also specify a caption. Note that all parameters that begin with two dashes (--) are optional.
+* {showmore}{/showmore} : Toggle showing content between opening and closing more tags. Limitations: Can only be used inline with text. Must now weave into other opening and closing tags.
 * {qrcode}{/qrcode} : Generate and display a QR Code for the content between the tags.
 
 ### For use in courses
@@ -1033,7 +1034,8 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Button [{button https://moodle.org}]Go to Moodle.org{/button}]: {button https://moodle.org.org}Go to Moodle{/button}
 * 80% radial chart [{chart radial 80 Are you over 70%?}]: {chart radial 80 Are you over 70%?}
 * 60% pie chart [{chart pie 60 Are you over 70%?}]: {chart radial 60 Are you over 70%?}
-* 75% progressbar chart [{chart progressbar 75 Are you over 70%?}]: {chart radial 75 Are you over 70%?}
+* 75% progressbar chart [{chart progressbar 75 Are you over 70%?}]: {chart progressbar 75 Are you over 70%?}
+* 80% progresspie chart [{chart progresspie 80 --size:100px --border:15px --color:darkblue --bgcolor:lightblue --title:Are you over 70%?}]: {chart progresspie 80 --size:100px --border:15px --color:darkblue --bgcolor:lightblue --title:Are you over 70%?}
 * Moodle Admin custom menu items [{menuadmin}]: <br><pre>{menuadmin}</pre>
 * Moodle Dev custom menu items [{menudev}]: <br><pre>{menudev}</pre>
 * Course's category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}

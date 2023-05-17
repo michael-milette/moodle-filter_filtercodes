@@ -1113,7 +1113,6 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{country\}/i'] = isloggedin() && !isguestuser() && !empty($USER->country)
                     ? get_string($USER->country, 'countries') : '';
         }
-
         // Tag: {timezone}.
         if (stripos($text, '{timezone}') !== false) {
             if (isloggedin() && !isguestuser() && !empty($USER->timezone)) {
@@ -3346,14 +3345,15 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tag: {chart <type> <value> <title>} - Easily display a chart in one of several styles.
-        if (stripos($text, '{chart ') !== false && $CFG->branch >= 32) {
+        if ($CFG->branch >= 32 && version_compare(PHP_VERSION, '7.0.0') >= 0 && stripos($text, '{chart ') !== false) {
             global $OUTPUT;
-            preg_match_all('/\{chart\s(\w+)\s([0-9]+)\s(.*)\}/isuU', $text, $matches, PREG_SET_ORDER);
+            preg_match_all('/\{chart\s(\w+)\s([0-9]+)((?:\s)(.*))?\}/isuU', $text, $matches, PREG_SET_ORDER);
             $matches = array_unique($matches, SORT_REGULAR);
             foreach ($matches as $match) {
-                $type = $match[1]; // Chart type: radial, pie or progressbar.
+                $type = $match[1]; // Chart type: radial, pie, progressbar or progresspie.
                 $value = $match[2]; // Value between 0 and 100.
-                $title = $match[3]; // Text label.
+                $match[3] = $match[3] ?? '';
+                $title = trim($match[3]); // Optional text label.
                 $percent = get_string('percents', '', $value);
                 switch($type) { // Type of chart.
                     case 'radial': // Tag: {chart radial 99 Label to be displayed} - Display a radial (circle) chart.
@@ -3384,7 +3384,7 @@ class filter_filtercodes extends moodle_text_filter {
                         }
                         $html = '<div class="fc-chart-pie">' . $OUTPUT->render_chart($chart, false) . '</div>';
                         break;
-                    case 'progressbar': // Tag: {chart progressbar 99 Label to be displayed} - Display a horizontal progres bar.
+                    case 'progressbar': // Tag: {chart progressbar 99 Label to be displayed} - Display a horizontal progress bar.
                         $html = '
                         <div class="progress mb-0">
                             <div class="fc-progress progress-bar bar" role="progressbar" aria-valuenow="' . $value
@@ -3396,10 +3396,26 @@ class filter_filtercodes extends moodle_text_filter {
                                     ['label' => $title, 'value' => $percent]) . '</div>';
                         }
                         break;
+                    case 'progresspie': // Tag: {chart progresspie 99 Label to display} - Display a progress pie.
+                        $styles = '--percent:' . $value . ';';
+                        $params = explode(' --', ' ' . $title);
+                        $title = '';
+                        foreach ($params as $param) {
+                            if (in_array(strtolower(strtok($param, ':')), ['color', 'size', 'border', 'bgcolor'])) {
+                                $styles .= '--' . $param . ';';
+                            } else if (stripos($param, 'title:') === 0) {
+                                $title = substr($param, 6);
+                            }
+                        }
+                        $html = '<div class="fc-progress-pie" style="' . $styles . '">' . $percent . '</div>';
+                        if (!empty($title)) {
+                            $html .= '<div class="small">' . $title . '</div>';
+                        }
+                        break;
                     default:
                         $html = '';
                 }
-                $replace['/\{chart ' . $type . ' ' . $value . ' ' . preg_quote($title) . '\}/isuU'] = $html;
+                $replace['/\{chart ' . $type . ' ' . $value . preg_quote($match[3]) . '\}/isuU'] = $html;
                 $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
                 if (!is_null($newtext)) {
                     $text = $newtext;
