@@ -1116,8 +1116,13 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {timezone}.
         if (stripos($text, '{timezone}') !== false) {
-            $replace['/\{timezone\}/i'] = isloggedin() && !isguestuser() && !empty($USER->timezone)
-                    ? core_date::get_localised_timezone($USER->timezone) : '';
+            if (isloggedin() && !isguestuser() && !empty($USER->timezone)) {
+                if ($USER->timezone == '99') { // Default is system timezone.
+                    $replace['/\{timezone\}/i'] = core_date::get_default_php_timezone();
+                } else {
+                    $replace['/\{timezone\}/i'] = core_date::get_localised_timezone($USER->timezone);
+                }
+            }
         }
 
         // Tag: {preferredlanguage}.
