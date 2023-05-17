@@ -1,12 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.7] 2023-05-10 (dev only)
+## [2.3.7] 2023-05-17 (dev only)
 ### Added
 - New {chart progresspie} tag.
+- Instruction to patch Moodle 4.2 to enable FilterCodes in custom menu.
+- Will now prevent some tags from running if they do not meet Moodle and PHP version requirements.
 ### Updated
 - Fix-253: Cohort names can now contain a dash in {ifincohort} tag.
 - {timezone} now works correctly if user's timezone is set to system timezone.
+- Documentation (README.md)
 
 ## [2.3.6] 2023-05-07
 ### Updated

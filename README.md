@@ -2,8 +2,8 @@
 
 FilterCodes filter plugin for Moodle
 ====================================
-![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3%2F%20v7.4%2F%20v8.0-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v4.1-orange.svg)
+![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3%2F%20v7.4%2F%20v8.0%2F%20v8.1-blue.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v4.2-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -137,22 +137,22 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 
 ### UI Elements
 
-* {teamcards}: Displays photos, names (optionally linked) and optional descriptions of the users who are teachers. Only Verbose format is suitable for use in a side block.
-* {coursecards} or {coursecards categoryID}: (ALPHA) Display available courses as cards. You can optionally specify the ID number of a category. Example: {coursecards 1} will only display courses in the default Miscellaneous category. Note: The categoryID is not the "Category ID Number" field that you can optionally specify when creating a category. Please also note that the maximum number of courses displayed is controlled by the front page setting called **frontpagecourselimit**.
-* {coursecardsbyenrol} (ALPHA): Display course cards for the most popular courses based on enrolment. The maximum number of cards is configurable in the plugin settings.
-* {courseprogress}: (ALPHA) Displays course progress status in words. Only works within a course.
-* {courseprogresspercent}: Displays course progress percentage as a number without a percentage symbol. Only works within a course.
-* {courseprogressbar}: (ALPHA) Displays course progress status as a status bar. Only works within a course.
-* {categorycards} or {categorycards id}: (ALPHA) Display top-level categories as cards using the current category as the top-level category. For example, on the Frontpage, it will display all top-level categories. However, if you are inside the Miscellaneous category (e.g., in Miscellaneous > Your Course), it will only display the next level of categories under the Miscellaneous category. You can optionally specify a category in the tag.
+* {teamcards} : Displays photos, names (optionally linked) and optional descriptions of the users who are teachers. Only Verbose format is suitable for use in a side block.
+* (ALPHA) {coursecards} or {coursecards categoryID} : Display available courses as cards. You can optionally specify the ID number of a category. Example: {coursecards 1} will only display courses in the default Miscellaneous category. Note: The categoryID is not the "Category ID Number" field that you can optionally specify when creating a category. Please also note that the maximum number of courses displayed is controlled by the front page setting called **frontpagecourselimit**.
+* (ALPHA) {coursecardsbyenrol} : Display course cards for the most popular courses based on enrolment. The maximum number of cards is configurable in the plugin settings.
+* (ALPHA) {courseprogress} : Displays course progress status in words. Only works within a course.
+* {courseprogresspercent} : Displays course progress percentage as a number without a percentage symbol. Only works within a course.
+* (ALPHA) {courseprogressbar}: Displays course progress status as a status bar. Only works within a course.
+* (ALPHA) {categorycards} or {categorycards id} : Display top-level categories as cards using the current category as the top-level category. For example, on the Frontpage, it will display all top-level categories. However, if you are inside the Miscellaneous category (e.g., in Miscellaneous > Your Course), it will only display the next level of categories under the Miscellaneous category. You can optionally specify a category in the tag.
 * {mycourses} : Display an unordered list of links to all my enrolled courses.
 * {mycoursescards} : Displays a series of cards for my enrolled courses.
 * {courserequest} : Displays a Request a Course link.
 * {label type}{/label} : Display text over background colour. The Boost theme supports the following types: **info**, **important**, **secondary**, **success** and **warning**. Other themes may also support **primary**, **danger**, **light**, **dark** and more. Example: {label info}For your information{/label}. Actual foreground and background colours vary depending on the theme. If the type is not specified, it will default to **info**. If the type specified is not supported by your theme, it may default to secondary.
 * {button URL}Label{/button} : Create a clickable button link formatted like a primary button.
-* (ALPHA) {chart radial x caption text} : Create a radial (circle / doughnut) chart given it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the Heading text.
-* (ALPHA) {chart pie x caption text} : Create a pie chart given a value of x between 0 and 100 and an optional title. If you do not want a caption, just specify a blank space instead of the caption text.
-* (ALPHA) {chart progressbar x caption text} : Create a horizontal progress bar chart giving it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the caption text.
-* (ALPHA) {chart progresspie x --size:150px --border:20px --color:purple --bgcolor:#f0f0f0 --title:caption text}Create a (circle / doughnut) progress chart giving it a value of x between 0 and 100. You can specify the height/width (size) and the thickness (border) of the line in *px* as well as the color and background color by name or by RGB value. You can also specify a caption. Note that all parameters that begin with two dashes (--) are optional.
+* (ALPHA) {chart radial x caption text} : Create a radial (circle / doughnut) chart given it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the Heading text. (Requires PHP 7.0+ and Moodle 3.2+)
+* (ALPHA) {chart pie x caption text} : Create a pie chart given a value of x between 0 and 100 and an optional title. If you do not want a caption, just specify a blank space instead of the caption text. (Requires PHP 7.0+ and Moodle 3.2+)
+* (ALPHA) {chart progressbar x caption text} : Create a horizontal progress bar chart giving it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the caption text. (Requires PHP 7.0+ and Moodle 3.2+)
+* (ALPHA) {chart progresspie x --size:150px --border:20px --color:purple --bgcolor:#f0f0f0 --title:caption text}Create a (circle / doughnut) progress chart giving it a value of x between 0 and 100. You can specify the height/width (size) and the thickness (border) of the line in* **px** as well as the color and background color by name or by RGB value. You can also specify a caption. Note that all parameters that begin with two dashes (--) are optional. (Requires PHP 7.0+ and Moodle 3.2+)
 * {showmore}{/showmore} : Toggle showing content between opening and closing more tags. Limitations: Can only be used inline with text. Must now weave into other opening and closing tags.
 * {qrcode}{/qrcode} : Generate and display a QR Code for the content between the tags.
 
@@ -164,16 +164,17 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {coursestartdate dateTimeFormat} : Course star t date. Will display "Open event" if there is no start date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {courseenddate dateTimeFormat} : Course end date. Will display "Open event" if there is no end date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {coursecompletiondate dateTimeFormat} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
-* {coursegrade} : Display course grade.
-* {courseprogress} : (ALPHA) Displays course progress status in words.
-* {courseprogressbar}: (ALPHA) Displays course progress status as a status bar.
-* {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
-* {course_field_shortname} : Display custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
+* {coursegradepercent}: Displays the current accumulated course grade of the student without percentage symbol. (Requires PHP 7.0 or later)
+* {coursegrade} : Displays the student's current overall course grade with the percentage symbol. (Requires PHP 7.0 or later)
+* (ALPHA) {courseprogress} : Displays course progress status in words.
+* (ALPHA) {courseprogressbar}: Displays course progress status as a status bar.
+* {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting. (Requires Moodle 3.7 or later)
+* {course_field_shortname} : Display custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting. (Requires Moodle 3.7 or later)
 * {coursesummary} : Display the course summary. If placed on a site page, displays the site summary.
 * {coursesummary ID} : Display the course summary of the course with the specified course ID number.
 * {courseimage} : Display's the course image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
-* {coursecount students} : Displays the number of students enrolled in a course.
+* {coursecount students} : Displays the number of students enrolled in a course. (Requires Moodle 3.2 or later)
 * {courseid} or %7Bcourseid%7D : Display a course's ID.
 * {coursecontextid} or %7Bcoursecontextid%7D : Display a course's context ID.
 * %7Bcoursemoduleid%7D : Display a course's activity module ID - for use in URLs. Only for use in course activity modules.
@@ -181,7 +182,6 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {sectionid} or %7Bsectionid%7D : Display the section ID (not to be confused with the section number).
 * {sectionname} : Display the section name in which the activity is located.
 * {coursecontacts}: List of course contacts with links to their profiles, email address or messaging or phone number, and their user description (there are settings for these). Note: This tag was formerly called {courseteachers}.
-* {coursegradepercent}: Displays the current accumulated course grade of the student.
 * {mygroups}: Displays a list of groups to which you are a member.
 
 Also, see Courses section below.
@@ -229,7 +229,7 @@ Also, see Courses section below.
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {help}content{/help} : Enables you to create popup help icons just like Moodle does.
 * {info}content{/info} : Enables you to create popup help icons just like the popup Help icons but with an "i" information icon.
-* {alert style}content{/alert}: (ALPHA) Creates an alert box containing the specified content. You can change the style by specifying an optional parameter. Example: **{alert primary}** or **{alert success}**. [List of styles](https://getbootstrap.com/docs/4.0/components/alerts/)
+* (ALPHA) {alert style}content{/alert} : Creates an alert box containing the specified content. You can change the style by specifying an optional parameter. Example: **{alert primary}** or **{alert success}**. [List of styles](https://getbootstrap.com/docs/4.0/components/alerts/)
 * {highlight}{/highlight} : Highlight text like a highlighter in bright yellow. NOTE: Must only be used within a paragraph.
 * {marktext}{/marktext} : Highlight text using HTML5's mark tag. You can style this tag using CSS in your theme using a fc-marktext class.
 * {markborder}{/markborder} : Surrounds text with a red dashed border. You can style this tag using CSS in your theme using a fc-markborder class (border and padding with !important to override).
@@ -319,8 +319,8 @@ If the condition is not met in the particular context, the specified tag and its
 * {ifnotmobile}{/ifnotmobile} : Will display content if not accessed from a web service such as a web browser.
 #### Conditionally display content filters (For Moodle Workplace)
 
-* {iftenant idnumber|tenantid}{/iftenant} : (ALPHA) Will display the content if a tenant idnumber or tenant id is specified. Only {iftenant 1} will work in Moodle classic.
-* {ifworkplace}{/ifworkplace} : (ALPHA) Will display the content only if displayed in Moodle Workplace.
+* (BETA) {iftenant idnumber|tenantid}{/iftenant} : Will display the content if a tenant idnumber or tenant id is specified. Only {iftenant 1} will work in Moodle classic.
+* (BETA) {ifworkplace}{/ifworkplace} : Will display the content only if displayed in Moodle Workplace.
 
 ### HTML and "lang" tagging
 
@@ -336,7 +336,9 @@ The opening {langx xx} tag should include two [ISO 639-1](https://en.wikipedia.o
 
 The {langx fr}{/langx} filter will convert this into the following HTML
 
+```html
     <span lang="fr">Contenu</span>
+```
 
 The opening {langx xx} may also include a [culture code](https://en.wikipedia.org/wiki/Language_localisation) used in countries and regions. This includes an additional dash and two uppercase letters associated with the language's region or country. French Canadian, for example, has the code **fr-CA**:
 
@@ -344,7 +346,9 @@ The opening {langx xx} may also include a [culture code](https://en.wikipedia.or
 
 The {langx fr-CA}{/langx} filter will convert this into the following HTML
 
+```html
     <span lang="fr-CA">Contenu</span>
+```
 
 ## Define your own custom global tags
 
@@ -483,7 +487,7 @@ Even better, try out the dynamic **{menudev}** tag. It includes all of the above
 
 ## FilterCodes in custom menus
 
-Note: The source code in this section was last updated in April 2022 for Moodle 4.0 and last tested in December 2022 for Moodle 4.1 compatibility.
+Note: The source code in this section was last updated in April 2022 for Moodle 4.0 and last tested in May 2023 for Moodle 4.2 compatibility.
 
 FilterCodes can work in custom menus but, unfortunately, only if the theme supports it or you patched Moodle. If it does not work for you, contact the theme's developer and request that they add support for Moodle filters. See the instructions included below.
 
@@ -506,12 +510,15 @@ To patch Moodle to handle this properly for most Moodle themes, cherry-pick the 
 * Moodle 3.11: https://github.com/michael-milette/moodle/tree/MDL-63219-M311
 * Moodle 4.0: https://github.com/michael-milette/moodle/tree/MDL-63219-M400
 * Moodle 4.1: https://github.com/michael-milette/moodle/tree/MDL-63219-M401
+* Moodle 4.2: https://github.com/michael-milette/moodle/tree/MDL-63219-M402
 * Moodle master: https://github.com/michael-milette/moodle/tree/MDL-63219-master
 
 Example: To apply the patch for Moodle using git (change the "M400" for other versions):
 
-    git fetch https://github.com/michael-milette/moodle MDL-63219-M401
+```bash
+    git fetch https://github.com/michael-milette/moodle MDL-63219-M402
     git cherry-pick FETCH_HEAD
+```
 
 This is usually enough to make the filters work in the custom menu. However, we have noticed it may not work with some Moodle themes, most notably premium themes. Those themes will need to be patched using the technique B.
 
@@ -519,12 +526,13 @@ This is usually enough to make the filters work in the custom menu. However, we 
 
 ### For themes based on **boost** (Moodle 4.0 and later)
 
-As more 3rd party/contributed Moodle 4.0/4.1 themes become available, this section will be updated. Until then, there is no tested patch available for 3rd party Moodle 4.0 themes. It is recommended to use Moodle core patch above which is known to work.
+There is no tested patch available for all 3rd party Moodle 4.0 themes. It is recommended to use Moodle core patch above which is known to work.
 
-The follow ALPHA code is based on information available in the Boost theme for Moodle 4.0/4.1. You will **also need** to apply the theme patch **For themes based on boost (Moodle 3.2 and later)** included below.
+The follow ALPHA code is based on information available in the Boost theme for Moodle 4.0/4.1/4.2. You will **also need** to apply the theme patch **For themes based on boost (Moodle 3.2 and later)** included below.
 
 Add this code to the core_renderer section (probably located in /theme/yourtheme/classes/navigation/output/primary.php) of your theme. Note: Your theme may even already have such a class (they often do):
 
+```php
     use filter_manager;
 
     class primary extends core\navigation\output\primary {
@@ -562,6 +570,7 @@ Add this code to the core_renderer section (probably located in /theme/yourtheme
             return $nodes;
         }
     }
+```
 
 ### For themes based on **boost** (Moodle 3.2 and later)
 
@@ -569,6 +578,7 @@ Note: Supported in Moodle 3.2 and later. If you are using Moodle 4.0 or later, y
 
 Add the following code to core_renderer section (often found in /theme/yourtheme/classes/output/core_renderer.php) of your theme. Note: Your theme may even already have such a class (they often do):
 
+```php
     use filter_manager;
 
     class core_renderer extends \theme_boost\output\core_renderer {
@@ -636,6 +646,7 @@ Add the following code to core_renderer section (often found in /theme/yourtheme
             return $custommenu->export_for_template($this);
         }
     }
+```
 
 ### For themes based on the older **bootstrapbase** (Moodle 2.7 to 3.6)
 
@@ -643,6 +654,7 @@ Note: Supported in Moodle 2.7 to 3.6.
 
 Add the following code to core_renderer section of your theme for Moodle 2.7 to 3.6. Be sure to replace "themename" with the name of the theme's directory. Note: Your theme may even already have such a class (they often do):
 
+```php
     class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
         /**
          * Applies Moodle filters to the custom menu and custom user menu.
@@ -678,6 +690,7 @@ Add the following code to core_renderer section of your theme for Moodle 2.7 to 
             return $this->render_custom_menu($custommenu);
         }
     }
+```
 
 ## Scrape'ing content
 
@@ -713,11 +726,15 @@ If the matching tag, class and/or id cannot be found, will return all of the pag
 
 Help students navigate your Moodle site by implementing this handy-dandy BACK button. Works at both the section and activity level.
 
+```html
     <p style="float:right;"><a href="{wwwroot}/course/view.php?id={courseid}&amp;section={sectionid}" class="btn btn-outline" style="font-size:14px;">Go Back</a></p>
+```
 
 If you are in a section and want to go directly back to the main course outline but scroll down to the current section, try this:
 
+```html
     <p style="float:right;"><a href="{wwwroot}/course/view.php?id={courseid}#section-{sectionid}" class="btn btn-outline" style="font-size:14px;">Back to course outline</a></p>
+```
 
 ## Optional FilterCodes for Moodle settings
 
@@ -806,7 +823,7 @@ Uninstalling the plugin by going into the following:
 
 Home > Administration > Site Administration > Plugins > Manage plugins > FilterCodes
 
-...and click Uninstall. You may also need to manually delete the following folder:
+...and click Uninstall. You may also need to manually delete the following folder if your webserver does not have the required permissions:
 
     /filter/filtercodes
 
@@ -814,18 +831,22 @@ Note that, once uninstalled, any tags and content normally handled by this plugi
 
 # Limitations
 
-* Be aware that enabling the Moodle "Download course content" feature may not process some tags correctly or at all through Moodle filters. As a result, tags may be displayed instead of content. This is a known Moodle issue [MDL-72894](https://tracker.moodle.org/browse/MDL-72894) which will hopefully be resolved in the near future.
+* Be aware that enabling the Moodle "Download course content" feature may not process some tags correctly or at all through Moodle filters. As a result, tags may be displayed instead of content. This is a known Moodle issue [MDL-72894](https://tracker.moodle.org/browse/MDL-72894) which was resolved in 3.10.8+ and 3.11.4+.
 * Do not use [For use in courses](#for-use-in-courses) type tags inside your course summary. Course listings and course descriptions pages are not displayed within the context of a course. These only work properly within courses. Keep context in mind.
 * The {langx xx}{/langx} tag only supports inline text, not blocks of text.
 * Unpredictable results may occur if you interweave HTML code with {FilterCodesTag} tags.
 
 Incorrect example:
 
+```html
     <strong>{FilterCodesTag}Content</strong>{/FilterCodesTag}
+```
 
 Correct example:
 
+```html
     {FilterCodesTag}<strong>Content</strong>{/FilterCodeTag}
+```
 
 # Language Support
 
@@ -857,7 +878,7 @@ Here are a few things you can check:
 * If it doesn't work with a particular 3rd party plugin (i.e. not included with Moodle), try using the tag in an HTML block or label.
 * If you have determined that the problem is with a 3rd party plugin or theme, please report the issue to its developer using the **Bug Tracker** link on the plugin's page located at moodle.org/plugins. Provide as much information as you can. It may be helpful to point them to the [Moodle Output API documentation](https://docs.moodle.org/dev/Output_functions), specifically the format_text() and format_string() functions.
 * If it still doesn't work, chances are that this part of Moodle doesn't support filters yet. It is rare but it happens (example: Badges). Please report the part of Moodle that doesn't support filters in the [Moodle Tracker](https://tracker.moodle.org). Nothing can be done to make FilterCodes work here until this has been fixed.
-* Read the rest of this FAQ section.
+* Read the FAQ section.
 * If all else fails, ask questions. There are links on the [FilterCodes](https://moodle.org/plugins/filter_filtercodes) plugin page to the [Discussion](https://moodle.org/mod/forum/discuss.php?d=359252) forum for getting help and the [Bug Tracker](https://github.com/michael-milette/moodle-filter_filtercodes/issues) on GitHub for reporting bugs.
 
 Note: There have also been reported cases where some tags in URLs, like {wwwroot}, do not seem to work. We have found that this can sometimes happen:
@@ -876,9 +897,13 @@ IMPORTANT: Although we expect everything to work, this release has not been full
 
 Yes. You can only combine (AND) them. The two, or more, tags must be all be true for the content to be displayed. For example:
 
-{ifloggedin}{ifenrolled}You are logged in and enrolled in this course.{/ifenrolled}{/ifloggedin}
+    {ifloggedin}{ifenrolled}You are logged in and enrolled in this course.{/ifenrolled}{/ifloggedin}
 
 This plugin does not support {IF this OR that} type conditions at this time. Depending on your requirement, the {ifmin...} tags might help you achieve this. These tags enable you to display content to users with a minimum role level. This could be useful if you wanted to only display a message to faculty such as (teacher or above).
+
+### How can {ifactivitycompleted} work for the completion of a combination of multiple activities?
+
+You will need to use the Pulse plugin for Moodle LMS by Stefan Scholz. It allows you to have one activity completion reflect the completed status of multiple other activities. Dave Foord has an excellent tutorial on how to use this on his YouTube channel at: https://www.youtube.com/watch?v=VlmLjIUFC6I . Once you have that setup, you will then be able to use FilterCodes {ifactivitycompleted} tag to do whatever you want based on the completion of the one Pulse activity.
 
 ### I am using FilterCodes on a multi-language site. Some of my non-FilterCode tags are not being processed. How can I fix this?
 
@@ -888,13 +913,17 @@ This is a pretty common question. Simply move FilterCodes to the top of the list
 
 Just put the tag in the input's value parameter. Here are a couple of examples:
 
+```html
     <input id="email" name="email" type="email" required="required" value="{email}">
     <input id="name" name="name" type="text" required="required" value="{fullname}">
+```
 
 Pro Tip: You can pre-populate a field and make it non-editable for logged in users using a conditional tag:
 
+```html
     <input id="email" name="email" type="email" required="required" {ifloggedin}readonly{/ifloggedin} value="{email}">
     <input id="name" name="name" type="text" required="required" {ifloggedin}readonly{/ifloggedin} value="{fullname}">
+```
 
 ### Why do administrators see the text of all other roles when using {ifminxxxx}Content{/ifminxxxx} tags?
 
@@ -918,15 +947,15 @@ If you have the skills, feel free to contribute code for new tags. These are mor
 
 It works just fine. Here are 3 examples:
 
-{button https://www.tngconsulting.ca}TNG Consulting Inc.{/button}
+    {button https://www.tngconsulting.ca}TNG Consulting Inc.{/button}
 
 This one just creates a button called **TNG Consulting Inc.** that will take you to the website when clicked.
 
-{button https://google.ca" target="_blank}Google{/button}
+    {button https://google.ca" target="_blank}Google{/button}
 
 This one will create a button called "Google" which will open a new tab in your browser and then take you to the website.
 
-{button {wwwroot}/my}{getstring}myhome{/getstring}{/button}
+    {button {wwwroot}/my}{getstring}myhome{/getstring}{/button}
 
 The last one will create a button called "Dashboard", using the Moodle language strings ({getstrings} is a FilterCode too). When clicked, it will take the user to your Moodle site's dashboard, regardless of where Moodle is installed (webroot or subdirectory).
 
@@ -936,6 +965,7 @@ The trick is to make sure that Moodle doesn't convert the URL to a link in the e
 
 Here is an example that reduces the image and places the information next to it. Just add this CSS to your site:
 
+```css
     .fc-coursecontacts li {
         clear:both;
         font-size: 1.3rem;
@@ -949,10 +979,11 @@ Here is an example that reduces the image and places the information next to it.
         display: block;
     }
     .fc-coursecontacts div {
-    border-top: 1px solid lightgrey;
-    margin-top: 5px;
-    padding-top: 5px
+        border-top: 1px solid lightgrey;
+        margin-top: 5px;
+        padding-top: 5px
     }
+```
 
 ### Do you have examples/samples of how tags work in my version of FilterCodes?
 
@@ -998,15 +1029,16 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course start date [{coursestartdate strftimedatetime}]: {coursestartdate strftimedatetime}
 * Course end date [{courseenddate strftimedatetime}]: {courseenddate strftimedatetime}
 * Completion date [{coursecompletiondate strftimedatetime}]: {coursecompletiondate strftimedatetime}
+* You current grade in this course is [{coursegradepercent}]: {coursegradepercent}
 * Your grade in this course is [{coursegrade}]: Your grade in this course is {coursegrade}
-* Course progress (ALPHA) [{courseprogress}]: {courseprogress}
+* (ALPHA) Course progress [{courseprogress}]: {courseprogress}
 * Course progress percent number [{courseprogresspercent}]: {courseprogresspercent}
-* Course progress bar (ALPHA) [{courseprogressbar}]: {courseprogressbar}
-* Course cards (ALPHA) [{coursecards}]: {coursecards}
-* Course cards by enrolment (ALPHA) [{coursecardsbyenrol}]: {coursecardsbyenrol}
+* (ALPHA) Course progress bar [{courseprogressbar}]: {courseprogressbar}
+* (ALPHA) Course cards [{coursecards}]: {coursecards}
+* (ALPHA) Course cards by enrolment [{coursecardsbyenrol}]: {coursecardsbyenrol}
 * Team cards Our faculty team [{teamcards}]: Our faculty team<br>{teamcards}
-* Category cards (ALPHA) [{categorycards}]: {categorycards}
-* Category 1 cards (ALPHA) [{categorycards 1}]: Sub-categories of Miscellaneous category include {categorycards 1}
+* (ALPHA) Category cards [{categorycards}]: {categorycards}
+* (ALPHA) Category 1 cards [{categorycards 1}]: Sub-categories of Miscellaneous category include {categorycards 1}
 * Total courses [{coursecount}]: {coursecount}
 * Institution [{institution}]: {institution}
 * Department [{department}]: {department}
@@ -1021,7 +1053,6 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Section Name [{sectionname}]: {sectionname}
 * Contacts in this course [{coursecontacts}]: {coursecontacts}
 * Please help other members of [{mygroups}] who might be struggling: Please help other members of {mygroups} who might be struggling.
-* You current grade in this course is [{coursegradepercent}]: {coursegradepercent}
 * Available free application disk space [{diskfreespace}]: {diskfreespace}
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}
 * My Enrolled Courses [{mycourses}]: {mycourses}
@@ -1031,7 +1062,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Request a course / Course request in top level menu [{courserequestmenu0}]: <br><pre>{courserequestmenu0}</pre>
 * Request a course / Course request in submenu [{courserequestmenu}]: <br><pre>{courserequestmenu}</pre>
 * Label [{label info}]Criteria for completion[{/label}]: {label info}Criteria for completion{/label}
-* Button [{button https://moodle.org}]Go to Moodle.org{/button}]: {button https://moodle.org.org}Go to Moodle{/button}
+* Button [{button https://moodle.org}]Go to Moodle.org{/button}]: {button https://moodle.org.org}Go to Moodle.org{/button}
 * 80% radial chart [{chart radial 80 Are you over 70%?}]: {chart radial 80 Are you over 70%?}
 * 60% pie chart [{chart pie 60 Are you over 70%?}]: {chart radial 60 Are you over 70%?}
 * 75% progressbar chart [{chart progressbar 75 Are you over 70%?}]: {chart progressbar 75 Are you over 70%?}

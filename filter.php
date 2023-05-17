@@ -695,31 +695,6 @@ class filter_filtercodes extends moodle_text_filter {
             unset($content);
         }
 
-        // Tag: {coursesummary}.
-        if (stripos($text, '{coursesummary') !== false) {
-            if (stripos($text, '{coursesummary}') !== false) {
-                // No course ID specified.
-                $coursecontext = context_course::instance($PAGE->course->id);
-                $replace['/\{coursesummary\}/i'] = format_text($PAGE->course->summary, FORMAT_HTML,
-                        ['context' => $coursecontext]);
-            }
-            if (stripos($text, '{coursesummary ') !== false) {
-                // Course ID was specified.
-                preg_match_all('/\{coursesummary ([0-9]+)\}/', $text, $matches);
-                // Eliminate course IDs.
-                $courseids = array_unique($matches[1]);
-                $coursecontext = context_course::instance($PAGE->course->id);
-                foreach ($courseids as $id) {
-                    $course = $DB->get_record('course', ['id' => $id]);
-                    if (!empty($course)) {
-                        $replace['/\{coursesummary ' . $course->id . '\}/isuU'] = format_text($course->summary, FORMAT_HTML,
-                                ['context' => $coursecontext]);;
-                    }
-                }
-                unset($matches, $course, $courseids, $id);
-            }
-        }
-
         // This tag: {menuadmin}.
         if (stripos($text, '{menuadmin}') !== false) {
             $theme = $PAGE->theme->name;
@@ -947,29 +922,59 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{idnumber\}/i'] = isloggedin() && !isguestuser() ? $USER->idnumber : '';
         }
 
-        // Tag: {coursegradepercent} - Calculate and display current overall course grade as a percentage.
-        if (stripos($text, '{coursegradepercent}') !== false) {
-            require_once($CFG->libdir . '/gradelib.php');
-            require_once($CFG->dirroot . '/grade/querylib.php');
-            $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
-            if (!empty($grademax = floatval($gradeobj->item->grademax))) {
-                // Avoid divide by 0 error if no grades have been defined.
-                $grade = (int) ($gradeobj->grade / floatval($grademax) * 100) ?? 0;
-            } else {
-                $grade = 0;
-            }
-            $replace['/\{coursegradepercent\}/i'] = $grade;
-        }
+        // Check if any {course*} or %7Bcourse*%7D tags. Note: There is another course tags section further down.
+        $coursetagsexist = (stripos($text, '{course') !== false);
+        if ($coursetagsexist) {
 
-        // Course completion progress percentage as a number.
-        if (stripos($text, '{courseprogresspercent}') !== false) {
-            $progress = $this->completionprogress();
-            if ($progress != -1) { // Is enabled.
-                $replace['/\{courseprogresspercent\}/i'] = $progress;
-            } else {
-                $replace['/\{courseprogresspercent\}/i'] = '';
+            // Tag: {coursesummary}.
+            if (stripos($text, '{coursesummary') !== false) {
+                if (stripos($text, '{coursesummary}') !== false) {
+                    // No course ID specified.
+                    $coursecontext = context_course::instance($PAGE->course->id);
+                    $replace['/\{coursesummary\}/i'] = format_text($PAGE->course->summary, FORMAT_HTML,
+                            ['context' => $coursecontext]);
+                }
+                if (stripos($text, '{coursesummary ') !== false) {
+                    // Course ID was specified.
+                    preg_match_all('/\{coursesummary ([0-9]+)\}/', $text, $matches);
+                    // Eliminate course IDs.
+                    $courseids = array_unique($matches[1]);
+                    $coursecontext = context_course::instance($PAGE->course->id);
+                    foreach ($courseids as $id) {
+                        $course = $DB->get_record('course', ['id' => $id]);
+                        if (!empty($course)) {
+                            $replace['/\{coursesummary ' . $course->id . '\}/isuU'] = format_text($course->summary, FORMAT_HTML,
+                                    ['context' => $coursecontext]);;
+                        }
+                    }
+                    unset($matches, $course, $courseids, $id);
+                }
             }
-            unset($progress);
+
+            // Tag: {coursegradepercent} - Calculate and display current overall course grade as a percentage.
+            if (version_compare(PHP_VERSION, '7.0.0') >= 0 && stripos($text, '{coursegradepercent}') !== false) {
+                require_once($CFG->libdir . '/gradelib.php');
+                require_once($CFG->dirroot . '/grade/querylib.php');
+                $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
+                if (!empty($grademax = floatval($gradeobj->item->grademax))) {
+                    // Avoid divide by 0 error if no grades have been defined.
+                    $grade = (int) ($gradeobj->grade / floatval($grademax) * 100) ?? 0;
+                } else {
+                    $grade = 0;
+                }
+                $replace['/\{coursegradepercent\}/i'] = $grade;
+            }
+
+            // Course completion progress percentage as a number.
+            if (stripos($text, '{courseprogresspercent}') !== false) {
+                $progress = $this->completionprogress();
+                if ($progress != -1) { // Is enabled.
+                    $replace['/\{courseprogresspercent\}/i'] = $progress;
+                } else {
+                    $replace['/\{courseprogresspercent\}/i'] = '';
+                }
+                unset($progress);
+            }
         }
 
         // Apply all of the filtercodes so far.
@@ -1110,8 +1115,11 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {country}.
         if (stripos($text, '{country}') !== false) {
-            $replace['/\{country\}/i'] = isloggedin() && !isguestuser() && !empty($USER->country)
-                    ? get_string($USER->country, 'countries') : '';
+            if (isloggedin() && !isguestuser() && !empty($USER->country)) {
+                $replace['/\{country\}/i'] = get_string($USER->country, 'countries');
+            } else {
+                $replace['/\{country\}/i'] =  '';
+            }
         }
         // Tag: {timezone}.
         if (stripos($text, '{timezone}') !== false) {
@@ -1388,8 +1396,9 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Any {course*} or %7Bcourse*%7D tags.
-        if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
+        // Check if any {course*} or %7Bcourse*%7D tags. Note: There is another course tags section further up.
+        $coursetagsexist = (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false);
+        if ($coursetagsexist) {
 
             // Custom Course Fields - First implemented in Moodle 3.7.
             if ($CFG->branch >= 37) {
@@ -1793,8 +1802,8 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{coursesactive\}/i'] = $cnt;
             }
 
-            // Tag: {coursegrade}. Overall grade in a courses.
-            if (stripos($text, '{coursegrade}') !== false) {
+            // Tag: {coursegrade}. Overall grade in a courses, with percentage symbol.
+            if (version_compare(PHP_VERSION, '7.0.0') >= 0 && stripos($text, '{coursegrade}') !== false) {
                 require_once($CFG->libdir . '/gradelib.php');
                 require_once($CFG->dirroot . '/grade/querylib.php');
                 $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
@@ -1802,7 +1811,7 @@ class filter_filtercodes extends moodle_text_filter {
                 if (!empty($grademax = floatval($gradeobj->item->grademax))) {
                     $grade = (int)($gradeobj->grade / floatval($grademax) * 100) ?? 0;
                 }
-                $replace['/\{coursegrade\}/i'] = $grade;
+                $replace['/\{coursegrade\}/i'] = get_string('percents', '', $grade);;
             }
 
             // Tag: {courseprogress} and {courseprogressbar}.
@@ -2676,6 +2685,7 @@ class filter_filtercodes extends moodle_text_filter {
             // If Custom User Profile Fields is not empty.
             if (stripos($text, '{ifprofile_field_') !== false) {
                 $isuser = (isloggedin() && !isguestuser());
+
                 // Cached the defined custom profile fields and data.
                 static $profilefields;
                 static $profiledata;
@@ -2699,7 +2709,6 @@ class filter_filtercodes extends moodle_text_filter {
                     } else {
                         $data = '';
                     }
-
                     // If the value is empty or zero, remove the all of the tags and their contents for that field shortname.
                     if (empty($data)) {
                         $replace['/\{' . $tag . '(.*)\}(.*)\{\/' . $tag . '\}/isuU'] = '';
