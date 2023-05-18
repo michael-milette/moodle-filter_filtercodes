@@ -1787,36 +1787,80 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{courseimage\}/i'] = '<img src="' . $imgurl . '" class="img-responsive">';
             }
 
-            // Tag: {coursestartdate} or {coursestartdate dateTimeFormat}. The course start date.
+            // Tag: {coursestartdate} or {coursestartdate dateTimeFormat id}. The course start date.
             if (stripos($text, '{coursestartdate') !== false) {
-                if (empty($PAGE->course->startdate)) {
-                    $PAGE->course->startdate = $DB->get_field_select(
-                            'course', 'startdate', 'id = :id', ['id' => $PAGE->course->id]
-                    );
-                }
-                if (!empty($PAGE->course->startdate)) {
-                    // Replace {coursestartdate} tag with formatted date.
-                    if (stripos($text, '{coursestartdate}') !== false) {
-                        $replace['/\{coursestartdate\}/i'] = userdate($PAGE->course->startdate,
-                                get_string('strftimedatefullshort'));
+
+                // Replace {coursestartdate} tag with formatted date.
+                if (stripos($text, '{coursestartdate}') !== false) {
+                    if (!empty($PAGE->course->startdate)) {
+                        $startdate = $PAGE->course->startdate;
+                    } else {
+                        $startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $PAGE->course->id]);
                     }
-                    // Replace {coursestartdate dateTimeFormat} tag and parameters with formatted date.
-                    if (stripos($text, '{coursestartdate ') !== false) {
-                        $newtext = preg_replace_callback('/\{coursestartdate\s+(.*)\}/isuU',
-                            function ($matches) use ($PAGE) {
-                                // Check if this is a built-in Moodle date/time format.
-                                if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
-                                    // It is! Get the strftime string.
-                                    $matches[1] = get_string($matches[1], 'langconfig');
+                    if (!empty($startdate)) {
+                        $replace['/\{coursestartdate\}/i'] = userdate($startdate, get_string('strftimedatefullshort'));
+                    } else {
+                        $replace['/\{coursestartdate(.*)\}/isuU'] = get_string('notyetstarted', 'completion');
+                    }
+                }
+
+                // Replace {coursestartdate dateTimeFormat} tag and parameters with formatted date.
+                if (stripos($text, '{coursestartdate ') !== false) {
+                    $newtext = preg_replace_callback('/\{coursestartdate\s(.*)(\s\d+)?\}/isuU',
+                        function ($matches) use ($PAGE, $DB) {
+
+                            // Optional date/time format.
+                            if (is_numeric($matches[1])) {
+                                // Only the course ID was specified.
+                                $matches[2] = trim($matches[1]); // Course ID.
+                                $matches[1] = ''; // Date/time format.
+                            } else {
+                                $matches[2] = empty($matches[2]) ? $PAGE->course->id : trim($matches[2]); // Course ID.
+                                $matches[1] = trim($matches[1]);
+                            }
+
+                            // Optional course ID.
+                            if (empty($matches[2])) {
+                                if (!empty($PAGE->course->startdate)) {
+                                    $startdate = $PAGE->course->startdate;
+                                } else {
+                                    $startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $PAGE->course->id]);
                                 }
-                                return userdate($PAGE->course->startdate, $matches[1]);
-                            },
-                            $text
-                        );
-                        if ($newtext !== false) {
-                            $text = $newtext;
-                            $changed = true;
-                        }
+                            } else {
+                                $course = $DB->get_record('course', ['id' => $matches[2]]);
+                                if (!empty($course)) {
+                                    $startdate = $course->startdate;
+                                    if (!empty($course->startdate)) {
+                                        $startdate = $course->startdate;
+                                    } else {
+                                        $startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $course->id]);
+                                    }
+                                } else {
+                                    // Should only happen if course does not exist.
+                                    $startdate = 1; // December 31, 1969.
+                                }
+                            }
+
+                            // Check if this is a built-in Moodle date/time format.
+                            if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                                // If it does, get the strftime string.
+                                $matches[1] = get_string($matches[1], 'langconfig');
+                            }
+
+                            // Format the date.
+                            if (!empty($startdate)) {
+                                $startdate = userdate($startdate, $matches[1]);
+                            } else {
+                                $startdate = get_string('notyetstarted', 'completion');
+                            }
+
+                            return $startdate;
+                        },
+                        $text
+                    );
+                    if ($newtext !== false) {
+                        $text = $newtext;
+                        $changed = true;
                     }
                 } else {
                     $replace['/\{coursestartdate(.*)\}/isuU'] = get_string('notyetstarted', 'completion');

@@ -160,7 +160,7 @@ $default = 'vertical'; // Default is vertical cards.
 $name = 'filter_filtercodes/coursecardsformat';
 $title = get_string('coursecardsformat', 'filter_filtercodes');
 $choices = ['vertical' => get_string('vertical', 'editor'),  // Image above the description.
-        'horizontal' => get_string('horizontal', 'editor') // Image to the left of the description.
+        'horizontal' => get_string('horizontal', 'editor'), // Image to the left of the description.
         'table' => get_string('list') // Table with course name, category and description.
 ];
 $description = get_string('coursecardsformat_desc', 'filter_filtercodes');
