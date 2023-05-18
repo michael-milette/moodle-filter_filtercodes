@@ -478,10 +478,12 @@ class filter_filtercodes extends moodle_text_filter {
      * @param array $rcourseids Array of course ids.
      * @return string HTML of course cars.
      */
-    private function rendercoursecards($rcourseids) {
+    private function rendercoursecards($rcourseids, $format = 'vertical') {
         global $OUTPUT, $PAGE;
+
         $content = '';
         $isadmin = (is_siteadmin() && !is_role_switched($PAGE->course->id));
+
         foreach ($rcourseids as $courseid) {
             $course = get_course($courseid);
             // Skip this course if end-date is past or course is not visible, unless you are an admin.
@@ -510,18 +512,124 @@ class filter_filtercodes extends moodle_text_filter {
                 $imgurl = $OUTPUT->get_generated_image_for_id($courseid);
             }
             $courseurl = new moodle_url('/course/view.php', ['id' => $courseid]);
-            $content .= '
-                <div class="card shadow mr-4 mb-4 ml-1" style="min-width:300px;max-width:300px;">
-                    <a href="' . $courseurl . '" class="text-normal h-100">
-                    <div class="card-img-top" style="background-image:url(' . $imgurl
-                            . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;'
-                            . 'background-repeat:no-repeat;background-position:center;"></div>
-                    <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0">' . $course->get_formatted_name() . '</div>
-                    </a>
-                </div>
-            ';
+
+            switch ($format) {
+                case 'vertical':
+                    $content .= '
+                    <div class="card shadow mr-4 mb-4 ml-1  fc-coursecard-card" style="min-width:300px;max-width:300px;">
+                        <a href="' . $courseurl . '" class="text-normal h-100">
+                        <div class="card-img-top" style="background-image:url(' . $imgurl
+                                . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;'
+                                . 'background-repeat:no-repeat;background-position:center;"></div>
+                        <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0"><span class="sr-only">' . get_string('course'). ': </span>'
+                                 . $course->get_formatted_name() . '</div>
+                        </a>
+                    </div>
+                    ';
+                    break;
+                case 'horizontal':
+                    global $DB;
+                    $category = $DB->get_record('course_categories', ['id' => $course->category]);
+                    $category = $category->name;
+
+                    $summary = $course->summary;
+                    $summary = substr($summary,-4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
+
+                    $content .= '
+                    <div class="card mb-3 fc-coursecard-list">
+                        <div class="row no-gutter">
+                            <div class="col-md-4">
+                                <a href="' . $courseurl . '" aria-hidden="true" tabindex="-1">
+                                    <img src="' . $imgurl . '" class="card-img" alt="">
+                                </a>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <p class="card-text text-category" style="float:right">
+                                        <small class="text-muted"><span class="sr-only">'
+                                            . get_string('category'). ': </span>' . $category .
+                                        '</small>
+                                    </p>
+                                    <h3 class="card-title">
+                                        <a href="' . $courseurl . '" class="text-normal h-100">
+                                            <span class="sr-only">' . get_string('course'). ': </span>'
+                                            . $course->get_formatted_name() .
+                                        '</a>
+                                    </h3>
+                                    <div class="card-text text-summary"><span class="sr-only">'
+                                            . get_string('summary'). ': </span>' . $summary .
+                                    '</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ';
+                    break;
+                case 'table':
+                    global $DB;
+                    $category = $DB->get_record('course_categories', ['id' => $course->category]);
+                    $category = $category->name;
+
+                    $summary = $course->summary;
+                    $summary = substr($summary,-4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
+
+                    $content .= '
+                    <tr class="fc-coursecard-table">
+                    <td class="text-coursename"><a href="' . $courseurl . '">' . $course->get_formatted_name() . '</a></td>
+                    <td class="text-coursecategory">' . $category . '</td>
+                    <td class="text-coursename" style="white-space:normal;">' . $summary . '</td>
+                    </tr>
+                    ';
+                    break;
+            }
         }
         return $content;
+    }
+
+    /**
+     * Get course card including format, header and footer.
+     *
+     * @return object $cards->format, $cards->header, $cards->footer
+     */
+    private function getcoursecardinfo($format = null) {
+        static $cards;
+        if (is_object($cards)) {
+            return $cards;
+        }
+        $cards = new stdClass();
+        if (empty($format)) {
+            $cards->format = get_config('filter_filtercodes', 'coursecardsformat');
+        } else {
+            $cards->format = $format;
+        }
+        switch ($cards->format) {
+            case 'table':
+                $cards->header = '
+                    <table class="table table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th scope="col">' . get_string('course') . '</th>
+                                <th scope="col">' . get_string('category') . '</th>
+                                <th scope="col">' . get_string('description') . '</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                ';
+                $cards->footer = '
+                        </tbody>
+                    </table>';
+                break;
+            case 'horizontal':
+                $cards->header = '<div class="d-flex"><div>';
+                $cards->footer = '</div></div>';
+                break;
+                return $cards;
+            default:
+                $cards->format = 'vertical';
+                $cards->header = '<div class="card-deck mr-0">';
+                $cards->footer = '</div>';
+        }
+        return $cards;
     }
 
     /**
@@ -1870,8 +1978,8 @@ class filter_filtercodes extends moodle_text_filter {
                 // Eliminate duplicate categories.
                 $categories = array_unique($matches[1]);
 
-                $header = '<div class="card-deck mr-0">';
-                $footer = '</div>';
+                $card = $this->getcoursecardinfo();
+
                 foreach ($categories as $catid) {
                     try {
                         $coursecat = core_course_category::get($catid);
@@ -1885,14 +1993,14 @@ class filter_filtercodes extends moodle_text_filter {
 
                     $rcourseids = array_keys($courses);
                     if (count($rcourseids) > 0) {
-                        $content = $this->rendercoursecards($rcourseids);
+                        $content = $this->rendercoursecards($rcourseids, $card->format);
                     } else {
                         $content = '';
                     }
                     if ($catid == 0 && $nocat) {
-                        $replace['/\{coursecards\}/i'] = !empty($content) ? $header . $content . $footer : '';
+                        $replace['/\{coursecards\}/i'] = !empty($content) ? $card->header . $content . $card->footer : '';
                     }
-                    $replace['/\{coursecards ' . $catid . '\}/isuU'] = !empty($content) ? $header . $content . $footer : '';
+                    $replace['/\{coursecards ' . $catid . '\}/isuU'] = !empty($content) ? $card->header . $content . $card->footer : '';
                 }
             }
 
@@ -1909,13 +2017,15 @@ class filter_filtercodes extends moodle_text_filter {
                 $courses = $DB->get_records_sql($sql, array(), 0, get_config('filter_filtercodes', 'coursecardsbyenrol'));
                 $rcourseids = array_keys($courses);
                 if (count($rcourseids) > 0) {
-                    $header = '<div class="card-deck mr-0">';
-                    $footer = '</div>';
-                    $content = $this->rendercoursecards($rcourseids);
+                    $card = $this->getcoursecardinfo();
+                    $content = $this->rendercoursecards($rcourseids, $card->format);
                 } else {
+                    $card = new stdClass();
+                    $card->header = '';
+                    $card->footer = '';
                     $content = '';
                 }
-                $replace['/\{coursecardsbyenrol\}/i'] = !empty($content) ? $header . $content . $footer : '';
+                $replace['/\{coursecardsbyenrol\}/i'] = !empty($content) ? $card->header . $content . $card->footer : '';
             }
 
             // Tag: {courserequest}. Link to Request a Course form.
@@ -2018,7 +2128,8 @@ class filter_filtercodes extends moodle_text_filter {
                     if (empty($courseids)) {
                         $list = '';
                     } else { // Otherwise, generate cards.
-                        $list = '<div class="card-deck mr-0 fc-mycoursescards">' . $this->rendercoursecards($courseids) . '</div>';
+                        $card = $this->getcoursecardinfo();
+                        $list = $card->header . $this->rendercoursecards($courseids, $card->format) . $card->footer;
                     }
                     $replace['/\{mycoursescards\}/i'] = $list;
                     unset($list);

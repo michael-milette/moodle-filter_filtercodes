@@ -1,12 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.7] 2023-05-17 (dev only)
+## [2.3.7] 2023-05-18 (dev only)
 ### Added
 - New {chart progresspie} tag.
 - Instruction to patch Moodle 4.2 to enable FilterCodes in custom menu.
-- Will now prevent some tags from running if they do not meet Moodle and PHP version requirements.
+- (ALPHA) Horizontal layout setting for {coursecards}, {coursecardsbyenrol} and {mycoursescards} (affects all 3).
+- (ALPHA) Table list layout setting for {coursecards}, {coursecardsbyenrol} and {mycoursescards} (affects all 3).
 ### Updated
+- Some tags are now disabled if they do not meet Moodle and PHP version requirements.
 - Fix-253: Cohort names can now contain a dash in {ifincohort} tag.
 - {timezone} now works correctly if user's timezone is set to system timezone.
 - Documentation (README.md)

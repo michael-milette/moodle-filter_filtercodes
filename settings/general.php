@@ -155,6 +155,18 @@ $choices = ['' => get_string('none'),
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);
 
+// Course card format for {coursecards} tag.
+$default = 'vertical'; // Default is vertical cards.
+$name = 'filter_filtercodes/coursecardsformat';
+$title = get_string('coursecardsformat', 'filter_filtercodes');
+$choices = ['vertical' => get_string('vertical', 'editor'),  // Image above the description.
+        'horizontal' => get_string('horizontal', 'editor') // Image to the left of the description.
+        'table' => get_string('list') // Table with course name, category and description.
+];
+$description = get_string('coursecardsformat_desc', 'filter_filtercodes');
+$setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+$settings->add($setting);
+
 // Number of cards to show for {coursecardsbyenrol} tag.
 $default = 8; // Default is to not show colour/pattern.
 $name = 'filter_filtercodes/coursecardsbyenrol';
