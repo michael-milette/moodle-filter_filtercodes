@@ -479,15 +479,20 @@ class filter_filtercodes extends moodle_text_filter {
      * @return string HTML of course cars.
      */
     private function rendercoursecards($rcourseids, $format = 'vertical') {
-        global $OUTPUT, $PAGE;
+        global $OUTPUT, $PAGE, $SITE;
 
         $content = '';
         $isadmin = (is_siteadmin() && !is_role_switched($PAGE->course->id));
 
         foreach ($rcourseids as $courseid) {
+            if ($courseid == $SITE->id) { // Skip site.
+                continue;
+            }
             $course = get_course($courseid);
-            // Skip this course if end-date is past or course is not visible, unless you are an admin.
-            if (!$isadmin && !empty($course->enddate) && $course->enddate < time() && empty($course->visible)) {
+            $context = context_course::instance($course->id);
+            // Skip if the course is not visible to user or course is site.
+            $visible = ($course->visible && !empty($course->enddate) and time() < $course->enddate);
+            if (!$visible && !($isadmin || has_capability('moodle/course:viewhiddencourses', $context))) {
                 continue;
             }
 
@@ -931,7 +936,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // This tag: {teamcards}.
         if (stripos($text, '{teamcards}') !== false) {
-            global $DB, $OUTPUT;
+            global $OUTPUT;
 
             $sql = 'SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
                     u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1
@@ -1957,7 +1962,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Tag: {coursecards} and {coursecards <categoryid>}.
             // Display courses in a category branch as cards.
             if (stripos($text, '{coursecards') !== false) {
-                global $CFG, $OUTPUT;
+                global $OUTPUT;
 
                 $chelper = new coursecat_helper();
                 $chelper->set_show_courses(20)->set_courses_display_options([
@@ -2001,6 +2006,33 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{coursecards\}/i'] = !empty($content) ? $card->header . $content . $card->footer : '';
                     }
                     $replace['/\{coursecards ' . $catid . '\}/isuU'] = !empty($content) ? $card->header . $content . $card->footer : '';
+                }
+            }
+
+            // Tag: {coursecard courseid}.
+            // Display a course card for the specified course id.
+            if (stripos($text, '{coursecard ') !== false) {
+                $re = '/\{coursecard\s([\s\d]+)\}/isuU';
+                $found = preg_match_all($re, $text, $matches);
+                $matches = array_combine(array_values($matches[0]), array_values($matches[1]));
+                $card = $this->getcoursecardinfo();
+                foreach ($matches as $key => $match) {
+                    $courseids = explode(' ', $match);
+
+                    // Only keep valid course ids.
+                    $courseids = array_map('trim', $courseids); // Remove extra spaces.
+                    $courseids = array_filter($courseids); // Remove empty elements.
+                    $courseids = array_unique($courseids); // Remove duplicates.
+                    foreach ($courseids as $key => $courseid) {
+                        $course = $DB->get_record('course', ['id' => $courseid]);
+                        if ($course === false) {
+                            // Course not found. Remove it from the list.
+                            unset($courseids[$key]);
+                        }
+                    }
+                    // Create cards for existing courses that are visible to user.
+                    $content = $this->rendercoursecards($courseids, $card->format);
+                    $replace['/\{coursecard ' . $match . '\}/isuU'] = !empty($content) ? $card->header . $content . $card->footer : '';
                 }
             }
 
@@ -2506,7 +2538,6 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Tag: {sesskey}.
         if (get_config('filter_filtercodes', 'enable_sesskey')) {
-            global $PAGE;
             if (@$PAGE->cm->modname != 'forum' && $PAGE->pagetype != 'admin-cron') {
                 if (stripos($text, '{sesskey}') !== false) {
                     // Tag: {sesskey}.
@@ -2720,7 +2751,6 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifinactivity}.
             if (stripos($text, '{/ifinactivity}') !== false) {
-                global $PAGE;
                 if (substr($PAGE->pagetype, 0, 4) == 'mod-') {
                     $replace['/\{ifinactivity\}/isu'] = '';
                     $replace['/\{\/ifinactivity\}/isu'] = '';
@@ -2731,7 +2761,6 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifnotinactivity}.
             if (stripos($text, '{/ifnotinactivity}') !== false) {
-                global $PAGE;
                 if (substr($PAGE->pagetype, 0, 4) != 'mod-') {
                     $replace['/\{ifnotinactivity\}/isu'] = '';
                     $replace['/\{\/ifnotinactivity\}/isu'] = '';
@@ -2742,7 +2771,6 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifactivitycompleted id}{/ifactivitycompleted}.
             if (stripos($text, '{/ifactivitycompleted}') !== false) {
-                global $PAGE;
                 $course = $PAGE->course;
                 $completion = new completion_info($course);
                 if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
@@ -2768,7 +2796,6 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifnotactivitycompleted id}{/ifnotactivitycompleted}.
             if (stripos($text, '{/ifnotactivitycompleted}') !== false) {
-                global $PAGE;
                 $course = $PAGE->course;
                 $completion = new completion_info($course);
                 if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
@@ -2889,8 +2916,8 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifnotvisible}.
             if (stripos($text, '{ifnotvisible}') !== false) {
-                // If the course visibility is set to hide...
                 global $COURSE;
+                // If the course visibility is set to hide...
                 if ($COURSE->id != 1 && empty($COURSE->visible)) { // Visibility set to Hide.
                     // Just remove the tags.
                     $replace['/\{ifnotvisible\}/i'] = '';
@@ -3139,7 +3166,6 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {ifadmin}.
-            global $PAGE;
             if (stripos($text, '{ifadmin}') !== false) {
                 if (is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If an administrator.
                     // Just remove the tags.

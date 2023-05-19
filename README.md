@@ -139,6 +139,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 
 * {teamcards} : Displays photos, names (optionally linked) and optional descriptions of the users who are teachers. Only Verbose format is suitable for use in a side block.
 * (ALPHA) {coursecards} or {coursecards categoryID} : Display available courses as cards. You can optionally specify the ID number of a category. Example: {coursecards 1} will only display courses in the default Miscellaneous category. Note: The categoryID is not the "Category ID Number" field that you can optionally specify when creating a category. The maximum number of courses displayed is controlled by the front page setting called **frontpagecourselimit**. You can change the layout from vertical cards to horizontal cards or a table list using the Course Cards Layout setting in the FilterCodes settings.
+* (ALPHA) {coursecard ids}  : Display specific course cards by specifying a list of one or more course ids separated by a space. Example: {coursecard 20 43 104} will display 3 course cards assuming they exist. Courses that have their visibility set to Hidden or that have an expired end-date will only be visible to those who have the capability to see hidden courses (e.g. Site Administrator or Manager role). The maximum number of courses displayed is controlled by the front page setting called **frontpagecourselimit**. You can change the layout from vertical cards to horizontal cards or a table list using the Course Cards Layout setting in the FilterCodes settings.
 * (ALPHA) {coursecardsbyenrol} : Display course cards for the most popular courses based on enrolment. The maximum number of cards is configurable in the plugin settings. You can change the layout from vertical cards to horizontal cards or a table list using the Course Cards Layout setting in the FilterCodes settings.
 * (ALPHA) {courseprogress} : Displays course progress status in words. Only works within a course.
 * {courseprogresspercent} : Displays course progress percentage as a number without a percentage symbol. Only works within a course.
@@ -1035,6 +1036,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course progress percent number [{courseprogresspercent}]: {courseprogresspercent}
 * (ALPHA) Course progress bar [{courseprogressbar}]: {courseprogressbar}
 * (ALPHA) Course cards [{coursecards}]: {coursecards}
+* (ALPHA) Individual course cards [{coursecard 2}]: {coursecard 2}
 * (ALPHA) Course cards by enrolment [{coursecardsbyenrol}]: {coursecardsbyenrol}
 * Team cards Our faculty team [{teamcards}]: Our faculty team<br>{teamcards}
 * (ALPHA) Category cards [{categorycards}]: {categorycards}
