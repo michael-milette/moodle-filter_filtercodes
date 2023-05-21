@@ -1289,7 +1289,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $newtext = preg_replace_callback('/\{firstaccessdate\s+(.+)\}/isuU',
                         function ($matches) use ($USER) {
                             // Check if this is a built-in Moodle date/time format.
-                            if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                            if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
                                 // It is! Get the strftime string.
                                 $matches[1] = get_string($matches[1], 'langconfig');
                             }
@@ -1319,7 +1319,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $newtext = preg_replace_callback('/\{lastlogin\s+(.+)\}/isuU',
                         function ($matches) use ($USER) {
                             // Check if this is a built-in Moodle date/time format.
-                            if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                            if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
                                 // It is! Get the strftime string.
                                 $matches[1] = get_string($matches[1], 'langconfig');
                             }
@@ -1820,13 +1820,13 @@ class filter_filtercodes extends moodle_text_filter {
                             }
 
                             // Optional course ID.
-                            if (empty($matches[2])) {
+                            if (empty($matches[2])) { // No course ID, use current course.
                                 if (!empty($PAGE->course->startdate)) {
                                     $startdate = $PAGE->course->startdate;
                                 } else {
                                     $startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $PAGE->course->id]);
                                 }
-                            } else {
+                            } else { // Course ID was specifed.
                                 $course = $DB->get_record('course', ['id' => $matches[2]]);
                                 if (!empty($course)) {
                                     $startdate = $course->startdate;
@@ -1842,9 +1842,11 @@ class filter_filtercodes extends moodle_text_filter {
                             }
 
                             // Check if this is a built-in Moodle date/time format.
-                            if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                            if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
                                 // If it does, get the strftime string.
                                 $matches[1] = get_string($matches[1], 'langconfig');
+                            } else {
+                                $matches[1] = get_string('strftimedatefullshort');
                             }
 
                             // Format the date.
@@ -1882,7 +1884,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $newtext = preg_replace_callback('/\{courseenddate\s+(.*)\}/isuU',
                             function ($matches) use ($PAGE) {
                                 // Check if this is a built-in Moodle date/time format.
-                                if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                                if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
                                     // It is! Get the strftime string.
                                     $matches[1] = get_string($matches[1], 'langconfig');
                                 }
@@ -1922,7 +1924,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $newtext = preg_replace_callback('/\{coursecompletiondate\s+(.+)\}/isuU',
                             function($matches) use ($ccompletion) {
                                 // Check if this is a built-in Moodle date/time format.
-                                if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                                if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
                                     // It is! Get the strftime string.
                                     $matches[1] = get_string($matches[1], 'langconfig');
                                 }
@@ -1935,6 +1937,43 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 } else {
                     $replace['/\{coursecompletiondate(.*)\}/isuU'] = $incomplete;
+                }
+            }
+
+            // Tag: {courseenrolmentdate} or {courseenrolmentdate dateTimeFormat}. The course enrolment date.
+            if (stripos($text, '{courseenrolmentdate') !== false) {
+                $sql = '
+                    SELECT ue.timecreated
+                    FROM {user} u
+                    JOIN {user_enrolments} ue ON ue.userid = u.id
+                    JOIN {enrol} e ON ue.enrolid = e.id
+                    WHERE ue.userid = :userid AND e.courseid = :courseid
+                ';
+                $thisuser = $DB->get_records_sql($sql, ['userid' => $USER->id, 'courseid' => $PAGE->course->id]);
+                if (count($thisuser)) {
+                    $datecreated = array_key_first($thisuser);
+                    // Replace {courseenrolmentdate} tag with formatted date.
+                    if (stripos($text, '{courseenrolmentdate}') !== false) {
+                        $replace['/\{courseenrolmentdate\}/i'] = userdate($datecreated, get_string('strftimedatefullshort'));
+                    }
+                    // Replace {courseenrolmentdate dateTimeFormat} tag and parameters with formatted date.
+                    if (stripos($text, '{courseenrolmentdate ') !== false) {
+                        $newtext = preg_replace_callback('/\{courseenrolmentdate\s+(.+)\}/isuU',
+                            function($matches) use ($datecreated) {
+                                // Check if this is a built-in Moodle date/time format.
+                                if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                                    // It is! Get the strftime string.
+                                    $matches[1] = get_string($matches[1], 'langconfig');
+                                }
+                                return userdate($datecreated, $matches[1]);
+                            }, $text);
+                        if ($newtext !== false) {
+                            $text = $newtext;
+                            $changed = true;
+                        }
+                    }
+                } else {
+                    $replace['/\{courseenrolmentdate(.*)\}/isuU'] = '';
                 }
             }
 
@@ -2240,7 +2279,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $newtext = preg_replace_callback('/\{now\s+(.+)\}/isuU',
                     function ($matches) use ($now) {
                         // Check if this is a built-in Moodle date/time format.
-                        if (get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                        if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
                             // It is! Get the strftime string.
                             $matches[1] = get_string($matches[1], 'langconfig');
                         }

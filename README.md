@@ -163,8 +163,9 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {coursename ID} : Display the full name of the course specified by the course ID.
 * {courseshortname} : Display the short name of the current course or the site's short name if not in a course.
 * {coursestartdate dateTimeFormat ID} : Course start date. Both the dateTimeFormat and the course ID are optional. For information on the dateTimeFormat format, see **Supported dateTimeFormats Formats** in the [FAQ](#faq) section of this documentation.
-* {courseenddate dateTimeFormat} : Course end date. Will display "Open event" if there is no end date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
-* {coursecompletiondate dateTimeFormat} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
+* {courseenddate dateTimeFormat} : Course end date. Will display "Open event" if there is no end date. For information on the optional dateTimeFormat format, see **Supported dateTimeFormats Formats** in the [FAQ](#faq) section of this documentation.
+* {courseenrolmentdate dateTimeFormat} : Date and time at which the user was enrolled in the current course. For information on the optional dateTimeFormat format, see **Supported dateTimeFormats Formats** in the [FAQ](#faq) section of this documentation.
+* {coursecompletiondate dateTimeFormat} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled. For information on the optional dateTimeFormat format, see **Supported dateTimeFormats Formats** in the [FAQ](#faq) section of this documentation.
 * {coursegradepercent}: Displays the current accumulated course grade of the student without percentage symbol. (Requires PHP 7.0 or later)
 * {coursegrade} : Displays the student's current overall course grade with the percentage symbol. (Requires PHP 7.0 or later)
 * (ALPHA) {courseprogress} : Displays course progress status in words.
@@ -1029,6 +1030,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course or Site short name [{courseshortname}]: {courseshortname}
 * Course start date [{coursestartdate strftimedatetime}]: {coursestartdate strftimedatetime}
 * Course end date [{courseenddate strftimedatetime}]: {courseenddate strftimedatetime}
+* Course enrolment date [{enrolmentdate strftimedatetime}]: {enrolmentdate strftimedatetime}
 * Completion date [{coursecompletiondate strftimedatetime}]: {coursecompletiondate strftimedatetime}
 * You current grade in this course is [{coursegradepercent}]: {coursegradepercent}
 * Your grade in this course is [{coursegrade}]: Your grade in this course is {coursegrade}
