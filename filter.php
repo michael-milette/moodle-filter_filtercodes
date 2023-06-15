@@ -1712,7 +1712,16 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: %7Bcoursemoduleid%7D (escaped).
             if (stripos($text, '%7Bcoursemoduleid%7D') !== false) {
-                $replace['/\%7Bcoursemoduleid%7D/i'] = @$PAGE->cm->id;
+                if (isset($PAGE->cm->id)) {
+                    $replace['/\%7Bcoursemoduleid%7D/i'] = @$PAGE->cm->id;
+                }
+            }
+
+            // Tag: {coursemoduleid} (not escaped).
+            if (stripos($text, '{coursemoduleid}') !== false) {
+                if (isset($PAGE->cm->id)) {
+                    $replace['/\{coursemoduleid\}/isu'] = $PAGE->cm->id;
+                }
             }
 
             // Tag: {courseidnumber}.
@@ -2538,7 +2547,7 @@ class filter_filtercodes extends moodle_text_filter {
             unset($categories, $catid, $thiscategorycard, $catids, $categoryids, $matches, $html, $categoryshowpic);
         }
 
-        // Tag: {mygroups}.
+        // Tag {mygroups}.
         if (stripos($text, '{mygroups}') !== false) {
             static $mygroups;
 

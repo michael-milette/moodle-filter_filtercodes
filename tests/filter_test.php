@@ -263,6 +263,10 @@ class filter_test extends \advanced_testcase {
                 'after'  => sesskey(),
             ],
             [
+                'before' => '{coursemoduleid}',
+                'after'  => (isset($PAGE->cm->id) ? $PAGE->cm->id : ''),
+            ],
+            [
                 'before' => '{sectionid}',
                 'after'  => @$PAGE->cm->sectionnum,
             ],

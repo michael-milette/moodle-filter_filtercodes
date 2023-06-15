@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.7] 2023-05-20 (rc only)
+## [2.3.7] 2023-06-15 (rc only)
 ### Added
+- New {coursemoduleid} tag.
 - New {chart progresspie} tag.
 - Fix-187: New {coursecard} tag (not the same as {coursecards}).
 - New {courseenrolmentdate} tag.
