@@ -1353,6 +1353,10 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{supportpage}') !== false) {
                 $replace['/\{supportpage\}/i'] = $CFG->supportpage;
             }
+            // Tag: {supportservicespage}.
+            if ($CFG->branch >= 402 && stripos($text, '{supportservicespage}') !== false) {
+                $replace['/\{supportservicespage\}/i'] = $CFG->servicespage;
+            }
         }
 
         if (get_config('filter_filtercodes', 'enable_scrape')) { // Must be enabled in FilterCodes settings.

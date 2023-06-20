@@ -134,6 +134,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {supportname} : Support name as seen on Site Administration > Server > Support contact.
 * {supportemail} : Support email address as seen on Site Administration > Server > Support contact.
 * {supportpage} : Support page URL as seen on Site Administration > Server > Support contact.
+* {supportservicespage} : Support services page URL as seen on Site Administration > Server > Support contact in Moodle LMS 4.2 and later.
 
 ### UI Elements
 
@@ -1092,6 +1093,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Site support name [{supportname}]: {supportname}
 * Site support email address [{supportemail}]: {supportemail}
 * Site support web page [{supportpage}]: {supportpage}
+* Support services link [{supportservicespage}]: {supportservicespage}
 * WWW for Contact Form [{wwwcontactform}]: {wwwcontactform}
 * Page path [{pagepath}]: {pagepath}
 * This URL [{thisurl}]: {thisurl}
