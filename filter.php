@@ -537,7 +537,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $category = $DB->get_record('course_categories', ['id' => $course->category]);
                     $category = $category->name;
 
-                    $summary = $course->summary;
+                    $summary = $course->summary == null ? '' : $course->summary;
                     $summary = substr($summary,-4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
 
                     $content .= '
@@ -575,7 +575,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $category = $DB->get_record('course_categories', ['id' => $course->category]);
                     $category = $category->name;
 
-                    $summary = $course->summary;
+                    $course->summary == null ? '' : $course->summary;
                     $summary = substr($summary,-4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
 
                     $content .= '
@@ -1044,6 +1044,7 @@ class filter_filtercodes extends moodle_text_filter {
                 if (stripos($text, '{coursesummary}') !== false) {
                     // No course ID specified.
                     $coursecontext = context_course::instance($PAGE->course->id);
+                    $PAGE->course->summary == null ? '' : $PAGE->course->summary;
                     $replace['/\{coursesummary\}/i'] = format_text($PAGE->course->summary, FORMAT_HTML,
                             ['context' => $coursecontext]);
                 }
@@ -1056,6 +1057,7 @@ class filter_filtercodes extends moodle_text_filter {
                     foreach ($courseids as $id) {
                         $course = $DB->get_record('course', ['id' => $id]);
                         if (!empty($course)) {
+                            $course->summary == null ? '' : $course->summary;
                             $replace['/\{coursesummary ' . $course->id . '\}/isuU'] = format_text($course->summary, FORMAT_HTML,
                                     ['context' => $coursecontext]);;
                         }
@@ -1366,6 +1368,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $newtext = preg_replace_callback('/\{scrape\s+(.*)\}/isuU',
                     function ($matches) {
                         // Parse the scrape tag's atributes.
+                        $matches[0] = $matches[0] == null ? '' : $matches[0];
                         $attribs = substr($matches[0], 1, -1);
                         $scrape = $this->attribstoarray($attribs);
                         $url = isset($scrape['url']) ? $scrape['url'] : '';
@@ -2729,6 +2732,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Replace {fa...} tag and parameters with FontAwesome HTML.
             $newtext = preg_replace_callback('/\{fa(s|r|l|b){0,1}\sfa-(.*)\}/isuU',
                 function ($matches) {
+                    $matches[0] = $matches[0] == null ? '' : $matches[0];
                     return '<span class="' . substr($matches[0], 1, -1) . '" aria-hidden="true"></span>';
                 }, $text);
             if ($newtext !== false) {
@@ -2742,6 +2746,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Replace {glyphicon glyphicon-...} tag and parameters with Glyphicons HTML.
             $newtext = preg_replace_callback('/\{glyphicon\sglyphicon-(.*)\}/isuU',
                 function ($matches) {
+                    $matches[0] = $matches[0] == null ? '' : $matches[0];
                     return '<span class="' . substr($matches[0], 1, -1) . '" aria-hidden="true"></span>';
                 }, $text);
             if ($newtext !== false) {
@@ -3594,7 +3599,7 @@ class filter_filtercodes extends moodle_text_filter {
             foreach ($matches as $match) {
                 $type = $match[1]; // Chart type: radial, pie, progressbar or progresspie.
                 $value = $match[2]; // Value between 0 and 100.
-                $match[3] = $match[3] ?? '';
+                $match[3] = $match[3] == null ? '' : $match[3];
                 $title = trim($match[3]); // Optional text label.
                 $percent = get_string('percents', '', $value);
                 switch($type) { // Type of chart.

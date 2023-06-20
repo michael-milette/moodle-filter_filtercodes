@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.3.7] 2023-06-20 (rc only)
 ### Added
+- New {supportservicespage} tag (for Moodle 4.2 and later).
 - New {coursemoduleid} tag.
 - New {chart progresspie} tag.
 - Fix-187: New {coursecard} tag (not the same as {coursecards}).
@@ -11,8 +12,8 @@ All notable changes to this project will be documented in this file.
 - (ALPHA) New table list layout setting for {coursecards}, {coursecardsbyenrol} and {mycoursescards} (affects all 3).
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
 - Alternative (alt) text to {qrcode} tag.
-- New {supportservicespage} tag (for Moodle 4.2 and later).
 ### Updated
+- Addressed some PHP 8.1 compatibility warnings.
 - Some tags are now disabled if they do not meet Moodle and PHP version requirements.
 - Fix-253: Cohort names can now contain a dash in {ifincohort} tag.
 - Instruction to patch Moodle 4.2 to enable FilterCodes in custom menu.
