@@ -3681,8 +3681,9 @@ class filter_filtercodes extends moodle_text_filter {
             // Remove {qrcode}{/qrcode} tags and turn content between the tags into a QR code.
             $newtext = preg_replace_callback('/\{qrcode\}(.*)\{\/qrcode\}/isuU',
                 function($matches) {
-                    $src = $this->qrcode(html_to_text($matches[1]));
-                    $src = '<img src="' . $src . '" style="width:100%;max-width:480px;height:auto;" class="fc-qrcode">';
+                    $text = html_to_text($matches[1]);
+                    $src = $this->qrcode($text);
+                    $src = '<img src="' . $src . '" style="width:100%;max-width:480px;height:auto;" class="fc-qrcode" alt="' . $text . '">';
                     return $src;
                 }, $text);
             if ($newtext !== false) {

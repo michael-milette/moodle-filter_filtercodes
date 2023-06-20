@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.7] 2023-06-15 (rc only)
+## [2.3.7] 2023-06-20 (rc only)
 ### Added
 - New {coursemoduleid} tag.
 - New {chart progresspie} tag.
@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - (ALPHA) New horizontal layout setting for {coursecards}, {coursecardsbyenrol} and {mycoursescards} (affects all 3).
 - (ALPHA) New table list layout setting for {coursecards}, {coursecardsbyenrol} and {mycoursescards} (affects all 3).
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
+- Alternative (alt) text to {qrcode} tag.
 ### Updated
 - Some tags are now disabled if they do not meet Moodle and PHP version requirements.
 - Fix-253: Cohort names can now contain a dash in {ifincohort} tag.
