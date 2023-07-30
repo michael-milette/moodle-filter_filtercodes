@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.3.8] 2023-07-30 (rc only)
 ### Added
+- Fix-258: New {ifvisible} tag.
 - New {supportservicespage} tag (for Moodle 4.2 and later).
 - New {coursemoduleid} tag.
 - New {chart progresspie} tag.

@@ -282,6 +282,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 * {ifnotinsection}{/ifnotinsection} : Will only display the enclosed content if the user is not in a section of a course.
 * {ifingroup id|idnumber}{/ifingroup} : Will only display the content if the user is part of the specified course group ID or group ID number.
 * {ifnotingroup id|idnumber}{/ifnotingroup} : Will only display the content if the user is NOT part of the specified course group ID or group ID number.
+* {ifvisible}{/ifvisible} : Will only display the content if the course visibility is set to Show.
 * {ifnotvisible}{/ifnotvisible} : Will only display the content if the course visibility is set to Hide.
 * {ifinactivity}{/ifinactivity} : Will only display the content only in course activities.
 * {ifnotinactivity}{/ifnotinactivity} : Will only display the content only when not in a course activity.
@@ -1170,6 +1171,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Is this Moodle Workplace? [{ifworkplace}]Yes[{/ifworkplace}]: {ifworkplace}Yes{/ifworkplace}
 * This is FilterCodes version [{filtercodes}]: {filtercodes} (It be blank if you do not have the Moodle capability to edit this tag.)
 * Are you a member of the ATEAM group [{ifingroup ATEAM}]Yes[{/ifingroup}][{ifnotingroup ATEAM}]No[{/ifnotingroup}] ? : {ifingroup ATEAM}Yes{/ifingroup}{ifnotingroup ATEAM}No{/ifnotingroup} Note: Only works in courses.
+* [{ifvisible}]Notice: Course visibility is set to Show.[{/ifvisible}]: {ifvisible}Notice: Course visibility is set to Show.{/ifvisible}
 * [{ifnotvisible}]Warning: Course visibility is set to Hide.[{/ifnotvisible}]: {ifnotvisible}Warning: Course visibility is set to Hide.{/ifnotvisible}
 * Are you in an activity? [{ifinactivity}]Yes[{/ifinactivity}][{ifnotinactivity}]No[{/ifnotinactivity}]: {ifinactivity}Yes{/ifinactivity}{ifnotinactivity}No{/ifnotinactivity}
 * [{ifactivitycompleted 2}]You have completed the activity with ID 2.[{/ifactivitycompleted}]: {ifactivitycompleted id}You have completed the activity with ID 2.{/ifactivitycompleted} (example assumes you have an activity in a course with an ID of 2)

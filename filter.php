@@ -3018,6 +3018,20 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifvisible}.
+            if (stripos($text, '{ifvisible}') !== false) {
+                global $COURSE;
+                // If the course visibility is set to Show...
+                if ($COURSE->id != 1 && !empty($COURSE->visible)) {
+                    // Just remove the tags and leave the content.
+                    $replace['/\{ifvisible\}/i'] = '';
+                    $replace['/\{\/ifvisible\}/i'] = '';
+                } else { // Visibility set to Hide.
+                    // Remove the if visible tags and their content.
+                    $replace['/\{ifvisible\}(.*)\{\/ifvisible\}/isuU'] = '';
+                }
+            }
+
             // Tag: {ifnotvisible}.
             if (stripos($text, '{ifnotvisible}') !== false) {
                 global $COURSE;
