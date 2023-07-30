@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
 - Alternative (alt) text to {qrcode} tag.
 ### Updated
+- Fixed display of Course Cards Layout list of settings.
 - Addressed some PHP 8.1 compatibility warnings.
 - Some tags are now disabled if they do not meet Moodle and PHP version requirements.
 - Fix-253: Cohort names can now contain a dash in {ifincohort} tag.

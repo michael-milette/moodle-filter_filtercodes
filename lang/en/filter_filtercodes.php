@@ -58,17 +58,22 @@ $string['ifprofilefiedonlyvisible_desc'] = 'When checked, restrict the {ifprofil
 $string['categorycardshowpic'] = 'Show {categorycards} background';
 $string['categorycardshowpic_desc'] = 'If enabled, will display a background colour/pattern for {categorycards} tag similar to the course images when no image was specified.';
 $string['coursecardsformat'] = 'Course cards layout';
-$string['coursecardsformat_desc'] = '<p>Display {coursecards}, {coursecardsbyenrol} and {mycoursescards} either:</p><ul><li><strong>Vertical</strong>: Course image above course name.</li><li><strong>Horizontal</strong>: Course image to the left of course name, category and summary; or</li><li><strong>List</strong> in a table: Course name, category and summary.</li><ul>';
+$string['coursecardsformat_desc'] = 'Display {coursecards}, {coursecardsbyenrol} and {mycoursescards} either:<br>
+<ul>
+<li><strong>Vertical</strong>: Course image above course name.</li>
+<li><strong>Horizontal</strong>: Course image to the left of course name, category and summary; or</li>
+<li><strong>List</strong> in a table: Course name, category and summary.</li>
+</ul>';
 $string['coursecardsbyenrol'] = 'Maximum {coursecardsbyenrol} cards.';
 $string['coursecardsbyenrol_desc'] = 'Maximum number of course cards to display for {coursecardsbyenrol} tag. Set to zero for unlimited (not recommended).';
 $string['chartprogressbarlabel'] = '{$a->label}: {$a->value}';
 $string['teamcardsformat'] = 'Team cards format';
 $string['teamcardsformat_desc'] = 'Choose how the team members will appear in the {teamcards} tag.<br>
 <ul>
-<li>None: Displays just the picture and name as a card without the user description.</li>
-<li>Icon: Same as none except that the user description appears in an information popup bubble.</li>
-<li>Brief: Same as none but displays the description below the user picture and name.</li>
-<li>Verbose: List format. Recommended if your team members tends to have long user descriptions.</li>
+<li><strong>None</strong>: Displays just the picture and name as a card without the user description.</li>
+<li><strong>Icon</strong>: Same as none except that the user description appears in an information popup bubble.</li>
+<li><strong>Brief</strong>: Same as none but displays the description below the user picture and name.</li>
+<li><strong>Verbose</strong>: List format. Recommended if your team members tends to have long user descriptions.</li>
 </ul>';
 $string['brief'] = 'Brief';
 $string['verbose'] = 'Verbose';
