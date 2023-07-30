@@ -1,8 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-<<<<<<< HEAD
-## [2.3.7] 2023-06-20 (rc only)
+## [2.3.8] 2023-07-30 (rc only)
 ### Added
 - New {supportservicespage} tag (for Moodle 4.2 and later).
 - New {coursemoduleid} tag.
@@ -19,6 +18,8 @@ All notable changes to this project will be documented in this file.
 - Fix-253: Cohort names can now contain a dash in {ifincohort} tag.
 - Instruction to patch Moodle 4.2 to enable FilterCodes in custom menu.
 - {timezone} now works correctly if user's timezone is set to system timezone.
+- Refactored {mycourses...} tags and added missing unordered tag for {mycourses} tag.
+- {mycoursescards} tag will now display message if the user is not enrolled in any courses.
 - Courses that are either hidden or expired will now appear in course cards if the user has the capability to to see hidden courses.
 - Documentation (README.md)
 

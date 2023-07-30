@@ -2227,6 +2227,8 @@ class filter_filtercodes extends moodle_text_filter {
                         }
                     }
                 }
+                // If not enrolled in any courses.
+                $emptylist = empty($mycourses) ? get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') : '';
 
                 // Tag: {mycourses}. An unordered list of links to enrolled course.
                 if (stripos($text, '{mycourses}') !== false) {
@@ -2235,11 +2237,7 @@ class filter_filtercodes extends moodle_text_filter {
                         $list .= '<li><a href="' . (new moodle_url('/course/view.php', ['id' => $mycourse->id])) . '">' .
                                 $mycourse->fullname . '</a></li>';
                     }
-                    // If not enrolled in any courses.
-                    if (empty($list)) {
-                        $list .= '<li>' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . '</li>';
-                    }
-                    $replace['/\{mycourses\}/i'] = $list;
+                    $replace['/\{mycourses\}/i'] = '<ul>' . (empty($list) ? "<li>$emptylist</li>" : $list) . '</ul>';
                     unset($list);
                 }
 
@@ -2250,30 +2248,26 @@ class filter_filtercodes extends moodle_text_filter {
                         $list .= '-' . $mycourse->fullname . '|' .
                             (new moodle_url('/course/view.php', ['id' => $mycourse->id])) . PHP_EOL;
                     }
-                    // If not enrolled in any courses.
-                    if (empty($list)) {
-                        $list .= '-' . get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') . PHP_EOL;
-                    }
-                    $replace['/\{mycoursesmenu\}/i'] = $list;
+                    $replace['/\{mycoursesmenu\}/i'] = '-' . (empty($list) ? $emptylist : $list);
                     unset($list);
                 }
 
                 // Tag: {mycoursescards}. Generates course cards for each enrolled course.
                 if (stripos($text, '{mycoursescards}') !== false) {
+                    $list = '';
                     $courseids = [];
                     foreach ($mycourses as $mycourse) {
                         $courseids[] = $mycourse->id;
                     }
-                    // If not enrolled in any courses.
-                    if (empty($courseids)) {
-                        $list = '';
-                    } else { // Otherwise, generate cards.
+                    // If enrolled in at least one course, generate cards.
+                    if (!empty($courseids)) {
                         $card = $this->getcoursecardinfo();
                         $list = $card->header . $this->rendercoursecards($courseids, $card->format) . $card->footer;
                     }
-                    $replace['/\{mycoursescards\}/i'] = $list;
+                    $replace['/\{mycoursescards\}/i'] = (empty($list) ? $emptylist : $list);
                     unset($list);
                 }
+                unset($emptylist);
                 unset($mycourses);
             } else { // Not logged in.
                 // Replace tags with message indicating that you need to be logged in.
