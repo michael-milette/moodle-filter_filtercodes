@@ -1788,7 +1788,7 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {courseimage}. The course image.
+            // Tag: {courseimage} and {courseimage-url}. The course image.
             if (stripos($text, '{courseimage') !== false) {
                 $course = $PAGE->course;
                 $imgurl = '';
@@ -1809,7 +1809,12 @@ class filter_filtercodes extends moodle_text_filter {
                     global $OUTPUT;
                     $imgurl = $OUTPUT->get_generated_image_for_id($course->id);
                 }
-                $replace['/\{courseimage\}/i'] = '<img src="' . $imgurl . '" class="img-responsive">';
+                if (stripos($text, '{courseimage}') !== false) {
+                    $replace['/\{courseimage\}/i'] = '<img src="' . $imgurl . '" class="img-responsive">';
+                }
+                if (stripos($text, '{courseimage-url}') !== false) {
+                    $replace['/\{courseimage-url\}/i'] = $imgurl;
+                }
             }
 
             // Tag: {coursestartdate} or {coursestartdate dateTimeFormat id}. The course start date.

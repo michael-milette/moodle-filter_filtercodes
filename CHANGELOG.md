@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Fix-258: New {ifvisible} tag.
 - New {supportservicespage} tag (for Moodle 4.2 and later).
 - New {coursemoduleid} tag.
+- Fix-261: New {courseimage-url} tag.
 - New {chart progresspie} tag.
 - Fix-187: New {coursecard} tag (not the same as {coursecards}).
 - New {courseenrolmentdate} tag.

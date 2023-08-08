@@ -176,6 +176,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {coursesummary} : Display the course summary. If placed on a site page, displays the site summary.
 * {coursesummary ID} : Display the course summary of the course with the specified course ID number.
 * {courseimage} : Display's the course image.
+* {courseimage-url} : Display's the URL of the course image. Useful if you want to use it as a background image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
 * {coursecount students} : Displays the number of students enrolled in a course. (Requires Moodle 3.2 or later)
 * {courseid} or %7Bcourseid%7D : Display a course's ID within a course and on the course enrolment page. Set to site ID (1) if outside a course.
@@ -1031,6 +1032,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course or Site description/Summary [{coursesummary}]: {coursesummary}
 * The description for the course "[{coursename 2}]" is [{coursesummary 2}]: The summary for the course "[{coursename 2}]" is [{coursesummary 2}] (note: this example only works if you have a course with a course id of 2 that has a summary).
 * [{courseimage}]: {courseimage}
+* [{courseimage-url}]: {courseimage-url}
 * Course or Site short name [{courseshortname}]: {courseshortname}
 * Course start date [{coursestartdate strftimedatetime}]: {coursestartdate strftimedatetime}
 * Course end date [{courseenddate strftimedatetime}]: {courseenddate strftimedatetime}
