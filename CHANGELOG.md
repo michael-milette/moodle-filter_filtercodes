@@ -16,6 +16,10 @@ All notable changes to this project will be documented in this file.
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
 - Alternative (alt) text to {qrcode} tag.
 ### Updated
+- The {courseid} and %7Bcourseid%7D tags can now be embedded in other tags.
+- The {coursemoduleid} and %7Bcoursecontextid%7D tags can now be embedded in other tags.
+- The {coursecontextid} and %7Bcoursecontextid%7D tags can now be embedded in other tags.
+- The {coursemoduleid} and %7Bcoursemoduleid%7D tags can now be embedded in other tags.
 - Fixed display of Course Cards Layout list of settings.
 - Addressed some PHP 8.1 compatibility warnings.
 - Some tags are now disabled if they do not meet Moodle and PHP version requirements.

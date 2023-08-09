@@ -1090,6 +1090,52 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 unset($progress);
             }
+
+            // Tag: {courseid} and %7Bcourseid%7D.
+            if (stripos($text, 'courseid') !== false) {
+                $courseid = 1;
+                if ($PAGE->pagetype == 'enrol-index') {
+                    $courseid = optional_param('id', 1, PARAM_INT);
+                } else {
+                    $courseid = $PAGE->course->id;
+                }
+                // Tag: {courseid} and %7Bcourseid%7D.
+                if (stripos($text, '{courseid}') !== false) {
+                    $replace['/\{courseid\}/i'] = $courseid;
+                }
+                // Alternative Tag: %7Bcourseid%7D (for encoded URLs).
+                if (stripos($text, '%7Bcourseid%7D') !== false) {
+                    $replace['/%7Bcourseid%7D/i'] = $PAGE->course->id;
+                }
+            }
+
+            // Tag: {coursecontextid}.
+            if (stripos($text, '{coursecontextid}') !== false) {
+                $context = context_course::instance($PAGE->course->id);
+                $coursecontextid = isset($PAGE->course->id) ? $context->id : 1;
+                $replace['/\{coursecontextid\}/i'] = $coursecontextid;
+            }
+            // Alternative Tag:  %7Bcoursecontextid%7D (for encoded URLs).
+            if (stripos($text, '%7Bcoursecontextid%7D') !== false) {
+                $context = context_course::instance($PAGE->course->id);
+                $coursecontextid = isset($PAGE->course->id) ? $context->id : 1;
+                $replace['/%7Bcoursecontextid%7D/i'] = $coursecontextid;
+            }
+
+            // Tag: %7Bcoursemoduleid%7D (escaped).
+            if (stripos($text, '%7Bcoursemoduleid%7D') !== false) {
+                if (isset($PAGE->cm->id)) {
+                    $replace['/\%7Bcoursemoduleid%7D/i'] = @$PAGE->cm->id;
+                }
+            }
+
+            // Tag: {coursemoduleid} (not escaped).
+            if (stripos($text, '{coursemoduleid}') !== false) {
+                if (isset($PAGE->cm->id)) {
+                    $replace['/\{coursemoduleid\}/isu'] = $PAGE->cm->id;
+                }
+            }
+
         }
 
         // Apply all of the filtercodes so far.
@@ -1708,51 +1754,6 @@ class filter_filtercodes extends moodle_text_filter {
                         WHERE ue.status = 0 AND e.courseid = :courseid";
                 $cnt = $DB->count_records_sql($sql, array('courseid' => $PAGE->course->id));
                 $replace['/\{coursecount students:active\}/i'] = $cnt;
-            }
-
-            // Tag: {courseid} and %7Bcourseid%7D.
-            if (stripos($text, 'courseid') !== false) {
-                $courseid = 1;
-                if ($PAGE->pagetype == 'enrol-index') {
-                    $courseid = optional_param('id', 1, PARAM_INT);
-                } else {
-                    $courseid = $PAGE->course->id;
-                }
-                // Tag: {courseid} and %7Bcourseid%7D.
-                if (stripos($text, '{courseid}') !== false) {
-                    $replace['/\{courseid\}/i'] = $courseid;
-                }
-                // Alternative Tag: %7Bcourseid%7D (for encoded URLs).
-                if (stripos($text, '%7Bcourseid%7D') !== false) {
-                    $replace['/%7Bcourseid%7D/i'] = $PAGE->course->id;
-                }
-            }
-
-            // Tag: {coursecontextid}.
-            if (stripos($text, '{coursecontextid}') !== false) {
-                $context = context_course::instance($PAGE->course->id);
-                $coursecontextid = isset($PAGE->course->id) ? $context->id : 1;
-                $replace['/\{coursecontextid\}/i'] = $coursecontextid;
-            }
-            // Alternative Tag:  %7Bcoursecontextid%7D (for encoded URLs).
-            if (stripos($text, '%7Bcoursecontextid%7D') !== false) {
-                $context = context_course::instance($PAGE->course->id);
-                $coursecontextid = isset($PAGE->course->id) ? $context->id : 1;
-                $replace['/%7Bcoursecontextid%7D/i'] = $coursecontextid;
-            }
-
-            // Tag: %7Bcoursemoduleid%7D (escaped).
-            if (stripos($text, '%7Bcoursemoduleid%7D') !== false) {
-                if (isset($PAGE->cm->id)) {
-                    $replace['/\%7Bcoursemoduleid%7D/i'] = @$PAGE->cm->id;
-                }
-            }
-
-            // Tag: {coursemoduleid} (not escaped).
-            if (stripos($text, '{coursemoduleid}') !== false) {
-                if (isset($PAGE->cm->id)) {
-                    $replace['/\{coursemoduleid\}/isu'] = $PAGE->cm->id;
-                }
             }
 
             // Tag: {courseidnumber}.
