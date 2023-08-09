@@ -178,7 +178,8 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courseimage} : Display's the course image.
 * {courseimage-url} : Display's the URL of the course image. Useful if you want to use it as a background image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
-* {coursecount students} : Displays the number of students enrolled in a course. (Requires Moodle 3.2 or later)
+* {coursecount students} : Displays the number of all users with the role of 'student' in a course. (Requires Moodle 3.2 or later)
+* {coursecount students:active} : Displays the number of users with the role of 'student' in a course who are not suspended in the course.
 * {courseid} or %7Bcourseid%7D : Display a course's ID within a course and on the course enrolment page. Set to site ID (1) if outside a course.
 * {coursecontextid} or %7Bcoursecontextid%7D : Display a course's context ID.
 * {coursemoduleid} or %7Bcoursemoduleid%7D : Display a course's activity module ID (activity id) - for use in URLs. Only for use in course activity modules.
@@ -1093,7 +1094,8 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * List of custom course fields [{course_fields}]: {course_fields}
 * Course custom fields [{course_field_location}] (assumes you have created a custom course field called "location"): {course_field_location}
 * Number of participants in the course [{courseparticipantcount}]: {courseparticipantcount}
-* Number of students enrolled in the course {{coursecount students}}: {coursecount students}
+* Number of all students enrolled in the course {{coursecount students}}: {coursecount students}
+* Number of enrolled students in the course (excluding suspended) {{coursecount students:active}}: {coursecount students:active}
 * The base (root) URL of your Moodle site [{wwwroot}]: {wwwroot}
 * Site support name [{supportname}]: {supportname}
 * Site support email address [{supportemail}]: {supportemail}

@@ -1695,6 +1695,21 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{coursecount students\}/i'] = $cnt;
             }
 
+            // Tag: {coursecount students:active}.
+            if (stripos($text, '{coursecount students:active}') !== false) {
+                global $DB;
+                $sql = "SELECT COUNT(DISTINCT ue.userid)
+                        FROM {user_enrolments} ue
+                        JOIN {enrol} e ON e.id = ue.enrolid
+                        JOIN {course} c ON c.id = e.courseid
+                        JOIN {context} ctx ON ctx.instanceid = c.id AND ctx.contextlevel = 50
+                        JOIN {role_assignments} ra ON ra.contextid = ctx.id AND ra.userid = ue.userid
+                        JOIN {role} r ON r.id = ra.roleid AND r.shortname = 'student'
+                        WHERE ue.status = 0 AND e.courseid = :courseid";
+                $cnt = $DB->count_records_sql($sql, array('courseid' => $PAGE->course->id));
+                $replace['/\{coursecount students:active\}/i'] = $cnt;
+            }
+
             // Tag: {courseid} and %7Bcourseid%7D.
             if (stripos($text, 'courseid') !== false) {
                 $courseid = 1;

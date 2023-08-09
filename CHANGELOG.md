@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.8] 2023-07-30 (rc only)
+## [2.3.8] 2023-08-08 (rc only)
 ### Added
+- New {coursecount students:active} tag.
 - Fix-258: New {ifvisible} tag.
 - New {supportservicespage} tag (for Moodle 4.2 and later).
 - New {coursemoduleid} tag.
