@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.3.8] 2023-08-08 (rc only)
 ### Added
+- New {myccourses} tag.
 - New {ifnotincourse}{/ifnotincourse} tags.
 - New {coursecount students:active} tag.
 - Fix-258: New {ifvisible} tag.

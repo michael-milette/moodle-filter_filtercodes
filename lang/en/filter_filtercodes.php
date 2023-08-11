@@ -45,6 +45,7 @@ $string['escapebraces'] = 'Escape tags';
 $string['escapebraces_desc'] = 'When this option is checked, you will be able to display FilterCode tags without them being interpreted by this filter by wrapping your tag in [ brackets ]. This can be very useful when creating FilterCodes documentation for the teachers and course creators on your Moodle site.<br><br>Example: [{fullname}] will not display the user\'s full name but display the {fullname} tag instead without the brackets.';
 $string['hidecompletedcourses'] = 'Hide completed courses';
 $string['hidecompletedcourses_desc'] = 'Enable to filter out completed courses in {mycoursesmenu} tag listings.';
+$string['nocompletedcourses'] = 'None of the courses in which you are enrolled have been marked as completed.';
 $string['coursecontactshowpic'] = 'Show contact picture';
 $string['coursecontactshowpic_desc'] = 'If enabled, will display the contact\'s profile picture in {coursecontacts} tags.';
 $string['coursecontactshowdesc'] = 'Show contact\'s profile description.';

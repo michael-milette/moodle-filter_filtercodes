@@ -2236,20 +2236,32 @@ class filter_filtercodes extends moodle_text_filter {
                 // Append the chosen sortorder.
                 $sortorder = $sortorder . ',' . $CFG->navsortmycoursessort . ' ASC';
                 $mycourses = enrol_get_my_courses('fullname,id', $sortorder);
+                $myccourses = [];
 
-                // Remove completed courses from the list.
+                // Save and remove completed courses from the list.
                 if (isset($CFG->enablecompletion) && $CFG->enablecompletion == 1 // COMPLETION_ENABLED.
                         && get_config('filter_filtercodes', 'hidecompletedcourses')) {
                     foreach ($mycourses as $key => $mycourse) {
                         $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $mycourse->id]);
                         if (!empty($ccompletion->timecompleted)) {
+                            // Save course to list of completed courses.
+                            $myccourses[] = $mycourses[$key];
                             // Remove completed course from the list.
                             unset($mycourses[$key]);
                         }
                     }
                 }
-                // If not enrolled in any courses.
-                $emptylist = empty($mycourses) ? get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades') : '';
+
+                // Messages to display if not enrolled in any courses or have not yet completed some courses.
+                // Start by assuming that we are not enrolled in any courses.
+                $emptylist = get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades');
+                $emptycclist = $emptylist;
+                if (!empty($mycourses)) { // Enrolled in some courses.
+                    $emptylist = '';
+                }
+                if (empty($myccourses)) { // Not completed any courses.
+                    $emptycclist = get_string('nocompletedcourses', 'filter_filtercodes');
+                }
 
                 // Tag: {mycourses}. An unordered list of links to enrolled course.
                 if (stripos($text, '{mycourses}') !== false) {
@@ -2259,6 +2271,17 @@ class filter_filtercodes extends moodle_text_filter {
                                 $mycourse->fullname . '</a></li>';
                     }
                     $replace['/\{mycourses\}/i'] = '<ul>' . (empty($list) ? "<li>$emptylist</li>" : $list) . '</ul>';
+                    unset($list);
+                }
+
+                // Tag: {myccourses}. An unordered list of links to completed course.
+                if (stripos($text, '{myccourses}') !== false) {
+                    $list = '';
+                    foreach ($myccourses as $myccourse) {
+                        $list .= '<li><a href="' . (new moodle_url('/course/view.php', ['id' => $myccourse->id])) . '">' .
+                                $myccourse->fullname . '</a></li>';
+                    }
+                    $replace['/\{myccourses\}/i'] = '<ul>' . (empty($list) ? "<li>$emptycclist</li>" : $list) . '</ul>';
                     unset($list);
                 }
 
@@ -2289,10 +2312,13 @@ class filter_filtercodes extends moodle_text_filter {
                     unset($list);
                 }
                 unset($emptylist);
+                unset($emptycclist);
                 unset($mycourses);
+                unset($myccourses);
             } else { // Not logged in.
                 // Replace tags with message indicating that you need to be logged in.
                 $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';
+                $replace['/\{myccourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';
                 $replace['/\{mycoursesmenu\}/i'] = '-' . get_string('loggedinnot') . PHP_EOL;
                 $replace['/\{mycoursescards\}/i'] = '';
             }
