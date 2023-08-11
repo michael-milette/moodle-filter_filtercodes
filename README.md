@@ -279,7 +279,8 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 * {ifnotenrolpage}{/ifnotenrolpage} : Will only display the encclosed content if the user **is not** on a course enrolment page.
 * {ifenrolled}{/ifenrolled} : Will only display the enclosed content if the user **is** enrolled as **a student** in the current course. This tag ignores all other roles.
 * {ifnotenrolled}{/ifnotenrolled} : Will only display the enclosed content if the user is **not** enrolled as **a student** in the current course. This tag ignores all other roles.
-* {ifincourse}{/ifincourse} : Will only display the enclosed content if the user is in a course other than the Frontpage.
+* {ifincourse}{/ifincourse} : Will only display the enclosed content if the user is in a course.
+* {ifnotincourse}{/ifnotincourse} : Will only display the enclosed content if the user is not in a course, such as the Frontpage, dashboard or site administration pages.
 * {ifinsection}{/ifinsection} : Will only display the enclosed content if the user is in a section of a course which is not the Frontpage.
 * {ifnotinsection}{/ifnotinsection} : Will only display the enclosed content if the user is not in a section of a course.
 * {ifingroup id|idnumber}{/ifingroup} : Will only display the content if the user is part of the specified course group ID or group ID number.
@@ -1165,7 +1166,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If on Home page [{ifhome}]You are on the Home Frontpage.[{/ifhome}]: {ifhome}You are on the Home Frontpage.{/ifhome}
 * If not on the Home page [{ifnothome}]You are NOT on the Home Frontpage.[{/ifnothome}]: {ifnothome}You are NOT on the Home Frontpage.{/ifnothome}
 * If on Dashboard [{ifdashboard}]You are on the Dashboard page.[{/ifdashboard}]: {ifdashboard}You are on the Dashboard page.{/ifdashboard}
-* If in a course [{ifincourse}]Yes[{/ifincourse}]? {ifincourse}Yes{/ifincourse}
+* If in a course [{ifincourse}]Yes[{/ifincourse}][{ifnotincourse}]No[{/ifnotincourse}]? {ifincourse}Yes{/ifincourse}{ifnotincourse}No{/ifnotincourse}
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
 * Are you a member of the "moodlers" cohort [{ifincohort moodlers}]Yes[{/ifincohort}]? {ifincohort moodlers}Yes{/ifincohort} (will be blank of not a member of cohort)

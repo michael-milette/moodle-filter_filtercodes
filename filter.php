@@ -3156,8 +3156,9 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tags: {ifenrolled}. and {ifnotenrolled}.
-            // Tags: {ifincourse} and {ifinsection}.
+            // Tags: {ifenrolled} and {ifnotenrolled}.
+            // Tags: {ifincourse} and {ifnotincourse}
+            // Tags: {ifinsection}.
             if ($PAGE->course->id == $SITE->id) { // If frontpage course.
                 // Everyone is automatically enrolled in the Front Page course.
                 // Remove the ifenrolled tags.
@@ -3173,12 +3174,21 @@ class filter_filtercodes extends moodle_text_filter {
                 if (stripos($text, '{ifincourse}') !== false) {
                     $replace['/\{ifincourse\}(.*)\{\/ifincourse\}/isuU'] = '';
                 }
+                // If not in a course, remove the {ifnotincourse} tags.
+                if (stripos($text, '{ifnotincourse}') !== false) {
+                    $replace['/\{ifnotincourse\}/i'] = '';
+                    $replace['/\{\/ifnotincourse\}/i'] = '';
+                }
                 // Remove the {ifinsection} strings if not in a section of a course or are on the Front Page.
                 if (stripos($text, '{ifinsection}') !== false) {
                     $replace['/\{ifinsection\}(.*)\{\/ifinsection\}/isuU'] = '';
                 }
             } else {
                 if ($this->hasarchetype('student')) { // If user is enrolled in the course.
+                    // Remove the {ifnotincourse} strings if in a course.
+                    if (stripos($text, '{ifnotincourse}') !== false) {
+                        $replace['/\{ifnotincourse\}(.*)\{\/ifnotincourse\}/isuU'] = '';
+                    }
                     // If enrolled, remove the {ifenrolled} tags.
                     if (stripos($text, '{ifenrolled}') !== false) {
                         $replace['/\{ifenrolled\}/i'] = '';
