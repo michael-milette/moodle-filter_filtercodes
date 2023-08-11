@@ -476,6 +476,7 @@ class filter_filtercodes extends moodle_text_filter {
      * Render course cards for list of course ids.
      *
      * @param array $rcourseids Array of course ids.
+     * @param string $format orientation/layout of course cards.
      * @return string HTML of course cars.
      */
     private function rendercoursecards($rcourseids, $format = 'vertical') {
@@ -491,7 +492,7 @@ class filter_filtercodes extends moodle_text_filter {
             $course = get_course($courseid);
             $context = context_course::instance($course->id);
             // Skip if the course is not visible to user or course is site.
-            $visible = ($course->visible && !empty($course->enddate) and time() < $course->enddate);
+            $visible = ($course->visible && !empty($course->enddate) && time() < $course->enddate);
             if (!$visible && !($isadmin || has_capability('moodle/course:viewhiddencourses', $context))) {
                 continue;
             }
@@ -538,7 +539,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $category = $category->name;
 
                     $summary = $course->summary == null ? '' : $course->summary;
-                    $summary = substr($summary,-4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
+                    $summary = substr($summary, -4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
 
                     $content .= '
                     <div class="card mb-3 fc-coursecard-list">
@@ -576,7 +577,7 @@ class filter_filtercodes extends moodle_text_filter {
                     $category = $category->name;
 
                     $course->summary == null ? '' : $course->summary;
-                    $summary = substr($summary,-4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
+                    $summary = substr($summary, -4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
 
                     $content .= '
                     <tr class="fc-coursecard-table">
@@ -594,6 +595,7 @@ class filter_filtercodes extends moodle_text_filter {
     /**
      * Get course card including format, header and footer.
      *
+     * @param string $format card format.
      * @return object $cards->format, $cards->header, $cards->footer
      */
     private function getcoursecardinfo($format = null) {
@@ -1279,7 +1281,7 @@ class filter_filtercodes extends moodle_text_filter {
             if (isloggedin() && !isguestuser() && !empty($USER->country)) {
                 $replace['/\{country\}/i'] = get_string($USER->country, 'countries');
             } else {
-                $replace['/\{country\}/i'] =  '';
+                $replace['/\{country\}/i'] = '';
             }
         }
         // Tag: {timezone}.
@@ -1870,7 +1872,8 @@ class filter_filtercodes extends moodle_text_filter {
                                 if (!empty($PAGE->course->startdate)) {
                                     $startdate = $PAGE->course->startdate;
                                 } else {
-                                    $startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $PAGE->course->id]);
+                                    $startdate = $DB->get_field_select('course', 'startdate', 'id = :id',
+                                            ['id' => $PAGE->course->id]);
                                 }
                             } else { // Course ID was specifed.
                                 $course = $DB->get_record('course', ['id' => $matches[2]]);
@@ -1879,7 +1882,8 @@ class filter_filtercodes extends moodle_text_filter {
                                     if (!empty($course->startdate)) {
                                         $startdate = $course->startdate;
                                     } else {
-                                        $startdate = $DB->get_field_select('course', 'startdate', 'id = :id', ['id' => $course->id]);
+                                        $startdate = $DB->get_field_select('course', 'startdate', 'id = :id',
+                                                ['id' => $course->id]);
                                     }
                                 } else {
                                     // Should only happen if course does not exist.
@@ -2134,7 +2138,8 @@ class filter_filtercodes extends moodle_text_filter {
                     if ($catid == 0 && $nocat) {
                         $replace['/\{coursecards\}/i'] = !empty($content) ? $card->header . $content . $card->footer : '';
                     }
-                    $replace['/\{coursecards ' . $catid . '\}/isuU'] = !empty($content) ? $card->header . $content . $card->footer : '';
+                    $replace['/\{coursecards ' . $catid . '\}/isuU'] =
+                            !empty($content) ? $card->header . $content . $card->footer : '';
                 }
             }
 
@@ -2161,7 +2166,8 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                     // Create cards for existing courses that are visible to user.
                     $content = $this->rendercoursecards($courseids, $card->format);
-                    $replace['/\{coursecard ' . $match . '\}/isuU'] = !empty($content) ? $card->header . $content . $card->footer : '';
+                    $replace['/\{coursecard ' . $match . '\}/isuU'] =
+                            !empty($content) ? $card->header . $content . $card->footer : '';
                 }
             }
 
@@ -3792,7 +3798,8 @@ class filter_filtercodes extends moodle_text_filter {
                 function($matches) {
                     $text = html_to_text($matches[1]);
                     $src = $this->qrcode($text);
-                    $src = '<img src="' . $src . '" style="width:100%;max-width:480px;height:auto;" class="fc-qrcode" alt="' . $text . '">';
+                    $src = '<img src="' . $src . '" style="width:100%;max-width:480px;height:auto;" class="fc-qrcode" alt="'
+                            . $text . '">';
                     return $src;
                 }, $text);
             if ($newtext !== false) {
