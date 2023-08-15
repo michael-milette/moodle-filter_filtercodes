@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
 - Alternative (alt) text to {qrcode} tag.
 ### Updated
+- Git now ignores .patch files.
 - The {courseid} and %7Bcourseid%7D tags can now be embedded in other tags.
 - The {coursemoduleid} and %7Bcoursecontextid%7D tags can now be embedded in other tags.
 - The {coursecontextid} and %7Bcoursecontextid%7D tags can now be embedded in other tags.

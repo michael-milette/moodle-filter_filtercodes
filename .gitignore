@@ -103,6 +103,9 @@ test.php
 *.tmp
 *.temp
 
+##### Git Patches
+*.patch
+
 ##### GPG
 secring.*
 
