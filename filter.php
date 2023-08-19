@@ -1745,7 +1745,6 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {coursecount students:active}.
             if (stripos($text, '{coursecount students:active}') !== false) {
-                global $DB;
                 $sql = "SELECT COUNT(DISTINCT ue.userid)
                         FROM {user_enrolments} ue
                         JOIN {enrol} e ON e.id = ue.enrolid
@@ -2230,7 +2229,7 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // These tags: {mycourses} and {mycoursesmenu} and {mycoursescards}.
-        if (stripos($text, '{mycourses') !== false) {
+        if (stripos($text, '{mycourse') !== false) {
             if (isloggedin() && !isguestuser()) {
 
                 // Retrieve list of user's enrolled courses.
@@ -2302,7 +2301,8 @@ class filter_filtercodes extends moodle_text_filter {
                     unset($list);
                 }
 
-                // Tag: {mycoursescards}. Generates course cards for each enrolled course.
+                // Tag: {mycoursescards}.
+                // Generates a course card for each enrolled course.
                 if (stripos($text, '{mycoursescards}') !== false) {
                     $list = '';
                     $courseids = [];
@@ -2317,16 +2317,52 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{mycoursescards\}/i'] = (empty($list) ? $emptylist : $list);
                     unset($list);
                 }
-                unset($emptylist);
-                unset($emptycclist);
-                unset($mycourses);
-                unset($myccourses);
+
+                // Tag: {mycoursescards <categoryid(s)>}.
+                // Generates a course card for each enrolled course in the specified category.
+                if (stripos($text, '{mycoursescards ') !== false) {
+                    // Get the card format.
+                    $card = $this->getcoursecardinfo();
+                    // Find all of the mycoursescards tags where category ID was specified.
+                    preg_match_all('/{mycoursescards ([^}]*)}/', $text, $matches);
+                    // For each tag
+                    foreach($matches[0] as $key => $tag) {
+                        $catids = array_map('intval', array_filter(explode(' ', $matches[1][$key]), 'is_numeric'));
+                        // For each category in each tag.
+                        $content = '';
+                        foreach($catids as $catid) {
+                            // Get all the enrolled courses in the specified category for the user.
+                            $courses = $DB->get_records_sql(
+                                "SELECT c.*
+                                    FROM {course} c
+                                    JOIN {enrol} e ON e.courseid = c.id
+                                    JOIN {user_enrolments} ue ON ue.enrolid = e.id
+                                    WHERE ue.userid = ? AND c.category = ?
+                                    ORDER BY c.shortname",
+                                array($USER->id, $catid)
+                            );
+                            // Make an array of the course ids and render the course cards.
+                            $courseids = array_column($courses, 'id');
+                            $content .= $this->rendercoursecards($courseids, $card->format);
+                        }
+                        if (!empty($content)) {
+                            $replace['/' . $tag . '/isuU'] = $card->header . $content . $card->footer;
+                        }
+                    }
+                    unset($card);
+                    unset($matches);
+                    unset($catids);
+                    unset($catid);
+                    unset($content);
+                    unset($courses);
+                    unset($courseids);
+                }
             } else { // Not logged in.
                 // Replace tags with message indicating that you need to be logged in.
                 $replace['/\{mycourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';
                 $replace['/\{myccourses\}/i'] = '<ul class="mycourseslist"><li>' . get_string('loggedinnot') . '</li></ul>';
                 $replace['/\{mycoursesmenu\}/i'] = '-' . get_string('loggedinnot') . PHP_EOL;
-                $replace['/\{mycoursescards\}/i'] = '';
+                $replace['/\{mycoursescards[^}]*\}/i'] = '<p>' . get_string('loggedinnot') . '</p>';
             }
         }
 

@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.8] 2023-08-08 (rc only)
+## [2.3.8] 2023-08-19 (rc only)
 ### Added
 - New {myccourses} tag.
 - New {ifnotincourse}{/ifnotincourse} tags.
@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
 - Alternative (alt) text to {qrcode} tag.
 ### Updated
+- Fix-241: You may now optionally specify a space delimited list of category ID(s) in the {mycoursescards} tag.
 - Git now ignores .patch files.
 - The {courseid} and %7Bcourseid%7D tags can now be embedded in other tags.
 - The {coursemoduleid} and %7Bcoursecontextid%7D tags can now be embedded in other tags.
