@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.8] 2023-08-19 (rc only)
+## [2.3.8] 2023-08-25 (rc only)
 ### Added
+- Fix-198: Module level assigned roles detection to {ifcustomrole} and {ifnotcustomrole} tags.
 - New {myccourses} tag.
 - New {ifnotincourse}{/ifnotincourse} tags.
 - New {coursecount students:active} tag.

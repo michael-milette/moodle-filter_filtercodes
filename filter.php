@@ -3572,42 +3572,85 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {ifcustomrole rolename}.
+            // Tag: {ifcustomrole shortrolename}{/ifcustomrole}.
             if (stripos($text, '{ifcustomrole') !== false) {
+
                 $re = '/{ifcustomrole\s+(.*)\}(.*)\{\/ifcustomrole\}/isuU';
                 $found = preg_match_all($re, $text, $matches);
                 if ($found > 0) {
+
+                    $context = $PAGE->context;
+                    if ($context->contextlevel == CONTEXT_COURSE) {
+                        // We are in a course
+                        $context = context_course::instance($context->instanceid);
+                    } elseif ($context->contextlevel == CONTEXT_MODULE) {
+                        // We are in an activity
+                        $cm = get_coursemodule_from_id('', $context->instanceid, 0, false, MUST_EXIST);
+                        $context = context_module::instance($cm->id);
+                        unset($cm);
+                    }
+
+                    // Get roles within this context.
+                    $roles = get_user_roles($context, $USER->id, true);
+                    $roles = array_column($roles, 'shortname');
+                    unset($context);
+
+                    // Replace all instances of a given ifcustomrole tag.
                     foreach ($matches[1] as $roleshortname) {
                         $key = '/{ifcustomrole\s+' . $roleshortname . '\}(.*)\{\/ifcustomrole\}/isuU';
-                        $contextid = ($PAGE->course->id == SITEID) ? 0 : context_course::instance($PAGE->course->id)->id;
-                        if ($this->hascustomrole($roleshortname, $contextid)) {
+                        // We have a role that matches this tag.
+                        if (in_array($roleshortname, $roles)) {
                             // Just remove the tags.
                             $replace[$key] = '$1';
                         } else {
-                            // Remove the ifcustomrole strings.
+                            // Otherwise, remove the ifcustomrole tags and the string inside it.
                             $replace[$key] = '';
                         }
+                        unset($key);
                     }
                 }
+                unset($re);
+                unset($found);
             }
 
-            // Tag: {ifnotcustomrole rolename}.
+            // Tag: {ifnotcustomrole shortrolename}{/ifnotcustomrole}.
             if (stripos($text, '{ifnotcustomrole') !== false) {
                 $re = '/{ifnotcustomrole\s+(.*)\}(.*)\{\/ifnotcustomrole\}/isuU';
                 $found = preg_match_all($re, $text, $matches);
                 if ($found > 0) {
+
+                    $context = $PAGE->context;
+                    if ($context->contextlevel == CONTEXT_COURSE) {
+                        // We are in a course
+                        $context = context_course::instance($context->instanceid);
+                    } elseif ($context->contextlevel == CONTEXT_MODULE) {
+                        // We are in an activity
+                        $cm = get_coursemodule_from_id('', $context->instanceid, 0, false, MUST_EXIST);
+                        $context = context_module::instance($cm->id);
+                        unset($cm);
+                    }
+
+                    // Get roles within this context.
+                    $roles = get_user_roles($context, $USER->id, true);
+                    $roles = array_column($roles, 'shortname');
+                    unset($context);
+
+                    // Replace all instances of a given ifnotcustomrole tag.
                     foreach ($matches[1] as $roleshortname) {
                         $key = '/{ifnotcustomrole\s+' . $roleshortname . '\}(.*)\{\/ifnotcustomrole\}/isuU';
-                        $contextid = ($PAGE->course->id == SITEID) ? 0 : context_course::instance($PAGE->course->id)->id;
-                        if (!$this->hascustomrole($roleshortname, $contextid)) {
+                        // We do not have a role that matches this tag.
+                        if (!in_array($roleshortname, $roles)) {
                             // Just remove the tags.
                             $replace[$key] = '$1';
                         } else {
-                            // Remove the ifnotcustomrole strings.
+                            // Otherwise, remove the ifnotcustomrole strings.
                             $replace[$key] = '';
                         }
+                        unset($key);
                     }
                 }
+                unset($re);
+                unset($found);
             }
 
             // Tag: {ifhasarolename roleshortname}{/ifhasarolename}.
