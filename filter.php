@@ -1259,7 +1259,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {alternatename}.
         if (stripos($text, '{alternatename}') !== false) {
             // If alternate name is empty, use firstname instead.
-            if (isloggedin() && !isguestuser() && !empty(trim($USER->alternatename))) {
+            if (isloggedin() && !isguestuser() && (!is_null($USER->alternatename) && !empty(trim($USER->alternatename)))) {
                 $replace['/\{alternatename\}/i'] = $USER->alternatename;
             } else {
                 $replace['/\{alternatename\}/i'] = $u->firstname;

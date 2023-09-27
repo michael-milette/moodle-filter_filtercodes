@@ -140,7 +140,7 @@ class filter_test extends \advanced_testcase {
             ],
             [
                 'before' => '{alternatename}',
-                'after'  => !empty(trim($USER->alternatename)) ? $USER->alternatename : $USER->firstname,
+                'after'  => (!is_null($USER->alternatename) && !empty(trim($USER->alternatename))) ? $USER->alternatename : $USER->firstname,
             ],
             [
                 'before' => '{fullname}',
