@@ -2888,10 +2888,10 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {note} - Used to add notes which appear when editing but not displayed.
-        if (stripos($text, '{note}') !== false) {
-            // Remove the note content.
-            $replace['/\{note\}(.*)\{\/note\}/isuU'] = '';
+        // Tag: {multilang xx}{/multilang} - Make it easier to use Moodle's multi-language filter.
+        if (stripos($text, '{/multilang}') !== false) {
+            // This is specifically to make it easier to use Moodle's own multi-language filter.
+            $replace['/\{multilang\s+(.*)\}(.*)\{\/multilang\}/isuU'] = '<span lang="$1" class="multilang">$2</span>';
         }
 
         //
@@ -2911,6 +2911,12 @@ class filter_filtercodes extends moodle_text_filter {
         // Tag: {langx xx}.
         if (stripos($text, '{langx ') !== false) {
             $replace['/\{langx\s+(.*)\}(.*)\{\/langx\}/isuU'] = '<span lang="$1">$2</span>';
+        }
+
+        // Tag: {note} - Used to add notes which appear when editing but not displayed.
+        if (stripos($text, '{note}') !== false) {
+            // Remove the note content.
+            $replace['/\{note\}(.*)\{\/note\}/isuU'] = '';
         }
 
         // Tag: {-} - Soft hyphen.

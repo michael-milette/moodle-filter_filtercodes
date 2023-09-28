@@ -338,6 +338,7 @@ If the condition is not met in the particular context, the specified tag and its
 * {nbsp} : Is substituted for a non-breaking space when displayed.
 * {hr} : Horizontal rule.
 * {details}{summary}{/summary}{/details} : An easy way to create an HTML 5 Details/Summary expandable section in your page. IMPORTANT: {details}{summary}{/summary} must all be on one line (it is ok if the line wraps). The rest of the details can be on multiple lines followed by the {/details}. This is an experimental feature that may result in invalid HTML but it works. You can optionally add a CSS class name to the opening details tag. Example: {details faq-class}
+* {multilang xx}{/multilang} : Tags text so it displays only when the user interface is set to that particular language. For example, use {multilang en}English{/multilang}{multilang fr}Français{/multilang} to display ‘English’ when the UI is in English and ‘Français’ when it’s in French. Please be aware that this method does not actually perform language filtering. It merely simplifies the usage of Moodle’s **Multi-Language Content** filter. If this filter is activated, it will convert these plain text tags into HTML span tags, which are then processed by the **Multi-Language Content** filter. This only works if the Multi-Language Content filter is listed below the FilterCodes filter in ‘ Site Administration > Plugins > Filters > Manage filters’. When the content displayed, if you see the content for all languages, it is because you did not enable the Multi-Language Content filter.
 * {langx xx}{/langx} : Tag specific text in a particular language by wrapping the text in a plain text pair of {langx xx} {/langx} or {langx xx-XX} {/langx} tags. This makes no visible changes to the content but wraps the content in an HTML <span lang="xx"></span> inline tag. As a result, screen readers will make use of this localization information to apply a particular pronunciation if the text is in a different language than the language of the rest of the page. This is required for compliance with W3C Web Content Accessibility Guidelines (WCAG 2.0)
 
 The opening {langx xx} tag should include two [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code abbreviation letters in lowercase associated with the language's name. French, for example, has the code **fr**:
@@ -1121,6 +1122,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Non-breaking space [{nbsp}]: This{nbsp}: Is it! (view source code to see the non-breaking space)
 * Horizontal rule line [{hr}]: {hr}
 * English [{langx en}]Content[{/langx}]: {langx en}Content{/langx}
+* Current language: [{multilang en}]English[{/multilang}][{multilang fr}]Français[{/multilang}]:{multilang en}English{/multilang}{multilang fr}Français{/multilang}
 * String with component [{getstring:filter_filtercodes}]filtername[{/getstring}]: {getstring:filter_filtercodes}filtername{/getstring}
 * String [{getstring}]Help[{/getstring}]: {getstring}help{/getstring}
 * Toggle editing menu [{toggleeditingmenu}]: {toggleeditingmenu}
@@ -1316,6 +1318,7 @@ Michael Milette - Author and Lead Developer
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
 * suzyzan: Fixed deprecation notice relating to trim() function in PHP 8.1 (2023).
+* richardvi/HZ University of Applied Sciences (premium supporter): Added support for locally assigned on module/activity custom roles to {ifcustomrole} (2023).
 * alexmorrisnz: Add CSS class support for {details} tag (2022).
 * alexmorrisnz: {lastlogin} and fixing issue with {teamcardsformat} setting (2022).
 * 3iPunt and abertranb: New {ifcustomrole} tag (2020).
