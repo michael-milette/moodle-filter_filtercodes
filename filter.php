@@ -1138,6 +1138,17 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {courseshortname}. The short name of this course.
+            if (stripos($text, '{courseshortname}') !== false) {
+                $course = $PAGE->course;
+                if ($course->id == $SITE->id) { // Front page - use site name.
+                    $replace['/\{courseshortname\}/i'] = format_string($SITE->shortname);
+                } else { // In a course - use course full name.
+                    $coursecontext = context_course::instance($course->id);
+                    $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
+                }
+            }
+
         }
 
         // Apply all of the filtercodes so far.
@@ -1791,17 +1802,6 @@ class filter_filtercodes extends moodle_text_filter {
                         }
                     }
                     unset($matches, $course, $courseids, $id);
-                }
-            }
-
-            // Tag: {courseshortname}. The short name of this course.
-            if (stripos($text, '{courseshortname}') !== false) {
-                $course = $PAGE->course;
-                if ($course->id == $SITE->id) { // Front page - use site name.
-                    $replace['/\{courseshortname\}/i'] = format_string($SITE->shortname);
-                } else { // In a course - use course full name.
-                    $coursecontext = context_course::instance($course->id);
-                    $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
                 }
             }
 
@@ -2812,11 +2812,6 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 }
             }
-        }
-
-        // Tag: {button}{/button}.
-        if (stripos($text, '{button ') !== false) {
-            $replace['/\{button\s+(.*)\}(.*)\{\/button\}/isuU'] = '<a href="$1" class="btn btn-primary">$2</a>';
         }
 
         // Tag: {fa fa-icon-name}.
@@ -3943,6 +3938,11 @@ class filter_filtercodes extends moodle_text_filter {
                 $text = $newtext;
                 $changed = true;
             }
+        }
+
+        // Tag: {button}{/button}.
+        if (stripos($text, '{button ') !== false) {
+            $replace['/\{button\s+(.*)\}(.*)\{\/button\}/isuU'] = '<a href="$1" class="btn btn-primary">$2</a>';
         }
 
         //

@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
 - Alternative (alt) text to {qrcode} tag.
 ### Updated
+- Fix-274: Fixed issue creating {button} with {urlencoded}{shortcoursename}{/urlencoded}.
 - Fix-273: Fixed several tags that were not being replaced.
 - Fix-269: Fixed deprecation notice relating to trim() function in PHP 8.1.
 - Fix-241: You may now optionally specify a space delimited list of category ID(s) in the {mycoursescards} tag.
