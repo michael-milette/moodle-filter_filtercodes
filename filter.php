@@ -3762,20 +3762,6 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        //
-        // Apply all of the filtercodes at once.
-        //
-
-        $newtext = null;
-        if (count($replace) > 0) {
-            $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
-            $replace = [];
-        }
-        if (!is_null($newtext)) {
-            $text = $newtext;
-            $changed = true;
-        }
-
         // Tag: {chart <type> <value> <title>} - Easily display a chart in one of several styles.
         if ($CFG->branch >= 32 && version_compare(PHP_VERSION, '7.0.0') >= 0 && stripos($text, '{chart ') !== false) {
             global $OUTPUT;
@@ -3957,6 +3943,20 @@ class filter_filtercodes extends moodle_text_filter {
                 $text = $newtext;
                 $changed = true;
             }
+        }
+
+        //
+        // Apply all of the filtercodes at once.
+        //
+
+        $newtext = null;
+        if (count($replace) > 0) {
+            $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
+            $replace = [];
+        }
+        if (!is_null($newtext)) {
+            $text = $newtext;
+            $changed = true;
         }
 
         // Handle escaped tags.

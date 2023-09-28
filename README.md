@@ -1315,6 +1315,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* suzyzan: Fixed deprecation notice relating to trim() function in PHP 8.1 (2023).
 * alexmorrisnz: Add CSS class support for {details} tag (2022).
 * alexmorrisnz: {lastlogin} and fixing issue with {teamcardsformat} setting (2022).
 * 3iPunt and abertranb: New {ifcustomrole} tag (2020).
