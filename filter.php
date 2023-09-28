@@ -2467,7 +2467,10 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{categorydescription}') !== false) {
                 if (!empty($catid)) {
                     // If category is not 0, get category description.
-                    $replace['/\{categorydescription\}/i'] = $category->description;
+                    $catcontext = context_coursecat::instance($category->id);
+                    // Resolve embedded URLs that might be in the description.
+                    $description = file_rewrite_pluginfile_urls($category->description, 'pluginfile.php', $catcontext->id, 'coursecat', 'description', null);
+                    $replace['/\{categorydescription\}/i'] = $description;
                 } else {
                     // Otherwise, category has no description.
                     $replace['/\{categorydescription\}/i'] = '';
