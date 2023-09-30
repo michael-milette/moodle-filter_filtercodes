@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.8] 2023-09-28 (rc only)
+## [2.3.8] 2023-09-30 (rc only)
 ### Added
 - Fix-266: New {multilang}{/multilang} tag. Note: Depends on Moodle's `Multi-language content` filter.
 - Fix-198: Module level assigned roles detection to {ifcustomrole} and {ifnotcustomrole} tags.
@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
 - Alternative (alt) text to {qrcode} tag.
 ### Updated
+- Fix-271: Fixed issue with multiple static declarations.
 - Fix-272: Fixed issue with {categorydescription} tag if it includes an embedded URL for image.
 - Fix-274: Fixed issue creating {button} with {urlencoded}{shortcoursename}{/urlencoded}.
 - Fix-273: Fixed several tags that were not being replaced.

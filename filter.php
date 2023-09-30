@@ -731,6 +731,11 @@ class filter_filtercodes extends moodle_text_filter {
             return $text;
         }
 
+        // Declare some of the static variables.
+        static $profilefields;
+        static $profiledata;
+        static $mygroupslist;
+
         $replace = []; // Array of key/value filterobjects.
         $changed = false; // Will be true if there were any changes.
 
@@ -1187,8 +1192,6 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{profile_field') !== false) {
                 $isuser = (isloggedin() && !isguestuser());
                 // Cached the defined custom profile fields and data.
-                static $profilefields;
-                static $profiledata;
                 if (!isset($profilefields)) {
                     $profilefields = $DB->get_records('user_info_field', null, '', 'id, datatype, shortname, visible, param3');
                     if ($isuser && !empty($profilefields)) {
@@ -3022,8 +3025,6 @@ class filter_filtercodes extends moodle_text_filter {
                 $isuser = (isloggedin() && !isguestuser());
 
                 // Cached the defined custom profile fields and data.
-                static $profilefields;
-                static $profiledata;
                 if (!isset($profilefields)) {
                     $profilefields = $DB->get_records('user_info_field', null, '', 'id, datatype, shortname, visible, param3');
                     if ($isuser && !empty($profilefields)) {
@@ -3474,7 +3475,6 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifingroup id|idnumber}.
             if (stripos($text, '{ifingroup') !== false) {
-                static $mygroupslist;
                 if (!isset($mygroupslist)) { // Fetch my groups.
                     $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
                 }
@@ -3501,7 +3501,6 @@ class filter_filtercodes extends moodle_text_filter {
 
             // Tag: {ifnotingroup id|idnumber}.
             if (stripos($text, '{ifnotingroup') !== false) {
-                static $mygroupslist;
                 if (!isset($mygroupslist)) { // Fetch my groups.
                     $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
                 }
