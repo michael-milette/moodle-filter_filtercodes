@@ -12,5 +12,10 @@
     "support": {
         "issues": "https://github.com/michael-milette/moodle-filter_filtercodes/issues",
         "source": "https://github.com/michael-milette/moodle-filter_filtercodes/"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
 }
