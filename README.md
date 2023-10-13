@@ -241,7 +241,7 @@ Also, see Courses section below.
 * {markborder}{/markborder} : Surrounds text with a red dashed border. You can style this tag using CSS in your theme using a fc-markborder class (border and padding with !important to override).
 * {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
 * {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
-* {fa/fas/far/fal fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme.
+* {fa/fas/fab/fa-solid/fa-brands fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme. Supports FontAwesome 4.x and 6.0 included with Moodle. If you have the pro version installed, it the additional icons will be supported as well.
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
 
 ### Contact Form templates
@@ -1127,7 +1127,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * String [{getstring}]Help[{/getstring}]: {getstring}help{/getstring}
 * Toggle editing menu [{toggleeditingmenu}]: {toggleeditingmenu}
 * Editing Toggle [{editingtoggle}]: <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
-* FontAwesome "fa-globe": v4.x [{fa fa-globe}] {fa fa-globe}, v5.x [{fas fa-globe}] {fas fa-globe}. Must be supported by your theme.
+* FontAwesome "fa-globe": v4.x [{fa fa-globe}] {fa fa-globe}, v5.x [{fas fa-globe}] {fas fa-globe}, v6.x [{fa-solid fa-globe}] {fa-solid fa-globe}. Must be supported by your theme.
 * Glyphicons "glyphicon-envelope": Glyphicons [{glyphicon glyphicon-envelope}] {glyphicon glyphicon-envelope}. Must be supported by your theme.
 * Details/summary [{details}][{summary}]This is the summary[{/summary}] followed by the details.[{/details}]: {details}{summary}This is the summary{/summary} followed by the details.{/details}
 * You should not see the following note [{note}]This could be a comment, todo or reminder.[{/note}]: {note}This could be a comment, todo or reminder.{/note}

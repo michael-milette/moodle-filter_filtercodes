@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.8] 2023-09-30 (rc only)
+## [2.3.8] 2023-10-13 (rc only)
 ### Added
+- Support for FontAwesome v6 syntax including fa-solid and fa-brands. E.g. {fa-solid fa-user}.
 - Fix-266: New {multilang}{/multilang} tag. Note: Depends on Moodle's `Multi-language content` filter.
 - Fix-198: Module level assigned roles detection to {ifcustomrole} and {ifnotcustomrole} tags.
 - New {myccourses} tag.

@@ -2820,7 +2820,35 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tag: {fa fa-icon-name}.
+        // Tag: {fa fa-icon-name} - For FontAwesome 4.7 and 6.0.
+        if (stripos($text, '{fa') !== false) {
+            // Replace {fa...} tag and parameters with FontAwesome HTML.
+            $regex = '/\{fa(';
+            $regex .= 's|-solid|'; // Solid - included with Moodle.
+            $regex .= 'b|-brands|'; // Brands - included with Moodle.
+            // The rest require the FontAwesome Pro.
+            $regex .= 'r|-regular|';
+            $regex .= 'l|-light|';
+            $regex .= 't|-thin|';
+            $regex .= 'd|-duotone|';
+            $regex .= 'ss|-sharp\s+fa-solid|';
+            $regex .= 'sr|-sharp\s+fa-regular|';
+            $regex .= 'sl|-sharp\s+fa-light|';
+            $regex .= 'st|-sharp\s+fa-thin|';
+            $regex .= 'sd|-sharp\s+fa-duotone';
+            $regex .= '){0,1}\s+fa-(.*)\}/isuU';
+            $newtext = preg_replace_callback($regex,
+                function ($matches) {
+                    $matches[0] = $matches[0] == null ? '' : $matches[0];
+                    return '<span class="' . substr($matches[0], 1, -1) . '" aria-hidden="true"></span>';
+                }, $text);
+            if ($newtext !== false) {
+                $text = $newtext;
+                $changed = true;
+            }
+        }
+
+        // Tag: {fa fa-icon-name} - For FontAwesome 6.0.
         if (stripos($text, '{fa') !== false) {
             // Replace {fa...} tag and parameters with FontAwesome HTML.
             $newtext = preg_replace_callback('/\{fa(s|r|l|b){0,1}\sfa-(.*)\}/isuU',
