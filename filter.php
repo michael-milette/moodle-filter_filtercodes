@@ -2700,6 +2700,88 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{courserequest\}/i'] = $link;
             }
 
+            // Tag: {courseoutline} (ALPHA).
+            // Description: Display's the course outline.
+            // Parameters:  None.
+            if (stripos($text, '{courseoutline}') !== false) {
+                $outline = '';
+                $courseid = $PAGE->course->id;
+                if ($courseid != $SITE->id) {
+                    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+                    unset($courseid);
+                    $modinfo = get_fast_modinfo($course);
+                    if (empty(@$PAGE->cm->sectionnum)) {
+                        // Not in a section, include the course outline for all sections.
+                        $sections = $modinfo->get_section_info_all();
+                    } else {
+                        // In a section, only include the course outline for that section.
+                        $sections[0] = $modinfo->get_section_info($PAGE->cm->sectionnum);
+                    }
+                    // Create the course outline for each of these sections.
+                    foreach ($sections as $section) {
+                        if (empty($section->uservisible)) {
+                            continue;
+                        }
+                        // Section Name
+                        if (!empty((string)$section->name)) {
+                            // A custom section name is available.
+                            $section->name = format_string(
+                                $section->name,
+                                true,
+                                ['context' => context_course::instance($PAGE->course->id)]
+                            );
+                        } else {
+                            // Get the default name of the section if none has been specified.
+                            if ($section->section == 0) {
+                                // Get the name of the "General" section.
+                                $section->name = get_string('section0name', 'format_topics');;
+                            } else {
+                                // For all other sections.
+                                $courseformat = course_get_format($course);
+                                $section->name = $courseformat->get_default_section_name($section);
+                            }
+                        }
+                        // Section name.
+                        $outline .= get_string('topic') . ': ' . $section->name . '. ';
+                        if (!empty($section->summary)) {
+                            // Section summary.
+                            $outline .= get_string('summary') . ': ' . format_text($section->summary, FORMAT_HTML, array('noclean' => true, 'para' => false)) . '<br>' . PHP_EOL;
+                        }
+                        // Activity.
+                        $outline .= '<ul>';
+                        $cmids = explode(',', $modinfo->get_section_info($section->section)->sequence);
+                        foreach ($cmids as $cmid) {
+                            if (empty($cmid)) {
+                                // There are no activities in this section.
+                                continue;
+                            }
+                            $cm = $modinfo->get_cm($cmid);
+                            if (empty($cm->uservisible)) {
+                                continue;
+                            }
+                            // Activity name.
+                            $outline .= '<li>' . get_string('basicltiname', 'lti') . ': ' . html_writer::link($cm->url, $cm->get_formatted_name());
+                            if (!empty($cm->content)) {
+                                // Actvity description.
+                                $outline .= '. ' . get_string('basicltiintro', 'lti') . ': ' . format_text($cm->content, FORMAT_HTML, array('noclean' => true, 'para' => false));
+                            }
+                            $outline .= '</li>';
+                        }
+                        unset($cm);
+                        unset($cmid);
+                        unset($cmids);
+                        $outline .= '</ul>';
+                    }
+                    unset($sections);
+                    unset($section);
+                    unset($course);
+                    unset($modinfo);
+                }
+                unset($courseid);
+                $replace['/\{courseoutline\}/i'] = $outline;
+                unset($outline);
+            }
+
             if (stripos($text, '{courserequestmenu') !== false) {
                 // Add request a course link.
                 $context = context_system::instance();
