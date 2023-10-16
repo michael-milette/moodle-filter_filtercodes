@@ -4578,7 +4578,20 @@ class filter_filtercodes extends moodle_text_filter {
         // Required Parameter: URL. You also need to specify the content which will become the text in the button.
         // Requires content between tags.
         if (stripos($text, '{button ') !== false) {
-            $replace['/\{button\s+(.*)\}(.*)\{\/button\}/isuU'] = '<a href="$1" class="btn btn-primary">$2</a>';
+            $newtext = preg_replace_callback(
+                '/\{button\s+(.*)\}(.*)\{\/button\}/isuU',
+                function ($matches) {
+                    // Remove HTML tags created by filters like Activity Name Auto-Linking and Convert URLs Into Links.
+                    $url = strip_tags($matches[1]);
+                    $label = $matches[2];
+                    return '<a href="' . $url . '" class="btn btn-primary">' . $label . '</a>';
+                },
+                $text
+            );
+            if ($newtext !== false) {
+                $text = $newtext;
+                $changed = true;
+            }
         }
 
         //

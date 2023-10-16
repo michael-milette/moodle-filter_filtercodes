@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
 - Alternative (alt) text to {qrcode} tag.
 ### Updated
+- The {button} tag will now attempt to automatically strip HTML tags created by some other filters.
 - Fixed profile pictures including user picture, gravatar and faceless avatar.
 - {scrape} tag now automatically removes any HTML in case Moodle turned the URL into a link.
 - Fixed issue with some tags not working if they were embedded in other tags.
