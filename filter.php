@@ -234,24 +234,20 @@ class filter_filtercodes extends moodle_text_filter {
      * Retrieves the URL for the user's profile picture, if one is available.
      *
      * @param object $user The Moodle user object for which we want a photo.
+     * @param mixed $size Can be sm|md|lg or an integer 2|1|3 or an integer size in pixels > 3.
      * @return string URL to the photo image file but with $1 for the size.
      */
-    private function getprofilepictureurl($user) {
-        if (isloggedin() && !isguestuser() && $user->picture > 0) {
-            $usercontext = context_user::instance($user->id, IGNORE_MISSING);
-            $url = moodle_url::make_pluginfile_url($usercontext->id, 'user', 'icon', 0, '/', "f$1")
-                    . '?rev=' . $user->picture;
-        } else {
-            // If the user does not have a profile picture, use the default faceless picture.
-            global $PAGE, $CFG;
-            $renderer = $PAGE->get_renderer('core');
-            if ($CFG->branch >= 33) {
-                $url = $renderer->image_url('u/f$1');
-            } else {
-                $url = $renderer->pix_url('u/f$1'); // Deprecated as of Moodle 3.3.
-            }
+    private function getprofilepictureurl($user, $size = 'md') {
+        global $PAGE;
+
+        $sizes = ['sm' => 35, '2' => 35, 'md' => 100, '1' => 100, 'lg' => 512, '3' => 512];
+        if (empty($px = $sizes[$size])) {
+            $px = $size; // Size was specified in pixels.
         }
-        return str_replace('/f%24', '/f$', $url);
+        $userpicture = new user_picture($user);
+        $userpicture->size = $px; // Size in pixels.
+        $url = $userpicture->get_url($PAGE);
+        return $url;
     }
 
     /**
@@ -1926,15 +1922,12 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{userpicture') !== false) {
                 // Tag: {userpictureurl size}.
                 // Description: URL of user's picture as set in their profile.
-                // Parameters: Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
+                // Parameters: Sizes: sm|md|lg or an integer 2|1|3 or an integer size in pixels > 3.
                 if (stripos($text, '{userpictureurl ') !== false) {
-                    $url = $this->getprofilepictureurl($USER);
-                    // Substitute the $1 in URL with value of (\w+), making sure to substitute text versions into numbers.
                     $newtext = preg_replace_callback(
                         '/\{userpictureurl\s+(\w+)\}/isuU',
-                        function ($matches) {
-                            $sublist = ['sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3'];
-                            return '{userpictureurl ' . $sublist[$matches[1]] . '}';
+                        function ($matches) use ($USER) {
+                            return $this->getprofilepictureurl($USER, $matches[1]);
                         },
                         $text
                     );
@@ -1942,21 +1935,18 @@ class filter_filtercodes extends moodle_text_filter {
                         $text = $newtext;
                         $changed = true;
                     }
-                    $replace['/\{userpictureurl\s+(\w+)\}/isuU'] = $url;
                 }
 
                 // Tag: {userpictureimg size}.
                 // Description: URL of user's picture as set in their profile, wrapped in an HTML img tag.
-                // Parameters: Sizes: 2 or sm (small), 1 or md (medium), 3 or lg (large).
+                // Parameters: Sizes: sm|md|lg or an integer 2|1|3 or an integer size in pixels > 3.
                 if (stripos($text, '{userpictureimg ') !== false) {
-                    $url = $this->getprofilepictureurl($USER);
-                    $tag = '<img src="' . $url . '" alt="' . $u->fullname . '" class="userpicture">';
-                    // Will substitute the $1 in URL with value of (\w+).
                     $newtext = preg_replace_callback(
                         '/\{userpictureimg\s+(\w+)\}/isuU',
-                        function ($matches) {
-                            $sublist = ['sm' => '2', '2' => '2', 'md' => '1', '1' => '1', 'lg' => '3', '3' => '3'];
-                            return '{userpictureimg ' . $sublist[$matches[1]] . '}';
+                        function ($matches) use ($USER) {
+                            $url = $this->getprofilepictureurl($USER, $matches[1]);
+                            $tag = '<img src="' . $url . '" alt="' . $USER->fullname . '" class="userpicture">';
+                            return $tag;
                         },
                         $text
                     );
@@ -1964,7 +1954,6 @@ class filter_filtercodes extends moodle_text_filter {
                         $text = $newtext;
                         $changed = true;
                     }
-                    $replace['/\{userpictureimg\s+(\w+)\}/isuU'] = $tag;
                 }
             }
 
@@ -2092,9 +2081,9 @@ class filter_filtercodes extends moodle_text_filter {
                                 $fields = '*',
                                 $strictness = IGNORE_MULTIPLE
                             );
-                            $imgurl = str_replace('$1', '3', $this->getprofilepictureurl($user));
                             $fullname = get_string('fullnamedisplay', null, $user);
                             if ($cshowpic) {
+                                $imgurl = $this->getprofilepictureurl($user, 3);
                                 $contacts .= '<img src="' . $imgurl . '" alt="' . $fullname
                                     . '" class="img-fluid img-thumbnail' . (!empty($cnt) ? ' mt-4' : '') . '">';
                                 $cnt++;
@@ -3145,8 +3134,8 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {categorycards} and {categorycards categoryid}.
-            // Description: Course categories presented as card tiles.
-            // Optional Parameter: Category id.
+            // Description: Course sub-categories of the current level presented as card tiles.
+            // Optional Parameter: You can specify a category id to display categories under that category. 0: Top level categories.
             if (stripos($text, '{categorycards') !== false) {
                 $categoryids = [];
                 $thiscategorycard = null;
