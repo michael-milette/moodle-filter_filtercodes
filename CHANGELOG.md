@@ -21,11 +21,13 @@ All notable changes to this project will be documented in this file.
 - (ALPHA) New table list layout setting for {coursecards}, {coursecardsbyenrol} and {mycoursescards} (affects all 3).
 - Fix-251: New optional course ID parameter for {coursestartdate} tag.
 - Alternative (alt) text to {qrcode} tag.
+- Documented tags in the source code.
+- Compatibility with Moodle 4.3.
 ### Updated
 - The {button} tag will now attempt to automatically strip HTML tags created by some other filters.
 - Fixed profile pictures including user picture, gravatar and faceless avatar.
 - {scrape} tag now automatically removes any HTML in case Moodle turned the URL into a link.
-- Fixed issue with some tags not working if they were embedded in other tags.
+- Reordered tags to fix issue where some tags were not working or not being interpreted in the right order.
 - Fix-271: Fixed issue with multiple static declarations.
 - Fix-272: Fixed issue with {categorydescription} tag if it includes an embedded URL for image.
 - Fix-274: Fixed issue creating {button} with {urlencoded}{shortcoursename}{/urlencoded}.

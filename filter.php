@@ -12,7 +12,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * Main filter code for FilterCodes.
@@ -20,7 +20,7 @@
  * @package    filter_filtercodes
  * @copyright  2017-2023 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -37,7 +37,7 @@ require_once($CFG->dirroot . '/course/renderer.php');
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *
  * @copyright  2017-2023 TNG Consulting Inc. - www.tngconsulting.ca
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_filtercodes extends moodle_text_filter {
     /** @var object $archetypes Object array of Moodle archetypes. */
@@ -1105,7 +1105,6 @@ class filter_filtercodes extends moodle_text_filter {
         static $mygroupslist;
 
         $replace = []; // Array of key/value filterobjects.
-        $changed = false; // Will be true if there were any changes.
 
         // Handle escaped tags to be ignored.
 
@@ -1415,7 +1414,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -1474,7 +1472,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -1494,7 +1491,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -1517,6 +1513,7 @@ class filter_filtercodes extends moodle_text_filter {
             if (!is_null($newtext)) {
                 $text = $newtext;
             }
+            $replace = [];
         }
 
         // ========================================================================================================================.
@@ -1573,12 +1570,12 @@ class filter_filtercodes extends moodle_text_filter {
         $newtext = null;
         if (count($replace) > 0) {
             $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
+            if (!is_null($newtext)) {
+                $text = $newtext;
+            }
+            $replace = [];
         }
-        if (!is_null($newtext)) {
-            $text = $newtext;
-            $changed = true;
-        }
-        $replace = [];
+
 
         // END: Process tags that may end up containing other tags first.
 
@@ -1788,7 +1785,6 @@ class filter_filtercodes extends moodle_text_filter {
                     );
                     if ($newtext !== false) {
                         $text = $newtext;
-                        $changed = true;
                     }
                 }
             } else {
@@ -1821,7 +1817,6 @@ class filter_filtercodes extends moodle_text_filter {
                     );
                     if ($newtext !== false) {
                         $text = $newtext;
-                        $changed = true;
                     }
                 }
             } else {
@@ -1888,7 +1883,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -1933,7 +1927,6 @@ class filter_filtercodes extends moodle_text_filter {
                     );
                     if ($newtext !== false) {
                         $text = $newtext;
-                        $changed = true;
                     }
                 }
 
@@ -1952,7 +1945,6 @@ class filter_filtercodes extends moodle_text_filter {
                     );
                     if ($newtext !== false) {
                         $text = $newtext;
-                        $changed = true;
                     }
                 }
             }
@@ -2375,7 +2367,6 @@ class filter_filtercodes extends moodle_text_filter {
                     );
                     if ($newtext !== false) {
                         $text = $newtext;
-                        $changed = true;
                     }
                 } else {
                     $replace['/\{coursestartdate(.*)\}/isuU'] = get_string('notyetstarted', 'completion');
@@ -2410,7 +2401,6 @@ class filter_filtercodes extends moodle_text_filter {
                         );
                         if ($newtext !== false) {
                             $text = $newtext;
-                            $changed = true;
                         }
                     }
                 } else { // No end date has been set.
@@ -2457,7 +2447,6 @@ class filter_filtercodes extends moodle_text_filter {
                         );
                         if ($newtext !== false) {
                             $text = $newtext;
-                            $changed = true;
                         }
                     }
                 } else {
@@ -2499,7 +2488,6 @@ class filter_filtercodes extends moodle_text_filter {
                         );
                         if ($newtext !== false) {
                             $text = $newtext;
-                            $changed = true;
                         }
                     }
                 } else {
@@ -3002,7 +2990,6 @@ class filter_filtercodes extends moodle_text_filter {
                 );
                 if ($newtext !== false) {
                     $text = $newtext;
-                    $changed = true;
                 }
             }
             unset($now);
@@ -3380,7 +3367,6 @@ class filter_filtercodes extends moodle_text_filter {
                         return 'showmore-' . $count++;
                 }, $newtext);
                 $text = $newtext;
-                $changed = true;
             }
             $newtext = str_replace('{/showmore}', '</span> <a href="#" class="fc-showmore" style="white-space: nowrap;" ' .
                     'onclick="m=document.getElementById(\'fc-showmore-tmp\').classList;m.toggle(\'hidden\');' .
@@ -3392,7 +3378,6 @@ class filter_filtercodes extends moodle_text_filter {
                         return 'showmore-' . $count++;
                 }, $newtext);
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -3491,21 +3476,24 @@ class filter_filtercodes extends moodle_text_filter {
             // Required Parameter: coursemoduleid is the id of the instance of the content module.
             // Requires content between tags.
             if (stripos($text, '{/ifactivitycompleted}') !== false) {
-                $course = $PAGE->course;
-                $completion = new completion_info($course);
+                $completion = new completion_info($PAGE->course);
                 if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
-                    $activities = $completion->get_activities();
-
+                    // Get a list of the the instances of this tag.
                     $re = '/{ifactivitycompleted\s+([0-9]+)\}(.*)\{\/ifactivitycompleted\}/isuU';
                     $found = preg_match_all($re, $text, $matches);
                     if ($found > 0) {
-                        foreach ($matches[1] as $modid) {
-                            if (array_key_exists($modid, $activities)) {
-                                $mod = $completion->get_data($activities[$modid], true, $USER->id);
-                                $key = '/{ifactivitycompleted\s+' . $modid . '\}(.*)\{\/ifactivitycompleted\}/isuU';
-                                if ($mod->completionstate) { // Activity completed by user. Just remove the tags, keep content.
+                        // Check if the activity is in the list.
+                        foreach ($matches[1] as $cmid) {
+                            if (($cm = get_coursemodule_from_id('', $cmid, 0)) !== false) { // Only process valid IDs.
+                                // Get the completion data for this activity.
+                                $data = $completion->get_data($cm, true, $USER->id);
+                                // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
+                                $key = '/{ifactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifactivitycompleted\}/isuU';
+                                if ($data->completionstate == COMPLETION_COMPLETE) {
+                                    // Completed. Keep the text and remove the tags.
                                     $replace[$key] = "$1";
-                                } else { // Activity not completed. Remove tags and content.
+                                } else {
+                                    // Activity not completed. Remove tags and content.
                                     $replace[$key] = '';
                                 }
                             }
@@ -3515,26 +3503,29 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {ifnotactivitycompleted coursemoduleid}...{/ifnotactivitycompleted}.
-            // Description: Will display content if the specified activity has not been completed.
+            // Description: Will display content if the specified activity has been completed.
             // Required Parameter: coursemoduleid is the id of the instance of the content module.
             // Requires content between tags.
             if (stripos($text, '{/ifnotactivitycompleted}') !== false) {
-                $course = $PAGE->course;
-                $completion = new completion_info($course);
+                $completion = new completion_info($PAGE->course);
                 if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
-                    $activities = $completion->get_activities();
-
+                    // Get a list of the the instances of this tag.
                     $re = '/{ifnotactivitycompleted\s+([0-9]+)\}(.*)\{\/ifnotactivitycompleted\}/isuU';
                     $found = preg_match_all($re, $text, $matches);
                     if ($found > 0) {
-                        foreach ($matches[1] as $modid) {
-                            if (array_key_exists($modid, $activities)) {
-                                $mod = $completion->get_data($activities[$modid], true, $USER->id);
-                                $key = '/{ifnotactivitycompleted\s+' . $modid . '\}(.*)\{\/ifnotactivitycompleted\}/isuU';
-                                if ($mod->completionstate) { // Activity completed. Remove tags and content.
-                                    $replace[$key] = '';
-                                } else { // Activity NOT completed by user. Just remove the tags, keep content.
+                        // Check if the activity is in the list.
+                        foreach ($matches[1] as $cmid) {
+                            if (($cm = get_coursemodule_from_id('', $cmid, 0)) !== false) { // Only process valid IDs.
+                                // Get the completion data for this activity.
+                                $data = $completion->get_data($cm, true, $USER->id);
+                                // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
+                                $key = '/{ifnotactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifnotactivitycompleted\}/isuU';
+                                if ($data->completionstate != COMPLETION_COMPLETE) {
+                                    // Completed. Keep the text and remove the tags.
                                     $replace[$key] = "$1";
+                                } else {
+                                    // Activity not completed. Remove tags and content.
+                                    $replace[$key] = '';
                                 }
                             }
                         }
@@ -3707,7 +3698,6 @@ class filter_filtercodes extends moodle_text_filter {
                 );
                 if ($newtext !== false) {
                     $text = $newtext;
-                    $changed = true;
                 }
             }
 
@@ -4509,7 +4499,6 @@ class filter_filtercodes extends moodle_text_filter {
                 $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
                 if (!is_null($newtext)) {
                     $text = $newtext;
-                    $changed = true;
                 }
             }
             unset($chart, $matches, $html, $value, $title);
@@ -4530,7 +4519,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -4553,7 +4541,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -4575,7 +4562,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -4597,7 +4583,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -4624,7 +4609,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -4651,7 +4635,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -4672,7 +4655,6 @@ class filter_filtercodes extends moodle_text_filter {
             );
             if ($newtext !== false) {
                 $text = $newtext;
-                $changed = true;
             }
         }
 
@@ -4680,14 +4662,14 @@ class filter_filtercodes extends moodle_text_filter {
         // Apply all of the filtercodes at once.
         //
 
+        // Apply all of the filtercodes so far.
         $newtext = null;
         if (count($replace) > 0) {
             $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
+            if (!is_null($newtext)) {
+                $text = $newtext;
+            }
             $replace = [];
-        }
-        if (!is_null($newtext)) {
-            $text = $newtext;
-            $changed = true;
         }
 
         // Handle escaped tags.

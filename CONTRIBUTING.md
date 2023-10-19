@@ -33,4 +33,4 @@ Once you have made all your changes, tests, and updated the documentation, make 
 
 Versioning
 -------------------
-We use [SemVer](http://semver.org/) for versioning.
+We use [SemVer](https://semver.org/) for versioning.

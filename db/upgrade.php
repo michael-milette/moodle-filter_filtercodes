@@ -1,5 +1,5 @@
 <?php
-// This file is part of the FilterCodes plugin for Moodle - http://moodle.org/
+// This file is part of the FilterCodes plugin for Moodle - https://moodle.org/
 //
 // FilterCodes is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with FilterCodes.  If not, see <http://www.gnu.org/licenses/>.
+// along with FilterCodes.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * FilterCodes filter upgrade code.
@@ -20,7 +20,7 @@
  * @package    filter_filtercodes
  * @copyright  2017-2023 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
