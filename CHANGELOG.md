@@ -1,9 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.3.8] 2023-10-13 (rc only)
+## [2.4.0] 2023-10-22
 ### Added
-- New {courseoutline} tag (ALPHA - temporary - Do Not Use).
+- New %7Bwwwroot%7D - alias for the {wwwroot} tag.
+### Updated
+- Fixed a failed PHPUnit test for {coursemoduleid}.
+- Fix spacing for some failed CSS code checks.
+- Tested compatible with PHP 8.2.
+
+## [2.4.0] 2023-10-20
+### Added
 - Support for FontAwesome v6 syntax including fa-solid and fa-brands. E.g. {fa-solid fa-user}.
 - Fix-266: New {multilang}{/multilang} tag. Note: Depends on Moodle's `Multi-language content` filter.
 - Fix-198: Module level assigned roles detection to {ifcustomrole} and {ifnotcustomrole} tags.
@@ -14,7 +21,7 @@ All notable changes to this project will be documented in this file.
 - New {supportservicespage} tag (for Moodle 4.2 and later).
 - New {coursemoduleid} tag.
 - Fix-261: New {courseimage-url} tag.
-- New {chart progresspie} tag.
+- New {chart progresspie} tag (ALPHA - not yet compatible with Firefox).
 - Fix-187: New {coursecard} tag (not the same as {coursecards}).
 - New {courseenrolmentdate} tag.
 - (ALPHA) New horizontal layout setting for {coursecards}, {coursecardsbyenrol} and {mycoursescards} (affects all 3).

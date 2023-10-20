@@ -1129,9 +1129,9 @@ class filter_filtercodes extends moodle_text_filter {
 
         // START: Process tags that may end up containing other tags first.
 
-        // ======================================================================================================================.
+        // ...===================================================================================================================.
         // Tags that may generate content which could possibly include additional tags. These need to be processed first.
-        // ======================================================================================================================.
+        // ...===================================================================================================================.
 
         // Loop through the tags that may have embedded tags until these generator tags have all been proceseed.
 
@@ -1144,9 +1144,9 @@ class filter_filtercodes extends moodle_text_filter {
 
         // We can now process all other tags including ones added by the code above.
 
-        // ======================================================================================================================.
+        // ...===================================================================================================================.
         // Tags that may be used as parameters by other tags shoud be processed before the tags that may them.
-        // ======================================================================================================================.
+        // ...===================================================================================================================.
 
         // Tag: {lang}.
         // Description: First 2-letters, in lowercase, of current language of user interface.
@@ -1313,6 +1313,13 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{referrer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
                 }
             }
+        }
+
+        // Tag: %7Bwwwroot%7D.
+        // Description: Alias for {wwwroot}.
+        // Parameters: None.
+        if (stripos($text, '%7Bwwwroot%7D') !== false) {
+            $text = str_replace('%7Bwwwroot%7D', '{wwwroot}', $text);
         }
 
         // Tag: {wwwroot}.
@@ -1516,9 +1523,9 @@ class filter_filtercodes extends moodle_text_filter {
             $replace = [];
         }
 
-        // ========================================================================================================================.
+        // ...===================================================================================================================.
         // The rest of the tags. Put tags that generate more tags and tags that will be used as parameters above.
-        // ========================================================================================================================.
+        // ...===================================================================================================================.
 
         // Tag: {idnumber}.
         // Description: idnumber as specified in the user's profile.
@@ -1575,7 +1582,6 @@ class filter_filtercodes extends moodle_text_filter {
             }
             $replace = [];
         }
-
 
         // END: Process tags that may end up containing other tags first.
 
@@ -2688,88 +2694,6 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{courserequest\}/i'] = $link;
             }
 
-            // Tag: {courseoutline} (ALPHA).
-            // Description: Display's the course outline.
-            // Parameters:  None.
-            if (stripos($text, '{courseoutline}') !== false) {
-                $outline = '';
-                $courseid = $PAGE->course->id;
-                if ($courseid != $SITE->id) {
-                    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-                    unset($courseid);
-                    $modinfo = get_fast_modinfo($course);
-                    if (empty(@$PAGE->cm->sectionnum)) {
-                        // Not in a section, include the course outline for all sections.
-                        $sections = $modinfo->get_section_info_all();
-                    } else {
-                        // In a section, only include the course outline for that section.
-                        $sections[0] = $modinfo->get_section_info($PAGE->cm->sectionnum);
-                    }
-                    // Create the course outline for each of these sections.
-                    foreach ($sections as $section) {
-                        if (empty($section->uservisible)) {
-                            continue;
-                        }
-                        // Section Name
-                        if (!empty((string)$section->name)) {
-                            // A custom section name is available.
-                            $section->name = format_string(
-                                $section->name,
-                                true,
-                                ['context' => context_course::instance($PAGE->course->id)]
-                            );
-                        } else {
-                            // Get the default name of the section if none has been specified.
-                            if ($section->section == 0) {
-                                // Get the name of the "General" section.
-                                $section->name = get_string('section0name', 'format_topics');;
-                            } else {
-                                // For all other sections.
-                                $courseformat = course_get_format($course);
-                                $section->name = $courseformat->get_default_section_name($section);
-                            }
-                        }
-                        // Section name.
-                        $outline .= get_string('topic') . ': ' . $section->name . '. ';
-                        if (!empty($section->summary)) {
-                            // Section summary.
-                            $outline .= get_string('summary') . ': ' . format_text($section->summary, FORMAT_HTML, array('noclean' => true, 'para' => false)) . '<br>' . PHP_EOL;
-                        }
-                        // Activity.
-                        $outline .= '<ul>';
-                        $cmids = explode(',', $modinfo->get_section_info($section->section)->sequence);
-                        foreach ($cmids as $cmid) {
-                            if (empty($cmid)) {
-                                // There are no activities in this section.
-                                continue;
-                            }
-                            $cm = $modinfo->get_cm($cmid);
-                            if (empty($cm->uservisible)) {
-                                continue;
-                            }
-                            // Activity name.
-                            $outline .= '<li>' . get_string('basicltiname', 'lti') . ': ' . html_writer::link($cm->url, $cm->get_formatted_name());
-                            if (!empty($cm->content)) {
-                                // Actvity description.
-                                $outline .= '. ' . get_string('basicltiintro', 'lti') . ': ' . format_text($cm->content, FORMAT_HTML, array('noclean' => true, 'para' => false));
-                            }
-                            $outline .= '</li>';
-                        }
-                        unset($cm);
-                        unset($cmid);
-                        unset($cmids);
-                        $outline .= '</ul>';
-                    }
-                    unset($sections);
-                    unset($section);
-                    unset($course);
-                    unset($modinfo);
-                }
-                unset($courseid);
-                $replace['/\{courseoutline\}/i'] = $outline;
-                unset($outline);
-            }
-
             if (stripos($text, '{courserequestmenu') !== false) {
                 // Add request a course link.
                 $context = context_system::instance();
@@ -3857,12 +3781,12 @@ class filter_filtercodes extends moodle_text_filter {
                         $replace['/\{\/ifnotenrolled\}/i'] = '';
                     }
                 }
-                // Tag: {ifincourse}...{/ifincourse}.
+                // Tag: {ifincourse}...{/ifincourse}. // phpcs:ignore .
                 if (stripos($text, '{ifincourse}') !== false) {
                     $replace['/\{ifincourse\}/i'] = '';
                     $replace['/\{\/ifincourse\}/i'] = '';
                 }
-                // Tag: {ifinsection}...{/ifinsection}.
+                // Tag: {ifinsection}...{/ifinsection}. // phpcs:ignore .
                 if (stripos($text, '{ifinsection}') !== false) {
                     if (!empty(@$PAGE->cm->sectionnum)) {
                         $replace['/\{ifinsection\}/i'] = '';
@@ -4603,7 +4527,7 @@ class filter_filtercodes extends moodle_text_filter {
             $newtext = preg_replace_callback(
                 '/\{help\}(.*)\{\/help\}/isuU',
                 function ($matches) use ($helpwrapper) {
-                    return $helpwrapper[0] . htmlspecialchars($matches[1]) . $helpwrapper[1];
+                    return $helpwrapper[0] . htmlspecialchars($matches[1], ENT_COMPAT) . $helpwrapper[1];
                 },
                 $text
             );
@@ -4629,7 +4553,7 @@ class filter_filtercodes extends moodle_text_filter {
             $newtext = preg_replace_callback(
                 '/\{info\}(.*)\{\/info\}/isuU',
                 function ($matches) use ($infowrapper) {
-                    return $infowrapper[0] . htmlspecialchars($matches[1]) . $infowrapper[1];
+                    return $infowrapper[0] . htmlspecialchars($matches[1], ENT_COMPAT) . $infowrapper[1];
                 },
                 $text
             );

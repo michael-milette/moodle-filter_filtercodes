@@ -123,7 +123,8 @@ $choices = ['' => get_string('none'),
         'email' => get_string('issueremail', 'badges'),
         'message' => get_string('message', 'message'),
         'profile' => get_string('profile'),
-        'phone' => get_string('phone')];
+        'phone' => get_string('phone'),
+];
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);
 
@@ -151,7 +152,8 @@ $description = get_string('teamcardsformat_desc', 'filter_filtercodes');
 $choices = ['' => get_string('none'),
         'infoicon' => get_string('icon'),
         'brief' => get_string('brief', 'filter_filtercodes'),
-        'verbose' => get_string('verbose', 'filter_filtercodes')];
+        'verbose' => get_string('verbose', 'filter_filtercodes'),
+];
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);
 
@@ -159,9 +161,10 @@ $settings->add($setting);
 $default = 'vertical'; // Default is vertical cards.
 $name = 'filter_filtercodes/coursecardsformat';
 $title = get_string('coursecardsformat', 'filter_filtercodes');
-$choices = ['vertical' => get_string('vertical', 'editor'),  // Image above the description.
-        'horizontal' => get_string('horizontal', 'editor'), // Image to the left of the description.
-        'table' => get_string('list') // Table with course name, category and description.
+$choices = [
+    'vertical' => get_string('vertical', 'editor'), // Image above the description.
+    'horizontal' => get_string('horizontal', 'editor'), // Image to the left of the description.
+    'table' => get_string('list'), // Table with course name, category and description.
 ];
 $description = get_string('coursecardsformat_desc', 'filter_filtercodes');
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);

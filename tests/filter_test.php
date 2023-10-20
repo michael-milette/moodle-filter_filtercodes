@@ -24,8 +24,6 @@
  * @covers filter_filtercodes
  */
 
-namespace filter_filtercodes;
-
 /**
  * Unit tests for FilterCodes filter.
  *
@@ -35,12 +33,16 @@ namespace filter_filtercodes;
  * @copyright  2017-2023 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class filter_test extends \advanced_testcase {
+namespace filter_filtercodes;
 
+use filter_filtercodes;
+class filter_test extends \advanced_testcase {
     /**
-     * Tests setup
+     * Setup the test framework
+     *
+     * @return void
      */
-    public function setUp() : void {
+    public function setUp(): void {
         global $PAGE;
         parent::setUp();
 
@@ -93,9 +95,9 @@ class filter_test extends \advanced_testcase {
                 'after'  => '<span lang="es">Algo de español</span><span lang="fr">Quelque chose en français</span>',
             ],
             [
-                'before' => 'Non-filtered {begin}{langx es}Algo de español{/langx}{langx fr}Quelque chose en français{/langx}'.
+                'before' => 'Non-filtered {begin}{langx es}Algo de español{/langx}{langx fr}Quelque chose en français{/langx}' .
                         ' Non-filtered{end}',
-                'after'  => 'Non-filtered {begin}<span lang="es">Algo de español</span><span lang="fr">Quelque chose en français'.
+                'after'  => 'Non-filtered {begin}<span lang="es">Algo de español</span><span lang="fr">Quelque chose en français' .
                         '</span> Non-filtered{end}',
             ],
             [
@@ -140,7 +142,8 @@ class filter_test extends \advanced_testcase {
             ],
             [
                 'before' => '{alternatename}',
-                'after'  => (!is_null($USER->alternatename) && !empty(trim($USER->alternatename))) ? $USER->alternatename : $USER->firstname,
+                'after'  => (!is_null($USER->alternatename) && !empty(trim($USER->alternatename))) ?
+                        $USER->alternatename : $USER->firstname,
             ],
             [
                 'before' => '{fullname}',
@@ -264,7 +267,7 @@ class filter_test extends \advanced_testcase {
             ],
             [
                 'before' => '{coursemoduleid}',
-                'after'  => (isset($PAGE->cm->id) ? $PAGE->cm->id : ''),
+                'after'  => (isset($PAGE->cm->id) ? $PAGE->cm->id : '{coursemoduleid}'),
             ],
             [
                 'before' => '{sectionid}',
@@ -289,7 +292,7 @@ class filter_test extends \advanced_testcase {
         ];
 
         foreach ($tests as $test) {
-            $filtered = format_text($test['before'], FORMAT_HTML, array('context' => \context_system::instance()));
+            $filtered = format_text($test['before'], FORMAT_HTML, ['context' => \context_system::instance()]);
             $this->assertEquals($test['after'], $filtered);
         }
     }

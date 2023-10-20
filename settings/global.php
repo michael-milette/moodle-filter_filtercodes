@@ -55,9 +55,13 @@ $default = '';
 $globaltagcount = get_config($name, 'globaltagcount');
 for ($i = 1; $i <= $globaltagcount; $i++) {
     // Tag name.
-    $setting = new admin_setting_configtext($name . '/globalname' . $i,
-            $tagtitle .  get_config($name, 'globalname' . $i),
-            $tagdescription, $default, PARAM_ALPHA);
+    $setting = new admin_setting_configtext(
+        $name . '/globalname' . $i,
+        $tagtitle .  get_config($name, 'globalname' . $i),
+        $tagdescription,
+        $default,
+        PARAM_ALPHA
+    );
     $settings->add($setting);
 
     // Tag content editor.
@@ -68,12 +72,22 @@ for ($i = 1; $i <= $globaltagcount; $i++) {
 
     if (empty($editor)) {
         // Plain text area.
-        $setting = new admin_setting_configtextarea($name . '/globalcontent' . $i, $contenttitle,
-                $contentdescription, $default, PARAM_RAW);
+        $setting = new admin_setting_configtextarea(
+            $name . '/globalcontent' . $i,
+            $contenttitle,
+            $contentdescription,
+            $default,
+            PARAM_RAW
+        );
     } else {
         // Rich text area.
-        $setting = new admin_setting_confightmleditor($name . '/globalcontent' . $i, $contenttitle,
-                $contentdescription, $default, PARAM_RAW);
+        $setting = new admin_setting_confightmleditor(
+            $name . '/globalcontent' . $i,
+            $contenttitle,
+            $contentdescription,
+            $default,
+            PARAM_RAW
+        );
     }
     $settings->add($setting);
 

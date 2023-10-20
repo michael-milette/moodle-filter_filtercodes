@@ -35,15 +35,18 @@ function filter_filtercodes_render_navbar_output() {
 
         // Don't filter menus on Theme Settings page or it will filter the custommenuitems field in the page and loose the tags.
         if ($PAGE->pagetype != 'admin-setting-themesettings' && stripos($CFG->custommenuitems, '{') !== false) {
-
             // Don't apply auto-linking filters.
             $filtermanager = filter_manager::instance();
             $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
             $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters'];
 
             // Filter Custom Menu.
-            $CFG->custommenuitems = $filtermanager->filter_text($CFG->custommenuitems,
-                    $PAGE->context, $filteroptions, $skipfilters);
+            $CFG->custommenuitems = $filtermanager->filter_text(
+                $CFG->custommenuitems,
+                $PAGE->context,
+                $filteroptions,
+                $skipfilters
+            );
         }
     }
     return '';
