@@ -469,7 +469,7 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
-     * Render course cards for list of course ids.
+     * Render course cards for list of course ids. Not visible for hidden courses or if it has expired.
      *
      * @param array $rcourseids Array of course ids.
      * @param string $format orientation/layout of course cards.
@@ -487,9 +487,11 @@ class filter_filtercodes extends moodle_text_filter {
             }
             $course = get_course($courseid);
             $context = context_course::instance($course->id);
-            // Skip if the course is not visible to user or course is site.
-            $visible = ($course->visible && !empty($course->enddate) && time() < $course->enddate);
+            // Course will be displayed if its visibility is set to Show AND (either has no end date OR a future end date).
+            $visible = ($course->visible && (empty($course->enddate) || time() < $course->enddate));
+            // Courses not visible will be still visible to site admins or users with viewhiddencourses capability.
             if (!$visible && !($isadmin || has_capability('moodle/course:viewhiddencourses', $context))) {
+                // Skip if the course is not visible to user or course is the "site".
                 continue;
             }
 
@@ -2591,7 +2593,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $chelper->set_attributes(['class' => 'frontpage-course-list-all']);
                 // Find all coursecards tags where category ID was specified.
                 preg_match_all('/\{coursecards ([0-9]+)\}/', $text, $matches);
-                // Check if tag with no cateogry.
+                // Check if tag with no category.
                 $nocat = (stripos($text, '{coursecards}') !== false);
                 if ($nocat) {
                     $matches[1][] = 0;

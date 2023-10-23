@@ -1,10 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.4.0] 2023-10-22
+## [2.4.1] 2023-10-23
 ### Added
 - New %7Bwwwroot%7D - alias for the {wwwroot} tag.
 ### Updated
+- Fixed: {coursecard}, {coursecards}, {mycoursescards} and {coursecardsbyenrol} now include visible courses without an end date.
 - Fixed a failed PHPUnit test for {coursemoduleid}.
 - Fix spacing for some failed CSS code checks.
 - Tested compatible with PHP 8.2.
