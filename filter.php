@@ -502,9 +502,9 @@ class filter_filtercodes extends moodle_text_filter {
             }
             $coursefiles = $course->get_course_overviewfiles();
             $imgurl = '';
-            if ($CFG->branch >= 33) {
+            if ($CFG->branch >= 311) {
                 $imgurl = \core_course\external\course_summary_exporter::get_course_image($course);
-            } else { // Previous to Moodle 3.3.
+            } else { // Previous to Moodle 3.11.
                 foreach ($coursefiles as $file) {
                     if ($isimage = $file->is_valid_image()) {
                             // The file_encode_url() function is deprecated as per MDL-31071 but still in wide use.

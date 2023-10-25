@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.4.2] 2023-10-25
+### Updated
+- Fixed bug with rendering of coursecards in Moodle 3.10 and earlier.
+
 ## [2.4.1] 2023-10-23
 ### Added
 - New %7Bwwwroot%7D - alias for the {wwwroot} tag.
