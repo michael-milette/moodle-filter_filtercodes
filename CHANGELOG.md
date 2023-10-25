@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.4.2] 2023-10-26 (dev)
+### Added
+- Fixed {preferredlanguage} tag if system default language is a child language pack.
+### Updated
+- Instructions for enabling filters in custom menu.
+
 ## [2.4.2] 2023-10-25
 ### Updated
 - Fixed bug with rendering of coursecards in Moodle 3.10 and earlier.

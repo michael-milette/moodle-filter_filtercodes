@@ -1163,23 +1163,25 @@ class filter_filtercodes extends moodle_text_filter {
         // Parameters: None.
         if (stripos($text, '{preferredlanguage}') !== false) {
             if (isloggedin() && !isguestuser()) {
-                if ('en' == $USER->lang) {
+                // If user does not have a preferred language, default to the system default language.
+                $preflang = empty($USER->lang) ? $CFG->lang : $USER->lang;
+                if ($preflang == 'en') {
                     $langconfig = $CFG->dirroot . '/lang/en/langconfig.php';
                 } else {
-                    $langconfig = $CFG->dataroot . '/lang/' . $USER->lang . '/langconfig.php';
+                    $langconfig = $CFG->dataroot . '/lang/' . $preflang . '/langconfig.php';
                 }
                 // Ignore parents here for now.
                 $string = [];
                 include($langconfig);
                 if (!empty($string['thislanguage'])) {
-                    $replace['/\{preferredlanguage\}/i'] = '<span lang="' . $string['iso6391'] . '">' . $string['thislanguage']
-                            . '</span>';
+                    $replace['/\{preferredlanguage\}/i'] = '<span lang="' . $preflang . '">' . $string['thislanguage'] . '</span>';
                 } else { // This should never happen since the known user already exists.
                     $replace['/\{preferredlanguage\}/i'] = get_string('unknown', 'notes');
                 }
             } else {
                 $replace['/\{preferredlanguage\}/i'] = '';
             }
+            unset($preflang, $langconfig, $string);
         }
 
         // Tag: %7Buserid%7D.
