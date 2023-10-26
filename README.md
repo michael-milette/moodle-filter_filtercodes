@@ -522,12 +522,13 @@ To patch Moodle to handle this properly for most Moodle themes, cherry-pick the 
 * Moodle 4.0: https://github.com/michael-milette/moodle/tree/MDL-63219-M400
 * Moodle 4.1: https://github.com/michael-milette/moodle/tree/MDL-63219-M401
 * Moodle 4.2: https://github.com/michael-milette/moodle/tree/MDL-63219-M402
+* Moodle 4.3: https://github.com/michael-milette/moodle/tree/MDL-63219-M403
 * Moodle master: https://github.com/michael-milette/moodle/tree/MDL-63219-master
 
-Example: To apply the patch for Moodle using git (change the "M400" for other versions):
+Example: To apply the patch for Moodle using git (change the "M403" for other versions):
 
 ```bash
-    git fetch https://github.com/michael-milette/moodle MDL-63219-M402
+    git fetch https://github.com/michael-milette/moodle MDL-63219-M403
     git cherry-pick FETCH_HEAD
 ```
 
@@ -539,7 +540,7 @@ This is usually enough to make the filters work in the custom menu. However, we 
 
 There is no tested patch available for all 3rd party Moodle 4.0 themes. It is recommended to use Moodle core patch above which is known to work.
 
-The follow ALPHA code is based on information available in the Boost theme for Moodle 4.0/4.1/4.2. You will **also need** to apply the theme patch **For themes based on boost (Moodle 3.2 and later)** included below.
+The follow ALPHA code is based on information available in the Boost theme for Moodle 4.x. You will **also need** to apply the theme patch **For themes based on boost (Moodle 3.2 and later)** included below.
 
 Add this code to the core_renderer section (probably located in /theme/yourtheme/classes/navigation/output/primary.php) of your theme. Note: Your theme may even already have such a class (they often do):
 
