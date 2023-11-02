@@ -1,11 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.4.2] 2023-10-26 (dev)
+## [2.4.2] 2023-11-01 (dev)
 ### Added
 - Fixed {preferredlanguage} tag if system default language is a child language pack.
 ### Updated
 - Instructions for enabling filters in custom menu.
+- {courseshortname} tag can now be used inside other tags.
 
 ## [2.4.2] 2023-10-25
 ### Updated

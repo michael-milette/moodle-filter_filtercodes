@@ -1283,6 +1283,19 @@ class filter_filtercodes extends moodle_text_filter {
                     $replace['/\{coursemoduleid\}/isu'] = $PAGE->cm->id;
                 }
             }
+
+            // Tag: {courseshortname}.
+            // Description: The short name of this course. If not in a course, will use the site's shortname.
+            // Parameters: None.
+            if (stripos($text, '{courseshortname}') !== false) {
+                $course = $PAGE->course;
+                if ($course->id == $SITE->id) { // Front page - use site name.
+                    $replace['/\{courseshortname\}/i'] = format_string($SITE->shortname);
+                } else { // In a course - use course full name.
+                    $coursecontext = context_course::instance($course->id);
+                    $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
+                }
+            }
         }
 
         // Tag: {categoryid}.
@@ -2722,19 +2735,6 @@ class filter_filtercodes extends moodle_text_filter {
                     }
                 } else {
                     $replace['/\{courserequestmenu\}/i'] = '';
-                }
-            }
-
-            // Tag: {courseshortname}.
-            // Description: The short name of this course. If not in a course, will use the site's shortname.
-            // Parameters: None.
-            if (stripos($text, '{courseshortname}') !== false) {
-                $course = $PAGE->course;
-                if ($course->id == $SITE->id) { // Front page - use site name.
-                    $replace['/\{courseshortname\}/i'] = format_string($SITE->shortname);
-                } else { // In a course - use course full name.
-                    $coursecontext = context_course::instance($course->id);
-                    $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
                 }
             }
         }
