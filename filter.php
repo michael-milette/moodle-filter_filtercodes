@@ -663,8 +663,12 @@ class filter_filtercodes extends moodle_text_filter {
             case 'profile':
                 $link = '<a href="' . new moodle_url('/user/profile.php', ['id' => $user->id]) . '">' . $name . '</a>';
                 break;
-            case 'phone1' && !empty($user->phone1):
-                $link = '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
+            case 'phone1':
+                if (!empty($user->phone1)) {
+                    $link = '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
+                } else {
+                    $link = $name;
+                }
                 break;
             default:
                 $link = $name;
@@ -966,7 +970,8 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tag: {teamcards}.
-        // Description: Displays a series of card for each teacher on the site. Configurable in FilterCodes settins.
+        // Description: Displays a series of card for each contact on the site. Configurable in FilterCodes settings.
+        // Note: Included selected roles in Site Administration > Appearance > Course > Course Contacts.
         // Parameters: None.
         if (stripos($text, '{teamcards}') !== false) {
             global $OUTPUT, $DB;
@@ -974,10 +979,10 @@ class filter_filtercodes extends moodle_text_filter {
             $sql = 'SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
                     u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1
                     FROM {course} c, {role_assignments} ra, {user} u, {context} ct
-                    WHERE c.id = ct.instanceid AND ra.roleid = 3 AND ra.userid = u.id AND ct.id = ra.contextid
+                    WHERE c.id = ct.instanceid AND ra.roleid in (?) AND ra.userid = u.id AND ct.id = ra.contextid
                         AND u.suspended = 0 AND u.deleted = 0
                     ORDER BY u.lastname desc, u.firstname';
-            $users = $DB->get_records_sql($sql);
+            $users = $DB->get_records_sql($sql, [$CFG->coursecontact]);
 
             $cards = '';
             if (count($users)) {

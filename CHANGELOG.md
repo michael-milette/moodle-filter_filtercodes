@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 - Refactored for performance improvement performance. Enable more tags for embedding.
 - Instructions for enabling filters in custom menu.
 - {courseshortname} tag can now be used inside other tags.
+- {teamcards} now lists users with selected roles in Site Administration > Appearance > Course > Course Contacts.
+- Fixed issue where a tel: link was unexpectedly created in {teamcards}.
 
 ## [2.4.2] 2023-10-25
 ### Updated
