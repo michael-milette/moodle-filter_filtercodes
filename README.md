@@ -214,7 +214,8 @@ Also, see Courses section below.
 * {courserequestmenu0} : Request a course / Course request in a top level custom menu.
 * {courserequestmenu} : Request a course / Course request in submenu.
 * {menuadmin} : Useful dynamic menu for Moodle teachers, managers and administrators.
-* {menudev} : Useful dynamic menu for Moodle developers.
+* {menudev} : Useful dynamic menu for Moodle developers. Only visible when debugging is set to DEVELOPER mode.
+* {menuthemes} : Theme switcher. Only for administrators. Not available after POST. Allow Theme Changes on URL must be enabled. Will be visible even when Administrator is using the **Log In As** feature to log in as a different user.
 
 ### URL
 
@@ -1086,6 +1087,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * 80% progresspie chart [{chart progresspie 80 --size:100px --border:15px --color:darkblue --bgcolor:lightblue --title:Are you over 70%?}]: {chart progresspie 80 --size:100px --border:15px --color:darkblue --bgcolor:lightblue --title:Are you over 70%?}
 * Moodle Admin custom menu items [{menuadmin}]: <br><pre>{menuadmin}</pre>
 * Moodle Dev custom menu items [{menudev}]: <br><pre>{menudev}</pre>
+* Moodle Admin theme switcher [{menuthemes}]: <br><pre>{menuthemes}</pre>
 * Course's category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course's category name (blank if not in a course) [{categoryname}]: {categoryname}
 * Course's category number (blank if not in a course) [{categorynumber}]: {categorynumber}

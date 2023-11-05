@@ -867,6 +867,30 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{menudev\}/i'] = $menu;
         }
 
+        // Tag: {menuthemes}.
+        // Description: Theme switcher for custom menu. Only for administrators. Not available after POST. Allow Theme Changes on URL must be enabled.
+        // Parameters: None.
+        if (stripos($text, '{menuthemes}') !== false) {
+            $menu = '';
+            if (is_siteadmin() && empty($_POST)) { // If a site administrator.
+                if (get_config('core', 'allowthemechangeonurl')) {
+                    $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
+                        . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+                    $url .= (strpos($url, '?') ? '&' : '?');
+                    $themeslist = core_component::get_plugin_list('theme');
+                    $menu = '';
+                    foreach ($themeslist as $theme => $themedir) {
+                        $themename = ucfirst(get_string('pluginname', 'theme_' . $theme));
+                        $menu .= '-' . $themename . '|' . $url . 'theme=' . $theme . PHP_EOL;
+                    }
+                    if (!empty($menu)) {
+                        $menu = 'Themes' . PHP_EOL . $menu;
+                    }
+                }
+            }
+            $replace['/\{menuthemes\}/i'] = $menu;
+        }
+
         // Check if any {course*} or %7Bcourse*%7D tags. Note: There is another course tags section further down.
         $coursetagsexist = (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false);
         if ($coursetagsexist) {
