@@ -725,11 +725,11 @@ class filter_filtercodes extends moodle_text_filter {
      *
      * This function processes tags that generate content that could potentially include additional tags.
      *
-     * @param string $text The unprocessed text.
-     * @return string The updated text.
+     * @param string $text The unprocessed text. Passed by refernce.
+     * @return boolean True of there are more tags to be processed, otherwise false.
      */
-    private function generatortags($text) {
-        global $CFG, $PAGE;
+    private function generatortags(&$text) {
+        global $CFG, $PAGE, $DB;
 
         $replace = []; // Array of key/value filterobjects.
 
@@ -861,6 +861,45 @@ class filter_filtercodes extends moodle_text_filter {
                         PHP_EOL;
             }
             $replace['/\{menudev\}/i'] = $menu;
+        }
+
+        // Check if any {course*} or %7Bcourse*%7D tags. Note: There is another course tags section further down.
+        $coursetagsexist = (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false);
+        if ($coursetagsexist) {
+            // Tag: {coursesummary} or {coursesummary courseid}.
+            // Description: Course summary as defined in the course settings.
+            // Optional parameters: Course id. Default is to use the current course, or site summary if not in a course.
+            if (stripos($text, '{coursesummary') !== false) {
+                if (stripos($text, '{coursesummary}') !== false) {
+                    // No course ID specified.
+                    $coursecontext = context_course::instance($PAGE->course->id);
+                    $PAGE->course->summary == null ? '' : $PAGE->course->summary;
+                    $replace['/\{coursesummary\}/i'] = format_text(
+                        $PAGE->course->summary,
+                        FORMAT_HTML,
+                        ['context' => $coursecontext]
+                    );
+                }
+                if (stripos($text, '{coursesummary ') !== false) {
+                    // Course ID was specified.
+                    preg_match_all('/\{coursesummary ([0-9]+)\}/', $text, $matches);
+                    // Eliminate course IDs.
+                    $courseids = array_unique($matches[1]);
+                    $coursecontext = context_course::instance($PAGE->course->id);
+                    foreach ($courseids as $id) {
+                        $course = $DB->get_record('course', ['id' => $id]);
+                        if (!empty($course)) {
+                            $course->summary == null ? '' : $course->summary;
+                            $replace['/\{coursesummary ' . $course->id . '\}/isuU'] = format_text(
+                                $course->summary,
+                                FORMAT_HTML,
+                                ['context' => $coursecontext]
+                            );
+                        }
+                    }
+                    unset($matches, $course, $courseids, $id);
+                }
+            }
         }
 
         // Tag: {formquickquestion}
@@ -1076,15 +1115,81 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Apply all of the filtercodes so far.
+        /* ---------------- Apply all of the filtercodes so far. ---------------*/
+
+        return $this->replacetags($text, $replace);
+    }
+
+    /**
+     * Handle escaped tags.
+     *
+     * @param string $text Content to be processed.
+     * @return string Processed text.
+     *
+     * Note: First time this function is called, it will mark all tags that should not be processed.
+     *       The second time it is called, it will turn escaped tags back into unprocessed plain text tags.
+     */
+    private function escapedtags($text) {
+        static $escapedtags;
+        static $escapedtagsenc;
+
+        if (!isset($escapedtags)) {
+            // First time, escape tags.
+            if (!empty(get_config('filter_filtercodes', 'escapebraces'))) {
+                // Temporarily escaped tags these with non-printable character. Will be re-adjusted after processing tags.
+                $escapedtags = (strpos($text, '[{') !== false && strpos($text, '}]') !== false);
+                if ($escapedtags) {
+                    $text = str_replace('[{', chr(2), $text);
+                    $text = str_replace('}]', chr(3), $text);
+                }
+                // Temporarily escaped tags these with non-printable character. Will be re-adjusted after processing tags.
+                $escapedtagsenc = (strpos($text, '[%7B') !== false && strpos($text, '%7D]') !== false);
+                if ($escapedtagsenc) {
+                    $text = str_replace('[%7B', chr(4), $text);
+                    $text = str_replace('%7D]', chr(5), $text);
+                }
+            } else {
+                $escapedtags = false;
+                $escapedtagsenc = false;
+            }
+        } else {
+            // Complete the process of replacing escaped tags with single braces.
+            if ($escapedtags) {
+                $text = str_replace(chr(2), '{', $text);
+                $text = str_replace(chr(3), '}', $text);
+            }
+            // Complete the process of replacing escaped tags with single escaped braces.
+            if ($escapedtagsenc) {
+                $text = str_replace(chr(4), '%7B', $text);
+                $text = str_replace(chr(5), '%7D', $text);
+            }
+        }
+        return $text;
+    }
+
+    /**
+     * Applies all filters defined in $replace to the $text.
+     *
+     * @param string $text Content to be processed. Passed by reference.
+     * @param array $replace Array in the format Key=Regex, Value=To be applied. Passed by reference.
+     * @return boolean True of there are more changes, otherwise false.
+     */
+    private function replacetags(&$text, &$replace) {
         $newtext = null;
+        $moretags = true;
         if (count($replace) > 0) {
             $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
             if (!is_null($newtext)) {
                 $text = $newtext;
+                if (strpos($text, '{') === false && strpos($text, '%7B') === false) {
+                    // No more tags? Put back the escaped tags, if any and return false.
+                    $text = $this->escapedtags($text);
+                    $moretags = false;
+                }
             }
+            $replace = [];
         }
-        return $text;
+        return $moretags;
     }
 
     /**
@@ -1108,46 +1213,26 @@ class filter_filtercodes extends moodle_text_filter {
 
         $replace = []; // Array of key/value filterobjects.
 
-        // Handle escaped tags to be ignored.
-
-        // Determine if the option to {escape braces}] is enabled.
-        if (!empty(get_config('filter_filtercodes', 'escapebraces'))) {
-            // Temporarily escaped tags these with non-printable character. Will be re-adjusted after processing tags.
-            $escapedtags = (strpos($text, '[{') !== false && strpos($text, '}]') !== false);
-            if ($escapedtags) {
-                $text = str_replace('[{', chr(2), $text);
-                $text = str_replace('}]', chr(3), $text);
-            }
-            // Temporarily escaped tags these with non-printable character. Will be re-adjusted after processing tags.
-            $escapedtagsenc = (strpos($text, '[%7B') !== false && strpos($text, '%7D]') !== false);
-            if ($escapedtagsenc) {
-                $text = str_replace('[%7B', chr(4), $text);
-                $text = str_replace('%7D]', chr(5), $text);
-            }
-        } else {
-            $escapedtags = false;
-            $escapedtagsenc = false;
-        }
+        // Handle escaped tags to be ignored. Remove them so they don't get processed if the option to [{escape braces}] is enabled.
+        $text = $this->escapedtags($text);
 
         // START: Process tags that may end up containing other tags first.
 
         // ...===================================================================================================================.
-        // Tags that may generate content which could possibly include additional tags. These need to be processed first.
+        // Tags that may create more content which could possibly include tags. These need to be processed first.
         // ...===================================================================================================================.
 
         // Loop through the tags that may have embedded tags until these generator tags have all been proceseed.
 
         $loop = 0; // We only support tags nested up to 3 deep - to handle circular references.
-        $newtext = $text;
         do {
-            $text = $newtext;
-        } while ($loop++ < 3 && ($newtext = $this->generatortags($text)) != $text);
-        $text = $newtext;
+            $moretags = $this->generatortags($text);
+        } while ($loop++ < 3 && $moretags);
 
         // We can now process all other tags including ones added by the code above.
 
         // ...===================================================================================================================.
-        // Tags that may be used as parameters by other tags shoud be processed before the tags that may them.
+        // Tags that may be used as parameters by other tags shoud be processed before the tags that may include them.
         // ...===================================================================================================================.
 
         // Tag: {lang}.
@@ -1530,158 +1615,18 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{multilang\s+(.*)\}(.*)\{\/multilang\}/isuU'] = '<span lang="$1" class="multilang">$2</span>';
         }
 
-        // Apply all of the filtercodes so far.
-        $newtext = null;
-        if (count($replace) > 0) {
-            $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
-            if (!is_null($newtext)) {
-                $text = $newtext;
-            }
-            $replace = [];
+        /* ---------------- Apply all of the filtercodes so far. ---------------*/
+
+        if ($this->replacetags($text, $replace) == false) {
+            // Go no further if there are no more tags.
+            return $text;
         }
 
         // ...===================================================================================================================.
-        // The rest of the tags. Put tags that generate more tags and tags that will be used as parameters above.
+        // The rest of the tags below. Put tags above if they generate more tags or will be used as parameters for other tags.
         // ...===================================================================================================================.
 
-        // Tag: {idnumber}.
-        // Description: idnumber as specified in the user's profile.
-        // Parameters: None.
-        if (stripos($text, '{idnumber}') !== false) {
-            $replace['/\{idnumber\}/i'] = isloggedin() && !isguestuser() ? $USER->idnumber : '';
-        }
-
-        // Check if any {course*} or %7Bcourse*%7D tags. Note: There is another course tags section further down.
-        $coursetagsexist = (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false);
-        if ($coursetagsexist) {
-            // Tag: {coursesummary} or {coursesummary courseid}.
-            // Description: Course summary as defined in the course settings.
-            // Optional parameters: Course id. Default is to use the current course, or site summary if not in a course.
-            if (stripos($text, '{coursesummary') !== false) {
-                if (stripos($text, '{coursesummary}') !== false) {
-                    // No course ID specified.
-                    $coursecontext = context_course::instance($PAGE->course->id);
-                    $PAGE->course->summary == null ? '' : $PAGE->course->summary;
-                    $replace['/\{coursesummary\}/i'] = format_text(
-                        $PAGE->course->summary,
-                        FORMAT_HTML,
-                        ['context' => $coursecontext]
-                    );
-                }
-                if (stripos($text, '{coursesummary ') !== false) {
-                    // Course ID was specified.
-                    preg_match_all('/\{coursesummary ([0-9]+)\}/', $text, $matches);
-                    // Eliminate course IDs.
-                    $courseids = array_unique($matches[1]);
-                    $coursecontext = context_course::instance($PAGE->course->id);
-                    foreach ($courseids as $id) {
-                        $course = $DB->get_record('course', ['id' => $id]);
-                        if (!empty($course)) {
-                            $course->summary == null ? '' : $course->summary;
-                            $replace['/\{coursesummary ' . $course->id . '\}/isuU'] = format_text(
-                                $course->summary,
-                                FORMAT_HTML,
-                                ['context' => $coursecontext]
-                            );
-                        }
-                    }
-                    unset($matches, $course, $courseids, $id);
-                }
-            }
-        }
-
-        // Apply all of the filtercodes so far.
-        $newtext = null;
-        if (count($replace) > 0) {
-            $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
-            if (!is_null($newtext)) {
-                $text = $newtext;
-            }
-            $replace = [];
-        }
-
-        // END: Process tags that may end up containing other tags first.
-
-        //
-        // FilterCodes extended (future feature).
-        //
-        if (file_exists(dirname(__FILE__) . '/filter-ext.php')) {
-            include(dirname(__FILE__) . '/filter-ext.php');
-        }
-
-        // Tag: {webpage}
-        // Description: Social field in user's profile. This migrates from pre-Moodle 3.11 - for backwards compatibility.
-        // Parameters: None.
-        if (stripos($text, '{webpage}') !== false) {
-            if ($CFG->branch >= 311) {
-                $text = str_replace('{webpage}', '{profile_field_webpage}', $text);
-            } else {
-                $replace['/\{webpage\}/i'] = isloggedin() && !isguestuser() ? $USER->url : '';
-            }
-        }
-
-        if (stripos($text, '{profile') !== false) {
-            // Tag: {profile_field_shortname}.
-            // Description: Contents of the custom user profile field. Will apply formating to datetime and checkbox type fields.
-            // Required Parameters: shortname of a custom profile field.
-            if (stripos($text, '{profile_field') !== false) {
-                $isuser = (isloggedin() && !isguestuser());
-                // Cached the defined custom profile fields and data.
-                if (!isset($profilefields)) {
-                    $profilefields = $DB->get_records('user_info_field', null, '', 'id, datatype, shortname, visible, param3');
-                    if ($isuser && !empty($profilefields)) {
-                        $profiledata = $DB->get_records_menu('user_info_data', ['userid' => $USER->id], '', 'fieldid, data');
-                    }
-                }
-                $showhidden = get_config('filter_filtercodes', 'showhiddenprofilefields');
-                foreach ($profilefields as $field) {
-                    // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
-                    if (
-                        $isuser
-                        && stripos($text, '{profile_field_' . $field->shortname . '}') !== false
-                        && ($field->visible != '0' || !empty($showhidden))
-                    ) {
-                        $data = isset($profiledata[$field->id]) ? trim($profiledata[$field->id]) : '' . PHP_EOL;
-                        switch ($field->datatype) { // Format data for some field types.
-                            case 'datetime':
-                                // Include date and time or just date?
-                                $datetimeformat = !empty($field->param3) ? 'strftimedaydatetime' : 'strftimedate';
-                                $data = empty($data) ? '' : userdate($data, get_string($datetimeformat, 'langconfig'));
-                                break;
-                            case 'checkbox':
-                                // 1 = Yes, 0 = No
-                                $data = empty($data) ? get_string('no') : get_string('yes');
-                                break;
-                        }
-                        $replace['/\{profile_field_' . $field->shortname . '\}/i'] = $data;
-                    } else {
-                        $replace['/\{profile_field_' . $field->shortname . '\}/i'] = '';
-                    }
-                }
-            }
-
-            // Tag: {profilefullname}.
-            // Description: Full name of current user.
-            // Parameters: None.
-            if (stripos($text, '{profilefullname}') !== false) {
-                $fullname = '';
-                if (isloggedin() && !isguestuser()) {
-                    $fullname = get_string('fullnamedisplay', null, $USER);
-                    if ($PAGE->pagelayout == 'mypublic' && $PAGE->pagetype == 'user-profile') {
-                        $userid = optional_param('userid', optional_param(
-                            'user',
-                            optional_param('id', $USER->id, PARAM_INT),
-                            PARAM_INT
-                        ), PARAM_INT);
-                        if ($user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0])) {
-                            $fullname = get_string('fullnamedisplay', null, $user);
-                        }
-                    }
-                }
-                $replace['/\{profilefullname\}/i'] = $fullname;
-                unset($fullname);
-            }
-        }
+        // Simple tags that don't ever have parameters.
 
         // Substitutions.
 
@@ -1783,6 +1728,141 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{department\}/i'] = isloggedin() && !isguestuser() ? $USER->department : '';
         }
 
+        // Tag: {idnumber}.
+        // Description: idnumber as specified in the user's profile.
+        // Parameters: None.
+        if (stripos($text, '{idnumber}') !== false) {
+            $replace['/\{idnumber\}/i'] = isloggedin() && !isguestuser() ? $USER->idnumber : '';
+        }
+
+        // Tag: {webpage}
+        // Description: Social field in user's profile. This migrates from pre-Moodle 3.11 - for backwards compatibility.
+        // Parameters: None.
+        if (stripos($text, '{webpage}') !== false) {
+            if ($CFG->branch >= 311) {
+                $text = str_replace('{webpage}', '{profile_field_webpage}', $text);
+            } else {
+                $replace['/\{webpage\}/i'] = isloggedin() && !isguestuser() ? $USER->url : '';
+            }
+        }
+
+        // Tag: {diskfreespace}.
+        // Description: Free space of Moodle application volume.
+        // Parameters: None.
+        if (stripos($text, '{diskfreespace}') !== false) {
+            $bytes = @disk_free_space('.');
+            $replace['/\{diskfreespace\}/i'] = $this->humanbytes($bytes);
+        }
+
+        // Tag: {diskfreespacedata}.
+        // Description: Free space of Moodle data volume.
+        // Parameters: None.
+        if (stripos($text, '{diskfreespacedata}') !== false) {
+            $bytes = @disk_free_space($CFG->dataroot);
+            $replace['/\{diskfreespacedata\}/i'] = $this->humanbytes($bytes);
+        }
+
+        // Tags starting with: {support...}.
+        if (stripos($text, '{support') !== false) {
+            // Tag: {supportname}.
+            // Description: Support name for the site from Moodle settings.
+            // None.
+            if (stripos($text, '{supportname}') !== false) {
+                $replace['/\{supportname\}/i'] = $CFG->supportname;
+            }
+
+            // Tag: {supportemail}.
+            // Description: Support email address for the site from Moodle settings.
+            // None.
+            if (stripos($text, '{supportemail}') !== false) {
+                $replace['/\{supportemail\}/i'] = $CFG->supportemail;
+            }
+
+            // Tag: {supportpage}.
+            // Description: URL of Support for the site from Moodle settings.
+            // None.
+            if (stripos($text, '{supportpage}') !== false) {
+                $replace['/\{supportpage\}/i'] = $CFG->supportpage;
+            }
+
+            // Tag: {supportservicespage}.
+            // Description: URL of support services page from Moodle settings.
+            // None.
+            if ($CFG->branch >= 402 && stripos($text, '{supportservicespage}') !== false) {
+                $replace['/\{supportservicespage\}/i'] = $CFG->servicespage;
+            }
+        }
+
+        /* ---------------- Apply all of the filtercodes so far. ---------------*/
+
+        if ($this->replacetags($text, $replace) == false) {
+            // Go no further if there are no more tags.
+            return $text;
+        }
+
+        if (stripos($text, '{profile') !== false) {
+            // Tag: {profile_field_shortname}.
+            // Description: Contents of the custom user profile field. Will apply formating to datetime and checkbox type fields.
+            // Required Parameters: shortname of a custom profile field.
+            if (stripos($text, '{profile_field') !== false) {
+                $isuser = (isloggedin() && !isguestuser());
+                // Cached the defined custom profile fields and data.
+                if (!isset($profilefields)) {
+                    $profilefields = $DB->get_records('user_info_field', null, '', 'id, datatype, shortname, visible, param3');
+                    if ($isuser && !empty($profilefields)) {
+                        $profiledata = $DB->get_records_menu('user_info_data', ['userid' => $USER->id], '', 'fieldid, data');
+                    }
+                }
+                $showhidden = get_config('filter_filtercodes', 'showhiddenprofilefields');
+                foreach ($profilefields as $field) {
+                    // If the tag exists and is not set to "Not visible" in the custom profile field's settings.
+                    if (
+                        $isuser
+                        && stripos($text, '{profile_field_' . $field->shortname . '}') !== false
+                        && ($field->visible != '0' || !empty($showhidden))
+                    ) {
+                        $data = isset($profiledata[$field->id]) ? trim($profiledata[$field->id]) : '' . PHP_EOL;
+                        switch ($field->datatype) { // Format data for some field types.
+                            case 'datetime':
+                                // Include date and time or just date?
+                                $datetimeformat = !empty($field->param3) ? 'strftimedaydatetime' : 'strftimedate';
+                                $data = empty($data) ? '' : userdate($data, get_string($datetimeformat, 'langconfig'));
+                                break;
+                            case 'checkbox':
+                                // 1 = Yes, 0 = No
+                                $data = empty($data) ? get_string('no') : get_string('yes');
+                                break;
+                        }
+                        $replace['/\{profile_field_' . $field->shortname . '\}/i'] = $data;
+                    } else {
+                        $replace['/\{profile_field_' . $field->shortname . '\}/i'] = '';
+                    }
+                }
+            }
+
+            // Tag: {profilefullname}.
+            // Description: Full name of current user.
+            // Parameters: None.
+            if (stripos($text, '{profilefullname}') !== false) {
+                $fullname = '';
+                if (isloggedin() && !isguestuser()) {
+                    $fullname = get_string('fullnamedisplay', null, $USER);
+                    if ($PAGE->pagelayout == 'mypublic' && $PAGE->pagetype == 'user-profile') {
+                        $userid = optional_param('userid', optional_param(
+                            'user',
+                            optional_param('id', $USER->id, PARAM_INT),
+                            PARAM_INT
+                        ), PARAM_INT);
+                        if ($user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0])) {
+                            $fullname = get_string('fullnamedisplay', null, $user);
+                        }
+                    }
+                }
+                $replace['/\{profilefullname\}/i'] = $fullname;
+                unset($fullname);
+            }
+        }
+
         // Tag: {firstaccessdate} or {firstaccessdate dateTimeFormat}.
         // Description: Date that the user first accessed the site.
         // Optional parameters: dateTimeFormat - either one of Moodle's built-in data/time formats or php's strftime.
@@ -1847,37 +1927,6 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        // Tags starting with: {support...}.
-        if (stripos($text, '{support') !== false) {
-            // Tag: {supportname}.
-            // Description: Support name for the site from Moodle settings.
-            // None.
-            if (stripos($text, '{supportname}') !== false) {
-                $replace['/\{supportname\}/i'] = $CFG->supportname;
-            }
-
-            // Tag: {supportemail}.
-            // Description: Support email address for the site from Moodle settings.
-            // None.
-            if (stripos($text, '{supportemail}') !== false) {
-                $replace['/\{supportemail\}/i'] = $CFG->supportemail;
-            }
-
-            // Tag: {supportpage}.
-            // Description: URL of Support for the site from Moodle settings.
-            // None.
-            if (stripos($text, '{supportpage}') !== false) {
-                $replace['/\{supportpage\}/i'] = $CFG->supportpage;
-            }
-
-            // Tag: {supportservicespage}.
-            // Description: URL of support services page from Moodle settings.
-            // None.
-            if ($CFG->branch >= 402 && stripos($text, '{supportservicespage}') !== false) {
-                $replace['/\{supportservicespage\}/i'] = $CFG->servicespage;
-            }
-        }
-
         // Tag: {scrape url="" <optional parameters>}.
         // Description: Scrapes content from an external HTML page. Cannot scrape secure pages from sites that requires login.
         // Optional parameters: You may use any combination of the following: tag="..." class="..." id="..." code="...".
@@ -1907,22 +1956,6 @@ class filter_filtercodes extends moodle_text_filter {
             if ($newtext !== false) {
                 $text = $newtext;
             }
-        }
-
-        // Tag: {diskfreespace}.
-        // Description: Free space of Moodle application volume.
-        // Parameters: None.
-        if (stripos($text, '{diskfreespace}') !== false) {
-            $bytes = @disk_free_space('.');
-            $replace['/\{diskfreespace\}/i'] = $this->humanbytes($bytes);
-        }
-
-        // Tag: {diskfreespacedata}.
-        // Description: Free space of Moodle data volume.
-        // Parameters: None.
-        if (stripos($text, '{diskfreespacedata}') !== false) {
-            $bytes = @disk_free_space($CFG->dataroot);
-            $replace['/\{diskfreespacedata\}/i'] = $this->humanbytes($bytes);
         }
 
         // Any {user*} tags.
@@ -4566,6 +4599,13 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        /* ---------------- Apply all of the filtercodes so far. ---------------*/
+
+        if ($this->replacetags($text, $replace) == false) {
+            // Go no further if there are no more tags.
+            return $text;
+        }
+
         // Tag: {button URL}...{/button}.
         // Description: Creates a button that displays the content and links to the specified URL.
         // Required Parameter: URL. You also need to specify the content which will become the text in the button.
@@ -4586,32 +4626,9 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
-        //
-        // Apply all of the filtercodes at once.
-        //
+        /* ---------------- Apply the rest of the FilterCodes tags. ---------------*/
 
-        // Apply all of the filtercodes so far.
-        $newtext = null;
-        if (count($replace) > 0) {
-            $newtext = preg_replace(array_keys($replace), array_values($replace), $text);
-            if (!is_null($newtext)) {
-                $text = $newtext;
-            }
-            $replace = [];
-        }
-
-        // Handle escaped tags.
-
-        // Complete the process of replacing escaped tags with single braces.
-        if ($escapedtags) {
-            $text = str_replace(chr(2), '{', $text);
-            $text = str_replace(chr(3), '}', $text);
-        }
-        // Complete the process of replacing escaped tags with single escaped braces.
-        if ($escapedtagsenc) {
-            $text = str_replace(chr(4), '%7B', $text);
-            $text = str_replace(chr(5), '%7D', $text);
-        }
+        $this->replacetags($text, $replace);
 
         return $text;
     }
