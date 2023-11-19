@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [2.4.2] 2023-11-05 (dev)
 ### Added
 - New {menuthemes} tag.
+- New {sitename} tag.
 ### Updated
 - Fixed {preferredlanguage} tag if system default language is a child language pack.
 - Refactored for performance improvement performance. Enable more tags for embedding.

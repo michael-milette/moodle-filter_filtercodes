@@ -1822,6 +1822,16 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        if (stripos($text, '{site') !== false) {
+            // Tag: {sitename}.
+            // Description: The full name of the site name.
+            // Parameters: None.
+            if (stripos($text, '{sitename') !== false) {
+                $sitecontext = context_system::instance();
+                $replace['/\{sitename\}/i'] = format_string($SITE->fullname, true, ['context' => $sitecontext]);
+            }
+        }
+
         /* ---------------- Apply all of the filtercodes so far. ---------------*/
 
         if ($this->replacetags($text, $replace) == false) {
