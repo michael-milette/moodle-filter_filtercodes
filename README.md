@@ -299,7 +299,8 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 #### Roles
 
 * {ifguest}{/ifguest} : Will display the enclosed content only if the user is logged in as guest.
-* {ifstudent}{/ifstudent} : Will display the enclosed content only if the user is logged in and enrolled in the course (no other roles).
+* {ifstudent}{/ifstudent} : Will display the enclosed content only if the user is logged in and enrolled in the course as a student (has no other roles).
+* {ifminstudent}{/ifminstudent} : Will display the enclosed content only if the user is logged in and enrolled in the course as a student (may have other roles).
 * {ifassistant}{/ifassistant} : Will display the enclosed content only if the user is logged in as a non-editing teacher in the current course.
 * {ifminassistant}{/ifminassistant} : Will display the enclosed content only if the user is logged in as a non-editing teacher or above in the current course.
 * {ifteacher}{/ifteacher} : Will display the enclosed content only if the user is logged in as a teacher in the current course.
@@ -1161,6 +1162,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If LoggedOut [{ifloggedout}]You are logged-out.[{/ifloggedout}]: {ifloggedout}You are logged-out.{/ifloggedout}
 * If Guest [{ifguest}]You are a guest.[{/ifguest}]: {ifguest}You are a guest.{/ifguest}
 * If Student [{ifstudent}]You are a student who is logged in and enrolled in this course and has no other roles.[{/ifstudent}]: {ifstudent}You are a student who is logged in and enrolled in this course and has no other roles.{/ifstudent}
+* If Student [{ifminstudent}]You are a student who is logged in and enrolled in this course.[{/ifminstudent}]: {ifminstudent}You are a student who is logged in and enrolled in this course.{/ifminstudent}
 * If Non-editing Teacher [{ifassistant}]You are an assistant teacher.[{/ifassistant}]: {ifassistant}You are an assistant teacher.{/ifassistant}
 * If Non-editing Teacher (minimum) [{ifminassistant}]You are an assistant teacher or above.[{/ifminassistant}]: {ifminassistant}You are an assistant teacher or above.{/ifminassistant}
 * If Teacher [{ifteacher}You are a teacher.{/ifteacher}]: {ifteacher}You are a teacher.{/ifteacher}

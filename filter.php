@@ -1837,6 +1837,13 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{sitesummary}') !== false) {
                 $replace['/\{sitesummary\}/i'] = $SITE->fullname;
             }
+
+            // Tag: {siteyear}.
+            // Description: Current year, 4 digits.
+            // Parameters: None.
+            if (stripos($text, '{siteyear}') !== false) {
+                $replace['/\{siteyear\}/i'] = date('Y');
+            }
         }
 
         /* ---------------- Apply all of the filtercodes so far. ---------------*/
@@ -2299,7 +2306,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {coursename}.
-            // Description: The full name of a course or the site name.
+            // Description: The full name of a course, or the site name if not in a course.
             // Parameters: None.
             if (stripos($text, '{coursename') !== false) {
                 if (stripos($text, '{coursename}') !== false) {
@@ -2963,13 +2970,6 @@ class filter_filtercodes extends moodle_text_filter {
                 $replace['/\{mycoursesmenu\}/i'] = '-' . get_string('loggedinnot') . PHP_EOL;
                 $replace['/\{mycoursescards[^}]*\}/i'] = '<p>' . get_string('loggedinnot') . '</p>';
             }
-        }
-
-        // Tag: {siteyear}.
-        // Description: Current year, 4 digits.
-        // Parameters: None.
-        if (stripos($text, '{siteyear}') !== false) {
-            $replace['/\{siteyear\}/i'] = date('Y');
         }
 
         // Tag: {now} or {now dateTimeFormat}.
@@ -3915,6 +3915,23 @@ class filter_filtercodes extends moodle_text_filter {
                 // And remove the ifstudent strings.
                 if (stripos($text, '{ifstudent}') !== false) {
                     $replace['/\{ifstudent\}(.*)\{\/ifstudent\}/isuU'] = '';
+                }
+            }
+
+            // Tag: {ifminstudent}...{/ifminstudent}.
+            // Description: This is similar to {ifstudent} but will displays if user's list of roles includes student.
+            // Example: Student but may also be teacher or administrator.
+            // Parameters: None.
+            // Requires content between tags.
+            if (stripos($text, '{ifminstudent}') !== false) {
+                // If an assistant (non-editing teacher).
+                if ($this->hasarchetype('student')) {
+                    // Just remove the tags.
+                    $replace['/\{ifminstudent\}/i'] = '';
+                    $replace['/\{\/ifminstudent\}/i'] = '';
+                } else {
+                    // Remove the ifassistant strings.
+                    $replace['/\{ifminstudent\}(.*)\{\/ifminstudent\}/isuU'] = '';
                 }
             }
 
