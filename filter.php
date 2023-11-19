@@ -1830,6 +1830,13 @@ class filter_filtercodes extends moodle_text_filter {
                 $sitecontext = context_system::instance();
                 $replace['/\{sitename\}/i'] = format_string($SITE->fullname, true, ['context' => $sitecontext]);
             }
+
+            // Tag: {sitesummary}.
+            // Description: Site summary as defined in the Front Page/Site Home Settings.
+            // Parameters: None.
+            if (stripos($text, '{sitesummary}') !== false) {
+                $replace['/\{sitesummary\}/i'] = $SITE->fullname;
+            }
         }
 
         /* ---------------- Apply all of the filtercodes so far. ---------------*/

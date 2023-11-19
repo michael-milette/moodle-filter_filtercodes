@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New {menuthemes} tag.
 - New {sitename} tag.
+- New {sitesummary} tag.
 ### Updated
 - Fixed {preferredlanguage} tag if system default language is a child language pack.
 - Refactored for performance improvement performance. Enable more tags for embedding.
