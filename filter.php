@@ -1797,7 +1797,11 @@ class filter_filtercodes extends moodle_text_filter {
             // Description: Support name for the site from Moodle settings.
             // None.
             if (stripos($text, '{supportname}') !== false) {
-                $replace['/\{supportname\}/i'] = $CFG->supportname;
+                if (empty($CFG->supportname)) {
+                    $replace['/\{supportname\}/i'] = get_string('notavailable', 'filter_filtercodes');
+                } else {
+                    $replace['/\{supportname\}/i'] = $CFG->supportname;
+                }
             }
 
             // Tag: {supportemail}.
