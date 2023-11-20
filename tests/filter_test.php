@@ -24,6 +24,10 @@
  * @covers filter_filtercodes
  */
 
+namespace filter_filtercodes;
+
+use filter_filtercodes;
+
 /**
  * Unit tests for FilterCodes filter.
  *
@@ -33,9 +37,6 @@
  * @copyright  2017-2023 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace filter_filtercodes;
-
-use filter_filtercodes;
 class filter_test extends \advanced_testcase {
     /**
      * Setup the test framework

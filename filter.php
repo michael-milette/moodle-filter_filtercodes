@@ -868,8 +868,9 @@ class filter_filtercodes extends moodle_text_filter {
         }
 
         // Tag: {menuthemes}.
-        // Description: Theme switcher for custom menu. Only for administrators. Not available after POST. Allow Theme Changes on URL must be enabled.
+        // Description: Theme switcher for custom menu. Only for administrators. Not available after POST.
         // Parameters: None.
+        // Allow Theme Changes on URL must be enabled for this to have any effect.
         if (stripos($text, '{menuthemes}') !== false) {
             $menu = '';
             if (is_siteadmin() && empty($_POST)) { // If a site administrator.
@@ -1507,7 +1508,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Description: Moodle Session key. Does not work in forums. May be disabled in FilterCodes settings.
         // Parameters: None.
         if (get_config('filter_filtercodes', 'enable_sesskey')) {
-            if (@$PAGE->cm->modname != 'forum' && $PAGE->pagetype != 'admin-cron') {
+            if ((!isset($PAGE->cm->modname) || $PAGE->cm->modname != 'forum') && $PAGE->pagetype != 'admin-cron') {
                 if (stripos($text, '{sesskey}') !== false) {
                     // Tag: {sesskey}.
                     $replace['/\{sesskey\}/i'] = sesskey();
@@ -2497,9 +2498,9 @@ class filter_filtercodes extends moodle_text_filter {
             // Optional Parameters: dateTimeFormat - either in a Moodle datetime format or a PHP strftime format.
             // Optional Parameters: id - id of a course.
             if (stripos($text, '{courseenddate') !== false) {
-            	// Replace {courseenddate} tag with formatted date.
-            	if (stripos($text, '{courseenddate}') !== false) {
-                	if (empty($PAGE->course->enddate)) {
+                // Replace {courseenddate} tag with formatted date.
+                if (stripos($text, '{courseenddate}') !== false) {
+                    if (empty($PAGE->course->enddate)) {
                         $enddate = $PAGE->course->enddate;
                     } else {
                         $enddate = $DB->get_field_select('course', 'enddate', 'id = :id', ['id' => $PAGE->course->id]);

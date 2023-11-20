@@ -16,7 +16,7 @@
     --bgcolor: #f0f0f0;
 
     width: var(--size);
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1;
     position: relative;
     display: inline-grid;
     margin: 5px;
@@ -34,7 +34,7 @@
     inset: 0;
     background:
         radial-gradient(farthest-side, var(--color) 98%, #0000) top/var(--border) var(--border) no-repeat,
-        conic-gradient(var(--color) calc(var(--percent) *1%), #0000 0);
+        conic-gradient(var(--color) calc(var(--percent) * 1%), #0000 0);
     -webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--border)), #000 calc(100% - var(--border)));
     mask: radial-gradient(farthest-side, #0000 calc(99% - var(--border)), #000 calc(100% - var(--border)));
     background-color: var(--bgcolor);
@@ -42,9 +42,9 @@
 
 }
 .fc-progress-pie:after {
-    inset: calc(50% - var(--border)/2);
+    inset: calc(50% - var(--border) / 2);
     background: var(--color);
-    transform: rotate(calc(var(--percent) *3.6deg)) translateY(calc(50% - var(--size)/2));
+    transform: rotate(calc(var(--percent) * 3.6deg)) translateY(calc(50% - var(--size) / 2));
     content: none;
 }
 .fc-progress-pie.animate {

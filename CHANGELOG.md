@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.4.3] 2023-11-19 (dev)
+## [2.4.3] 2023-11-20
 ### Added
 - New {menuthemes} tag.
 - New {sitename} tag.
