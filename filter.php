@@ -1808,7 +1808,11 @@ class filter_filtercodes extends moodle_text_filter {
             // Description: Support email address for the site from Moodle settings.
             // None.
             if (stripos($text, '{supportemail}') !== false) {
-                $replace['/\{supportemail\}/i'] = $CFG->supportemail;
+                if (empty($CFG->supportname)) {
+                    $replace['/\{supportemail\}/i'] = get_string('notavailable', 'filter_filtercodes');
+                } else {
+                    $replace['/\{supportemail\}/i'] = $CFG->supportemail;
+                }
             }
 
             // Tag: {supportpage}.

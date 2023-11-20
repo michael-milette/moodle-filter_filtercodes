@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - New {sitesummary} tag.
 - New {ifminstudent} tag.
 ### Updated
+- If support email is blank, the {supportemail} tag will display "Not available" instead of the tag.
 - If support name is blank, the {supportname} tag will display "Not available" instead of the tag.
 - Fixed {preferredlanguage} tag if system default language is a child language pack.
 - Refactored for performance improvement performance. Enable more tags for embedding.
