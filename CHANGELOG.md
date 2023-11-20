@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 - New {sitesummary} tag.
 - New {ifminstudent} tag.
 ### Updated
+- {courseenddate} tag can now take an optional courseid parameter.
+- {courseenddate} tag will now display strftime date formats.
 - If support page is blank, the {supportpage} tag will be blank instead of displaying the tag.
 - If support email is blank, the {supportemail} tag will display "Not available" instead of the tag.
 - If support name is blank, the {supportname} tag will display "Not available" instead of the tag.

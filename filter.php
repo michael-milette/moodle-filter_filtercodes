@@ -2469,10 +2469,8 @@ class filter_filtercodes extends moodle_text_filter {
 
                             // Check if this is a built-in Moodle date/time format.
                             if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
-                                // If it does, get the strftime string.
+                                // It is! Get the strftime string.
                                 $matches[1] = get_string($matches[1], 'langconfig');
-                            } else {
-                                $matches[1] = get_string('strftimedatefullshort');
                             }
 
                             // Format the date.
@@ -2494,37 +2492,94 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {courseenddate} or {coursesenddate dateTimeFormat}.
+            // Tag: {courseenddate} or {coursesenddate dateTimeFormat courseid}.
             // Description: The course end date.
             // Optional Parameters: dateTimeFormat - either in a Moodle datetime format or a PHP strftime format.
+            // Optional Parameters: id - id of a course.
             if (stripos($text, '{courseenddate') !== false) {
-                if (empty($PAGE->course->enddate)) {
-                    $PAGE->course->enddate = $DB->get_field_select('course', 'enddate', 'id = :id', ['id' => $PAGE->course->id]);
+            	// Replace {courseenddate} tag with formatted date.
+            	if (stripos($text, '{courseenddate}') !== false) {
+                	if (empty($PAGE->course->enddate)) {
+                        $enddate = $PAGE->course->enddate;
+                    } else {
+                        $enddate = $DB->get_field_select('course', 'enddate', 'id = :id', ['id' => $PAGE->course->id]);
+                    }
+                    if (!empty($enddate)) {
+                        $replace['/\{courseenddate\}/i'] = userdate($startdate, get_string('strftimedatefullshort'));
+                    } else {
+                        $replace['/\{courseenddate(.*)\}/isuU'] = get_string('none');
+                    }
                 }
-                if (!empty($PAGE->course->enddate)) {
-                    // Replace {courseenddate} tag with formatted date.
-                    if (stripos($text, '{courseenddate}') !== false) {
-                        $replace['/\{courseenddate\}/i'] = userdate($PAGE->course->enddate, get_string('strftimedatefullshort'));
-                    }
-                    // Replace {courseenddate dateTimeFormat} tag and parameters with formatted date.
-                    if (stripos($text, '{courseenddate ') !== false) {
-                        $newtext = preg_replace_callback(
-                            '/\{courseenddate\s+(.*)\}/isuU',
-                            function ($matches) use ($PAGE) {
-                                // Check if this is a built-in Moodle date/time format.
-                                if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
-                                    // It is! Get the strftime string.
-                                    $matches[1] = get_string($matches[1], 'langconfig');
+
+                // Replace {courseenddate dateTimeFormat} tag and parameters with formatted date.
+                if (stripos($text, '{courseenddate ') !== false) {
+                    $newtext = preg_replace_callback(
+                        '/\{courseenddate\s(.*)(\s\d+)?\}/isuU',
+                        function ($matches) use ($PAGE, $DB) {
+
+                            // Optional date/time format.
+                            if (is_numeric($matches[1])) {
+                                // Only the course ID was specified.
+                                $matches[2] = trim($matches[1]); // Course ID.
+                                $matches[1] = ''; // Date/time format.
+                            } else {
+                                $matches[2] = empty($matches[2]) ? $PAGE->course->id : trim($matches[2]); // Course ID.
+                                $matches[1] = trim($matches[1]);
+                            }
+
+                            // Optional course ID.
+                            if (empty($matches[2])) { // No course ID, use current course.
+                                if (!empty($PAGE->course->enddate)) {
+                                    $enddate = $PAGE->course->enddate;
+                                } else {
+                                    $enddate = $DB->get_field_select(
+                                        'course',
+                                        'enddate',
+                                        'id = :id',
+                                        ['id' => $PAGE->course->id]
+                                    );
                                 }
-                                return userdate($PAGE->course->enddate, $matches[1]);
-                            },
-                            $text
-                        );
-                        if ($newtext !== false) {
-                            $text = $newtext;
-                        }
+                            } else { // Course ID was specifed.
+                                $course = $DB->get_record('course', ['id' => $matches[2]]);
+                                if (!empty($course)) {
+                                    $enddate = $course->enddate;
+                                    if (!empty($course->enddate)) {
+                                        $enddate = $course->enddate;
+                                    } else {
+                                        $enddate = $DB->get_field_select(
+                                            'course',
+                                            'enddate',
+                                            'id = :id',
+                                            ['id' => $course->id]
+                                        );
+                                    }
+                                } else {
+                                    // Should only happen if course does not exist.
+                                    $enddate = 1; // December 31, 1969.
+                                }
+                            }
+
+                            // Check if this is a built-in Moodle date/time format.
+                            if (!empty($matches[1]) && get_string_manager()->string_exists($matches[1], 'langconfig')) {
+                                // It is! Get the strftime string.
+                                $matches[1] = get_string($matches[1], 'langconfig');
+                            }
+
+                            // Format the date.
+                            if (!empty($enddate)) {
+                                $enddate = userdate($enddate, $matches[1]);
+                            } else {
+                                $enddate = get_string('none');
+                            }
+
+                            return $enddate;
+                        },
+                        $text
+                    );
+                    if ($newtext !== false) {
+                        $text = $newtext;
                     }
-                } else { // No end date has been set.
+                } else {
                     $replace['/\{courseenddate(.*)\}/isuU'] = get_string('none');
                 }
             }
