@@ -1819,7 +1819,11 @@ class filter_filtercodes extends moodle_text_filter {
             // Description: URL of Support for the site from Moodle settings.
             // None.
             if (stripos($text, '{supportpage}') !== false) {
-                $replace['/\{supportpage\}/i'] = $CFG->supportpage;
+                if (empty($CFG->supportname)) {
+                    $replace['/\{supportpage\}/i'] = '';
+                } else {
+                    $replace['/\{supportpage\}/i'] = $CFG->supportpage;
+                }
             }
 
             // Tag: {supportservicespage}.
