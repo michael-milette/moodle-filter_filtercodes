@@ -413,12 +413,15 @@ This will add a Home link, a listing of top-level categories, a listing of cours
 
 ### Admin menu
 
-Parts of this menu will only appear for Moodle administrators, managers, course creators and teachers depending on the user's role within the current context. For example:
+Parts of this menu will only appear for Moodle administrators, managers, course creators and teachers depending on the user's role within the current context.
+
+For example:
 
 - {ifincourse} menu items will only appear in a course.
 - Category Course Creators will only see the Admin menu within categories where they have that role.
 - Teachers will only see the Admin menu within the course where they are a teacher.
 
+```
     {ifminteacher}
     {fa fa-wrench} {getstring}admin{/getstring}
     {/ifminteacher}
@@ -460,6 +463,7 @@ Parts of this menu will only appear for Moodle administrators, managers, course 
     -{getstring}site{/getstring}: Boost|/admin/settings.php?section=themesettingboost
     -{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})|/admin/index.php
     {/ifadmin}
+```
 
 Tips: If you are not using the Boost theme, customize the link in the 3rd to last line to your theme's settings page.
 
