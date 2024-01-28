@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.4.4] 2024-01-28 (dev)
+### Updated
+- Copyright notice to include 2024.
+
 ## [2.4.3] 2023-11-20
 ### Added
 - New {menuthemes} tag.

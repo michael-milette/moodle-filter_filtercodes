@@ -18,7 +18,7 @@
  * Main filter code for FilterCodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2023 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2024 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -36,7 +36,7 @@ require_once($CFG->dirroot . '/course/renderer.php');
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *
- * @copyright  2017-2023 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2024 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_filtercodes extends moodle_text_filter {
@@ -799,8 +799,13 @@ class filter_filtercodes extends moodle_text_filter {
                         PHP_EOL;
                 $menu .= '-{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php' .
                         '?section=supportcontact' . PHP_EOL;
-                $menu .= '-{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php' .
-                        '?section=themesettings|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+                if ($CFG->branch >= 404) {
+                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}themesettingsadvanced{/getstring}|/admin/settings.php' .
+                            '?section=themesettingsadvanced|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+                } else {
+                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php' .
+                            '?section=themesettings|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+                }
                 if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
                     $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|/admin/settings.php' .
                             '?section=themesetting' . $theme . PHP_EOL;
