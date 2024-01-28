@@ -397,19 +397,21 @@ Some themes may not support horizontal menu separators. Again, contact the devel
 
 This will add a Home link, a listing of top-level categories, a listing of courses in which you are currently enrolled, and a Logout link, but only if you are currently logged in.
 
-    {fa fa-home} {getstring}home{/getstring}|/{ifloggedin}?redirect=0{/ifloggedin}
-    {fa fa-th} {mlang en}Course catalogue{mlang}{mlang fr}Répertoire des cours{mlang}
-    {categories0menu}
-        -###
-        -{getstring}fulllistofcourses{/getstring}|/course/
-    {ifloggedin}
-    {fa fa-tachometer} {getstring}myhome{/getstring}|/my/
-    {fa fa-graduation-cap} {getstring}mycourses{/getstring}
-    {mycoursesmenu}
-    {courserequestmenu}
-    {getstring}logout{/getstring}|/login/logout.php?sesskey={sesskey}
-    {/ifloggedin}
-    {fa fa-question} {getstring}help{/getstring}|/mod/page/view.php?id=275
+```
+{fa fa-home} {getstring}home{/getstring}|/{ifloggedin}?redirect=0{/ifloggedin}
+{fa fa-th} {mlang en}Course catalogue{mlang}{mlang fr}Répertoire des cours{mlang}
+{categories0menu}
+    -###
+    -{getstring}fulllistofcourses{/getstring}|/course/
+{ifloggedin}
+{fa fa-tachometer} {getstring}myhome{/getstring}|/my/
+{fa fa-graduation-cap} {getstring}mycourses{/getstring}
+{mycoursesmenu}
+{courserequestmenu}
+{getstring}logout{/getstring}|/login/logout.php?sesskey={sesskey}
+{/ifloggedin}
+{fa fa-question} {getstring}help{/getstring}|/mod/page/view.php?id=275
+```
 
 ### Admin menu
 
@@ -422,47 +424,53 @@ For example:
 - Teachers will only see the Admin menu within the course where they are a teacher.
 
 ```
-    {ifminteacher}
-    {fa fa-wrench} {getstring}admin{/getstring}
-    {/ifminteacher}
-    {ifmincreator}
-    -{getstring}administrationsite{/getstring}|/admin/search.php
-    -{toggleeditingmenu}
-    -Moodle Admin Basics course|https://learn.moodle.org/course/view.php?id=23353|Learn.Moodle.org
-    -###
-    {/ifmincreator}
-    {ifminmanager}
-    -{getstring}user{/getstring}: {mlang en}Management{mlang}{mlang fr}Gestion{mlang}|/admin/user.php
-    {ifminsitemanager}
-    -{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php
-    -###
-    {/ifminsitemanager}
-    -{getstring}course{/getstring}: {mlang en}Management{mlang}{mlang fr}Gestion{mlang}|/course/management.php
-    -{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php?category={coursecategoryid}&returnto=topcat
-    {/ifminmanager}
-    {ifminteacher}
-    -{getstring}course{/getstring}: {getstring}restore{/getstring}|/backup/restorefile.php?contextid={coursecontextid}
-    {ifincourse}
-    -{getstring}course{/getstring}: {getstring}backup{/getstring}|/backup/backup.php?id={courseid}
-    -{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}
-    -{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/index.php?type={courseid}
-    -{getstring}course{/getstring}: {getstring}reset{/getstring}|/course/reset.php?id={courseid}
-    -Course: Layoutit|https://www.layoutit.com/build" target="popup" onclick="window.open('https://www.layoutit.com/build','popup','width=1340,height=700'); return false;|Bootstrap Page Builder
-    {/ifincourse}
-    -###
-    {/ifminteacher}
-    {ifminmanager}
-    -{getstring}site{/getstring}: System reports|/admin/category.php?category=reports
-    {/ifminmanager}
-    {ifadmin}
-    -{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php?section=additionalhtml
-    -{getstring}site{/getstring}: {getstring:admin}frontpage{/getstring}|/admin/settings.php?section=frontpagesettings|Including site name
-    -{getstring}site{/getstring}: {getstring:admin}plugins{/getstring}|/admin/search.php#linkmodules
-    -{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php?section=supportcontact
-    -{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php?section=themesettings|Including custom menus, designer mode, theme in URL
-    -{getstring}site{/getstring}: Boost|/admin/settings.php?section=themesettingboost
-    -{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})|/admin/index.php
-    {/ifadmin}
+{ifminteacher}
+{fa fa-wrench} {getstring}admin{/getstring}
+{/ifminteacher}
+{ifmincreator}
+-{getstring}administrationsite{/getstring}|/admin/search.php
+-{toggleeditingmenu}
+-Moodle Admin Basics course|https://learn.moodle.org/course/view.php?id=23353|Learn.Moodle.org
+-###
+{/ifmincreator}
+{ifminmanager}
+-{getstring}user{/getstring}: {mlang en}Management{mlang}{mlang fr}Gestion{mlang}|/admin/user.php
+{ifminsitemanager}
+-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php
+-###
+{/ifminsitemanager}
+-{getstring}course{/getstring}: {mlang en}Management{mlang}{mlang fr}Gestion{mlang}|/course/management.php
+-{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php?category={coursecategoryid}&returnto=topcat
+{/ifminmanager}
+{ifminteacher}
+-{getstring}course{/getstring}: {getstring}restore{/getstring}|/backup/restorefile.php?contextid={coursecontextid}
+{ifincourse}
+-{getstring}course{/getstring}: {getstring}backup{/getstring}|/backup/backup.php?id={courseid}
+-{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}
+-{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/index.php?type={courseid}
+-{getstring}course{/getstring}: {getstring}reset{/getstring}|/course/reset.php?id={courseid}
+-Course: Layoutit|https://www.layoutit.com/build" target="popup" onclick="window.open('https://www.layoutit.com/build','popup','width=1340,height=700'); return false;|Bootstrap Page Builder
+{/ifincourse}
+-###
+{/ifminteacher}
+{ifminmanager}
+-{getstring}site{/getstring}: System reports|/admin/category.php?category=reports
+{/ifminmanager}
+{ifadmin}
+-{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php?section=additionalhtml
+-{getstring}site{/getstring}: {getstring:admin}frontpage{/getstring}|/admin/settings.php?section=frontpagesettings|Including site name
+-{getstring}site{/getstring}: {getstring:admin}plugins{/getstring}|/admin/search.php#linkmodules
+-{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php?section=supportcontact
+-{getstring}site{/getstring}: {getstring:admin}themesettingsadvanced{/getstring}|/admin/settings.php?section=themesettingsadvanced|Including custom menus, designer mode, theme in URL
+-{getstring}site{/getstring}: Boost|/admin/settings.php?section=themesettingboost
+-{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})|/admin/index.php
+{/ifadmin}
+```
+
+Note: Previous to Moodle 4.4, the line for Theme Settings was:
+
+```
+-{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php?section=themesettings|Including custom menus, designer mode, theme in URL
 ```
 
 Tips: If you are not using the Boost theme, customize the link in the 3rd to last line to your theme's settings page.
@@ -506,7 +514,7 @@ Even better, try out the dynamic **{menudev}** tag. It includes all of the above
 
 ## FilterCodes in custom menus
 
-Note: The source code in this section was last updated in April 2022 for Moodle 4.0 and last tested in May 2023 for Moodle 4.2 compatibility.
+Note: The source code in this section was last updated in April 2022 for Moodle 4.0 and last tested in January 2024 for Moodle 4.3 and 4.4 (ALPHA) compatibility.
 
 FilterCodes can work in custom menus but, unfortunately, only if the theme supports it or you patched Moodle. If it does not work for you, contact the theme's developer and request that they add support for Moodle filters. See the instructions included below.
 
@@ -531,6 +539,7 @@ To patch Moodle to handle this properly for most Moodle themes, cherry-pick the 
 * Moodle 4.1: https://github.com/michael-milette/moodle/tree/MDL-63219-M401
 * Moodle 4.2: https://github.com/michael-milette/moodle/tree/MDL-63219-M402
 * Moodle 4.3: https://github.com/michael-milette/moodle/tree/MDL-63219-M403
+* Moodle 4.4: https://github.com/michael-milette/moodle/tree/MDL-63219-M404
 * Moodle master: https://github.com/michael-milette/moodle/tree/MDL-63219-master
 
 Example: To apply the patch for Moodle using git (change the "M403" for other versions):
