@@ -1,7 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.4.4] 2024-01-28 (dev)
+## [2.4.4] 2024-01-29 (dev)
+### Added
+- New {iftheme} tag.
 ### Updated
 - Copyright notice to include 2024.
 - Fixed compatibility issue with Moodle LMS 4.4 (ALPHA)

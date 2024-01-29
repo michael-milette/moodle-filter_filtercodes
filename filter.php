@@ -4410,6 +4410,28 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {iftheme themename}...{/iftheme}.
+            // Description: Display content only if the current theme matches the one specified.
+            // Parameters: The name of the directory in which the theme is located.
+            // Requires content between tags.
+            if (stripos($text, '{iftheme ') != false) {
+                $theme = strtolower($PAGE->theme->name);
+                $re = '/{iftheme\s+(.*)\}(.*)\{\/iftheme\}/isuU';
+                $found = preg_match_all($re, $text, $matches);
+                if ($found > 0) {
+                    foreach ($matches[1] as $themename) {
+                        $key = '/{iftheme\s+' . $themename . '\}(.*)\{\/iftheme\}/isuU';
+                        if (strtolower($theme == strtolower($themename))) {
+                            // Just remove the tags.
+                            $replace[$key] = '$1';
+                        } else {
+                            // Remove the iftheme strings.
+                            $replace[$key] = '';
+                        }
+                    }
+                }
+            }
+
             if (strpos($text, '{ifmin') !== false) { // If there are conditional ifmin tags.
                 // Tag: {ifminassistant}...{/ifminassistant}.
                 // Description: Display content only if user has the role of a non-editing teacher or higher.
