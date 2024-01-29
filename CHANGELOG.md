@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Copyright notice to include 2024.
 - Fixed compatibility issue with Moodle LMS 4.4 (ALPHA)
 - Improved detection of https protocol.
+- Improved {ifmobile} tag detection.
 
 ## [2.4.3] 2023-11-20
 ### Added
