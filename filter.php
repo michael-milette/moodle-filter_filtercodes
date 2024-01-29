@@ -260,7 +260,7 @@ class filter_filtercodes extends moodle_text_filter {
         if ($CFG->branch >= 28) {
             $ishttps = is_https(); // Available as of Moodle 2.8.
         } else {
-            $ishttps = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443);
+            $ishttps = (filter_input(INPUT_SERVER, 'HTTPS') === 'on');
         }
         return $ishttps;
     }

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Updated
 - Copyright notice to include 2024.
 - Fixed compatibility issue with Moodle LMS 4.4 (ALPHA)
+- Improved detection of https protocol.
 
 ## [2.4.3] 2023-11-20
 ### Added
