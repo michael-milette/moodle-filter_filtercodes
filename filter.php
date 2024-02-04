@@ -1167,38 +1167,50 @@ class filter_filtercodes extends moodle_text_filter {
     private function escapedtags($text) {
         static $escapedtags;
         static $escapedtagsenc;
+        static $escapebraces;
 
-        if (!isset($escapedtags)) {
-            // First time, escape tags.
-            if (!empty(get_config('filter_filtercodes', 'escapebraces'))) {
-                // Temporarily escaped tags these with non-printable character. Will be re-adjusted after processing tags.
-                $escapedtags = (strpos($text, '[{') !== false && strpos($text, '}]') !== false);
-                if ($escapedtags) {
-                    $text = str_replace('[{', chr(2), $text);
-                    $text = str_replace('}]', chr(3), $text);
-                }
-                // Temporarily escaped tags these with non-printable character. Will be re-adjusted after processing tags.
-                $escapedtagsenc = (strpos($text, '[%7B') !== false && strpos($text, '%7D]') !== false);
-                if ($escapedtagsenc) {
-                    $text = str_replace('[%7B', chr(4), $text);
-                    $text = str_replace('%7D]', chr(5), $text);
-                }
-            } else {
-                $escapedtags = false;
-                $escapedtagsenc = false;
+        // Don't process if this feature is disabled.
+        if (!isset($escapebraces)) {
+            $escapebraces = !empty(get_config('filter_filtercodes', 'escapebraces'));
+            if (!$escapebraces) {
+                return $text;
+            }
+        }
+
+        if (!isset($escapedtags) || !isset($escapedtagsenc)) {
+            // First time called, temporarily replace the escaped tags so they will not be processed by FilterCodes.
+
+            // Regular tags.
+            $escapedtags = (strpos($text, '[{') !== false && strpos($text, '}]') !== false);
+            if ($escapedtags) {
+                $text = str_replace('[{', chr(2), $text);
+                $text = str_replace('}]', chr(3), $text);
+            }
+
+            // Encoded tags.
+            $escapedtagsenc = (strpos($text, '[%7B') !== false && strpos($text, '%7D]') !== false);
+            if ($escapedtagsenc) {
+                $text = str_replace('[%7B', chr(4), $text);
+                $text = str_replace('%7D]', chr(5), $text);
             }
         } else {
-            // Complete the process of replacing escaped tags with single braces.
+            // Second time called, complete the process of putting back the tags, but not escaped.
+
+            // Regular tags.
             if ($escapedtags) {
                 $text = str_replace(chr(2), '{', $text);
                 $text = str_replace(chr(3), '}', $text);
             }
-            // Complete the process of replacing escaped tags with single escaped braces.
+            $escapedtags = null;
+
+            // Encoded tags.
             if ($escapedtagsenc) {
                 $text = str_replace(chr(4), '%7B', $text);
                 $text = str_replace(chr(5), '%7D', $text);
             }
+            $escapedtagsenc = null;
         }
+
         return $text;
     }
 
@@ -1217,8 +1229,6 @@ class filter_filtercodes extends moodle_text_filter {
             if (!is_null($newtext)) {
                 $text = $newtext;
                 if (strpos($text, '{') === false && strpos($text, '%7B') === false) {
-                    // No more tags? Put back the escaped tags, if any and return false.
-                    $text = $this->escapedtags($text);
                     $moretags = false;
                 }
             }
@@ -2018,7 +2028,8 @@ class filter_filtercodes extends moodle_text_filter {
         /* ---------------- Apply all of the filtercodes so far. ---------------*/
 
         if ($this->replacetags($text, $replace) == false) {
-            // Go no further if there are no more tags.
+            // No more tags? Put back the escaped tags, if any, and return the string.
+            $text = $this->escapedtags($text);
             return $text;
         }
 
@@ -2232,7 +2243,8 @@ class filter_filtercodes extends moodle_text_filter {
         /* ---------------- Apply all of the filtercodes so far. ---------------*/
 
         if ($this->replacetags($text, $replace) == false) {
-            // Go no further if there are no more tags.
+            // No more tags? Put back the escaped tags, if any, and return the string.
+            $text = $this->escapedtags($text);
             return $text;
         }
 
@@ -4760,7 +4772,8 @@ class filter_filtercodes extends moodle_text_filter {
         /* ---------------- Apply all of the filtercodes so far. ---------------*/
 
         if ($this->replacetags($text, $replace) == false) {
-            // Go no further if there are no more tags.
+            // No more tags? Put back the escaped tags, if any, and return the string.
+            $text = $this->escapedtags($text);
             return $text;
         }
 
@@ -4787,7 +4800,8 @@ class filter_filtercodes extends moodle_text_filter {
         /* ---------------- Apply the rest of the FilterCodes tags. ---------------*/
 
         $this->replacetags($text, $replace);
-
+        // Put back the escaped tags.
+        $text = $this->escapedtags($text);
         return $text;
     }
 }

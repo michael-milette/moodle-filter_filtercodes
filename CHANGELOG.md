@@ -1,10 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.4.4] 2024-01-29 (dev)
+## [2.4.4] 2024-02-04 (dev)
 ### Added
 - New {iftheme} tag.
 ### Updated
+- Fix-291: Escape tags now work reliably.
 - Copyright notice to include 2024.
 - Fixed compatibility issue with Moodle LMS 4.4 (ALPHA)
 - Improved detection of https protocol.
