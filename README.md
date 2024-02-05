@@ -326,6 +326,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 * {ifeditmode}{/ifeditmode} : Will display the enclosed content only if editing mode is turned on.
 * {ifprofile_field_shortname}{/ifprofile_field_shortname} : Will display the enclosed content if the custom user profile field is not blank/zero.
 * {iftheme themename}{/iftheme} : Will display enclosed content if the theme specified (theme's directory name) is the one currently used to render the page.
+* {ifnottheme themename}{/ifnottheme} : Will display enclosed content if the theme specified (theme's directory name) is NOT the one currently used to render the page.
 
 If the condition is not met in the particular context, the specified tag and its content will be removed.
 
@@ -1191,6 +1192,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If user has a parent custom role [{ifcustomrole parent}]You have a parent custom role in this context[{/ifcustomrole}]: {ifcustomrole parent}You have a parent custom role in this context{/ifcustomrole}.
 * If user does not have a parent custom role [{ifnotcustomrole parent}]You do not have a parent custom role in this context[{/ifnotcustomrole}]: {ifnotcustomrole parent}You do not have a parent custom role in this context{/ifnotcustomrole}.
 * The current theme is [{iftheme boost}]Boost[{/iftheme}][{iftheme classic}]Classic[{/iftheme}]: {iftheme boost}Boost{/iftheme}{iftheme classic}Classic{/iftheme}
+* The current theme is [{ifnottheme boost}]NOT [{/ifnottheme}]Boost: {ifnottheme boost}NOT {/ifnottheme} Boost.
 * If on Home page [{ifhome}]You are on the Home Frontpage.[{/ifhome}]: {ifhome}You are on the Home Frontpage.{/ifhome}
 * If not on the Home page [{ifnothome}]You are NOT on the Home Frontpage.[{/ifnothome}]: {ifnothome}You are NOT on the Home Frontpage.{/ifnothome}
 * If on Dashboard [{ifdashboard}]You are on the Dashboard page.[{/ifdashboard}]: {ifdashboard}You are on the Dashboard page.{/ifdashboard}

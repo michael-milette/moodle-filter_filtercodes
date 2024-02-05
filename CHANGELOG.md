@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [2.4.4] 2024-02-04 (dev)
 ### Added
-- New {iftheme} tag.
+- New {iftheme}{/iftheme} tag.
+- New {ifnottheme}{/ifnottheme} tag.
 ### Updated
 - Fix-291: Escape tags now work reliably.
 - Copyright notice to include 2024.
