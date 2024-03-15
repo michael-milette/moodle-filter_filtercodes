@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New {iftheme}{/iftheme} tag.
 - New {ifnottheme}{/ifnottheme} tag.
+- New {alert border}{/alert} tag.
 ### Updated
 - Fix-291: Escape tags now work reliably.
 - Copyright notice to include 2024.

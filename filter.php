@@ -4709,8 +4709,8 @@ class filter_filtercodes extends moodle_text_filter {
                 function ($matches) {
                     // If alert <style> parameter is not included, default to alert-warning.
                     $matches[1] = trim($matches[1]);
-                    $matches[1] = empty($matches[1]) ? 'warning' : $matches[1];
-                    return '<div class="alert alert-' . $matches[1] . '" role="alert"><p>' . $matches[2] . '</p></div>';
+                    $matches[1] = empty($matches[1]) || $matches[1] == 'border' ? 'border' : 'alert-' . $matches[1];
+                    return '<div class="alert ' . $matches[1] . '" role="alert"><p>' . $matches[2] . '</p></div>';
                 },
                 $text
             );
