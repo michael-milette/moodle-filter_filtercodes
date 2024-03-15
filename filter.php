@@ -3569,25 +3569,37 @@ class filter_filtercodes extends moodle_text_filter {
             // Requires content between tags.
             if (stripos($text, '{/ifactivitycompleted}') !== false) {
                 $completion = new completion_info($PAGE->course);
+
                 if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
                     // Get a list of the the instances of this tag.
                     $re = '/{ifactivitycompleted\s+([0-9]+)\}(.*)\{\/ifactivitycompleted\}/isuU';
                     $found = preg_match_all($re, $text, $matches);
+
                     if ($found > 0) {
                         // Check if the activity is in the list.
                         foreach ($matches[1] as $cmid) {
-                            if (($cm = get_coursemodule_from_id('', $cmid, 0)) !== false) { // Only process valid IDs.
-                                // Get the completion data for this activity.
-                                $data = $completion->get_data($cm, true, $USER->id);
-                                // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
-                                $key = '/{ifactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifactivitycompleted\}/isuU';
-                                if ($data->completionstate == COMPLETION_COMPLETE) {
-                                    // Completed. Keep the text and remove the tags.
-                                    $replace[$key] = "$1";
-                                } else {
-                                    // Activity not completed. Remove tags and content.
-                                    $replace[$key] = '';
+                            $iscompleted = false;
+
+                            // Only process valid IDs.
+                            if (($cm = get_coursemodule_from_id('', $cmid, 0)) !== false) {
+                                // Get the completion data for this activity if it exists.
+                                try {
+                                    $data = $completion->get_data($cm, true, $USER->id);
+                                    $iscompleted = ($data->completionstate == COMPLETION_COMPLETE);
+                                } catch (Exception $e) {
+                                    unset($e);
+                                    continue;
                                 }
+                            }
+
+                            // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
+                            $key = '/{ifactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifactivitycompleted\}/isuU';
+                            if ($iscompleted) {
+                                // Completed. Keep the text and remove the tags.
+                                $replace[$key] = "$1";
+                            } else {
+                                // Activity not completed. Remove tags and content.
+                                $replace[$key] = '';
                             }
                         }
                     }
@@ -3600,25 +3612,37 @@ class filter_filtercodes extends moodle_text_filter {
             // Requires content between tags.
             if (stripos($text, '{/ifnotactivitycompleted}') !== false) {
                 $completion = new completion_info($PAGE->course);
+
                 if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
                     // Get a list of the the instances of this tag.
                     $re = '/{ifnotactivitycompleted\s+([0-9]+)\}(.*)\{\/ifnotactivitycompleted\}/isuU';
                     $found = preg_match_all($re, $text, $matches);
+
                     if ($found > 0) {
                         // Check if the activity is in the list.
                         foreach ($matches[1] as $cmid) {
-                            if (($cm = get_coursemodule_from_id('', $cmid, 0)) !== false) { // Only process valid IDs.
+                            $iscompleted = false;
+
+                            // Only process valid IDs.
+                            if (($cm = get_coursemodule_from_id('', $cmid, 0)) !== false) {
                                 // Get the completion data for this activity.
-                                $data = $completion->get_data($cm, true, $USER->id);
-                                // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
-                                $key = '/{ifnotactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifnotactivitycompleted\}/isuU';
-                                if ($data->completionstate != COMPLETION_COMPLETE) {
-                                    // Completed. Keep the text and remove the tags.
-                                    $replace[$key] = "$1";
-                                } else {
-                                    // Activity not completed. Remove tags and content.
-                                    $replace[$key] = '';
+                                try {
+                                    $data = $completion->get_data($cm, true, $USER->id);
+                                    $iscompleted = ($data->completionstate == COMPLETION_COMPLETE);
+                                } catch (Exception $e) {
+                                    unset($e);
+                                    continue;
                                 }
+                            }
+
+                            // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
+                            $key = '/{ifnotactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifnotactivitycompleted\}/isuU';
+                            if (!$iscompleted ) {
+                                // Completed. Keep the text and remove the tags.
+                                $replace[$key] = "$1";
+                            } else {
+                                // Activity not completed. Remove tags and content.
+                                $replace[$key] = '';
                             }
                         }
                     }

@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 - Fixed compatibility issue with Moodle LMS 4.4 (ALPHA)
 - Improved detection of https protocol.
 - Improved {ifmobile} tag detection.
+- Improved error handling of the ifactivitycompleted tag.
+- Improved error handling of the ifnotactivitycompleted tag.
 
 ## [2.4.3] 2023-11-20
 ### Added
