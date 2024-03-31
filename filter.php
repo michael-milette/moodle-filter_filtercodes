@@ -799,16 +799,27 @@ class filter_filtercodes extends moodle_text_filter {
                         PHP_EOL;
                 $menu .= '-{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php' .
                         '?section=supportcontact' . PHP_EOL;
+
                 if ($CFG->branch >= 404) {
-                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}themesettingsadvanced{/getstring}|/admin/settings.php' .
-                            '?section=themesettingsadvanced|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+                    $label = 'themesettingsadvanced';
+                    $section = 'themesettingsadvanced';
                 } else {
-                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}themesettings{/getstring}|/admin/settings.php' .
-                            '?section=themesettings|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+                    $label = 'themesettings';
+                    $section = 'themesettings';
                 }
+                $menu .= '-{getstring}site{/getstring}: {getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
+                    '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+
                 if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
-                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|/admin/settings.php' .
-                            '?section=themesetting' . $theme . PHP_EOL;
+                    require_once($CFG->libdir . '/adminlib.php');
+                    if (admin_get_root()->locate('theme_' . $theme)) {
+                        // Settings use categories interface URL.
+                        $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
+                    } else {
+                        // Settings use tabs interface URL.
+                        $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                    }
+                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|' . $url;
                 }
                 $menu .= '-{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})' .
                         '|/admin/index.php' . PHP_EOL;
@@ -889,8 +900,33 @@ class filter_filtercodes extends moodle_text_filter {
                         $themename = ucfirst(get_string('pluginname', 'theme_' . $theme));
                         $menu .= '-' . $themename . '|' . $url . 'theme=' . $theme . PHP_EOL;
                     }
-                    if (!empty($menu)) {
+
+                    // If an administrator, add links to Advanced Theme Settings and to Current theme settings.
+                    if (is_siteadmin() && !is_role_switched($PAGE->course->id)) {
+                        $theme = $PAGE->theme->name;
                         $menu = 'Themes' . PHP_EOL . $menu;
+                        if ($CFG->branch >= 404) {
+                            $label = 'themesettingsadvanced';
+                            $section = 'themesettingsadvanced';
+                        } else {
+                            $label = 'themesettings';
+                            $section = 'themesettings';
+                        }
+
+                        $menu .= '-###' . PHP_EOL;
+                        $menu .= '-{getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
+                            '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+                        if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
+                            require_once($CFG->libdir . '/adminlib.php');
+                            if (admin_get_root()->locate('theme_' . $theme)) {
+                                // Settings use categories interface URL.
+                                $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
+                            } else {
+                                // Settings use tabs interface URL.
+                                $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                            }
+                            $menu .= '-{getstring:admin}currenttheme{/getstring}|' . $url;
+                        }
                     }
                 }
             }
