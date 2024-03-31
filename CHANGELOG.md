@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Improved {ifmobile} tag detection.
 - Improved error handling of the ifactivitycompleted tag.
 - Improved error handling of the ifnotactivitycompleted tag.
+- {getstring} tag now checks if string is deprecated before trying to load a string from the language pack.
 
 ## [2.4.3] 2023-11-20
 ### Added

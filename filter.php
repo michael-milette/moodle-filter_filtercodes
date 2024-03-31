@@ -1557,8 +1557,11 @@ class filter_filtercodes extends moodle_text_filter {
             // Replace {getstring:} tag and parameters with retrieved content.
             $newtext = preg_replace_callback(
                 '/\{getstring:?(\w*)\}(\w+)\{\/getstring\}/isuU',
-                function ($matches) {
-                    if (get_string_manager()->string_exists($matches[2], $matches[1])) {
+                function ($matches) use ($CFG) {
+                    if ($strexists = get_string_manager()->string_exists($matches[2], $matches[1]) && $CFG->branch >= 28) {
+                        $strexists = !get_string_manager()->string_deprecated($matches[2], $matches[1]);
+                    }
+                    if ($strexists) {
                         return get_string($matches[2], $matches[1]);
                     } else {
                         return "{getstring" . (!empty($matches[1]) ? ":$matches[1]" : '') . "}$matches[2]{/getstring}";
