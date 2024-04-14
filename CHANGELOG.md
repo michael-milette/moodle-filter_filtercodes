@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - New {ifnottheme}{/ifnottheme} tag.
 - New {alert border}{/alert} tag.
 - New links to edit Advanced theme settings and current theme settings to {menuthemes} tag.
+- GitHub actions workflow.
 ### Updated
 - Fix-291: Escape tags now work reliably.
 - Improved filtering of parameters for some tags.
@@ -17,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - {getstring} tag now checks if string is deprecated before trying to load a string from the language pack.
 - Reference to style guides in CONTRIBUTING.md.
 - References to PHP and Noodle versions in bug reports.
+- Removed support for Travis integration.
 - Fixed compatibility issue with Moodle LMS 4.4 (ALPHA)
 - Copyright notice to include 2024.
 
