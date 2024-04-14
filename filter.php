@@ -3676,7 +3676,7 @@ class filter_filtercodes extends moodle_text_filter {
 
                             // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
                             $key = '/{ifnotactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifnotactivitycompleted\}/isuU';
-                            if (!$iscompleted ) {
+                            if (!$iscompleted) {
                                 // Completed. Keep the text and remove the tags.
                                 $replace[$key] = "$1";
                             } else {
