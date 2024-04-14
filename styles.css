@@ -1,6 +1,7 @@
 @property --percent {
     syntax: '<number>';
     inherits: true;
+    /* stylelint-disable-next-line -- not yet supported in FireFox. */
     initial-value: 0;
 }
 

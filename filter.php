@@ -4529,7 +4529,6 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-
             if (strpos($text, '{ifmin') !== false) { // If there are conditional ifmin tags.
                 // Tag: {ifminassistant}...{/ifminassistant}.
                 // Description: Display content only if user has the role of a non-editing teacher or higher.
