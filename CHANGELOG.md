@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Improved error handling of the ifactivitycompleted tag.
 - Improved error handling of the ifnotactivitycompleted tag.
 - {getstring} tag now checks if string is deprecated before trying to load a string from the language pack.
+- Reference to style guides in CONTRIBUTING.md.
 - References to PHP and Noodle versions in bug reports.
 
 ## [2.4.3] 2023-11-20
