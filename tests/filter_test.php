@@ -119,7 +119,7 @@ class filter_test extends \advanced_testcase {
             ],
             [
                 'before' => 'Before {langx en_ca}Some content{/langx} After',
-                'after'  => 'Before <span lang="en_ca">Some content</span> After',
+                'after'  => 'Before {langx en_ca}Some content{/langx} After',
             ],
             [
                 'before' => 'Before {langx en-ca}Some content{/langx} After',
