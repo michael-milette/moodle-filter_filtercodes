@@ -1654,7 +1654,7 @@ class filter_filtercodes extends moodle_text_filter {
             $regex .= 'sl|-sharp\s+fa-light|';
             $regex .= 'st|-sharp\s+fa-thin|';
             $regex .= 'sd|-sharp\s+fa-duotone';
-            $regex .= '){0,1}\s+fa-(.*)\}/isuU';
+            $regex .= '){0,1}\s+fa-([a-z0-9 -]+)\}/isuU';
             $newtext = preg_replace_callback(
                 $regex,
                 function ($matches) {
@@ -1675,7 +1675,7 @@ class filter_filtercodes extends moodle_text_filter {
         if (stripos($text, '{glyphicon ') !== false) {
             // Replace {glyphicon glyphicon-...} tag and parameters with Glyphicons HTML.
             $newtext = preg_replace_callback(
-                '/\{glyphicon\sglyphicon-(.*)\}/isuU',
+                '/\{glyphicon\sglyphicon-([a-z0-9 -]+)\}/isuU',
                 function ($matches) {
                     $matches[0] = $matches[0] == null ? '' : $matches[0];
                     return '<span class="' . substr($matches[0], 1, -1) . '" aria-hidden="true"></span>';
@@ -1696,7 +1696,7 @@ class filter_filtercodes extends moodle_text_filter {
         // For more information on the Multi-Language Content filter see https://docs.moodle.org/en/Multi-language_content_filter.
         if (stripos($text, '{/multilang}') !== false) {
             // This is specifically to make it easier to use Moodle's own multi-language filter.
-            $replace['/\{multilang\s+(.*)\}(.*)\{\/multilang\}/isuU'] = '<span lang="$1" class="multilang">$2</span>';
+            $replace['/\{multilang\s+([a-z-]+)\}(.*)\{\/multilang\}/isuU'] = '<span lang="$1" class="multilang">$2</span>';
         }
 
         // Tag: {firstaccessdate} or {firstaccessdate dateTimeFormat}.
@@ -3542,7 +3542,7 @@ class filter_filtercodes extends moodle_text_filter {
         // Parameters: None.
         // Requires content between tags.
         if (stripos($text, '{langx ') !== false) {
-            $replace['/\{langx\s+(.*)\}(.*)\{\/langx\}/isuU'] = '<span lang="$1">$2</span>';
+            $replace['/\{langx\s+([a-z-]+)\}(.*)\{\/langx\}/isuU'] = '<span lang="$1">$2</span>';
         }
 
         // Tag: {note}...{/note}

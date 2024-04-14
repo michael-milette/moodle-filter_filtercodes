@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Fix-291: Escape tags now work reliably.
 - Copyright notice to include 2024.
 - Fixed compatibility issue with Moodle LMS 4.4 (ALPHA)
+- Improved filtering of parameters for some tags.
 - Improved detection of https protocol.
 - Improved {ifmobile} tag detection.
 - Improved error handling of the ifactivitycompleted tag.
