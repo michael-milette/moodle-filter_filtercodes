@@ -65,7 +65,7 @@ body:
     id: moodle
     attributes:
       label: Moodle version
-      placeholder: e.g. Moodle 4.0.4+ (Build 20220919)
+      placeholder: e.g. Moodle 4.4.0+ (Build 20240422)
     validations:
       required: true
   - type: checkboxes
@@ -104,7 +104,7 @@ body:
         Client Web Browser: (e.g. Chrome, Edge, Firefox, Safari, Safe Exam Browser, Moodle Mobile App)
         Server Operating System: (e.g. Windows, Linux, Mac OS, Other - specify)
         Server Webserver: (e.g. Apache, Nginx, IIS, Other - specify)
-        Server PHP: (e.g. 7.3, 7.4, 8.x, Other - specify)
+        Server PHP: (e.g. 7.3, 7.4, 8.0, 8.1, 8.2, 8.3, Other - specify)
   - type: checkboxes
     attributes:
       label: Code of Conduct

@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.4.4] 2024-03-30 (dev)
+## [2.4.4] 2024-04-14 (dev)
 ### Added
 - New {iftheme}{/iftheme} tag.
 - New {ifnottheme}{/ifnottheme} tag.
@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Improved error handling of the ifactivitycompleted tag.
 - Improved error handling of the ifnotactivitycompleted tag.
 - {getstring} tag now checks if string is deprecated before trying to load a string from the language pack.
+- References to PHP and Noodle versions in bug reports.
 
 ## [2.4.3] 2023-11-20
 ### Added
