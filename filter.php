@@ -919,10 +919,10 @@ class filter_filtercodes extends moodle_text_filter {
                         if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
                             require_once($CFG->libdir . '/adminlib.php');
                             if (admin_get_root()->locate('theme_' . $theme)) {
-                                // Settings use categories interface URL.
+                                // Settings using categories interface URL.
                                 $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
                             } else {
-                                // Settings use tabs interface URL.
+                                // Settings using tabs interface URL.
                                 $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
                             }
                             $menu .= '-{getstring:admin}currenttheme{/getstring}|' . $url;
@@ -1183,6 +1183,65 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 $coursecontext = context_course::instance($PAGE->course->id);
                 $replace['/\{course_fields\}/i'] = format_text($customfields, FORMAT_HTML, ['context' => $coursecontext]);
+            }
+        }
+
+        if (stripos($text, '{dashboard_siteinfo}') !== false) {
+            if (is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If an administrator.
+                $appbytes = @disk_free_space('.');
+                $databytes = @disk_free_space($CFG->dataroot);
+                $disktxt = $this->humanbytes($databytes);
+                if ($appbytes != $databytes) {
+                    $disktxt = 'app: ' . $disktxt . ' | data: ' . $this->humanbytes($databytes);
+                }
+
+                $cards = [];
+                $cards[] = [
+                    'icon' => 'fa-database',
+                    'label' => 'Available disk space',
+                    'info' => $disktxt,
+                ];
+                $cards[] = [
+                    'icon' => 'fa-graduation-cap',
+                    'label' => get_string('courses'),
+                    'info' => get_string('total') . ' {coursecount}',
+                ];
+                $cards[] = [
+                    'icon' => 'fa-users',
+                    'label' => get_string('users'),
+                    'info' => get_string('active') . ' {usersonline} | ' . get_string('total') . ' {usersactive}',
+                ];
+                // $cards[] = [
+                //    'icon' => 'fa-user-gear',
+                //    'label' => 'Customizable',
+                //    'info' => 'Future feature',
+                // ];
+                $totalcards = count($cards);
+
+                $content = '
+                    <div class="fcdashboard-siteinfo container-fluid">
+                        <h3 class="sr-only">Site info dashboard</h2>
+                        <div class="row">
+                ';
+                for ($card = 0; $card < $totalcards; $card++) {
+                    $content .= '
+                            <div class="col-12 col-md-6 col-lg-3">
+                                <div class="card-body">
+                                    <i class="fa fa-3x ' . $cards[$card]['icon'] . ' float-left pr-3"></i>
+                                    <h3 class="h5 pt-1">' . $cards[$card]['label'] . '</h3>
+                                    <p>' . $cards[$card]['info'] . '</p>
+                                </div>
+                            </div>
+                    ';
+                }
+                $content .= '
+                        </div>
+                    </div>
+                ';
+                $coursecontext = context_course::instance($PAGE->course->id);
+                $replace['/\{dashboard_siteinfo\}/i'] = format_text($content, FORMAT_HTML, ['context' => $coursecontext]);
+            } else {
+                $replace['/\{dashboard_siteinfo\}/i'] = '';
             }
         }
 

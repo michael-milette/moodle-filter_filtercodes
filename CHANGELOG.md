@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - New {ifnottheme}{/ifnottheme} tag.
 - New {alert border}{/alert} tag.
 - New links to edit Advanced theme settings and current theme settings to {menuthemes} tag.
+- {ALPHA} New {dashboard_siteinfo} tag. Work in progress - doesn't display correctly in all themes.
 - GitHub actions workflow.
 ### Updated
 - Fix-291: Escape tags now work reliably.

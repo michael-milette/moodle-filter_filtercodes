@@ -160,6 +160,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * (ALPHA) {chart progresspie x --size:150px --border:20px --color:purple --bgcolor:#f0f0f0 --title:caption text}Create a (circle / doughnut) progress chart giving it a value of x between 0 and 100. You can specify the height/width (size) and the thickness (border) of the line in* **px** as well as the color and background color by name or by RGB value. You can also specify a caption. Note that all parameters that begin with two dashes (--) are optional. (Requires PHP 7.0+ and Moodle 3.2+)
 * {showmore}{/showmore} : Toggle showing content between opening and closing more tags. Limitations: Can only be used inline with text. Must now weave into other opening and closing tags.
 * {qrcode}{/qrcode} : Generate and display a QR Code for the content between the tags.
+* (ALPHA) {dashboard_siteinfo} : Only displays for admins - Use this on your dashboard to see system information like available disk space, number of courses, total number of users and users currently online (in the last 5 minutes). This is an early alpha release and will likely change in the future.
 
 ### For use in courses
 
@@ -1075,6 +1076,8 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Team cards Our faculty team [{teamcards}]: Our faculty team<br>{teamcards}
 * (ALPHA) Category cards [{categorycards}]: {categorycards}
 * (ALPHA) Category 1 cards [{categorycards 1}]: Sub-categories of Miscellaneous category include {categorycards 1}
+* (ALPHA) Dashboard site information [{dashboard_siteinfo}]:
+{dashboard_siteinfo}
 * Total courses [{coursecount}]: {coursecount}
 * Institution [{institution}]: {institution}
 * Department [{department}]: {department}
