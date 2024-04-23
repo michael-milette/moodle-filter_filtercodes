@@ -1211,11 +1211,6 @@ class filter_filtercodes extends moodle_text_filter {
                     'label' => get_string('users'),
                     'info' => get_string('active') . ' {usersonline} | ' . get_string('total') . ' {usersactive}',
                 ];
-                // $cards[] = [
-                //    'icon' => 'fa-user-gear',
-                //    'label' => 'Customizable',
-                //    'info' => 'Future feature',
-                // ];
                 $totalcards = count($cards);
 
                 $content = '

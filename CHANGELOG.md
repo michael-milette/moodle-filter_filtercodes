@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.4.4] 2024-04-14 (dev)
+## [2.4.5] 2024-04-22
 ### Added
 - New {iftheme}{/iftheme} tag.
 - New {ifnottheme}{/ifnottheme} tag.
@@ -20,8 +20,8 @@ All notable changes to this project will be documented in this file.
 - Reference to style guides in CONTRIBUTING.md.
 - References to PHP and Noodle versions in bug reports.
 - Removed support for Travis integration.
-- Fixed compatibility issue with Moodle LMS 4.4 (ALPHA)
 - Copyright notice to include 2024.
+- Fixed compatibility issue with Moodle LMS 4.4
 
 ## [2.4.3] 2023-11-20
 ### Added
