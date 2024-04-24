@@ -107,6 +107,9 @@ $string['screenrec'] = 'Screen recorder';
 $string['screenreclink'] = 'https://screenapp.io/#/recording';
 $string['notavailable'] = 'Not available';
 
+$string['moremenu'] = 'More'; // Only used for Moodle before 4.0.
+$string['unenrolme'] = 'Unenrol me from this course'; // Only used for Moodle before 4.2.
+
 $string['formquickquestion'] = '
 <form action="{wwwroot}/local/contact/index.php" method="post" class="cf contact-us">
     <fieldset>

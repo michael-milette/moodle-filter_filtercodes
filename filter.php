@@ -737,200 +737,255 @@ class filter_filtercodes extends moodle_text_filter {
 
         $replace = []; // Array of key/value filterobjects.
 
-        // Tag: {menuadmin}.
-        // Description: Displays a menu of useful links for site administrators when added to the custom menu.
-        // Parameters: None.
-        if (stripos($text, '{menuadmin}') !== false) {
-            $theme = $PAGE->theme->name;
-            $menu = '';
-            if ($this->hasminarchetype('editingteacher')) {
-                $menu .= '{fa fa-wrench} {getstring}admin{/getstring}' . PHP_EOL;
-            }
-            if ($this->hasminarchetype('coursecreator')) { // If a course creator or above.
-                $menu .= '-{getstring}administrationsite{/getstring}|/admin/search.php' . PHP_EOL;
-                $menu .= '-{toggleeditingmenu}' . PHP_EOL;
-                $menu .= '-Moodle Academy|https://moodle.academy/' . PHP_EOL;
-                $menu .= '-###' . PHP_EOL;
-            }
-            if ($this->hasminarchetype('manager')) { // If a manager or above.
-                $menu .= '-{getstring}user{/getstring}: {getstring:admin}usermanagement{/getstring}|/admin/user.php' . PHP_EOL;
-                $menu .= '{ifminsitemanager}' . PHP_EOL;
-                $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' .
-                        PHP_EOL;
-                $menu .= '-###' . PHP_EOL;
-                $menu .= '{/ifminsitemanager}' . PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring:admin}coursemgmt{/getstring}|/course/management.php' .
-                        '?categoryid={categoryid}' . PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php' .
-                        '?category={categoryid}&returnto=topcat' . PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring}searchcourses{/getstring}|/course/search.php' . PHP_EOL;
-            }
-            if ($this->hasminarchetype('editingteacher')) {
-                $menu .= '-{getstring}course{/getstring}: {getstring}restore{/getstring}|/backup/restorefile.php' .
-                    '?contextid={coursecontextid}' . PHP_EOL;
-                $menu .= '{ifincourse}' . PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring}backup{/getstring}|/backup/backup.php?id={courseid}' .
-                        PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}' .
-                        PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/index.php' .
-                        '?type=2&id={courseid}' . PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring}reports{/getstring}|/course/admin.php' .
-                        '?courseid={courseid}#linkcoursereports' . PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring:enrol}enrolmentinstances{/getstring}|/enrol/instances.php' .
-                        '?id={courseid}' . PHP_EOL;
-                $menu .= '-{getstring}course{/getstring}: {getstring}reset{/getstring}|/course/reset.php?id={courseid}' . PHP_EOL;
-                $menu .= '-Course: Layoutit|https://www.layoutit.com/build" target="popup" ' .
+        // If there are {menu...} tags.
+        if (stripos($text, '{menu') !== false) {
+            // Tag: {menuadmin}.
+            // Description: Displays a menu of useful links for site administrators when added to the custom menu.
+            // Parameters: None.
+            if (stripos($text, '{menuadmin}') !== false) {
+                $theme = $PAGE->theme->name;
+                $menu = '';
+                if ($this->hasminarchetype('editingteacher')) {
+                    $menu .= '{fa fa-wrench} {getstring}admin{/getstring}' . PHP_EOL;
+                }
+                if ($this->hasminarchetype('coursecreator')) { // If a course creator or above.
+                    $menu .= '-{getstring}administrationsite{/getstring}|/admin/search.php' . PHP_EOL;
+                    $menu .= '-{toggleeditingmenu}' . PHP_EOL;
+                    $menu .= '-Moodle Academy|https://moodle.academy/' . PHP_EOL;
+                    $menu .= '-###' . PHP_EOL;
+                }
+                if ($this->hasminarchetype('manager')) { // If a manager or above.
+                    $menu .= '-{getstring}user{/getstring}: {getstring:admin}usermanagement{/getstring}|/admin/user.php' . PHP_EOL;
+                    $menu .= '{ifminsitemanager}' . PHP_EOL;
+                    $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' .
+                            PHP_EOL;
+                    $menu .= '-###' . PHP_EOL;
+                    $menu .= '{/ifminsitemanager}' . PHP_EOL;
+                    $menu .= '-{getstring}course{/getstring}: {getstring:admin}coursemgmt{/getstring}|/course/management.php' .
+                            '?categoryid={categoryid}' . PHP_EOL;
+                    $menu .= '-{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php' .
+                            '?category={categoryid}&returnto=topcat' . PHP_EOL;
+                    $menu .= '-{getstring}course{/getstring}: {getstring}searchcourses{/getstring}|/course/search.php' . PHP_EOL;
+                }
+                if ($this->hasminarchetype('editingteacher')) {
+                    $menu .= '-{getstring}course{/getstring}: {getstring}restore{/getstring}|/backup/restorefile.php' .
+                        '?contextid={coursecontextid}' . PHP_EOL;
+                    $menu .= '{ifincourse}' . PHP_EOL;
+                    $menu .= '-{getstring}course{/getstring}: {getstring}backup{/getstring}|/backup/backup.php?id={courseid}' .
+                            PHP_EOL;
+                    if (stripos($text, '{menucoursemore}') === false) {
+                        $menu .= '-{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}'
+                            . PHP_EOL;
+                        $menu .= '-{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/view.php' .
+                            '?type=2&id={courseid}' . PHP_EOL;
+                        $menu .= '-{getstring}course{/getstring}: {getstring}reports{/getstring}|/course/admin.php' .
+                            '?courseid={courseid}#linkcoursereports' . PHP_EOL;
+                    }
+                    $menu .= '-{getstring}course{/getstring}: {getstring:enrol}enrolmentinstances{/getstring}|/enrol/instances.php'
+                        . '?id={courseid}' . PHP_EOL;
+                    $menu .= '-{getstring}course{/getstring}: {getstring}reset{/getstring}|/course/reset.php?id={courseid}'
+                        . PHP_EOL;
+                    $menu .= '-Course: Layoutit|https://www.layoutit.com/build" target="popup" ' .
                         'onclick="window.open(\'https://www.layoutit.com/build\',\'popup\',\'width=1340,height=700\');' .
                         ' return false;|Bootstrap Page Builder' . PHP_EOL;
-                $menu .= '{/ifincourse}' . PHP_EOL;
-                $menu .= '-###' . PHP_EOL;
-            }
-            if ($this->hasminarchetype('manager')) { // If a manager or above.
-                $menu .= '-{getstring}site{/getstring}: {getstring}reports{/getstring}|/admin/category.php?category=reports' .
-                        PHP_EOL;
-            }
-            if (is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If an administrator.
-                $menu .= '-{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php' .
-                        '?section=additionalhtml' . PHP_EOL;
-                $menu .= '-{getstring}site{/getstring}: {getstring:admin}frontpage{/getstring}|/admin/settings.php' .
-                        '?section=frontpagesettings|Including site name' . PHP_EOL;
-                $menu .= '-{getstring}site{/getstring}: {getstring:admin}plugins{/getstring}|/admin/search.php#linkmodules' .
-                        PHP_EOL;
-                $menu .= '-{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php' .
-                        '?section=supportcontact' . PHP_EOL;
-
-                if ($CFG->branch >= 404) {
-                    $label = 'themesettingsadvanced';
-                    $section = 'themesettingsadvanced';
-                } else {
-                    $label = 'themesettings';
-                    $section = 'themesettings';
+                    $menu .= '{/ifincourse}' . PHP_EOL;
+                    $menu .= '-###' . PHP_EOL;
                 }
-                $menu .= '-{getstring}site{/getstring}: {getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
-                    '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+                if ($this->hasminarchetype('manager')) { // If a manager or above.
+                    $menu .= '-{getstring}site{/getstring}: {getstring}reports{/getstring}|/admin/category.php?category=reports' .
+                        PHP_EOL;
+                }
+                if (is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If an administrator.
+                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php' .
+                            '?section=additionalhtml' . PHP_EOL;
+                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}frontpage{/getstring}|/admin/settings.php' .
+                            '?section=frontpagesettings|Including site name' . PHP_EOL;
+                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}plugins{/getstring}|/admin/search.php#linkmodules' .
+                            PHP_EOL;
+                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}supportcontact{/getstring}|/admin/settings.php' .
+                            '?section=supportcontact' . PHP_EOL;
 
-                if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
-                    require_once($CFG->libdir . '/adminlib.php');
-                    if (admin_get_root()->locate('theme_' . $theme)) {
-                        // Settings use categories interface URL.
-                        $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
+                    if ($CFG->branch >= 404) {
+                        $label = 'themesettingsadvanced';
+                        $section = 'themesettingsadvanced';
                     } else {
-                        // Settings use tabs interface URL.
-                        $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                        $label = 'themesettings';
+                        $section = 'themesettings';
                     }
-                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|' . $url;
-                }
-                $menu .= '-{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})' .
-                        '|/admin/index.php' . PHP_EOL;
-            }
-            $replace['/\{menuadmin\}/i'] = $menu;
-        }
+                    $menu .= '-{getstring}site{/getstring}: {getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
+                        '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
 
-        // Tag: {menudev}.
-        // Description: Displays a menu of useful links for site administrators when added to the custom menu.
-        // Parameters: None.
-        if (stripos($text, '{menudev}') !== false) {
-            $menu = '';
-            if (is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If a site administrator.
-                $menu .= '-{getstring:tool_installaddon}installaddons{/getstring}|/admin/tool/installaddon' . PHP_EOL;
-                $menu .= '-###' . PHP_EOL;
-                $menu .= '-{getstring:admin}debugging{/getstring}|/admin/settings.php?section=debugging' . PHP_EOL;
-                $menu .= '-{getstring:admin}purgecachespage{/getstring}|/admin/purgecaches.php' . PHP_EOL;
-                $menu .= '-###' . PHP_EOL;
-                if (file_exists(dirname(__FILE__) . '/../../local/adminer/index.php')) {
-                    $menu .= '-{getstring:local_adminer}pluginname{/getstring}|/local/adminer' . PHP_EOL;
+                    if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
+                        require_once($CFG->libdir . '/adminlib.php');
+                        if (admin_get_root()->locate('theme_' . $theme)) {
+                            // Settings use categories interface URL.
+                            $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
+                        } else {
+                            // Settings use tabs interface URL.
+                            $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                        }
+                        $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|' . $url;
+                    }
+                    $menu .= '-{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})' .
+                            '|/admin/index.php' . PHP_EOL;
                 }
-                if (file_exists(dirname(__FILE__) . '/../../local/codechecker/index.php')) {
-                    $menu .= '-{getstring:local_codechecker}pluginname{/getstring}|/local/codechecker' . PHP_EOL;
+                $replace['/\{menuadmin\}/i'] = $menu;
+            }
+
+            // Tag: {menucoursemore}.
+            // Description: Show a "More" menu containing most of 4.x secondary menu. Useful if theme with pre-4.x style navigation.
+            // Parameters: None.
+            if (stripos($text, '{menucoursemore}') !== false) {
+                $menu = '';
+                $menu .= '{ifincourse}' . PHP_EOL;
+                if ($CFG->branch >= 400) {
+                    $menu .= '{getstring}moremenu{/getstring}' . PHP_EOL;
+                } else {
+                    $menu .= '{getstring:filter_filtercodes}moremenu{/getstring}' . PHP_EOL;
                 }
-                if (file_exists(dirname(__FILE__) . '/../../local/moodlecheck/index.php')) {
-                    $menu .= '-{getstring:local_moodlecheck}pluginname{/getstring}|/local/moodlecheck' . PHP_EOL;
+                $menu .= '-{getstring}course{/getstring}|/course/view.php?id={courseid}' . PHP_EOL;
+                if ($this->hasminarchetype('editingteacher')) {
+                    $menu .= '-{getstring}settings{/getstring}|/course/edit.php?id={courseid}' . PHP_EOL;
                 }
-                if (file_exists(dirname(__FILE__) . '/../../admin/tool/pluginskel/index.php')) {
-                    $menu .= '-{getstring:tool_pluginskel}pluginname{/getstring}|/admin/tool/pluginskel' . PHP_EOL;
+                $menu .= '-{getstring}participants{/getstring}|/user/index.php?id={courseid}' . PHP_EOL;
+                $menu .= '-{getstring}grades{/getstring}|/grade/report/index.php?id={courseid}' . PHP_EOL;
+                if ($this->hasminarchetype('editingteacher')) {
+                    $menu .= '-{getstring}reports{/getstring}|/report/view.php?courseid={courseid}' . PHP_EOL;
+                    $menu .= '-###' . PHP_EOL;
+                    $menu .= '-{getstring:question}questionbank{/getstring}|/question/edit.php?courseid={courseid}' . PHP_EOL;
+                    if ($CFG->branch >= 39) {
+                        $menu .= '-{getstring}contentbank{/getstring}|/contentbank/index.php?contextid={coursecontextid}' . PHP_EOL;
+                    }
+                    $menu .= '-{getstring:completion}coursecompletion{/getstring}|/course/completion.php?id={courseid}' . PHP_EOL;
+                    $menu .= '-{getstring:badges}badges{/getstring}|/badges/view.php?type=2&amp;id={courseid}' . PHP_EOL;
                 }
-                if (file_exists(dirname(__FILE__) . '/../../local/tinyfilemanager/index.php')) {
-                    $menu .= '-{getstring:local_tinyfilemanager}pluginname{/getstring}|/local/tinyfilemanager' . PHP_EOL;
+                $pluginame = '{getstring:competency}competencies{/getstring}';
+                $menu .= '-' . $pluginame . '|/admin/tool/lp/coursecompetencies.php?courseid={courseid}' . PHP_EOL;
+                if ($this->hasminarchetype('editingteacher')) {
+                    $menu .= '-{getstring:admin}filters{/getstring}|/filter/manage.php?contextid={coursecontextid}' . PHP_EOL;
                 }
-                $menu .= '-{getstring}phpinfo{/getstring}|/admin/phpinfo.php' . PHP_EOL;
-                $menu .= '-###' . PHP_EOL;
-                $menu .= '-{getstring:filter_filtercodes}pagebuilder{/getstring}|'
+                if ($CFG->branch >= 402) {
+                    $menu .= '-{getstring:enrol}unenrolme{/getstring}|{courseunenrolurl}' . PHP_EOL;
+                } else {
+                    $menu .= '-{getstring:filter_filtercodes}unenrolme{/getstring}|{courseunenrolurl}' . PHP_EOL;
+                }
+                if ($this->hasminarchetype('editingteacher')) {
+                    $menu .= '-{getstring:mod_lti}courseexternaltools{/getstring}|/mod/lti/coursetools.php?id={courseid}' . PHP_EOL;
+                    if ($CFG->branch >= 311) {
+                        $pluginame = '{getstring:tool_brickfield}pluginname{/getstring}';
+                        $menu .= '-' . $pluginame . '|/admin/tool/brickfield/index.php?courseid={courseid}' . PHP_EOL;
+                    }
+                    $menu .= '-{getstring}coursereuse{/getstring}|/backup/import.php?id={courseid}' . PHP_EOL;
+                }
+                $menu .= '{/ifincourse}' . PHP_EOL;
+                $replace['/\{menucoursemore\}/i'] = $menu;
+            }
+
+            // Tag: {menudev}.
+            // Description: Displays a menu of useful links for site administrators when added to the custom menu.
+            // Parameters: None.
+            if (stripos($text, '{menudev}') !== false) {
+                $menu = '';
+                if (is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If a site administrator.
+                    $menu .= '-{getstring:tool_installaddon}installaddons{/getstring}|/admin/tool/installaddon' . PHP_EOL;
+                    $menu .= '-###' . PHP_EOL;
+                    $menu .= '-{getstring:admin}debugging{/getstring}|/admin/settings.php?section=debugging' . PHP_EOL;
+                    $menu .= '-{getstring:admin}purgecachespage{/getstring}|/admin/purgecaches.php' . PHP_EOL;
+                    $menu .= '-###' . PHP_EOL;
+                    if (file_exists(dirname(__FILE__) . '/../../local/adminer/index.php')) {
+                        $menu .= '-{getstring:local_adminer}pluginname{/getstring}|/local/adminer' . PHP_EOL;
+                    }
+                    if (file_exists(dirname(__FILE__) . '/../../local/codechecker/index.php')) {
+                        $menu .= '-{getstring:local_codechecker}pluginname{/getstring}|/local/codechecker' . PHP_EOL;
+                    }
+                    if (file_exists(dirname(__FILE__) . '/../../local/moodlecheck/index.php')) {
+                        $menu .= '-{getstring:local_moodlecheck}pluginname{/getstring}|/local/moodlecheck' . PHP_EOL;
+                    }
+                    if (file_exists(dirname(__FILE__) . '/../../admin/tool/pluginskel/index.php')) {
+                        $menu .= '-{getstring:tool_pluginskel}pluginname{/getstring}|/admin/tool/pluginskel' . PHP_EOL;
+                    }
+                    if (file_exists(dirname(__FILE__) . '/../../local/tinyfilemanager/index.php')) {
+                        $menu .= '-{getstring:local_tinyfilemanager}pluginname{/getstring}|/local/tinyfilemanager' . PHP_EOL;
+                    }
+                    $menu .= '-{getstring}phpinfo{/getstring}|/admin/phpinfo.php' . PHP_EOL;
+                    $menu .= '-###' . PHP_EOL;
+                    $menu .= '-{getstring:filter_filtercodes}pagebuilder{/getstring}|'
                         . '{getstring:filter_filtercodes}pagebuilderlink{/getstring}"'
                         . ' target="popup" onclick="window.open(\'{getstring:filter_filtercodes}pagebuilderlink{/getstring}\''
                         . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
-                $menu .= '-{getstring:filter_filtercodes}photoeditor{/getstring}|'
+                    $menu .= '-{getstring:filter_filtercodes}photoeditor{/getstring}|'
                         . '{getstring:filter_filtercodes}photoeditorlink{/getstring}"'
                         . ' target="popup" onclick="window.open(\'{getstring:filter_filtercodes}photoeditorlink{/getstring}\''
                         . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
-                $menu .= '-{getstring:filter_filtercodes}screenrec{/getstring}|'
+                    $menu .= '-{getstring:filter_filtercodes}screenrec{/getstring}|'
                         . '{getstring:filter_filtercodes}screenreclink{/getstring}"'
                         . ' target="popup" onclick="window.open(\'{getstring:filter_filtercodes}screenreclink{/getstring}\''
                         . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
-                $menu .= '-###' . PHP_EOL;
-                $menu .= '-Dev docs|https://moodle.org/development|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
-                $menu .= '-Dev forum|https://moodle.org/mod/forum/view.php?id=55|Moodle.org ({getstring}english{/getstring})' .
-                        PHP_EOL;
-                $menu .= '-Tracker|https://tracker.moodle.org/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
-                $menu .= '-AMOS|https://lang.moodle.org/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
-                $menu .= '-WCAG 2.1|https://www.w3.org/WAI/WCAG21/quickref/|W3C ({getstring}english{/getstring})' . PHP_EOL;
-                $menu .= '-###' . PHP_EOL;
-                $menu .= '-DevTuts|https://www.youtube.com/watch?v=UY_pcs4HdDM|{getstring}english{/getstring}' . PHP_EOL;
-                $menu .= '-Moodle Development School|https://moodledev.moodle.school/|{getstring}english{/getstring}' . PHP_EOL;
-                $menu .= '-Moodle Dev Academy|https://moodle.academy/course/index.php?categoryid=4|{getstring}english{/getstring}' .
-                        PHP_EOL;
+                    $menu .= '-###' . PHP_EOL;
+                    $menu .= '-Dev docs|https://moodle.org/development|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
+                    $menu .= '-Dev forum|https://moodle.org/mod/forum/view.php?id=55|Moodle.org ({getstring}english{/getstring})' .
+                            PHP_EOL;
+                    $menu .= '-Tracker|https://tracker.moodle.org/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
+                    $menu .= '-AMOS|https://lang.moodle.org/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
+                    $menu .= '-WCAG 2.1|https://www.w3.org/WAI/WCAG21/quickref/|W3C ({getstring}english{/getstring})' . PHP_EOL;
+                    $menu .= '-###' . PHP_EOL;
+                    $menu .= '-DevTuts|https://www.youtube.com/watch?v=UY_pcs4HdDM|{getstring}english{/getstring}' . PHP_EOL;
+                    $menu .= '-Moodle Development School|https://moodledev.moodle.school/|{getstring}english{/getstring}' . PHP_EOL;
+                    $menuurl = 'https://moodle.academy/course/index.php?categoryid=4';
+                    $menu .= '-Moodle Dev Academy|' . $menuurl . '|{getstring}english{/getstring}' . PHP_EOL;
+                }
+                $replace['/\{menudev\}/i'] = $menu;
             }
-            $replace['/\{menudev\}/i'] = $menu;
-        }
 
-        // Tag: {menuthemes}.
-        // Description: Theme switcher for custom menu. Only for administrators. Not available after POST.
-        // Parameters: None.
-        // Allow Theme Changes on URL must be enabled for this to have any effect.
-        if (stripos($text, '{menuthemes}') !== false) {
-            $menu = '';
-            if (is_siteadmin() && empty($_POST)) { // If a site administrator.
-                if (get_config('core', 'allowthemechangeonurl')) {
-                    $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
-                        . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-                    $url .= (strpos($url, '?') ? '&' : '?');
-                    $themeslist = core_component::get_plugin_list('theme');
-                    $menu = '';
-                    foreach ($themeslist as $theme => $themedir) {
-                        $themename = ucfirst(get_string('pluginname', 'theme_' . $theme));
-                        $menu .= '-' . $themename . '|' . $url . 'theme=' . $theme . PHP_EOL;
-                    }
-
-                    // If an administrator, add links to Advanced Theme Settings and to Current theme settings.
-                    if (is_siteadmin() && !is_role_switched($PAGE->course->id)) {
-                        $theme = $PAGE->theme->name;
-                        $menu = 'Themes' . PHP_EOL . $menu;
-                        if ($CFG->branch >= 404) {
-                            $label = 'themesettingsadvanced';
-                            $section = 'themesettingsadvanced';
-                        } else {
-                            $label = 'themesettings';
-                            $section = 'themesettings';
+            // Tag: {menuthemes}.
+            // Description: Theme switcher for custom menu. Only for administrators. Not available after POST.
+            // Parameters: None.
+            // Allow Theme Changes on URL must be enabled for this to have any effect.
+            if (stripos($text, '{menuthemes}') !== false) {
+                $menu = '';
+                if (is_siteadmin() && empty($_POST)) { // If a site administrator.
+                    if (get_config('core', 'allowthemechangeonurl')) {
+                        $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
+                            . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+                        $url .= (strpos($url, '?') ? '&' : '?');
+                        $themeslist = core_component::get_plugin_list('theme');
+                        $menu = '';
+                        foreach ($themeslist as $theme => $themedir) {
+                            $themename = ucfirst(get_string('pluginname', 'theme_' . $theme));
+                            $menu .= '-' . $themename . '|' . $url . 'theme=' . $theme . PHP_EOL;
                         }
 
-                        $menu .= '-###' . PHP_EOL;
-                        $menu .= '-{getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
-                            '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
-                        if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
-                            require_once($CFG->libdir . '/adminlib.php');
-                            if (admin_get_root()->locate('theme_' . $theme)) {
-                                // Settings using categories interface URL.
-                                $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
+                        // If an administrator, add links to Advanced Theme Settings and to Current theme settings.
+                        if (is_siteadmin() && !is_role_switched($PAGE->course->id)) {
+                            $theme = $PAGE->theme->name;
+                            $menu = 'Themes' . PHP_EOL . $menu;
+                            if ($CFG->branch >= 404) {
+                                $label = 'themesettingsadvanced';
+                                $section = 'themesettingsadvanced';
                             } else {
-                                // Settings using tabs interface URL.
-                                $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                                $label = 'themesettings';
+                                $section = 'themesettings';
                             }
-                            $menu .= '-{getstring:admin}currenttheme{/getstring}|' . $url;
+
+                            $menu .= '-###' . PHP_EOL;
+                            $menu .= '-{getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
+                                '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+                            if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
+                                require_once($CFG->libdir . '/adminlib.php');
+                                if (admin_get_root()->locate('theme_' . $theme)) {
+                                    // Settings using categories interface URL.
+                                    $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
+                                } else {
+                                    // Settings using tabs interface URL.
+                                    $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                                }
+                                $menu .= '-{getstring:admin}currenttheme{/getstring}|' . $url;
+                            }
                         }
                     }
                 }
+                $replace['/\{menuthemes\}/i'] = $menu;
             }
-            $replace['/\{menuthemes\}/i'] = $menu;
         }
 
         // Check if any {course*} or %7Bcourse*%7D tags. Note: There is another course tags section further down.

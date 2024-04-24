@@ -219,6 +219,7 @@ Also, see Courses section below.
 * {menuadmin} : Useful dynamic menu for Moodle teachers, managers and administrators.
 * {menudev} : Useful dynamic menu for Moodle developers. Only visible when debugging is set to DEVELOPER mode.
 * {menuthemes} : Theme switcher. Only for administrators. Not available after POST. Allow Theme Changes on URL must be enabled. Will be visible even when Administrator is using the **Log In As** feature to log in as a different user.
+* {menucoursemore} : Adds the content of the secondary menu to a menu called "More". Useful for themes with pre-4.x style navigation.
 
 ### URL
 
@@ -1111,6 +1112,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Moodle Admin custom menu items [{menuadmin}]: <br><pre>{menuadmin}</pre>
 * Moodle Dev custom menu items [{menudev}]: <br><pre>{menudev}</pre>
 * Moodle Admin theme switcher [{menuthemes}]: <br><pre>{menuthemes}</pre>
+* Secondary menu for pre-4.x themes [{menucoursemore}]: <br><pre>{menucoursemore}</pre>
 * Course's category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course's category name (blank if not in a course) [{categoryname}]: {categoryname}
 * Course's category number (blank if not in a course) [{categorynumber}]: {categorynumber}

@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.4.5] 2024-04-22
+## [2.5.0] 2024-04-24
 ### Added
+- New {menucoursemore} tag.
 - New {iftheme}{/iftheme} tag.
 - New {ifnottheme}{/ifnottheme} tag.
 - New {alert border}{/alert} tag.
@@ -10,6 +11,9 @@ All notable changes to this project will be documented in this file.
 - {ALPHA} New {dashboard_siteinfo} tag. Work in progress - doesn't display correctly in all themes.
 - GitHub actions workflow.
 ### Updated
+- Small performance optimization.
+- Corrected "Course: Badges" link in {menuadmin}.
+- Updated PHP and Moodle compatibility in CONTRIBUTING.md.
 - Fix-291: Escape tags now work reliably.
 - Improved filtering of parameters for some tags.
 - Improved detection of https protocol.
@@ -18,7 +22,7 @@ All notable changes to this project will be documented in this file.
 - Improved error handling of the ifnotactivitycompleted tag.
 - {getstring} tag now checks if string is deprecated before trying to load a string from the language pack.
 - Reference to style guides in CONTRIBUTING.md.
-- References to PHP and Noodle versions in bug reports.
+- References to PHP and Moodle versions in bug reports.
 - Removed support for Travis integration.
 - Copyright notice to include 2024.
 - Fixed compatibility issue with Moodle LMS 4.4
