@@ -2,8 +2,8 @@
 
 FilterCodes filter plugin for Moodle
 ====================================
-![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%20%2F%20v7.2%20%2F%20v7.3%20%2F%20v7.4%20%2F%20v8.0%20%2F%20v8.1%20%2F%20v8.2-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v4.3-orange.svg)
+![PHP](https://img.shields.io/badge/PHP-v5.6%20to%20v8.3-blue.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v4.4-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -61,7 +61,7 @@ This plugin requires Moodle 2.7+ from https://moodle.org/ . Note that some tags 
 The most recent STABLE release of FilterCodes for Moodle is available from:
 https://moodle.org/plugins/filter_filtercodes
 
-The most recent DEVELOPMENT release can be found at:
+The most recent development release can be found at:
 https://github.com/michael-milette/moodle-filter_filtercodes
 
 [(Back to top)](#table-of-contents)
