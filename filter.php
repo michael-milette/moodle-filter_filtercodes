@@ -774,7 +774,7 @@ class filter_filtercodes extends moodle_text_filter {
                 $menu .= '-{getstring}course{/getstring}: {getstring}participants{/getstring}|/user/index.php?id={courseid}' .
                         PHP_EOL;
                 $menu .= '-{getstring}course{/getstring}: {getstring:badges}badges{/getstring}|/badges/index.php' .
-                        '?type={courseid}' . PHP_EOL;
+                        '?type=2&id={courseid}' . PHP_EOL;
                 $menu .= '-{getstring}course{/getstring}: {getstring}reports{/getstring}|/course/admin.php' .
                         '?courseid={courseid}#linkcoursereports' . PHP_EOL;
                 $menu .= '-{getstring}course{/getstring}: {getstring:enrol}enrolmentinstances{/getstring}|/enrol/instances.php' .
