@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.5.1] 2024-05-01
+### Updated
+- {iftheme} tag now works even when at the beginning of a string.
+- Updated for Moodle coding guidelines.
+
 ## [2.5.0] 2024-04-24
 ### Added
 - New {menucoursemore} tag.
