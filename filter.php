@@ -4598,7 +4598,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Description: Display content only if the current theme matches the one specified.
             // Parameters: The name of the directory in which the theme is located.
             // Requires content between tags.
-            if (stripos($text, '{iftheme ') != false) {
+            if (stripos($text, '{/iftheme') !== false) {
                 $theme = strtolower($PAGE->theme->name);
                 $re = '/{iftheme\s+(.*)\}(.*)\{\/iftheme\}/isuU';
                 $found = preg_match_all($re, $text, $matches);
