@@ -103,6 +103,37 @@ $string['formcontactus'] = '
         <input type="submit" name="submit" id="submit" value="Send">
     </div>
 </form>';
+$string['formcourserequest'] = '
+<form action="{wwwroot}/local/contact/index.php" method="post" class="cf new-course-request">
+    <fieldset>
+        <div class="form-group">
+            <label for="name" id="namelabel" class="d-block">Your name <strong class="required">(required)</strong></label>
+            <input id="name" name="name" type="text" size="57" maxlength="45" pattern="[A-zÀ-ž]([A-zÀ-ž\s]){2,}"
+                    title="Minimum 3 letters/spaces." required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{fullname}">
+        </div>
+        <div class="form-group">
+            <label for="email" id="emaillabel" class="d-block">Email address <strong class="required">(required)</strong></label>
+            <input id="email" name="email" type="email" size="57" maxlength="60" required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{email}">
+        </div>
+        <div class="form-group">
+            <label for="new_course_name" id="new_course_namelabel" class="d-block">Proposed name of the new course <strong class="required">(required)</strong></label>
+            <input id="new_course_name" name="new_course_name" type="text" size="57" maxlength="80" minlength="5"
+                    title="Minimum 5 characters." required="required">
+        </div>
+        <div class="form-group">
+            <label for="description" id="descriptionlabel" class="d-block">Course description <strong class="required">(required)</strong></label>
+            <textarea id="description" name="description" rows="5" cols="58" minlength="5"
+                    title="Minimum 5 characters." required="required"></textarea>
+        </div>
+        <input type="hidden" id="sesskey" name="sesskey" value="">
+        <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
+        {recaptcha}
+    </fieldset>
+    <div>
+        <input type="submit" name="submit" id="submit" value="Submit request for this course">
+    </div>
+</form>
+';
 $string['formquickquestion'] = '
 <form action="{wwwroot}/local/contact/index.php" method="post" class="cf contact-us">
     <fieldset>
@@ -181,9 +212,9 @@ $string['globaltagnamedesc'] = 'This will be part of your tag name, prefixed wit
 $string['globaltagnametitle'] = 'Tag: global_';
 $string['hidecompletedcourses'] = 'Hide completed courses';
 $string['hidecompletedcourses_desc'] = 'Enable to filter out completed courses in {mycoursesmenu} tag listings.';
-$string['ifprofilefiedonlyvisible_desc'] = 'When checked, restrict the {ifprofile_field_...} tag to only access visible user profile fields. Hidden fields will behave as if they were empty. If unchecked, this tag will be also able to check hidden fields.';
 $string['ifprofilefiedonlyvisible'] = '{ifprofile_field_} only visible.';
-$string['moremenu'] = 'More'; // Only used for Moodle before 4.0.
+$string['ifprofilefiedonlyvisible_desc'] = 'When checked, restrict the {ifprofile_field_...} tag to only access visible user profile fields. Hidden fields will behave as if they were empty. If unchecked, this tag will be also able to check hidden fields.';
+$string['moremenu'] = 'More';
 $string['narrowpage'] = 'Narrow page';
 $string['narrowpage_desc'] = 'Enable this option to optimize display of information if Moodle is using a theme with limited page width (e.g., Boost in Moodle 4.0+).';
 $string['nocompletedcourses'] = 'None of the courses in which you are enrolled have been marked as completed.';
@@ -216,38 +247,5 @@ $string['teamcardsformat_desc'] = 'Choose how the team members will appear in th
 </ul>';
 $string['teamcardslinktype'] = 'Team link type';
 $string['teamcardslinktype_desc'] = 'Choose the type of link for the team member\'s link in the {teamcards} tag. Note: Photo will automatically be linked to profile when the user is logged-in regardless of your choice here.';
-$string['unenrolme'] = 'Unenrol me from this course'; // Only used for Moodle before 4.2.
+$string['unenrolme'] = 'Unenrol me from this course';
 $string['verbose'] = 'Verbose';
-
-
-$string['formcourserequest'] = '
-<form action="{wwwroot}/local/contact/index.php" method="post" class="cf new-course-request">
-    <fieldset>
-        <div class="form-group">
-            <label for="name" id="namelabel" class="d-block">Your name <strong class="required">(required)</strong></label>
-            <input id="name" name="name" type="text" size="57" maxlength="45" pattern="[A-zÀ-ž]([A-zÀ-ž\s]){2,}"
-                    title="Minimum 3 letters/spaces." required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{fullname}">
-        </div>
-        <div class="form-group">
-            <label for="email" id="emaillabel" class="d-block">Email address <strong class="required">(required)</strong></label>
-            <input id="email" name="email" type="email" size="57" maxlength="60" required="required" {readonly}{ifloggedin} disabled{/ifloggedin} value="{email}">
-        </div>
-        <div class="form-group">
-            <label for="new_course_name" id="new_course_namelabel" class="d-block">Proposed name of the new course <strong class="required">(required)</strong></label>
-            <input id="new_course_name" name="new_course_name" type="text" size="57" maxlength="80" minlength="5"
-                    title="Minimum 5 characters." required="required">
-        </div>
-        <div class="form-group">
-            <label for="description" id="descriptionlabel" class="d-block">Course description <strong class="required">(required)</strong></label>
-            <textarea id="description" name="description" rows="5" cols="58" minlength="5"
-                    title="Minimum 5 characters." required="required"></textarea>
-        </div>
-        <input type="hidden" id="sesskey" name="sesskey" value="">
-        <script>document.getElementById("sesskey").value = M.cfg.sesskey;</script>
-        {recaptcha}
-    </fieldset>
-    <div>
-        <input type="submit" name="submit" id="submit" value="Submit request for this course">
-    </div>
-</form>
-';
