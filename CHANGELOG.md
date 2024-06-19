@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.5.2] 2024-06-19 (dev)
+### Updated
+- Fixed a couple of PHP 5.6 compatibility issues. Note that unit tests are still only compatible with PHP 7.1 and later.
+
 ## [2.5.1] 2024-05-01
 ### Updated
 - {iftheme} tag now works even when at the beginning of a string.

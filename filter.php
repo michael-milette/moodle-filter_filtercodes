@@ -1506,7 +1506,8 @@ class filter_filtercodes extends moodle_text_filter {
                 $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
                 if (!empty($grademax = floatval($gradeobj->item->grademax))) {
                     // Avoid divide by 0 error if no grades have been defined.
-                    $grade = (int) ($gradeobj->grade / floatval($grademax) * 100) ?? 0;
+                    $grade = floatval($grademax) > 0 ? (int) ($gradeobj->grade / floatval($grademax) * 100) : 0;
+
                 } else {
                     $grade = 0;
                 }
@@ -2115,7 +2116,9 @@ class filter_filtercodes extends moodle_text_filter {
             ';
             $thisuser = $DB->get_records_sql($sql, ['userid' => $USER->id, 'courseid' => $PAGE->course->id]);
             if (count($thisuser)) {
-                $datecreated = array_key_first($thisuser);
+                // Gets the first key of the array.
+                reset($thisuser);
+                $datecreated = key($thisuser);
                 // Replace {courseenrolmentdate} tag with formatted date.
                 if (stripos($text, '{courseenrolmentdate}') !== false) {
                     $replace['/\{courseenrolmentdate\}/i'] = userdate($datecreated, get_string('strftimedatefullshort'));
@@ -2901,7 +2904,8 @@ class filter_filtercodes extends moodle_text_filter {
                 $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
                 $grade = 0;
                 if (!empty($grademax = floatval($gradeobj->item->grademax))) {
-                    $grade = (int)($gradeobj->grade / floatval($grademax) * 100) ?? 0;
+                    // Avoid divide by 0 error if no grades have been defined.
+                    $grade = floatval($grademax) > 0 ? (int) ($gradeobj->grade / floatval($grademax) * 100) : 0;
                 }
                 $replace['/\{coursegrade\}/i'] = get_string('percents', '', $grade);
             }
