@@ -1507,7 +1507,6 @@ class filter_filtercodes extends moodle_text_filter {
                 if (!empty($grademax = floatval($gradeobj->item->grademax))) {
                     // Avoid divide by 0 error if no grades have been defined.
                     $grade = floatval($grademax) > 0 ? (int) ($gradeobj->grade / floatval($grademax) * 100) : 0;
-
                 } else {
                     $grade = 0;
                 }
@@ -4592,6 +4591,27 @@ class filter_filtercodes extends moodle_text_filter {
                             $replace[$key] = '$1';
                         } else {
                             // Remove the ifhasarolename strings.
+                            $replace[$key] = '';
+                        }
+                    }
+                }
+            }
+
+            // Tag: {ifuser id|username}...{/ifuser}.
+            // Description: Display content only for specified user id or username.
+            // Parameters: id or username number of user.
+            // Requires content between tags.
+            if (stripos($text, '{ifuser') !== false) {
+                $re = '/{ifuser\s+(.*)\}(.*)\{\/ifuser\}/isuU';
+                $found = preg_match_all($re, $text, $matches);
+                if ($found > 0) {
+                    foreach ($matches[1] as $user) {
+                        $key = '/{ifuser\s+' . $user . '\}(.*)\{\/ifuser\}/isuU';
+                        if ($user == $USER->id || $user == $USER->username) {
+                            // Just remove the tags.
+                            $replace[$key] = '$1';
+                        } else {
+                            // Remove the ifuser strings.
                             $replace[$key] = '';
                         }
                     }

@@ -320,6 +320,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 
 #### Miscellanious
 
+* {ifuser id|username}{/ifuser}: Will display the enclosed content if the the user matches the specified user ID or user name. Recommendation: Use the user's ID because you can rename a username.
 * {ifdev}{/ifdev} : Will display the enclosed content only if the user is logged in as an administrator and developer debugging mode is enabled.
 * {ifhome}{/ifhome} : Will display the enclosed content only if the user is on the Moodle Home Frontpage.
 * {ifnothome}{/ifnothome} : Will not display the enclosed content if the user is on the Moodle Home Frontpage.
@@ -553,7 +554,7 @@ Example: To apply the patch for Moodle using git (change the "M403" for other ve
     git cherry-pick FETCH_HEAD
 ```
 
-This is usually enough to make the filters work in the custom menu. However, we have noticed it may not work with some Moodle themes, most notably premium themes. Those themes will need to be patched using the technique B.
+This is usually enough to make the filters work in the custom menu. However, we have noticed it may not work with some Moodle themes, most notably premium themes. Those themes will need to be patched using the Technique B.
 
 **Technique B**: If technique A does not work for you, you will need to integrate a few lines of code into your Moodle theme, or ask your theme's developer/maintainer to apply this change for you. Be sure to follow the correct instructions for your version of Moodle.
 
@@ -605,11 +606,11 @@ Add this code to the core_renderer section (probably located in /theme/yourtheme
     }
 ```
 
-### For themes based on **boost** (Moodle 3.2 and later)
+### For themes based on **boost** (Moodle 3.2 to 3.11 and some 4.0+)
 
-Note: Supported in Moodle 3.2 and later. If you are using Moodle 4.0 or later, you **must also** integrate the patch **For themes based on boost (Moodle 4.0 and later)** above.
+Note: Supported in Moodle 3.2 to 3.11. Most Moodle 4.0 themes do not require this patch but some that were ported for 4.0+ still do.
 
-Add the following code to core_renderer section (often found in /theme/yourtheme/classes/output/core_renderer.php) of your theme. Note: Your theme may even already have such a class (they often do):
+Add the following code to core_renderer section (often found in /theme/yourtheme/classes/output/core_renderer.php) of your theme. Note: Your theme may even already have such a class (they often do). The important lines are chunk of code that starts with "// Filter custom menu items..." including the 5 lines that follow it.
 
 ```php
     use filter_manager;
@@ -1196,6 +1197,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If Developer [{ifdev}]You are an administrator with debugging set to developer mode.[{/ifdev}]: {ifdev}You are an administrator with debugging set to developer mode.{/ifdev}
 * If user has a parent custom role [{ifcustomrole parent}]You have a parent custom role in this context[{/ifcustomrole}]: {ifcustomrole parent}You have a parent custom role in this context{/ifcustomrole}.
 * If user does not have a parent custom role [{ifnotcustomrole parent}]You do not have a parent custom role in this context[{/ifnotcustomrole}]: {ifnotcustomrole parent}You do not have a parent custom role in this context{/ifnotcustomrole}.
+* If a specific user [{ifuser 2}]Hi Admin[{/ifuser}]: {ifuser 2}Hi Admin{/ifuser}.
 * The current theme is [{iftheme boost}]Boost[{/iftheme}][{iftheme classic}]Classic[{/iftheme}]: {iftheme boost}Boost{/iftheme}{iftheme classic}Classic{/iftheme}
 * The current theme is [{ifnottheme boost}]NOT [{/ifnottheme}]Boost: {ifnottheme boost}NOT {/ifnottheme} Boost.
 * If on Home page [{ifhome}]You are on the Home Frontpage.[{/ifhome}]: {ifhome}You are on the Home Frontpage.{/ifhome}
@@ -1348,6 +1350,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* Premergency: New {ifuser} tag (2024).
 * suzyzan: Fixed deprecation notice relating to trim() function in PHP 8.1 (2023).
 * richardvi/HZ University of Applied Sciences (premium supporter): Added support for locally assigned on module/activity custom roles to {ifcustomrole} (2023).
 * alexmorrisnz: Add CSS class support for {details} tag (2022).

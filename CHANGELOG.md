@@ -1,7 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.5.2] 2024-06-19 (dev)
+## [2.5.2] 2024-07-17 (dev)
+### Added
+- New {ifuser id|username}{/ifuser} tag.
 ### Updated
 - Fixed a couple of PHP 5.6 compatibility issues. Note that unit tests are still only compatible with PHP 7.1 and later.
 
