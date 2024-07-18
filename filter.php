@@ -3373,14 +3373,25 @@ class filter_filtercodes extends moodle_text_filter {
             // Description: An unordered list of links to top level categories.
             // Parameters: None.
             if (stripos($text, '{categories0}') !== false) {
-                $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
+                // Display hidden categories if visibility user is siteadmin or role has moodle/category:viewhiddencategories.
+                $context = context_system::instance();
+                $isadmin = (is_siteadmin() && !is_role_switched($PAGE->course->id));
+                $viewhidden = has_capability('moodle/category:viewhiddencategories', $context, $USER, $isadmin);
+
+                // Categories not visible will be still visible to site admins or users with viewhiddencourses capability.
+                $sql = 'SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
                         FROM {course_categories} cc
-                        WHERE cc.parent = 0 AND cc.visible = 1
-                        ORDER BY cc.sortorder";
+                        WHERE cc.parent = 0' . (!$viewhidden ? ' AND cc.visible = 1' : '') . '
+                        ORDER BY cc.sortorder';
                 $list = '';
                 $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
                 foreach ($categories as $category) {
-                    $list .= '<li><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id])
+                    if (!$category->visible && !$viewhidden) {
+                        // Skip if the category is not visible to the user.
+                        continue;
+                    }
+                    $dimmed = $category->visible ? '' : ' class="dimmed"';
+                    $list .= '<li' . $dimmed . '><a href="' . new moodle_url('/course/index.php', ['categoryid' => $category->id])
                             . '">' . $category->name . '</a></li>' . PHP_EOL;
                 }
                 $list = !empty($list) ? '<ul>' . $list . '</ul>' : '';
@@ -3393,13 +3404,23 @@ class filter_filtercodes extends moodle_text_filter {
             // Description: A list of top level categories with links - for use in the custom menu as a top level menu.
             // Parameters: None.
             if (stripos($text, '{categories0menu}') !== false) {
-                $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
+                // Display hidden categories if visibility user is siteadmin or role has moodle/category:viewhiddencategories.
+                $context = context_system::instance();
+                $isadmin = (is_siteadmin() && !is_role_switched($PAGE->course->id));
+                $viewhidden = has_capability('moodle/category:viewhiddencategories', $context, $USER, $isadmin);
+
+                // Categories not visible will be still visible to site admins or users with viewhiddencourses capability.
+                $sql = 'SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
                         FROM {course_categories} cc
-                        WHERE cc.parent = 0 AND cc.visible = 1
-                        ORDER BY cc.sortorder";
+                        WHERE cc.parent = 0' . (!$viewhidden ? ' AND cc.visible = 1' : '') . '
+                        ORDER BY cc.sortorder';
                 $list = '';
                 $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
                 foreach ($categories as $category) {
+                    if (!$category->visible && !$viewhidden) {
+                        // Skip if the category is not visible to the user.
+                        continue;
+                    }
                     $list .= '-' . $category->name . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
                 }
                 $categories->close();

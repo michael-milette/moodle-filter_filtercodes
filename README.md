@@ -202,7 +202,7 @@ Also, see Courses section below.
 * {categorynumber} : If in a course, the number of the course's parent category, is otherwise blank.
 * {categorydescription} : If in a course, the number of the description of a course's parent category, is otherwise blank.
 * {categories} : Display an unordered list of links to all course categories.
-* {categories0} : Display an unordered list of just top-level links to all course categories.
+* {categories0} : Display an unordered list of just top-level links to all course categories. Does not include hidden categories unless admin or have moodle/category:viewhiddencategories capability.
 * {categoriesx} : Display an unordered list of other categories in the current category.
 
 ### Custom menu
@@ -210,7 +210,7 @@ Also, see Courses section below.
 **Important note**: Filtering must be supported in the custom menu by your theme.
 
 * {categoriesmenu} : A second-level list of categories with links for use in custom menus.
-* {categories0menu} : A second-level list of just top-level categories with links for use in custom menus.
+* {categories0menu} : A second-level list of just top-level categories with links for use in custom menus.  Does not include hidden categories unless admin or have moodle/category:viewhiddencategories capability.
 * {categoriesxmenu} : A second-level list of other categories in the current category with links for use in custom menus.
 * {toggleeditingmenu} : A **Turn Editing On** or **Turn Editing Off** custom menu item. Note that you need to add your own dash(es) to add it in a sub-menu item.
 * {mycoursesmenu} : A second-level list of courses with links for use in custom menus.
