@@ -251,6 +251,57 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Retrieves specified profile fields for a user.
+     *
+     * This method fetches and caches user profile fields from the database. If the fields have
+     * already been retrieved for the current request, the cached values are returned. This method
+     * supports fetching both core and custom user profile fields.
+     *
+     * @param object $user The user object whose profile fields are being retrieved.
+     * @param array $fields optional An array of field names to retrieve. If empty/not specified, only custom fields are retrieved.
+     * @return array An associative array of field names and their values for the specified user.
+     */
+    private function getuserprofilefields($user, $fields = []) {
+        global $DB;
+
+        static $profilefields;
+        static $lastfields;
+
+        // If we have already cached the profile fields and data, return them.
+        if (isset($profilefields) && $lastfields == $fields) {
+            return $profilefields;
+        }
+
+        $profilefields = [];
+        if (!isloggedin()) {
+            return $profilefields;
+        }
+
+        // Get custom user profile fields, their value and visibilit. Only works for authenticated users.
+        $sql = "SELECT f.shortname, f.visible, f.datatype, COALESCE(d.data, '') AS value
+            FROM {user_info_field} f
+            LEFT JOIN {user_info_data} d ON f.id = d.fieldid AND d.userid = :userid
+            ORDER BY f.shortname;";
+        $params = ['userid' => $user->id];
+        // Determine if restricted to only visible fields.
+        if (!empty(get_config('filter_filtercodes', 'ifprofilefiedonlyvisible'))) {
+            $params['visible'] = 1;
+        }
+        $profilefields = $DB->get_records_sql($sql, $params);
+
+        // Add core user profile fields.
+        foreach ($fields as $field) {
+            // Skip fields that don't exist (likely a typo).
+            if (isset($user->$field)) {
+                $profilefields[$field] = (object)['shortname' => $field, 'visible' => '1', 'datatype' => 'text', 'value' => $user->$field];
+            }
+        }
+        $lastfields = $fields;
+
+        return $profilefields;
+    }
+
+    /**
      * Determine if running on http or https. Same as Moodle's is_https() except that it is backwards compatible to Moodle 2.7.
      *
      * @return boolean true if protocol is https, false if http.
@@ -3864,6 +3915,79 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
+            // Tag: {ifprofile_shortname is|not|contains|in "value"}...{/ifprofile}.
+            // Description: Will display content if specified the User Profile Fields meets the specified condition.
+            //
+            // Parameter: shortname: Shortname of the custom user profile fields plus auth, idnumber, email, institution,
+            // department, city, country, timezone and lang.
+            // Parameter: contains|is|in: The comparison operator. Use:
+            // 'is' to check if the field is an exact match for the value.
+            // 'not' to check if the field does not contain the value.
+            // 'contains' to check if the field contains the text.
+            // 'in' to check if the value is in the fields content.
+            // Parameters: "value": The text to compare the field against.
+            // Requires content between tags.
+            if (stripos($text, '{/ifprofile}') !== false) {
+                // Retrieve all custom profile fields and specified core fields.
+                $corefields = ['id', 'username', 'auth', 'idnumber', 'email', 'institution', 'department', 'city', 'country', 'timezone', 'lang'];
+                $profilefields = $this->getuserprofilefields($USER, $corefields);
+
+                // Find all ifprofile tags.
+                $re = '/{ifprofile\s+(\w+)\s+(is|not|contains|in)\s+"([^}]*)"}(.*){\/ifprofile}/isuU';
+                $found = preg_match_all($re, $text, $matches);
+                if ($found > 0) {
+                    foreach ($matches[1] as $key => $match) {
+                        $fieldname = $matches[1][$key];
+                        // Do not process tag if the specified profile field name does not exist.
+                        if (!array_key_exists($fieldname, $profilefields)) {
+                            continue;
+                        }
+
+                        $string = $matches[0][$key]; // String found in $text.
+                        $operator = $matches[2][$key];
+                        $value = $matches[3][$key];
+
+                        if (!empty($value)) {
+                            $value = trim($value, '"'); // Trim quotation marks.
+                        }
+
+                        $content = '';
+                        switch ($operator) {
+                            case 'is':
+                                // If the specified field is exactly the specified value.
+                                // Example: {ifprofile country is "CA"}...{/ifprofile}.
+                                // Example: {ifprofile city is ""}...{/ifprofile}.
+                                if ($profilefields[$fieldname]->value === $value) {
+                                    $content = $matches[4][$key];
+                                }
+                                break;
+                            case 'not':
+                                // Example: {ifprofile country not "CA"}...{/ifprofile}.
+                                // Example: {ifprofile institution not ""}...{/ifprofile}.
+                                if ($profilefields[$fieldname]->value !== $value) {
+                                    $content = $matches[4][$key];
+                                }
+                                break;
+                            case 'contains':
+                                // If the specified field contains the specified value.
+                                // Example:{ifprofile email contains "@example.com"}...{/ifprofile}.
+                                if (strpos($profilefields[$fieldname]->value, $value) !== false) {
+                                    $content = $matches[4][$key];
+                                }
+                                break;
+                            case 'in':
+                                // If the specified value contains the value specified in the field.
+                                // Example: {ifprofile country in "CA,US,UK,AU,NZ"}...{/ifprofile}.
+                                if (strpos($value, $profilefields[$fieldname]->value) !== false) {
+                                    $content = $matches[4][$key];
+                                }
+                                break;
+                        }
+                        $replace['/' . preg_quote($string, '/') . '/isuU'] = $content;
+                    }
+                }
+            }
+
             // Tag: {ifmobile}...{/ifmobile}.
             // Description: Will display content if accessed from the mobile app.
             // Parameters: None.
@@ -4618,9 +4742,10 @@ class filter_filtercodes extends moodle_text_filter {
                 }
             }
 
-            // Tag: {ifuser id|username}...{/ifuser}.
-            // Description: Display content only for specified user id or username.
-            // Parameters: id or username number of user.
+            // DO NOT USE THIS TAG. IT WILL BE REMOVED SOON. Use {ifprofile id is 999} instead.
+            // Tag: {ifuser id}...{/ifuser}.
+            // Description: Display content only for specified user id.
+            // Parameters: id number of user.
             // Requires content between tags.
             if (stripos($text, '{ifuser') !== false) {
                 $re = '/{ifuser\s+(.*)\}(.*)\{\/ifuser\}/isuU';
@@ -4628,7 +4753,7 @@ class filter_filtercodes extends moodle_text_filter {
                 if ($found > 0) {
                     foreach ($matches[1] as $user) {
                         $key = '/{ifuser\s+' . $user . '\}(.*)\{\/ifuser\}/isuU';
-                        if ($user == $USER->id || $user == $USER->username) {
+                        if ($user == $USER->id) {
                             // Just remove the tags.
                             $replace[$key] = '$1';
                         } else {

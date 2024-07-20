@@ -320,16 +320,23 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 
 #### Miscellanious
 
-* {ifuser id|username}{/ifuser}: Will display the enclosed content if the the user matches the specified user ID or user name. Recommendation: Use the user's ID because you can rename a username.
 * {ifdev}{/ifdev} : Will display the enclosed content only if the user is logged in as an administrator and developer debugging mode is enabled.
 * {ifhome}{/ifhome} : Will display the enclosed content only if the user is on the Moodle Home Frontpage.
 * {ifnothome}{/ifnothome} : Will not display the enclosed content if the user is on the Moodle Home Frontpage.
 * {ifdashboard}{/ifdashboard} : Will display the enclosed content only if the user is on the Moodle Dashboard.
 * {ifcourserequests}{/ifcourserequests} : Will display enclosed contents only if the Request a Course feature is enabled.
 * {ifeditmode}{/ifeditmode} : Will display the enclosed content only if editing mode is turned on.
-* {ifprofile_field_shortname}{/ifprofile_field_shortname} : Will display the enclosed content if the custom user profile field is not blank/zero.
 * {iftheme themename}{/iftheme} : Will display enclosed content if the theme specified (theme's directory name) is the one currently used to render the page.
 * {ifnottheme themename}{/ifnottheme} : Will display enclosed content if the theme specified (theme's directory name) is NOT the one currently used to render the page.
+* {ifprofile_field_shortname}{/ifprofile_field_shortname} : Will display the enclosed content if the custom user profile field is not blank/zero. Only visible custom profile fields are supported unless the FilterCodes ifprofilefiedonlyvisible setting is unchecked. Does not include support for core profile fields like the {ifprofile...} tags mentioned above.
+* {ifprofile shortname is "value"}{/ifprofile} : Will only display the enclosed content if the value of the specified user profile field matches the specified value.
+* {ifprofile shortname is ""}{/ifprofile} : Will only display the specified user profile field is empty. See note below.
+* {ifprofile shortname not "value"}{/ifprofile} : Will display the specified user profile field is not equal to the specified value.
+* {ifprofile shortname not ""}{/ifprofile} : Will display the specified user profile field is not empty. This is similar to the {ifprofile_field_shortname} tag but can't be nested. See note below.
+* {ifprofile shortname contains "value"}{/ifprofile} : Will only display the enclosed content if the contents of the user profile field is an exact match to the specified value. See note below.
+* {ifprofile shortname in "value"}{/ifprofile} : Will only display the enclosed content if the contents of the user profile field appears in the specified value. See note below.
+
+Note: The **shortname** for {ifprofile **shortname**...} tags can be any visible custom profile fields, unless the FilterCodes ifprofilefiedonlyvisible setting is unchecked, as well as the core 'id', 'username', 'auth', 'idnumber', 'email', 'institution', 'department', 'city', 'country', 'timezone', or 'lang' core profile fields.
 
 If the condition is not met in the particular context, the specified tag and its content will be removed.
 
@@ -1174,6 +1181,12 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If you are logged in as a different user [{ifloggedinas}]: {ifloggedinas}You are logged in as a different user.{/ifloggedinas}
 * If you are NOT logged in as a different user [{ifloggedinas}]: {ifnotloggedinas}You are logged in as yourself.{/ifnotloggedinas}
 * If Editing mode activated (on) [{ifeditmode}]Don't forget to turn off editing mode![{/ifeditmode}]: {ifeditmode}Don't forget to turn off editing mode!{/ifeditmode}
+* Welcome to our [{ifprofile country is "CA"}]Canadian[{/ifprofile}][{ifprofile country not "CA"}]international[{/ifprofile}] students. : Welcome to our {ifprofile country is "CA"}Canadian{/ifprofile}{ifprofile country not "CA"}international{/ifprofile} students.
+* [{ifprofile city is ""}]You must specify a city in your profile.[{/ifprofile}] : {ifprofile city is ""}You must specify a city in your profile.{/ifprofile}
+* [{ifprofile city not ""}]Thanks for filling out the city field in your profile.[{/ifprofile}] : {ifprofile city not ""}Thanks for filling out the city field in your profile{/ifprofile}
+* [{ifprofile timezone contains "99"}]You must set your local time zone field in your profile.[{/ifprofile}] : {ifprofile timezone contains "99"}You must set your local time zone field in your profile{/ifprofile}
+* [{ifprofile email contains "@example.com"}]We have additional courses available for example.com customers today.[{/ifprofile}] : {ifprofile email contains "@example.com"}We have additional courses available for example.com customers today.{/ifprofile}
+* [{ifprofile country in "CA,US,UK,AU,NZ"}]We have many courses available in English[{/ifprofile}] : {ifprofile country in "CA,US,UK,AU,NZ"}We have many courses available in English{/ifprofile}
 * If defined custom user profile field with a shortname called "iswoman" is not blank or zero [{ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}]: {ifprofile_field_iswoman}Female{/ifprofile_field_iswoman}
 * If Editing mode is deactivated (off) [{ifnoteditmode}]&lt;a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on"&gt;Turn edit mode on&lt;a/&gt;[{/ifnoteditmode}]: {ifnoteditmode}<a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit=on">Turn edit mode on</a>{/ifnoteditmode}
 * If on the course enrolment page? [{ifenrolpage}]Yes[{/ifenrolpage}]: {ifenrolpage}Yes{/ifenrolpage}
@@ -1197,7 +1210,6 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If Developer [{ifdev}]You are an administrator with debugging set to developer mode.[{/ifdev}]: {ifdev}You are an administrator with debugging set to developer mode.{/ifdev}
 * If user has a parent custom role [{ifcustomrole parent}]You have a parent custom role in this context[{/ifcustomrole}]: {ifcustomrole parent}You have a parent custom role in this context{/ifcustomrole}.
 * If user does not have a parent custom role [{ifnotcustomrole parent}]You do not have a parent custom role in this context[{/ifnotcustomrole}]: {ifnotcustomrole parent}You do not have a parent custom role in this context{/ifnotcustomrole}.
-* If a specific user [{ifuser 2}]Hi Admin[{/ifuser}]: {ifuser 2}Hi Admin{/ifuser}.
 * The current theme is [{iftheme boost}]Boost[{/iftheme}][{iftheme classic}]Classic[{/iftheme}]: {iftheme boost}Boost{/iftheme}{iftheme classic}Classic{/iftheme}
 * The current theme is [{ifnottheme boost}]NOT [{/ifnottheme}]Boost: {ifnottheme boost}NOT {/ifnottheme} Boost.
 * If on Home page [{ifhome}]You are on the Home Frontpage.[{/ifhome}]: {ifhome}You are on the Home Frontpage.{/ifhome}
@@ -1350,7 +1362,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
-* Premergency: New {ifuser} tag (2024).
+* Premergency: New {ifprofile id is "999"} tag (2024).
 * suzyzan: Fixed deprecation notice relating to trim() function in PHP 8.1 (2023).
 * richardvi/HZ University of Applied Sciences (premium supporter): Added support for locally assigned on module/activity custom roles to {ifcustomrole} (2023).
 * alexmorrisnz: Add CSS class support for {details} tag (2022).
