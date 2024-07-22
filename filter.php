@@ -3939,14 +3939,21 @@ class filter_filtercodes extends moodle_text_filter {
                 if ($found > 0) {
                     foreach ($matches[1] as $key => $match) {
                         $fieldname = $matches[1][$key];
-                        // Do not process tag if the specified profile field name does not exist.
-                        if (!array_key_exists($fieldname, $profilefields)) {
-                            continue;
-                        }
-
                         $string = $matches[0][$key]; // String found in $text.
                         $operator = $matches[2][$key];
                         $value = $matches[3][$key];
+
+                        // Do not process tag if the specified profile field name does not exist or user is not logged in.
+                        if (!array_key_exists($fieldname, $profilefields) || !isloggedin() || isguestuser()) {
+                            if ($operator == 'not') {
+                                // It will always meet criteria of a "not" if the user doesn't have a profile.
+                                $replace['/' . preg_quote($string, '/') . '/isuU'] = $matches[4][$key];
+                            } else {
+                                // It will never match the criteria "is", "contains" or "in" if the user doesn't have a profile.
+                                $replace['/' . preg_quote($string, '/') . '/isuU'] = '';
+                            }
+                            continue;
+                        }
 
                         if (!empty($value)) {
                             $value = trim($value, '"'); // Trim quotation marks.

@@ -1467,6 +1467,8 @@ Important: The specified value must be the value that is stored in the database,
 * For dropdown fields, you may need to view the HTML code to see what the actual values are for a field.
 * For checkboxes, the checked value is 1, unchecked is 0.
 
+Reminder: When logged out (or in as guest), user profile fields do not exist. Therefore, "not" will always evaluate to true and "is", "contains" and "in" will evaluate to false.
+
 ### What are the supported dateTimeFormat formats?
 
 The date and time formats, defined in Moodle (langconfig.php)[https://github.com/moodle/moodle/blob/master/lang/en/langconfig.php], control how dates and times will be displayed.
