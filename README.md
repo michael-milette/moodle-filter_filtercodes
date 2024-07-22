@@ -561,7 +561,7 @@ Example: To apply the patch for Moodle using git (change the "M403" for other ve
     git cherry-pick FETCH_HEAD
 ```
 
-This is usually enough to make the filters work in the custom menu. However, we have noticed it may not work with some Moodle themes, most notably premium themes. Those themes will need to be patched using the Technique B.
+This is usually enough to make the filters work in the custom menu. However, we have noticed it may not work with some Moodle themes, most notably premium themes. Those themes will need to be patched using the technique B.
 
 **Technique B**: If technique A does not work for you, you will need to integrate a few lines of code into your Moodle theme, or ask your theme's developer/maintainer to apply this change for you. Be sure to follow the correct instructions for your version of Moodle.
 
@@ -613,11 +613,11 @@ Add this code to the core_renderer section (probably located in /theme/yourtheme
     }
 ```
 
-### For themes based on **boost** (Moodle 3.2 to 3.11 and some 4.0+)
+### For themes based on **boost** (Moodle 3.2 and later)
 
-Note: Supported in Moodle 3.2 to 3.11. Most Moodle 4.0 themes do not require this patch but some that were ported for 4.0+ still do.
+Note: Supported in Moodle 3.2 and later. If you are using Moodle 4.0 or later, you **must also** integrate the patch **For themes based on boost (Moodle 4.0 and later)** above.
 
-Add the following code to core_renderer section (often found in /theme/yourtheme/classes/output/core_renderer.php) of your theme. Note: Your theme may even already have such a class (they often do). The important lines are chunk of code that starts with "// Filter custom menu items..." including the 5 lines that follow it.
+Add the following code to core_renderer section (often found in /theme/yourtheme/classes/output/core_renderer.php) of your theme. Note: Your theme may even already have such a class (they often do):
 
 ```php
     use filter_manager;
