@@ -5107,6 +5107,24 @@ class filter_filtercodes extends moodle_text_filter {
             }
         }
 
+        // Tag: {rawurlencode}...{/rawurlencode}.
+        // Description: URL Encodes the content between the tags for use as a parameter of a URL in RFC 3986.
+        // Parameters: None.
+        // Requires content between tags.
+        if (stripos($text, '{rawurlencode}') !== false) {
+            // Replace {urlencode} tags and content with encoded content.
+            $newtext = preg_replace_callback(
+                '/\{rawurlencode\}(.*)\{\/rawurlencode\}/isuU',
+                function ($matches) {
+                    return rawurlencode($matches[1]);
+                },
+                $text
+            );
+            if ($newtext !== false) {
+                $text = $newtext;
+            }
+        }
+
         // Tag: {qrcode}...{/qrcode}.
         // Description: Encodes the content between the tags into a an HTML image tag containing a QR Code of the content.
         // Parameters: None.
