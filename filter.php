@@ -4635,7 +4635,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {ifingrouping id|idnumber}...{/ifingrouping}.
-            // Description: Display content if the user is a member of the specified group.
+            // Description: Display content if the user is a member of the specified grouping.
             // Required Parameters: group id or idnumber.
             // Requires content between tags.
             if (stripos($text, '{ifingrouping') !== false) {
@@ -4664,7 +4664,7 @@ class filter_filtercodes extends moodle_text_filter {
             }
 
             // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
-            // Description: Display content if the user is NOT a member of the specified group.
+            // Description: Display content if the user is NOT a member of the specified grouping.
             // Required Parameters: group id or idnumber.
             // Requires content between tags.
             if (stripos($text, '{ifnotingrouping') !== false) {
