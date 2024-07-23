@@ -320,7 +320,7 @@ class filter_filtercodes extends moodle_text_filter {
                      INNER JOIN {groupings} gp ON gp.id = gg.groupingid
                   WHERE g.courseid = ? AND u.id = ?
                GROUP BY gp.id
-               ORDER BY gp.name ASC', array($courseid, $userid));
+               ORDER BY gp.name ASC', [$courseid, $userid]);
     }
 
     /**
