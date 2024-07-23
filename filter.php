@@ -293,7 +293,8 @@ class filter_filtercodes extends moodle_text_filter {
         foreach ($fields as $field) {
             // Skip fields that don't exist (likely a typo).
             if (isset($user->$field)) {
-                $profilefields[$field] = (object)['shortname' => $field, 'visible' => '1', 'datatype' => 'text', 'value' => $user->$field];
+                $profilefields[$field] = (object)['shortname' => $field, 'visible' => '1',
+                    'datatype' => 'text', 'value' => $user->$field];
             }
         }
         $lastfields = $fields;
@@ -3930,7 +3931,8 @@ class filter_filtercodes extends moodle_text_filter {
             // Requires content between tags.
             if (stripos($text, '{/ifprofile}') !== false) {
                 // Retrieve all custom profile fields and specified core fields.
-                $corefields = ['id', 'username', 'auth', 'idnumber', 'email', 'institution', 'department', 'city', 'country', 'timezone', 'lang'];
+                $corefields = ['id', 'username', 'auth', 'idnumber', 'email', 'institution',
+                    'department', 'city', 'country', 'timezone', 'lang'];
                 $profilefields = $this->getuserprofilefields($USER, $corefields);
 
                 // Find all ifprofile tags.
