@@ -1222,6 +1222,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Section Name [{sectionname}]: {sectionname}
 * Contacts in this course [{coursecontacts}]: {coursecontacts}
 * Please help other members of [{mygroups}] who might be struggling: Please help other members of {mygroups} who might be struggling.
+* Please help other members of [{mygroupings}] who might be struggling: Please help other members of {mygroupings} who might be struggling.
 * Available free application disk space [{diskfreespace}]: {diskfreespace}
 * Available free moodledata disk space [{diskfreespacedata}]: {diskfreespacedata}
 * My Enrolled Courses [{mycourses}]: {mycourses}
@@ -1266,6 +1267,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * This URL [{thisurl}]: {thisurl}
 * This URL encoded [{thisurl_enc}]: {thisurl_enc}
 * Double encode this URL (useful for whatsurl parameters) [{urlencode}][{thisurl_enc}][{/urlencode}]: {urlencode}{thisurl_enc}{/urlencode}
+* Mailto with Subject mailto:someone@example.com?subject=[{rawurlencode}]This is an amazing subject[{/rawurlencode}]>Mailto with Subject: mailto:someone@example.com?subject={rawurlencode}This is an amazing subject[{/rawurlencode}
 * Protocol [{protocol}]: {protocol}
 * IP Address [{ipaddress}]: {ipaddress}
 * Moodle session key [{sesskey}]: {sesskey}
@@ -1345,6 +1347,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Is this Moodle Workplace? [{ifworkplace}]Yes[{/ifworkplace}]: {ifworkplace}Yes{/ifworkplace}
 * This is FilterCodes version [{filtercodes}]: {filtercodes} (It be blank if you do not have the Moodle capability to edit this tag.)
 * Are you a member of the ATEAM group [{ifingroup ATEAM}]Yes[{/ifingroup}][{ifnotingroup ATEAM}]No[{/ifnotingroup}] ? : {ifingroup ATEAM}Yes{/ifingroup}{ifnotingroup ATEAM}No{/ifnotingroup} Note: Only works in courses.
+* Are you a member of the MCU grouping [{ifingrouping MCU}]Yes[{/ifingrouping}][{ifnotingrouping MCU}]No[{/ifnotingrouping}] ? : {ifingrouping MCU}Yes{/ifingrouping}{ifnotingrouping MCU}No{/ifnotingrouping} Note: Only works in courses.
 * [{ifvisible}]Notice: Course visibility is set to Show.[{/ifvisible}]: {ifvisible}Notice: Course visibility is set to Show.{/ifvisible}
 * [{ifnotvisible}]Warning: Course visibility is set to Hide.[{/ifnotvisible}]: {ifnotvisible}Warning: Course visibility is set to Hide.{/ifnotvisible}
 * Are you in an activity? [{ifinactivity}]Yes[{/ifinactivity}][{ifnotinactivity}]No[{/ifnotinactivity}]: {ifinactivity}Yes{/ifinactivity}{ifnotinactivity}No{/ifnotinactivity}
@@ -1524,6 +1527,11 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* 28Smiles (Leon Camus): Bug fix for {qrcode} and {urlencode} tags (2024).
+* 28Smiles (Leon Camus): New {ifingouping} tag (2024).
+* 28Smiles (Leon Camus): New {ifnotingrouping} tag (2024).
+* 28Smiles (Leon Camus): New {mygroupings} tag (2024).
+* 28Smiles (Leon Camus): New {rawurlencode} tag (2024).
 * Premergency: New {ifprofile id is "999"} tag (2024).
 * suzyzan: Fixed deprecation notice relating to trim() function in PHP 8.1 (2023).
 * richardvi/HZ University of Applied Sciences (premium supporter): Added support for locally assigned on module/activity custom roles to {ifcustomrole} (2023).
