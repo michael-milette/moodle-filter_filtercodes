@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Updated
 - Added more documentation to README.md.
 - Fixed links and updated table of contents in README.md.
+- The {thisurl_enc} tag is now compliant with RFC 3986.
 - {categories0} tag now shows hidden categories if role has moodle/category:viewhiddencategories.
 - {categories0menu} tag now shows hidden categories if role has moodle/category:viewhiddencategories.
 - Fixed a couple of PHP 5.6 compatibility issues. Note that unit tests are still only compatible with PHP 7.1 and later.

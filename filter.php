@@ -1699,7 +1699,7 @@ class filter_filtercodes extends moodle_text_filter {
             // Description: Complete URL of the current page - URL encoded for use as a parameter of a URL.
             // Parameters: None.
             if (stripos($text, '{thisurl_enc}') !== false) {
-                $replace['/\{thisurl_enc\}/i'] = urlencode($url);
+                $replace['/\{thisurl_enc\}/i'] = rawurlencode($url);
             }
         }
 
