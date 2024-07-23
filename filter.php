@@ -4987,46 +4987,6 @@ class filter_filtercodes extends moodle_text_filter {
             unset($chart, $matches, $html, $value, $title);
         }
 
-        // Tag: {urlencode}...{/urlencode}.
-        // Description: URL Encodes the content between the tags for use as a parameter of a URL.
-        // Parameters: None.
-        // Requires content between tags.
-        if (stripos($text, '{urlencode}') !== false) {
-            // Replace {urlencode} tags and content with encoded content.
-            $newtext = preg_replace_callback(
-                '/\{urlencode\}(.*)\{\/urlencode\}/isuU',
-                function ($matches) {
-                    return urlencode($matches[1]);
-                },
-                $text
-            );
-            if ($newtext !== false) {
-                $text = $newtext;
-            }
-        }
-
-        // Tag: {qrcode}...{/qrcode}.
-        // Description: Encodes the content between the tags into a an HTML image tag containing a QR Code of the content.
-        // Parameters: None.
-        // Requires content between tags.
-        if (stripos($text, '{qrcode}') !== false) {
-            // Remove {qrcode}{/qrcode} tags and turn content between the tags into a QR code.
-            $newtext = preg_replace_callback(
-                '/\{qrcode\}(.*)\{\/qrcode\}/isuU',
-                function ($matches) {
-                    $text = html_to_text($matches[1]);
-                    $src = $this->qrcode($text);
-                    $src = '<img src="' . $src . '" style="width:100%;max-width:480px;height:auto;" class="fc-qrcode" alt="'
-                            . $text . '">';
-                    return $src;
-                },
-                $text
-            );
-            if ($newtext !== false) {
-                $text = $newtext;
-            }
-        }
-
         // Tag: {alert stylename}...{/alert}.
         // Description: Wraps content between the tags into a Bootstrap Alert box.
         // Optional Parameters: Stylenames: primary|secondary|success|danger|warning|info|light|dark. Default is 'warning'.
@@ -5127,6 +5087,46 @@ class filter_filtercodes extends moodle_text_filter {
             // No more tags? Put back the escaped tags, if any, and return the string.
             $text = $this->escapedtags($text);
             return $text;
+        }
+
+        // Tag: {urlencode}...{/urlencode}.
+        // Description: URL Encodes the content between the tags for use as a parameter of a URL.
+        // Parameters: None.
+        // Requires content between tags.
+        if (stripos($text, '{urlencode}') !== false) {
+            // Replace {urlencode} tags and content with encoded content.
+            $newtext = preg_replace_callback(
+                '/\{urlencode\}(.*)\{\/urlencode\}/isuU',
+                function ($matches) {
+                    return urlencode($matches[1]);
+                },
+                $text
+            );
+            if ($newtext !== false) {
+                $text = $newtext;
+            }
+        }
+
+        // Tag: {qrcode}...{/qrcode}.
+        // Description: Encodes the content between the tags into a an HTML image tag containing a QR Code of the content.
+        // Parameters: None.
+        // Requires content between tags.
+        if (stripos($text, '{qrcode}') !== false) {
+            // Remove {qrcode}{/qrcode} tags and turn content between the tags into a QR code.
+            $newtext = preg_replace_callback(
+                '/\{qrcode\}(.*)\{\/qrcode\}/isuU',
+                function ($matches) {
+                    $text = html_to_text($matches[1]);
+                    $src = $this->qrcode($text);
+                    $src = '<img src="' . $src . '" style="width:100%;max-width:480px;height:auto;" class="fc-qrcode" alt="'
+                        . $text . '">';
+                    return $src;
+                },
+                $text
+            );
+            if ($newtext !== false) {
+                $text = $newtext;
+            }
         }
 
         // Tag: {button URL}...{/button}.
