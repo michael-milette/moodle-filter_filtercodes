@@ -264,6 +264,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {sectionname} : Display the section name in which the activity is located.
 * {coursecontacts}: List of course contacts with links to their profiles, email address or messaging or phone number, and their user description (there are settings for these). Note: This tag was formerly called {courseteachers}.
 * {mygroups}: Displays a list of groups to which you are a member.
+* {mygroupings}: Displays a list of groupings to which you are a member.
 
 Also, see Courses section below.
 
@@ -299,6 +300,7 @@ Also, see Courses section below.
 * {thisurl} : The complete URL of the current page.
 * {thisurl_enc} : The complete encoded URL of the current page.
 * {urlencode}{/urlencode} : URL encodes any content between the tages.
+* {rawurlencode}{/rawurlencode} : URL encodes any content between the tages according to RFC 3986.
 * {referer} : Referring URL
 * {protocol} : http or https
 * {referrer} : Alias of {referer}
@@ -363,6 +365,8 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 * {ifnotinsection}{/ifnotinsection} : Will only display the enclosed content if the user is not in a section of a course.
 * {ifingroup id|idnumber}{/ifingroup} : Will only display the content if the user is part of the specified course group ID or group ID number.
 * {ifnotingroup id|idnumber}{/ifnotingroup} : Will only display the content if the user is NOT part of the specified course group ID or group ID number.
+* {ifingrouping id|idnumber}{/ifingrouping} : Will only display the content if the user is part of the specified course grouping ID or grouping ID number.
+* {ifnotingrouping id|idnumber}{/ifnotingrouping} : Will only display the content if the user is NOT part of the specified course grouping ID or grouping ID number.
 * {ifvisible}{/ifvisible} : Will only display the content if the course visibility is set to Show.
 * {ifnotvisible}{/ifnotvisible} : Will only display the content if the course visibility is set to Hide.
 * {ifinactivity}{/ifinactivity} : Will only display the content only in course activities.
