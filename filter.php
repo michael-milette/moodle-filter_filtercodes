@@ -303,6 +303,27 @@ class filter_filtercodes extends moodle_text_filter {
     }
 
     /**
+     * Retrieves the user's groupings for a course.
+     *
+     * @param integer $courseid The course ID.
+     * @param integer $userid The user ID.
+     * @return array An array of groupings for the specified user in the specified course.
+     */
+    private function getusergroupings($courseid, $userid) {
+        global $DB;
+
+        return $DB->get_records_sql('SELECT gp.id, gp.name, gp.idnumber
+                   FROM {user} u
+                     INNER JOIN {groups_members} gm ON u.id = gm.userid
+                     INNER JOIN {groups} g ON g.id = gm.groupid
+                     INNER JOIN {groupings_groups} gg ON gm.groupid = gg.groupid
+                     INNER JOIN {groupings} gp ON gp.id = gg.groupingid
+                  WHERE g.courseid = ? AND u.id = ?
+               GROUP BY gp.id
+               ORDER BY gp.name ASC', array($courseid, $userid));
+    }
+
+    /**
      * Determine if running on http or https. Same as Moodle's is_https() except that it is backwards compatible to Moodle 2.7.
      *
      * @return boolean true if protocol is https, false if http.
@@ -1452,6 +1473,7 @@ class filter_filtercodes extends moodle_text_filter {
         static $profilefields;
         static $profiledata;
         static $mygroupslist;
+        static $mygroupingslist;
 
         $replace = []; // Array of key/value filterobjects.
 
@@ -3608,6 +3630,29 @@ class filter_filtercodes extends moodle_text_filter {
             $replace['/\{mygroups\}/i'] = $mygroups;
         }
 
+        // Tag {mygroupings}.
+        // Description: List of groupings that the user is in.
+        // Parameters: None.
+        if (stripos($text, '{mygroupings}') !== false) {
+            static $mygroupings;
+
+            if (!isset($mygroupings)) {
+                // Fetch my groups.
+                $context = context_course::instance($PAGE->course->id);
+                if (!isset($mygroupingslist)) {
+                    $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
+                }
+                // Process group names through Moodle filters in case they are multi-language.
+                $mygroupings = [];
+                foreach ($mygroupingslist as $grouping) {
+                    $mygroupings[] = format_string($grouping->name, true, ['context' => $context]);
+                }
+                // Format groups into a language string.
+                $mygroupings = $this->formatlist($mygroupings);
+            }
+            $replace['/\{mygroupings\}/i'] = $mygroupings;
+        }
+
         // Tag: {wwwcontactform}.
         // Description: Action URL for ContactForm form submissions.
         // Parameters: None.
@@ -4578,6 +4623,64 @@ class filter_filtercodes extends moodle_text_filter {
                         $ismember = false;
                         foreach ($mygroupslist as $group) {
                             if ($groupid == $group->id || $groupid == $group->idnumber) {
+                                $ismember = true;
+                                break;
+                            }
+                        }
+                        if ($ismember) { // Remove the ifnotingroup tags and content.
+                            $replace[$key] = '';
+                        } else { // Just remove the tags and keep the content.
+                            $replace[$key] = '$1';
+                        }
+                    }
+                }
+            }
+
+            // Tag: {ifingrouping id|idnumber}...{/ifingrouping}.
+            // Description: Display content if the user is a member of the specified group.
+            // Required Parameters: group id or idnumber.
+            // Requires content between tags.
+            if (stripos($text, '{ifingrouping') !== false) {
+                if (!isset($mygroupingslist)) {
+                    $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
+                }
+                $re = '/{ifingrouping\s+(.*)\}(.*)\{\/ifingrouping\}/isuU';
+                $found = preg_match_all($re, $text, $matches);
+                if ($found > 0) {
+                    foreach ($matches[1] as $groupingid) {
+                        $key = '/{ifingrouping\s+' . $groupingid . '\}(.*)\{\/ifingrouping\}/isuU';
+                        $ismember = false;
+                        foreach ($mygroupingslist as $grouping) {
+                            if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
+                                $ismember = true;
+                                break;
+                            }
+                        }
+                        if ($ismember) { // Just remove the tags.
+                            $replace[$key] = '$1';
+                        } else { // Remove the ifingroup tags and content.
+                            $replace[$key] = '';
+                        }
+                    }
+                }
+            }
+
+            // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
+            // Description: Display content if the user is NOT a member of the specified group.
+            // Required Parameters: group id or idnumber.
+            // Requires content between tags.
+            if (stripos($text, '{ifnotingrouping') !== false) {
+                if (!isset($mygroupingslist)) {
+                    $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
+                }
+                $re = '/{ifnotingrouping\s+(.*)\}(.*)\{\/ifnotingrouping\}/isuU';
+                $found = preg_match_all($re, $text, $matches);
+                if ($found > 0) {
+                    foreach ($matches[1] as $groupingid) {
+                        $key = '/{ifnotingrouping\s+' . $groupingid . '\}(.*)\{\/ifnotingrouping\}/isuU';
+                        $ismember = false;
+                        foreach ($mygroupingslist as $grouping) {
+                            if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
                                 $ismember = true;
                                 break;
                             }
