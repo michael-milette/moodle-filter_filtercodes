@@ -2463,6 +2463,17 @@ class filter_filtercodes extends moodle_text_filter {
             if (stripos($text, '{siteyear}') !== false) {
                 $replace['/\{siteyear\}/i'] = date('Y');
             }
+            // Tag: {sitelogourl} or %7Bsitelogourl%7D.
+            // Description: URL of site logo.
+            // Parameters: None.
+            if (stripos($text, '{sitelogourl}') !== false) {
+                global $OUTPUT;
+                $replace['/\{sitelogourl\}/i'] = '' . $OUTPUT->get_logo_url();
+            }
+            if (stripos($text, '%7Bsitelogourl%7D') !== false) {
+                global $OUTPUT;
+                $replace['/\%7Bsitelogourl\%7D/i'] = '' . $OUTPUT->get_logo_url();
+            }
         }
 
         /* ---------------- Apply all of the filtercodes so far. ---------------*/

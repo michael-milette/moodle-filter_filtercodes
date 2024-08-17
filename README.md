@@ -200,6 +200,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {siteyear} : 4-digit current year.
 * {sitename} : Full name of the website.
 * {sitesummary} : Text from site summary.
+* {sitelogourl} : URL of the the site logo.
 * {now dateTimeFormat} : Display's the current date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {coursecount} : Total number of courses on this Moodle site (not including Frontpage).
 * {diskfreespace} : Display the amount of free disk space for the application folder. The infinite symbol will be displayed if greater than about 84,703.29 Yottabytes (YB), or if it fails to get the size from the operating system.
@@ -1182,6 +1183,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Current 4-digit year [{siteyear}]: {siteyear}
 * Fullname of website [{sitename}]: {sitename}
 * Site summary [{sitesummary}]: {sitesummary}
+* URL of the Site Logo: [{sitelogourl}]: {sitelogourl}
 * You first accessed the site on [{firstaccessdate strftimedatetime}]: {firstaccessdate strftimedatetime}
 * You last logged in on [{lastlogin strftimedatetime}]: {lastlogin strftimedatetime}
 * Course or Site full name [{coursename}]: {coursename}

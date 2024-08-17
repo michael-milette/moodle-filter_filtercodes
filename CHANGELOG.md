@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.5.2] 2024-07-23 (dev)
+## [2.5.2] 2024-08-17 (dev)
 ### Added
+- New {sitelogourl} tag.
 - New {ifprofile shortname is "value"}...{/ifprofile} tag.
 - New {ifprofile shortname is ""}...{/ifprofile} tag.
 - New {ifprofile shortname not "value"}...{/ifprofile} tag.
