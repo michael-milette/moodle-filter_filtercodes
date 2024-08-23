@@ -1059,6 +1059,65 @@ class filter_filtercodes extends moodle_text_filter {
                 }
                 $replace['/\{menuthemes\}/i'] = $menu;
             }
+
+            // Tag: {menuwishlist}.
+            // Description: Displays a list of wishlisted courses for the Primary (Custom) menu with an option to add or remove
+            // the current course from the wishlist. The list will be sorted alphabetically. If there are no courses in the
+            // wishlist or we are on a site page, a message will be displayed.
+            // Parameters: None.
+            if (stripos($text, '{menuwishlist}') !== false) {
+                // If not logged in, or guest user, do not display the Wishlist.
+                if (!isloggedin() || isguestuser()) {
+                    $menu = '';
+                } else {
+                    global $USER, $DB, $PAGE;
+
+                    // Get the user's wishlist from the user_preference table.
+                    $wishlist = $DB->get_record('user_preferences', [
+                        'userid' => $USER->id,
+                        'name' => 'filter_filtercodes_wishlist',
+                    ]);
+                    $wishlist = $wishlist ? explode(',', $wishlist->value) : [];
+
+                    // Generate the list of wishlisted courses.
+                    $menu = '';
+                    foreach ($wishlist as $courseid) {
+                        $course = $DB->get_record('course', ['id' => $courseid]);
+                        if ($course) {
+                            $courseurl = new moodle_url('/course/view.php', ['id' => $course->id]);
+                            $menu .= '-' . format_string($course->fullname) . '|' . $courseurl->out() . "\n";
+                        }
+                    }
+                    if (!empty($menu)) {
+                        // Sort course names.
+                        $menu = explode("\n", $menu);
+                        $menu = array_filter($menu, 'strlen');
+                        usort($menu, 'strnatcasecmp');
+                        $menu = trim(implode("\n", $menu));
+                    }
+
+                    // Check if the current course is in the wishlist.
+                    if ($PAGE->course->id === SITEID) {
+                        if (empty($menu)) {
+                            $menu = '-' . get_string('wishlist_nocourses', 'filter_filtercodes') . "\n";
+                        }
+                    } else {
+                        if (!empty($menu)) {
+                            $menu .= "\n-###\n";
+                        }
+                        $action = in_array($PAGE->course->id, $wishlist) ? 'remove' : 'add';
+                        $url = new moodle_url('/filter/filtercodes/wishlist.php', [
+                            'courseid' => $PAGE->course->id,
+                            'action' => $action,
+                        ]);
+                        $menu .= '-' . get_string('wishlist_' . $action, 'filter_filtercodes') . '|' . $url->out() . "\n";
+                    }
+                    $menu = get_string('wishlist', 'filter_filtercodes') . "\n" . $menu;
+                }
+
+                // Replace the {menuwishlist} tag with the generated wishlist output, if any.
+                $replace['/\{menuwishlist\}/i'] = $menu;
+            }
         }
 
         // Check if any {course*} or %7Bcourse*%7D tags. Note: There is another course tags section further down.
@@ -1581,7 +1640,6 @@ class filter_filtercodes extends moodle_text_filter {
                 if (!empty($grademax = floatval($gradeobj->item->grademax))) {
                     // Avoid divide by 0 error if no grades have been defined.
                     $grade = floatval($grademax) > 0 ? (int) ($gradeobj->grade / floatval($grademax) * 100) : 0;
-
                 } else {
                     $grade = 0;
                 }

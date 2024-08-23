@@ -281,7 +281,7 @@ Also, see Courses section below.
 
 ### Custom menu
 
-**Important note**: Filtering must be supported in the custom menu by your theme.
+**Important note**: Your theme must support filtering in the custom menu.
 
 * {categoriesmenu} : A second-level list of categories with links for use in custom menus.
 * {categories0menu} : A second-level list of just top-level categories with links for use in custom menus.  Does not include hidden categories unless admin or have moodle/category:viewhiddencategories capability.
@@ -294,6 +294,7 @@ Also, see Courses section below.
 * {menudev} : Useful dynamic menu for Moodle developers. Only visible when debugging is set to DEVELOPER mode.
 * {menuthemes} : Theme switcher. Only for administrators. Not available after POST. Allow Theme Changes on URL must be enabled. Will be visible even when Administrator is using the **Log In As** feature to log in as a different user.
 * {menucoursemore} : Adds the content of the secondary menu to a menu called "More". Useful for themes with pre-4.x style navigation.
+* {menuwishlist} : Adds a Wishlist menu where you can bookmark courses you would like to take or just use it as a favourite course list. Tip: You can rename the Wishlist menu to Bookmarks, Favourites, etc. by customizing the **wishlist** language string in the language pack for FilterCodes.
 
 ### URL
 
@@ -1244,6 +1245,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Moodle Dev custom menu items [{menudev}]: <br><pre>{menudev}</pre>
 * Moodle Admin theme switcher [{menuthemes}]: <br><pre>{menuthemes}</pre>
 * Secondary menu for pre-4.x themes [{menucoursemore}]: <br><pre>{menucoursemore}</pre>
+* Wishlist menu [{menuwishlist}]: <br><pre>{menuwishlist}</pre>
 * Course's category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
 * Course's category name (blank if not in a course) [{categoryname}]: {categoryname}
 * Course's category number (blank if not in a course) [{categorynumber}]: {categorynumber}

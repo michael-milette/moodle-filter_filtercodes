@@ -249,3 +249,7 @@ $string['teamcardslinktype'] = 'Team link type';
 $string['teamcardslinktype_desc'] = 'Choose the type of link for the team member\'s link in the {teamcards} tag. Note: Photo will automatically be linked to profile when the user is logged-in regardless of your choice here.';
 $string['unenrolme'] = 'Unenrol me from this course';
 $string['verbose'] = 'Verbose';
+$string['wishlist'] = 'Wishlist';
+$string['wishlist_nocourses'] = 'No courses in the list';
+$string['wishlist_add'] = 'Add this course to the list';
+$string['wishlist_remove'] = 'Remove this course from the list';
