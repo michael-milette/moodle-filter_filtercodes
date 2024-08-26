@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - New {ifnotgrouping groupingid}...{/ifnotgrouping} tag.
 - New {mygroupings} tag.
 ### Updated
+- Refactoring in preparations for Moodle 4.5.
 - Added more documentation to README.md.
 - Fixed links and updated table of contents in README.md.
 - The {thisurl_enc} tag is now compliant with RFC 3986.
