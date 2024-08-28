@@ -2308,6 +2308,13 @@ class filter_filtercodes extends moodle_text_filter {
             unset($now);
         }
 
+        // Tag: {keyboard}text{/keyboard}.
+        // Description: Wraps the text inside a set of HTML <keyb> tags.
+        // Parameters: Any text.
+        if (stripos($text, '{/keyboard}') !== false) {
+            $replace['/\{keyboard\}(.*)\{\/keyboard\}/isuU'] = '<kbd>$1</kbd>';
+        }
+
         /* ---------------- Apply all of the filtercodes so far. ---------------*/
 
         if ($this->replacetags($text, $replace) == false) {

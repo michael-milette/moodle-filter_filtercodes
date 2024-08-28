@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.5.2] 2024-08-23 (dev)
+## [2.5.2] 2024-08-28 (dev)
 ### Added
+- New {keyboard}...{/keyboard} tag.
 - New {menuwishlist} tag.
 - New {sitelogourl} tag.
 - New {ifprofile shortname is "value"}...{/ifprofile} tag.

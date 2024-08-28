@@ -234,6 +234,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {showmore}{/showmore} : Toggle showing content between opening and closing more tags. Limitations: Can only be used inline with text. Must now weave into other opening and closing tags.
 * {qrcode}{/qrcode} : Generate and display a QR Code for the content between the tags.
 * (ALPHA) {dashboard_siteinfo} : Only displays for admins - Use this on your dashboard to see system information like available disk space, number of courses, total number of users and users currently online (in the last 5 minutes). This is an early alpha release and will likely change in the future.
+* {keyboard}...{/keyboard} : Will format the enclosed text by putting a box around it to make it look like a key on a computer keyboard.
 
 ### For use in courses
 
@@ -1290,6 +1291,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Toggle editing menu [{toggleeditingmenu}]: {toggleeditingmenu}
 * Editing Toggle [{editingtoggle}]: <a href="{wwwroot}/course/view.php?id={courseid}&sesskey={sesskey}&edit={editingtoggle}">Toggle editing</a>
 * FontAwesome "fa-globe": v4.x [{fa fa-globe}] {fa fa-globe}, v5.x [{fas fa-globe}] {fas fa-globe}, v6.x [{fa-solid fa-globe}] {fa-solid fa-globe}. Must be supported by your theme.
+* Press the [{keyboard}]Ctrl[{/keyboard}]+[{keyboard}]r[{/keyboard}] to refresh the page: Press the {keyboard}CTRL{/keyboard} + {keyboard}r{/keyboard} to refresh the page.
 * Glyphicons "glyphicon-envelope": Glyphicons [{glyphicon glyphicon-envelope}] {glyphicon glyphicon-envelope}. Must be supported by your theme.
 * Details/summary [{details}][{summary}]This is the summary[{/summary}] followed by the details.[{/details}]: {details}{summary}This is the summary{/summary} followed by the details.{/details}
 * You should not see the following note [{note}]This could be a comment, todo or reminder.[{/note}]: {note}This could be a comment, todo or reminder.{/note}
