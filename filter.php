@@ -2324,7 +2324,7 @@ class filter_filtercodes extends moodle_text_filter {
 
         // Substitutions.
 
-        $u = $USER;
+        $u = clone $USER;
         if (!isloggedin() || isguestuser()) {
             $u->firstname = get_string('defaultfirstname', 'filter_filtercodes');
             $u->lastname = get_string('defaultsurname', 'filter_filtercodes');
