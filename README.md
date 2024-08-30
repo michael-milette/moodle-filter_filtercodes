@@ -1535,6 +1535,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* golenkovm (Micha Golenkov): FIx global USER change during text filtering (2024).
 * 28Smiles (Leon Camus): Bug fix for {qrcode} and {urlencode} tags (2024).
 * 28Smiles (Leon Camus): New {ifingouping} tag (2024).
 * 28Smiles (Leon Camus): New {ifnotingrouping} tag (2024).
