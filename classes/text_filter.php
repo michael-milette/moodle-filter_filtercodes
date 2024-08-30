@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die;
+
 /**
  * Main filter code for FilterCodes.
  *
@@ -37,7 +39,7 @@ require_once($CFG->dirroot . '/course/renderer.php');
  * @copyright  2017-2024 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class filter_filtercodes extends moodle_text_filter {
+class text_filter extends \core_filters\text_filter {
     /** @var object $archetypes Object array of Moodle archetypes. */
     public $archetypes = [];
     /** @var array $customroles array of Roles key is shortname and value is the id */
@@ -962,19 +964,19 @@ class filter_filtercodes extends moodle_text_filter {
                     $menu .= '-{getstring:admin}debugging{/getstring}|/admin/settings.php?section=debugging' . PHP_EOL;
                     $menu .= '-{getstring:admin}purgecachespage{/getstring}|/admin/purgecaches.php' . PHP_EOL;
                     $menu .= '-###' . PHP_EOL;
-                    if (file_exists(dirname(__FILE__) . '/../../local/adminer/index.php')) {
+                    if (file_exists($CFG->dirroot . '/local/adminer/index.php')) {
                         $menu .= '-{getstring:local_adminer}pluginname{/getstring}|/local/adminer' . PHP_EOL;
                     }
-                    if (file_exists(dirname(__FILE__) . '/../../local/codechecker/index.php')) {
+                    if (file_exists($CFG->dirroot . '/local/codechecker/index.php')) {
                         $menu .= '-{getstring:local_codechecker}pluginname{/getstring}|/local/codechecker' . PHP_EOL;
                     }
-                    if (file_exists(dirname(__FILE__) . '/../../local/moodlecheck/index.php')) {
+                    if (file_exists($CFG->dirroot . '/local/moodlecheck/index.php')) {
                         $menu .= '-{getstring:local_moodlecheck}pluginname{/getstring}|/local/moodlecheck' . PHP_EOL;
                     }
-                    if (file_exists(dirname(__FILE__) . '/../../admin/tool/pluginskel/index.php')) {
+                    if (file_exists($CFG->dirroot . '/admin/tool/pluginskel/index.php')) {
                         $menu .= '-{getstring:tool_pluginskel}pluginname{/getstring}|/admin/tool/pluginskel' . PHP_EOL;
                     }
-                    if (file_exists(dirname(__FILE__) . '/../../local/tinyfilemanager/index.php')) {
+                    if (file_exists($CFG->dirroot . '/local/tinyfilemanager/index.php')) {
                         $menu .= '-{getstring:local_tinyfilemanager}pluginname{/getstring}|/local/tinyfilemanager' . PHP_EOL;
                     }
                     $menu .= '-{getstring}phpinfo{/getstring}|/admin/phpinfo.php' . PHP_EOL;
