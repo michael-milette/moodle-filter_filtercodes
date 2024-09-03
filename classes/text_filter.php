@@ -1059,6 +1059,31 @@ class text_filter extends \core_filters\text_filter {
                 $replace['/\{menuthemes\}/i'] = $menu;
             }
 
+            // Tag: {menulanguages}.
+            // Description: Language switcher for custom menu. Not available after POST.
+            // Parameters: None.
+            if (stripos($text, '{menulanguages}') !== false) {
+                $menu = '';
+                if (empty($_POST)) {
+                    $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
+                    . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+                    $url .= (strpos($url, '?') ? '&' : '?');
+
+                    // Get list of available languages
+                    $availablelanguages = get_string_manager()->get_list_of_translations();
+                    if (count($availablelanguages) > 1) {
+                        foreach ($availablelanguages as $langcode => $langname) {
+                            // Create a link for each language
+                            $menu .= '-' . $langname . '|' . $url . 'lang=' . $langcode . PHP_EOL;
+                        }
+                        if (!empty($menu)) {
+                            $menu = get_string('language') . '||' . get_string('languageselector') . PHP_EOL . $menu;
+                        }
+                    }
+                }
+                $replace['/\{menulanguages\}/i'] = $menu;
+            }
+
             // Tag: {menuwishlist}.
             // Description: Displays a list of wishlisted courses for the Primary (Custom) menu with an option to add or remove
             // the current course from the wishlist. The list will be sorted alphabetically. If there are no courses in the

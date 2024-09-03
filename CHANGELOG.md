@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.5.2] 2024-08-28 (dev)
+## [2.5.2] 2024-09-03 (dev)
 ### Added
+- New {menulanguages} tag.
 - New {keyboard}...{/keyboard} tag.
 - New {menuwishlist} tag.
 - New {sitelogourl} tag.
