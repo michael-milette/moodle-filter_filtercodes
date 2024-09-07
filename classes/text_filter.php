@@ -887,16 +887,18 @@ class text_filter extends \core_filters\text_filter {
                     $menu .= '-{getstring}site{/getstring}: {getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
                         '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
 
-                    if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
-                        require_once($CFG->libdir . '/adminlib.php');
-                        if (admin_get_root()->locate('theme_' . $theme)) {
-                            // Settings use categories interface URL.
-                            $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
-                        } else {
-                            // Settings use tabs interface URL.
-                            $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                    if (!file_exists($CFG->dirroot . '/mod/hvp/version.php')) { // Not compatible with mod_hvp.
+                        if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
+                            require_once($CFG->libdir . '/adminlib.php');
+                            if (admin_get_root()->locate('theme_' . $theme)) {
+                                // Settings use categories interface URL.
+                                $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
+                            } else {
+                                // Settings use tabs interface URL.
+                                $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                            }
+                            $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|' . $url;
                         }
-                        $menu .= '-{getstring}site{/getstring}: {getstring:admin}currenttheme{/getstring}|' . $url;
                     }
                     $menu .= '-{getstring}site{/getstring}: {getstring}notifications{/getstring} ({getstring}admin{/getstring})' .
                             '|/admin/index.php' . PHP_EOL;
@@ -1045,16 +1047,19 @@ class text_filter extends \core_filters\text_filter {
                             $menu .= '-###' . PHP_EOL;
                             $menu .= '-{getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
                                 '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
-                            if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
-                                require_once($CFG->libdir . '/adminlib.php');
-                                if (admin_get_root()->locate('theme_' . $theme)) {
-                                    // Settings using categories interface URL.
-                                    $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
-                                } else {
-                                    // Settings using tabs interface URL.
-                                    $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+
+                            if (!file_exists($CFG->dirroot . '/mod/hvp/version.php')) { // Not compatible with mod_hvp.
+                                if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
+                                    require_once($CFG->libdir . '/adminlib.php');
+                                    if (admin_get_root()->locate('theme_' . $theme)) {
+                                        // Settings use categories interface URL.
+                                        $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
+                                    } else {
+                                        // Settings use tabs interface URL.
+                                        $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
+                                    }
+                                    $menu .= '-{getstring:admin}currenttheme{/getstring}|' . $url;
                                 }
-                                $menu .= '-{getstring:admin}currenttheme{/getstring}|' . $url;
                             }
                         }
                     }

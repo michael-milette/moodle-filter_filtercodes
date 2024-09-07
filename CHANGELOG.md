@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - New {mygroupings} tag.
 ### Updated
 - Link to External LTI now only available in Moodle 4.3+.
+- Addressed compatibility issue with mod_hvp that prevents link to current theme settings from working.
 - Refactoring in preparations for Moodle 4.5.
 - Added more documentation to README.md.
 - Fixed links and updated table of contents in README.md.
