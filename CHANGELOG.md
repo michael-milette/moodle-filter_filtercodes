@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - New {ifnotgrouping groupingid}...{/ifnotgrouping} tag.
 - New {mygroupings} tag.
 ### Updated
+- Link to External LTI now only available in Moodle 4.3+.
 - Refactoring in preparations for Moodle 4.5.
 - Added more documentation to README.md.
 - Fixed links and updated table of contents in README.md.

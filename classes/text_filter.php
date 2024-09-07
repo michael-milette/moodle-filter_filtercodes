@@ -942,7 +942,10 @@ class text_filter extends \core_filters\text_filter {
                     $menu .= '-{getstring:filter_filtercodes}unenrolme{/getstring}|{courseunenrolurl}' . PHP_EOL;
                 }
                 if ($this->hasminarchetype('editingteacher')) {
-                    $menu .= '-{getstring:mod_lti}courseexternaltools{/getstring}|/mod/lti/coursetools.php?id={courseid}' . PHP_EOL;
+                    if ($CFG->branch >= 403) {
+                        $menu .= '-{getstring:mod_lti}courseexternaltools{/getstring}|/mod/lti/coursetools.php?id={courseid}'
+                            . PHP_EOL;
+                    }
                     if ($CFG->branch >= 311) {
                         $pluginame = '{getstring:tool_brickfield}pluginname{/getstring}';
                         $menu .= '-' . $pluginame . '|/admin/tool/brickfield/index.php?courseid={courseid}' . PHP_EOL;
