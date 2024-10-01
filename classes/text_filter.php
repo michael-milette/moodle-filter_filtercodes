@@ -244,7 +244,7 @@ class text_filter extends \core_filters\text_filter {
         if (empty($px = $sizes[$size])) {
             $px = $size; // Size was specified in pixels.
         }
-        $userpicture = new user_picture($user);
+        $userpicture = new \user_picture($user);
         $userpicture->size = $px; // Size in pixels.
         $url = $userpicture->get_url($PAGE);
         return $url;
@@ -405,7 +405,7 @@ class text_filter extends \core_filters\text_filter {
         $libxmlpreviousstate = libxml_use_internal_errors(true);
 
         // Load content into DOM object.
-        $dom = new DOMDocument();
+        $dom = new \DOMDocument();
         $dom->loadHTML($content);
 
         // Clear suppressed warnings.
@@ -413,7 +413,7 @@ class text_filter extends \core_filters\text_filter {
         libxml_use_internal_errors($libxmlpreviousstate);
 
         // Scrape out the content we want. If not found, return everything.
-        $xpath = new DOMXPath($dom);
+        $xpath = new \DOMXPath($dom);
 
         // If a tag was not specified.
         if (empty($tag)) {
@@ -569,9 +569,7 @@ class text_filter extends \core_filters\text_filter {
 
             // Load image from course image. If none, generate a course image based on the course ID.
             $context = \context_course::instance($courseid);
-            if ($course instanceof stdClass) {
-                $course = new \core_course_list_element($course);
-            }
+            $course = new \core_course_list_element($course);
             $coursefiles = $course->get_course_overviewfiles();
             $imgurl = '';
             if ($CFG->branch >= 311) {
@@ -677,7 +675,7 @@ class text_filter extends \core_filters\text_filter {
         if (is_object($cards)) {
             return $cards;
         }
-        $cards = new stdClass();
+        $cards = new \stdClass();
         if (empty($format)) {
             $cards->format = get_config('filter_filtercodes', 'coursecardsformat');
         } else {
@@ -1393,9 +1391,7 @@ class text_filter extends \core_filters\text_filter {
             if (stripos($text, '{course_fields}') !== false) {
                 // Display all custom course fields.
                 $customfields = '';
-                if ($PAGE->course instanceof stdClass) {
-                    $thiscourse = new \core_course_list_element($PAGE->course);
-                }
+                $thiscourse = new \core_course_list_element($PAGE->course);
                 if ($thiscourse->has_custom_fields()) {
                     $handler = \core_course\customfield\course_handler::create();
                     $customfields = $handler->display_custom_fields_data($thiscourse->get_custom_fields());
@@ -2231,7 +2227,7 @@ class text_filter extends \core_filters\text_filter {
                 && $CFG->enablecompletion == 1 // COMPLETION_ENABLED.
                 && $PAGE->course->enablecompletion
             ) {
-                $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $PAGE->course->id]);
+                $ccompletion = new \completion_completion(['userid' => $USER->id, 'course' => $PAGE->course->id]);
                 $incomplete = get_string('notcompleted', 'completion');
             } else { // Completion not enabled.
                 $incomplete = get_string('completionnotenabled', 'completion');
@@ -3132,12 +3128,12 @@ class text_filter extends \core_filters\text_filter {
             if (stripos($text, '{coursecards') !== false) {
                 global $OUTPUT;
 
-                $chelper = new coursecat_helper();
+                $chelper = new \coursecat_helper();
                 $chelper->set_show_courses(20)->set_courses_display_options([
                     'recursive' => true,
                     'limit' => $CFG->frontpagecourselimit,
                     'viewmoreurl' => (new \moodle_url('/course/index.php'))->out(),
-                    'viewmoretext' => new lang_string('fulllistofcourses'),
+                    'viewmoretext' => new \lang_string('fulllistofcourses'),
                 ]);
 
                 $chelper->set_attributes(['class' => 'frontpage-course-list-all']);
@@ -3224,7 +3220,7 @@ class text_filter extends \core_filters\text_filter {
                     $card = $this->getcoursecardinfo();
                     $content = $this->rendercoursecards($rcourseids, $card->format);
                 } else {
-                    $card = new stdClass();
+                    $card = new \stdClass();
                     $card->header = '';
                     $card->footer = '';
                     $content = '';
@@ -3294,7 +3290,7 @@ class text_filter extends \core_filters\text_filter {
                     && get_config('filter_filtercodes', 'hidecompletedcourses')
                 ) {
                     foreach ($mycourses as $key => $mycourse) {
-                        $ccompletion = new completion_completion(['userid' => $USER->id, 'course' => $mycourse->id]);
+                        $ccompletion = new \completion_completion(['userid' => $USER->id, 'course' => $mycourse->id]);
                         if (!empty($ccompletion->timecompleted)) {
                             // Save course to list of completed courses.
                             $myccourses[] = $mycourses[$key];
@@ -3948,7 +3944,7 @@ class text_filter extends \core_filters\text_filter {
             // Required Parameter: coursemoduleid is the id of the instance of the content module.
             // Requires content between tags.
             if (stripos($text, '{/ifactivitycompleted}') !== false) {
-                $completion = new completion_info($PAGE->course);
+                $completion = new \completion_info($PAGE->course);
 
                 if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
                     // Get a list of the the instances of this tag.
@@ -3991,7 +3987,7 @@ class text_filter extends \core_filters\text_filter {
             // Required Parameter: coursemoduleid is the id of the instance of the content module.
             // Requires content between tags.
             if (stripos($text, '{/ifnotactivitycompleted}') !== false) {
-                $completion = new completion_info($PAGE->course);
+                $completion = new \completion_info($PAGE->course);
 
                 if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
                     // Get a list of the the instances of this tag.
@@ -4817,7 +4813,7 @@ class text_filter extends \core_filters\text_filter {
                 } else {
                     // Moodle Classic - Just simulate functionality as tenant 1.
                     // This allows a course to work in both Moodle Classic and Workplace.
-                    $tenants[0] = new stdClass();
+                    $tenants[0] = new \stdClass();
                     $tenants[0]->idnumber = 1;
                     $tenants[0]->id = 1;
                     $currenttenantid = 1;
@@ -5107,7 +5103,7 @@ class text_filter extends \core_filters\text_filter {
             // If you have the ability to edit the content.
             if (has_capability('moodle/course:update', $PAGE->context)) {
                 // Show the version of the FilterCodes plugin.
-                $plugin = new stdClass();
+                $plugin = new \stdClass();
                 require($CFG->dirroot . '/filter/filtercodes/version.php');
                 $replace['/\{filtercodes\}/i'] = "$plugin->release ($plugin->version)";
             } else {
