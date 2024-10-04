@@ -1714,7 +1714,7 @@ class text_filter extends \core_filters\text_filter {
             // Description: Alias for {coursemoduleid}. Useful for encoded URLs.
             // Parameters: None.
             if (stripos($text, '%7Bcoursemoduleid%7D') !== false) {
-                $text = str_replace('7Bcoursemoduleid%7D', '{coursemoduleid}', $text);
+                $text = str_replace('%7Bcoursemoduleid%7D', '{coursemoduleid}', $text);
             }
 
             // Tag: {coursemoduleid}.

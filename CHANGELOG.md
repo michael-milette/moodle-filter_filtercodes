@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - New {ifnotgrouping groupingid}...{/ifnotgrouping} tag.
 - New {mygroupings} tag.
 ### Updated
+- Fixed issue with %7Bcoursemoduleid%7D leaving % symbol behind.
 - Fixed issue when {coursesummary} is used in a block.
 - Link to External LTI now only available in Moodle 4.3+.
 - Addressed compatibility issue with mod_hvp that prevents link to current theme settings from working.
