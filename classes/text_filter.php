@@ -1161,8 +1161,15 @@ class text_filter extends \core_filters\text_filter {
                     // No course ID specified.
                     $coursecontext = \context_course::instance($PAGE->course->id);
                     $PAGE->course->summary == null ? '' : $PAGE->course->summary;
-                    $replace['/\{coursesummary\}/i'] = format_text(
+                    $summary = file_rewrite_pluginfile_urls(
                         $PAGE->course->summary,
+                        'pluginfile.php',
+                        $coursecontext->id,
+                        'course',
+                        'section',
+                        0);
+                    $replace['/\{coursesummary\}/i'] = format_text(
+                        $summary,
                         FORMAT_HTML,
                         ['context' => $coursecontext]
                     );
