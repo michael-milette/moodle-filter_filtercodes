@@ -321,14 +321,14 @@ class text_filter extends \filtercodes_base_text_filter {
         global $DB;
 
         return $DB->get_records_sql('SELECT gp.id, gp.name, gp.idnumber
-                   FROM {user} u
-                     INNER JOIN {groups_members} gm ON u.id = gm.userid
-                     INNER JOIN {groups} g ON g.id = gm.groupid
-                     INNER JOIN {groupings_groups} gg ON gm.groupid = gg.groupid
-                     INNER JOIN {groupings} gp ON gp.id = gg.groupingid
-                  WHERE g.courseid = ? AND u.id = ?
-               GROUP BY gp.id
-               ORDER BY gp.name ASC', [$courseid, $userid]);
+            FROM {user} u
+                INNER JOIN {groups_members} gm ON u.id = gm.userid
+                INNER JOIN {groups} g ON g.id = gm.groupid
+                INNER JOIN {groupings_groups} gg ON gm.groupid = gg.groupid
+                INNER JOIN {groupings} gp ON gp.id = gg.groupingid
+            WHERE g.courseid = ? AND u.id = ?
+            GROUP BY gp.id
+            ORDER BY gp.name ASC', [$courseid, $userid]);
     }
 
     /**
@@ -608,7 +608,7 @@ class text_filter extends \filtercodes_base_text_filter {
                                 . ');height:100px;max-width:300px;padding-top:50%;background-size:cover;'
                                 . 'background-repeat:no-repeat;background-position:center;"></div>
                         <div class="card-title pt-1 pr-3 pb-1 pl-3 m-0"><span class="sr-only">' . get_string('course') . ': </span>'
-                                 . $course->get_formatted_name() . '</div>
+                                . $course->get_formatted_name() . '</div>
                         </a>
                     </div>
                     ';
@@ -661,9 +661,11 @@ class text_filter extends \filtercodes_base_text_filter {
 
                     $content .= '
                     <tr class="fc-coursecard-table">
-                    <td class="text-coursename col-sm-12 col-md-3 d-block d-md-table-cell"><a href="' . $courseurl . '">' . $course->get_formatted_name() . '</a></td>
+                    <td class="text-coursename col-sm-12 col-md-3 d-block d-md-table-cell"><a href="' . $courseurl . '">'
+                        . $course->get_formatted_name() . '</a></td>
                     <td class="text-coursecategory col-sm-12 col-md-2 d-block d-md-table-cell">' . $category . '</td>
-                    <td class="text-coursename col-sm-12 col-md-7 d-block d-md-table-cell" style="word-wrap:break-word;">' . $summary . '</td>
+                    <td class="text-coursename col-sm-12 col-md-7 d-block d-md-table-cell" style="word-wrap:break-word;">'
+                        . $summary . '</td>
                     </tr>
                     ';
                     break;
@@ -695,9 +697,12 @@ class text_filter extends \filtercodes_base_text_filter {
                     <table class="table table-hover table-responsive">
                         <thead>
                             <tr>
-                                <th scope="col" class="col-12 col-md-3 d-block d-md-table-cell">' . get_string('course') . '</th>
-                                <th scope="col" class="col-12 col-md-2 d-block d-md-table-cell">' . get_string('category') . '</th>
-                                <th scope="col" class="col-12 col-md-7 d-block d-md-table-cell">' . get_string('description') . '</th>
+                                <th scope="col" class="col-12 col-md-3 d-block d-md-table-cell">'
+                                    . get_string('course') . '</th>
+                                <th scope="col" class="col-12 col-md-2 d-block d-md-table-cell">'
+                                    . get_string('category') . '</th>
+                                <th scope="col" class="col-12 col-md-7 d-block d-md-table-cell">'
+                                    . get_string('description') . '</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1083,11 +1088,11 @@ class text_filter extends \filtercodes_base_text_filter {
                     . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
                     $url .= (strpos($url, '?') ? '&' : '?');
 
-                    // Get list of available languages
+                    // Get list of available languages.
                     $availablelanguages = get_string_manager()->get_list_of_translations();
                     if (count($availablelanguages) > 1) {
                         foreach ($availablelanguages as $langcode => $langname) {
-                            // Create a link for each language
+                            // Create a link for each language.
                             $menu .= '-' . $langname . '|' . $url . 'lang=' . $langcode . PHP_EOL;
                         }
                         if (!empty($menu)) {
@@ -3250,7 +3255,8 @@ class text_filter extends \filtercodes_base_text_filter {
                 // Add request a course link.
                 $context = \context_system::instance();
                 if (!empty($CFG->enablecourserequests) && has_capability('moodle/course:request', $context)) {
-                    $link = '<a href="' . (new \moodle_url('/course/request.php'))->out() . '">' . get_string('requestcourse') . '</a>';
+                    $link = '<a href="' . (new \moodle_url('/course/request.php'))->out() . '">'
+                        . get_string('requestcourse') . '</a>';
                 } else {
                     $link = '';
                 }
