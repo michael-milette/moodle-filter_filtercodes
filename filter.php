@@ -23,11 +23,5 @@
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
 // For backwards compatibility with Moodle 4.4 and below.
-if ($CFG->branch < 405) {
-    class_alias('\moodle_text_filter', '\core_filters\text_filter');
-    require_once(__DIR__ . '/classes/text_filter.php');
-    class_alias('\text_filter', '\filter_filtercodes');
-}
+class_alias(\filter_filtercodes\text_filter::class, \filter_filtercodes::class);

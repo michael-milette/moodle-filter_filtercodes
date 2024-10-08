@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Main filter code for FilterCodes.
  *
@@ -25,13 +23,23 @@ defined('MOODLE_INTERNAL') || die;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace filter_filtercodes;
+
+defined('MOODLE_INTERNAL') || die;
+
 use block_online_users\fetcher;
-use \core_table\local\filter\integer_filter;
-use \core_user\table\participants_filterset;
-use \core_user\table\participants_search;
+use core_table\local\filter\integer_filter;
+use core_user\table\participants_filterset;
+use core_user\table\participants_search;
 use Endroid\QrCode\QrCode;
 
 require_once($CFG->dirroot . '/course/renderer.php');
+
+if (class_exists('\core_filters\text_filter')) {
+    class_alias('\core_filters\text_filter', 'filtercodes_base_text_filter');
+} else {
+    class_alias('\moodle_text_filter', 'filtercodes_base_text_filter');
+}
 
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
@@ -39,7 +47,7 @@ require_once($CFG->dirroot . '/course/renderer.php');
  * @copyright  2017-2024 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class text_filter extends \core_filters\text_filter {
+class text_filter extends \filtercodes_base_text_filter {
     /** @var object $archetypes Object array of Moodle archetypes. */
     public $archetypes = [];
     /** @var array $customroles array of Roles key is shortname and value is the id */

@@ -32,6 +32,7 @@ All notable changes to this project will be documented in this file.
 - {categories0menu} tag now shows hidden categories if role has moodle/category:viewhiddencategories.
 - Fixed a couple of PHP 5.6 compatibility issues. Note that unit tests are still only compatible with PHP 7.1 and later.
 - Fix-302: {qrcode} and {urlencode} not processed after replacement tags.
+- Fixed compatibility issue with Moodle LMS 4.5.
 
 ## [2.5.1] 2024-05-01
 ### Updated
@@ -62,7 +63,7 @@ All notable changes to this project will be documented in this file.
 - References to PHP and Moodle versions in bug reports.
 - Removed support for Travis integration.
 - Copyright notice to include 2024.
-- Fixed compatibility issue with Moodle LMS 4.4
+- Fixed compatibility issue with Moodle LMS 4.4.
 
 ## [2.4.3] 2023-11-20
 ### Added
