@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.5.2] 2024-10-04 (rc)
+## [2.6.0] 2024-10-07
 ### Added
 - New {menulanguages} tag.
 - New {keyboard}...{/keyboard} tag.
