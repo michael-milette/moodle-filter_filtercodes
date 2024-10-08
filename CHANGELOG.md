@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - New {ifgrouping groupingid}...{/ifgrouping} tag.
 - New {ifnotgrouping groupingid}...{/ifnotgrouping} tag.
 - New {mygroupings} tag.
+- New {ifnotincohort} tag.
 ### Updated
 - Fixed bug with ifactivitycompleted and ifnotactivitycompleted if activity does not exist.
 - Fixed issue with %7Bcoursemoduleid%7D leaving % symbol behind.

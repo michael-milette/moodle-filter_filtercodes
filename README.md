@@ -395,6 +395,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 * {ifcustomrole roleshortname}{/ifcustomrole} : Will display enclosed content only if the user has the custom role specified by its shortname within the current context.
 * {ifnotcustomrole roleshortname}{/ifnotcustomrole} : Will display enclosed content only if the user does not have the custom role specified by its shortname within the current context.
 * {ifincohort CohortID|idnumber}{/ifincohort} : Will display enclosed content only if user is a member of the specified cohort. You can specify the Cohort ID in your cohort settings or its ID number. Cohort ID can contain a combination of letters from a to z, A to Z, numbers 0 to 9 and underscores. It will not work if it contains spaces, dashes or other special characters.
+* {ifnotincohort CohortID|idnumber}{/ifnotincohort} : Will display enclosed content only if user is NOT a member of the specified cohort. You can specify the Cohort ID in your cohort settings or its ID number. Cohort ID can contain a combination of letters from a to z, A to Z, numbers 0 to 9 and underscores. It will not work if it contains spaces, dashes or other special characters.
 * {ifhasarolename roleshortname}{/ifhasarolename}: Will display enclosed contnet if the user has the specified role anywhere on the site. This conditional tag works with role shortnames, not role archtypes. It is **not** context sensitive.
 
 #### Miscellanious
@@ -1347,6 +1348,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * If in a section of a course [{ifinsection}]Yes[{/ifinsection}][{ifnotinsection}]No[{/ifnotinsection}]? {ifinsection}Yes{/ifinsection}{ifnotinsection}No{/ifnotinsection}
 * If Request a course is enabled [{ifcourserequests}]Yes[{/ifcourserequests}]? {ifcourserequests}Yes{/ifcourserequests}
 * Are you a member of the "moodlers" cohort [{ifincohort moodlers}]Yes[{/ifincohort}]? {ifincohort moodlers}Yes{/ifincohort} (will be blank of not a member of cohort)
+* Are you not a member of the "moodlers" cohort [{ifnotincohort moodlers}]Yes[{/ifnotincohort}]? {ifnotincohort moodlers}Yes{/ifnotincohort} (will be blank of a member of cohort)
 * [{ifhasarolename teacher}]This is a special message just for teachers.[{ifhasarolename}]: {ifhasarolename teacher}This is a special message just for teachers.{ifhasarolename}
 * Viewing in: [{ifmobile}]Browser[{/ifmobile}][{ifmobile}]Mobile App[{/ifmobile}]: Viewing in: {ifmobile}Browser{/ifmobile}{ifmobile}Mobile App{/ifmobile}
 * Is your tenant id 1? [{iftenant 1}]Yes[{/iftenant}]: {iftenant 1}Yes{/iftenant} Note: In Moodle classic, tenant id is assumed to be 1.

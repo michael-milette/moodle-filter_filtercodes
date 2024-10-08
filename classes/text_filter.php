@@ -4289,6 +4289,33 @@ class text_filter extends \core_filters\text_filter {
                 }
             }
 
+            // Tag: {ifnotincohort idname|idnumber}...{/ifnotincohort}.
+            // Description: Will display content if the user is not part of the specified cohort.
+            // Parameters: id name or id number of the cohort.
+            // Requires content between tags.
+            if (stripos($text, '{ifnotincohort ') !== false) {
+                static $mycohorts;
+                if (empty($mycohorts)) { // Cache list of cohorts.
+                    require_once($CFG->dirroot . '/cohort/lib.php');
+                    $mycohorts = cohort_get_user_cohorts($USER->id);
+                }
+                $newtext = preg_replace_callback(
+                    '/\{ifnotincohort ([\w\-]*)\}(.*)\{\/ifnotincohort\}/isuU',
+                    function ($matches) use ($mycohorts) {
+                        foreach ($mycohorts as $cohort) {
+                            if ($cohort->idnumber == $matches[1] || $cohort->id == $matches[1]) {
+                                return ''; // User is in the cohort, so return an empty string.
+                            }
+                        }
+                        return $matches[2]; // User is not in the cohort, so return the content.
+                    },
+                    $text
+                );
+                if ($newtext !== false) {
+                    $text = $newtext;
+                }
+            }
+
             // Tag: {ifeditmode}...{/ifeditmode}.
             // Description: Will display content if edit mode is turned on.
             // Parameters: None.
