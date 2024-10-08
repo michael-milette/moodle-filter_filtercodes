@@ -656,14 +656,14 @@ class text_filter extends \filtercodes_base_text_filter {
                     $category = $DB->get_record('course_categories', ['id' => $course->category]);
                     $category = $category->name;
 
-                    $course->summary == null ? '' : $course->summary;
+                    $summary = $course->summary == null ? '' : $course->summary;
                     $summary = substr($summary, -4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
 
                     $content .= '
                     <tr class="fc-coursecard-table">
-                    <td class="text-coursename"><a href="' . $courseurl . '">' . $course->get_formatted_name() . '</a></td>
-                    <td class="text-coursecategory">' . $category . '</td>
-                    <td class="text-coursename" style="white-space:normal;">' . $summary . '</td>
+                    <td class="text-coursename col-sm-12 col-md-3 d-block d-md-table-cell"><a href="' . $courseurl . '">' . $course->get_formatted_name() . '</a></td>
+                    <td class="text-coursecategory col-sm-12 col-md-2 d-block d-md-table-cell">' . $category . '</td>
+                    <td class="text-coursename col-sm-12 col-md-7 d-block d-md-table-cell" style="word-wrap:break-word;">' . $summary . '</td>
                     </tr>
                     ';
                     break;
@@ -695,9 +695,9 @@ class text_filter extends \filtercodes_base_text_filter {
                     <table class="table table-hover table-responsive">
                         <thead>
                             <tr>
-                                <th scope="col">' . get_string('course') . '</th>
-                                <th scope="col">' . get_string('category') . '</th>
-                                <th scope="col">' . get_string('description') . '</th>
+                                <th scope="col" class="col-12 col-md-3 d-block d-md-table-cell">' . get_string('course') . '</th>
+                                <th scope="col" class="col-12 col-md-2 d-block d-md-table-cell">' . get_string('category') . '</th>
+                                <th scope="col" class="col-12 col-md-7 d-block d-md-table-cell">' . get_string('description') . '</th>
                             </tr>
                         </thead>
                         <tbody>
