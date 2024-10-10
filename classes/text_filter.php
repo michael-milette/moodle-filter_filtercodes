@@ -1581,6 +1581,7 @@ class text_filter extends \filtercodes_base_text_filter {
         static $profiledata;
         static $mygroupslist;
         static $mygroupingslist;
+        static $mycohorts;
 
         $replace = []; // Array of key/value filterobjects.
 
@@ -4281,7 +4282,6 @@ class text_filter extends \filtercodes_base_text_filter {
             // Parameters: id name or id number of the cohort.
             // Requires content between tags.
             if (stripos($text, '{ifincohort ') !== false) {
-                static $mycohorts;
                 if (empty($mycohorts)) { // Cache list of cohorts.
                     require_once($CFG->dirroot . '/cohort/lib.php');
                     $mycohorts = cohort_get_user_cohorts($USER->id);
@@ -4308,7 +4308,6 @@ class text_filter extends \filtercodes_base_text_filter {
             // Parameters: id name or id number of the cohort.
             // Requires content between tags.
             if (stripos($text, '{ifnotincohort ') !== false) {
-                static $mycohorts;
                 if (empty($mycohorts)) { // Cache list of cohorts.
                     require_once($CFG->dirroot . '/cohort/lib.php');
                     $mycohorts = cohort_get_user_cohorts($USER->id);
