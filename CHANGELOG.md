@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.6.1] 2024-10-11
+### Update
+- Fix-308: Fixed compatibility issue with PHP 8.3.
+
 ## [2.6.0] 2024-10-07
 ### Added
 - New {menulanguages} tag.
