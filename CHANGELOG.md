@@ -1,7 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.6.1] 2024-10-11
+## [2.6.2] 2024-11-20 (dev)
+### Update
+- Fix-311: Global tags can now include numbers in their name.
+
+## [2.6.1] 2024-11-20
 ### Update
 - Fix-308: Fixed compatibility issue with PHP 8.3.
 

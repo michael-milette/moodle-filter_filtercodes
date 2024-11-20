@@ -313,7 +313,7 @@ Also, see Courses section below.
 
 ### Content
 
-* {global_...} : Use your own custom FilterCodes tags in the filter's settings. These are sometimes referred to as global blocks. An example of this might be if you wanted to define a standardized copyright or other text, email address, website URL, phone number, name, link, support information and more. Define and centrally manage up to 50 global block tags.
+* {global_...} : Use your own custom FilterCodes tags in the filter's settings. These are sometimes referred to as global blocks. An example of this might be if you wanted to define a standardized copyright or other text, form, email address, website URL, phone number, name, link, support information and more. Define and centrally manage up to 50 global block tags.
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {help}content{/help} : Enables you to create popup help icons just like Moodle does.
 * {info}content{/info} : Enables you to create popup help icons just like the popup Help icons but with an "i" information icon.
@@ -461,9 +461,9 @@ The {langx fr-CA}{/langx} filter will convert this into the following HTML
 
 You can define your own global tags, sometimes also called global blocks. This can only be configured by Moodle Administrators by going to **Site Administration** > **Plugins** > **Filters** > **FilterCodes**.
 
-You can create up to 50 custom global tags by specifying the tag name. The tag name will automatically be prefixed by global. For example, if you define a tag called *copyright*, it will create a FilterCodes tag {global_*copyright*}.
+You can create up to 50 custom global tags by specifying the tag name. The tag name will automatically be prefixed by global_. For example, if you define a tag called *copyright*, it will create a FilterCodes tag {global_*copyright*}.
 
-The content which you can insert is only limited by your imagination. You can include plain text content, such as one or more words, HTML source code or even a JavaScript snippet (wrap in a script tag). You can also enter almost any content using the WYSIWYG Atto editor by checking the "Pretty HTML format" checkbox. This allows you to create formatted content, uploaded images and more. Note: It does not support PHP code.
+The content which you can insert is only limited by your imagination. You can include plain text content, such as one or more words, HTML source code or even a JavaScript snippet (wrap in a script tag). You can also enter almost any content using the WYSIWYG Atto or TinyMCE editor by checking the "Pretty HTML format" checkbox. This allows you to create formatted content, uploaded images and more. Note: It does not support PHP code.
 
 Let's say you want to include a support email address in some of your courses. You could define a global tag called "global_email" and set it to "support@example.com". Then, wherever you want that email address to appear on your site, you just need to add the tag {global_email}. That way, when you decide to change the email address to "coursehelp@example.com", you need just change it here in the global custom tag settings.
 
@@ -1535,7 +1535,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
-* golenkovm (Micha Golenkov): FIx global USER change during text filtering (2024).
+* golenkovm (Micha Golenkov): Fix global USER change during text filtering (2024).
 * 28Smiles (Leon Camus): Bug fix for {qrcode} and {urlencode} tags (2024).
 * 28Smiles (Leon Camus): New {ifingouping} tag (2024).
 * 28Smiles (Leon Camus): New {ifnotingrouping} tag (2024).
