@@ -314,7 +314,7 @@ Also, see Courses section below.
 
 ### Content
 
-* {global_...} : Use your own custom FilterCodes tags in the filter's settings. These are sometimes referred to as global blocks. An example of this might be if you wanted to define a standardized copyright or other text, form, email address, website URL, phone number, name, link, support information and more. Define and centrally manage up to 50 global block tags.
+* {global_...} : Use your own custom FilterCodes tags in the filter's settings. These are sometimes referred to as global blocks. An example of this might be if you wanted to define a standardized copyright or other text, form, email address, website URL, phone number, name, link, support information and more. Define and centrally manage up to 100 global block tags.
 * {note}content{/note} : Enables you to include a note which will not be displayed.
 * {help}content{/help} : Enables you to create popup help icons just like Moodle does.
 * {info}content{/info} : Enables you to create popup help icons just like the popup Help icons but with an "i" information icon.
