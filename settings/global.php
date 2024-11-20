@@ -60,7 +60,7 @@ for ($i = 1; $i <= $globaltagcount; $i++) {
         $tagtitle .  get_config($name, 'globalname' . $i),
         $tagdescription,
         $default,
-        PARAM_ALPHA
+        PARAM_ALPHANUM
     );
     $settings->add($setting);
 
