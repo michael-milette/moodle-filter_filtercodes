@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Primary/Custom menu text, such as course or category names, can now contain a pipe (|) character.
 ### Updated
+- Performance optimization: Now caches login state.
 - Issue #329: Increase maximum globaltagcount to 100.
 - Issue #335: Refactor text_filter to construct archetypes only once.
 - Fixed several issues relating to Multi-language text.
