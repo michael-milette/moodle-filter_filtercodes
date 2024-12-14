@@ -196,7 +196,7 @@ class text_filter extends \filtercodes_base_text_filter {
         if (!isset($list)) {
             // Not cached yet? We can take care of that.
             $list = [];
-            if (isloggedin() && !isguestuser()) {
+            if ($this->isauthenticateduser()) {
                 // We only track logged-in roles.
                 global $DB;
                 // Retrieve list of role names.
@@ -546,6 +546,21 @@ class text_filter extends \filtercodes_base_text_filter {
         }
         $html .= '</a></li>' . PHP_EOL;
         return $html;
+    }
+
+    /**
+     * Check if the current user is authenticated and not a guest user.
+     *
+     * @return bool True if the user is logged in and not a guest user, false otherwise.
+     */
+    private function isauthenticateduser() {
+        static $isauthenticateduser;
+
+        if (!isset($isauthenticateduser)) {
+            $isauthenticateduser = isloggedin() && !isguestuser();
+        }
+
+        return $isauthenticateduser;
     }
 
     /**
@@ -1225,7 +1240,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // These require that you already be logged-in.
             foreach (['formquickquestion', 'formcheckin'] as $form) {
                 if (stripos($text, '{' . $form . '}') !== false) {
-                    if (isloggedin() && !isguestuser()) {
+                    if ($this->isauthenticateduser()) {
                         $formcode = get_string($form, 'filter_filtercodes');
                         $replace['/\{' . $form . '\}/i'] = $pre . $form . '">' . get_string($form, 'filter_filtercodes') . $post;
                     } else {
@@ -1619,7 +1634,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Description: First 2-letters, in lowercase, of the user's preferred language as set in their profile.
         // Parameters: None.
         if (stripos($text, '{preferredlanguage}') !== false) {
-            if (isloggedin() && !isguestuser()) {
+            if ($this->isauthenticateduser()) {
                 // If user does not have a preferred language, default to the system default language.
                 $preflang = empty($USER->lang) ? $CFG->lang : $USER->lang;
                 if ($preflang == 'en') {
@@ -1909,7 +1924,7 @@ class text_filter extends \filtercodes_base_text_filter {
             $course = $PAGE->course;
             $coursecontext = \context_course::instance($course->id);
             $replace['/\{courseunenrolurl\}/i'] = '';
-            if ($course->id != SITEID && isloggedin() && !isguestuser() && is_enrolled($coursecontext)) {
+            if ($course->id != SITEID && $this->isauthenticateduser() && is_enrolled($coursecontext)) {
                 $plugins   = enrol_get_plugins(true);
                 $instances = enrol_get_instances($course->id, true);
                 foreach ($instances as $instance) {
@@ -1994,7 +2009,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Description: Date that the user first accessed the site.
         // Optional parameters: dateTimeFormat - either one of Moodle's built-in data/time formats or php's strftime.
         if (stripos($text, '{firstaccessdate') !== false) {
-            if (isloggedin() && !isguestuser() && !empty($USER->firstaccess)) {
+            if ($this->isauthenticateduser() && !empty($USER->firstaccess)) {
                 // Replace {firstaccessdate} tag with formatted date.
                 if (stripos($text, '{firstaccessdate}') !== false) {
                     $replace['/\{firstaccessdate\}/i'] = userdate($USER->firstaccess, get_string('strftimedatefullshort'));
@@ -2026,7 +2041,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Description: Date that the user last logged in to the site.
         // Optional parameters: dateTimeFormat - either one of Moodle's built-in data/time formats or php's strftime.
         if (stripos($text, '{lastlogin') !== false) {
-            if (isloggedin() && !isguestuser() && !empty($USER->lastlogin)) {
+            if ($this->isauthenticateduser() && !empty($USER->lastlogin)) {
                 // Replace {lastlogin} tag with formatted date.
                 if (stripos($text, '{lastlogin}') !== false) {
                     $replace['/\{lastlogin\}/i'] = userdate($USER->lastlogin, get_string('strftimedatetimeshort'));
@@ -2420,7 +2435,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Parameters: None.
         if (stripos($text, '{alternatename}') !== false) {
             // If alternate name is empty, use firstname instead.
-            if (isloggedin() && !isguestuser() && (!is_null($USER->alternatename) && !empty(trim($USER->alternatename)))) {
+            if ($this->isauthenticateduser() && (!is_null($USER->alternatename) && !empty(trim($USER->alternatename)))) {
                 $replace['/\{alternatename\}/i'] = $USER->alternatename;
             } else {
                 $replace['/\{alternatename\}/i'] = $u->firstname;
@@ -2431,21 +2446,21 @@ class text_filter extends \filtercodes_base_text_filter {
         // Description: User's email address as set in their profile.
         // Parameters: None.
         if (stripos($text, '{email}') !== false) {
-            $replace['/\{email\}/i'] = isloggedin() && !isguestuser() ? $USER->email : '';
+            $replace['/\{email\}/i'] = $this->isauthenticateduser() ? $USER->email : '';
         }
 
         // Tag: {city}.
         // Description: User's city as set in their profile.
         // Parameters: None.
         if (stripos($text, '{city}') !== false) {
-            $replace['/\{city\}/i'] = isloggedin() && !isguestuser() ? $USER->city : '';
+            $replace['/\{city\}/i'] = $this->isauthenticateduser() ? $USER->city : '';
         }
 
         // Tag: {country}.
         // Description: User's country as set in their profile.
         // Parameters: None.
         if (stripos($text, '{country}') !== false) {
-            if (isloggedin() && !isguestuser() && !empty($USER->country)) {
+            if ($this->isauthenticateduser() && !empty($USER->country)) {
                 $replace['/\{country\}/i'] = get_string($USER->country, 'countries');
             } else {
                 $replace['/\{country\}/i'] = '';
@@ -2455,7 +2470,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Description: User's time zone as set in their profile.
         // Parameters: None.
         if (stripos($text, '{timezone}') !== false) {
-            if (isloggedin() && !isguestuser() && !empty($USER->timezone)) {
+            if ($this->isauthenticateduser() && !empty($USER->timezone)) {
                 if ($USER->timezone == '99') { // Default is system timezone.
                     $replace['/\{timezone\}/i'] = \core_date::get_default_php_timezone();
                 } else {
@@ -2468,21 +2483,21 @@ class text_filter extends \filtercodes_base_text_filter {
         // Description: User's institution as set in their profile.
         // Parameters: None.
         if (stripos($text, '{institution}') !== false) {
-            $replace['/\{institution\}/i'] = isloggedin() && !isguestuser() ? $USER->institution : '';
+            $replace['/\{institution\}/i'] = $this->isauthenticateduser() ? $USER->institution : '';
         }
 
         // Tag: {department}.
         // Description: User's department as set in their profile.
         // Parameters: None.
         if (stripos($text, '{department}') !== false) {
-            $replace['/\{department\}/i'] = isloggedin() && !isguestuser() ? $USER->department : '';
+            $replace['/\{department\}/i'] = $this->isauthenticateduser() ? $USER->department : '';
         }
 
         // Tag: {idnumber}.
         // Description: idnumber as specified in the user's profile.
         // Parameters: None.
         if (stripos($text, '{idnumber}') !== false) {
-            $replace['/\{idnumber\}/i'] = isloggedin() && !isguestuser() ? $USER->idnumber : '';
+            $replace['/\{idnumber\}/i'] = $this->isauthenticateduser() ? $USER->idnumber : '';
         }
 
         // Tag: {webpage}
@@ -2492,7 +2507,7 @@ class text_filter extends \filtercodes_base_text_filter {
             if ($CFG->branch >= 311) {
                 $text = str_replace('{webpage}', '{profile_field_webpage}', $text);
             } else {
-                $replace['/\{webpage\}/i'] = isloggedin() && !isguestuser() ? $USER->url : '';
+                $replace['/\{webpage\}/i'] = $this->isauthenticateduser() ? $USER->url : '';
             }
         }
 
@@ -2603,7 +2618,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Contents of the custom user profile field. Will apply formating to datetime and checkbox type fields.
             // Required Parameters: shortname of a custom profile field.
             if (stripos($text, '{profile_field') !== false) {
-                $isuser = (isloggedin() && !isguestuser());
+                $isuser = ($this->isauthenticateduser());
                 // Cached the defined custom profile fields and data.
                 if (!isset($profilefields)) {
                     $profilefields = $DB->get_records('user_info_field', null, '', 'id, datatype, shortname, visible, param3');
@@ -2643,7 +2658,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Parameters: None.
             if (stripos($text, '{profilefullname}') !== false) {
                 $fullname = '';
-                if (isloggedin() && !isguestuser()) {
+                if ($this->isauthenticateduser()) {
                     $fullname = get_string('fullnamedisplay', null, $USER);
                     if ($PAGE->pagelayout == 'mypublic' && $PAGE->pagetype == 'user-profile') {
                         $userid = optional_param('userid', optional_param(
@@ -2743,7 +2758,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Description as set in user's profile.
             // Parameters: None.
             if (stripos($text, '{userdescription}') !== false) {
-                if (isloggedin() && !isguestuser()) {
+                if ($this->isauthenticateduser()) {
                     $user = $DB->get_record('user', ['id' => $USER->id], 'description', MUST_EXIST);
                     $replace['/\{userdescription\}/i'] = format_text($user->description, $USER->descriptionformat);
                     unset($user);
@@ -3294,7 +3309,7 @@ class text_filter extends \filtercodes_base_text_filter {
 
         // These tags: {mycourses} and {mycoursesmenu} and {mycoursescards}.
         if (stripos($text, '{mycourse') !== false || stripos($text, '{myccourse') !== false) {
-            if (isloggedin() && !isguestuser()) {
+            if ($this->isauthenticateduser()) {
                 // Retrieve list of user's enrolled courses.
                 $sortorder = 'visible DESC';
                 // Prevent undefined $CFG->navsortmycoursessort errors.
@@ -3811,7 +3826,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Description: For use in forms to make a field read-only when user is logged-in as non-guest.
         // Parameters: None.
         if (stripos($text, '{readonly}') !== false) {
-            if (isloggedin() && !isguestuser()) {
+            if ($this->isauthenticateduser()) {
                 $replace['/\{readonly\}/i'] = 'readonly="readonly"';
             } else {
                 $replace['/\{readonly\}/i'] = '';
@@ -4060,7 +4075,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Required Parameter: Replace shortname with the shortname of the user profile field. Note that this is in both tags.
             // Requires content between tags.
             if (stripos($text, '{ifprofile_field_') !== false) {
-                $isuser = (isloggedin() && !isguestuser());
+                $isuser = ($this->isauthenticateduser());
 
                 // Cached the defined custom profile fields and data.
                 if (!isset($profilefields)) {
@@ -4566,7 +4581,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Parameters: None.
             // Requires content between tags.
 
-            if (isloggedin() && !isguestuser()) { // If logged-in but not just as guest.
+            if ($this->isauthenticateduser()) { // If logged-in but not just as guest.
                 // Just remove ifloggedin tags.
                 if (stripos($text, '{ifloggedin}') !== false) {
                     $replace['/\{ifloggedin\}/i'] = '';

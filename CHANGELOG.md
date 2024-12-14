@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.6.2] 2024-12-14 (dev)
+- Performance optimization: Now caches login state.
+
 ## [2.6.1] 2024-11-20
 ### Update
 - Fix-311: Global tags can now include numbers in their name.
