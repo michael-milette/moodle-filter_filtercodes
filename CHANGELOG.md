@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 ## [2.6.4] 2025-05-04 (dev)
 ### Added
 - Primary/Custom menu text, such as course or category names, can now contain a pipe (|) character.
+- New {firstnamephonetic} tag.
+- New {lastnamephonetic} tag.
+- New {middlename} tag.
 ### Updated
 - Performance optimization: Now caches login state.
 - Issue #329: Increase maximum globaltagcount to 100.
