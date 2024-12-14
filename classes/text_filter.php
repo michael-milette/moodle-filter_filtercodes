@@ -2442,6 +2442,15 @@ class text_filter extends \filtercodes_base_text_filter {
             }
         }
 
+        // Tags: {firstnamephonetic}, {lastnamephonetic}, {middlename}.
+        // Description: User's first name phonetic, last name phonetic and middle name as set in their profile.
+        // Parameters: None.
+        foreach (['firstnamephonetic', 'lastnamephonetic', 'middlename'] as $field) {
+            if (stripos($text, '{' . $field . '}') !== false) {
+                $replace['/\{' . $field . '\}/i'] = $this->isauthenticateduser() ? trim($USER->{$field}) : '';
+            }
+        }
+
         // Tag: {email}.
         // Description: User's email address as set in their profile.
         // Parameters: None.
