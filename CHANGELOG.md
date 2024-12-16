@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.6.2] 2024-11-20 (dev)
-### Update
+## [2.6.2] 2024-12-16 (dev)
+### Updated
+- Fix-312: ifactivitycompleted and ifnotactivitycompleted now works correctly with graded activities.
 - Fix-311: Global tags can now include numbers in their name.
 
 ## [2.6.1] 2024-11-20

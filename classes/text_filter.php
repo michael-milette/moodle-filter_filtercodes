@@ -3982,8 +3982,8 @@ class text_filter extends \filtercodes_base_text_filter {
                             if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
                                 // Get the completion data for this activity if it exists.
                                 try {
-                                    $data = $completion->get_data($cm, true, $USER->id);
-                                    $iscompleted = ($data->completionstate == COMPLETION_COMPLETE);
+                                    $data = $completion->get_data($cm, false, $USER->id);
+                                    $iscompleted = ($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
                                 } catch (\moodle_exception $e) {
                                     // Handle Moodle-specific exceptions.
                                     unset($e);
@@ -4027,15 +4027,15 @@ class text_filter extends \filtercodes_base_text_filter {
 
                             // Only process valid IDs.
                             if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
-                                // Get the completion data for this activity.
+                                // Get the completion data for this activity if it exists.
                                 try {
-                                    $data = $completion->get_data($cm, true, $USER->id);
-                                    $iscompleted = ($data->completionstate == COMPLETION_COMPLETE);
+                                    $data = $completion->get_data($cm, false, $USER->id);
+                                    $iscompleted = ($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
                                 } catch (\moodle_exception $e) {
                                     // Handle Moodle-specific exceptions.
                                     unset($e);
                                     continue;
-                                } catch (Exception $e) {
+                                } catch (\Exception $e) {
                                     unset($e);
                                     continue;
                                 }
