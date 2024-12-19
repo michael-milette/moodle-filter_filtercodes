@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - New {lastnamephonetic} tag.
 - New {middlename} tag.
 ### Updated
+- Managers can no longer access the Themes menu.
 - Only Site Administrators can access User: Profile Fields in Admin menu.
 - Fix-312: ifactivitycompleted and ifnotactivitycompleted now works correctly with graded activities.
 
