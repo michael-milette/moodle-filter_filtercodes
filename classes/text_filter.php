@@ -839,11 +839,11 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
                 if ($this->hasminarchetype('manager')) { // If a manager or above.
                     $menu .= '-{getstring}user{/getstring}: {getstring:admin}usermanagement{/getstring}|/admin/user.php' . PHP_EOL;
-                    $menu .= '{ifminsitemanager}' . PHP_EOL;
-                    $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' .
+                    if (is_siteadmin()) {
+                        $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' .
                             PHP_EOL;
+                    }
                     $menu .= '-###' . PHP_EOL;
-                    $menu .= '{/ifminsitemanager}' . PHP_EOL;
                     $menu .= '-{getstring}course{/getstring}: {getstring:admin}coursemgmt{/getstring}|/course/management.php' .
                             '?categoryid={categoryid}' . PHP_EOL;
                     $menu .= '-{getstring}course{/getstring}: {getstring}new{/getstring}|/course/edit.php' .
