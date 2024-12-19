@@ -1031,7 +1031,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Allow Theme Changes on URL must be enabled for this to have any effect.
             if (stripos($text, '{menuthemes}') !== false) {
                 $menu = '';
-                if (is_siteadmin() && empty($_POST)) { // If a site administrator.
+                if (empty($_POST) && is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If a site administrator.
                     if (get_config('core', 'allowthemechangeonurl')) {
                         $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
                             . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
@@ -1043,34 +1043,32 @@ class text_filter extends \filtercodes_base_text_filter {
                             $menu .= '-' . $themename . '|' . $url . 'theme=' . $theme . PHP_EOL;
                         }
 
-                        // If an administrator, add links to Advanced Theme Settings and to Current theme settings.
-                        if (is_siteadmin() && !is_role_switched($PAGE->course->id)) {
-                            $theme = $PAGE->theme->name;
-                            $menu = 'Themes' . PHP_EOL . $menu;
-                            if ($CFG->branch >= 404) {
-                                $label = 'themesettingsadvanced';
-                                $section = 'themesettingsadvanced';
-                            } else {
-                                $label = 'themesettings';
-                                $section = 'themesettings';
-                            }
+                        // Add links to Advanced Theme Settings and to Current theme settings.
+                        $theme = $PAGE->theme->name;
+                        $menu = 'Themes' . PHP_EOL . $menu;
+                        if ($CFG->branch >= 404) {
+                            $label = 'themesettingsadvanced';
+                            $section = 'themesettingsadvanced';
+                        } else {
+                            $label = 'themesettings';
+                            $section = 'themesettings';
+                        }
 
-                            $menu .= '-###' . PHP_EOL;
-                            $menu .= '-{getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
-                                '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
+                        $menu .= '-###' . PHP_EOL;
+                        $menu .= '-{getstring:admin}' . $label . '{/getstring}|/admin/settings.php' .
+                            '?section=' . $section . '|Including custom menus, designer mode, theme in URL' . PHP_EOL;
 
-                            if (!file_exists($CFG->dirroot . '/mod/hvp/version.php')) { // Not compatible with mod_hvp.
-                                if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
-                                    require_once($CFG->libdir . '/adminlib.php');
-                                    if (admin_get_root()->locate('theme_' . $theme)) {
-                                        // Settings use categories interface URL.
-                                        $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
-                                    } else {
-                                        // Settings use tabs interface URL.
-                                        $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
-                                    }
-                                    $menu .= '-{getstring:admin}currenttheme{/getstring}|' . $url;
+                        if (!file_exists($CFG->dirroot . '/mod/hvp/version.php')) { // Not compatible with mod_hvp.
+                            if (file_exists($CFG->dirroot . '/theme/' . $theme . '/settings.php')) {
+                                require_once($CFG->libdir . '/adminlib.php');
+                                if (admin_get_root()->locate('theme_' . $theme)) {
+                                    // Settings use categories interface URL.
+                                    $url = '/admin/category.php?category=theme_' . $theme . PHP_EOL;
+                                } else {
+                                    // Settings use tabs interface URL.
+                                    $url = '/admin/settings.php?section=themesetting' . $theme . PHP_EOL;
                                 }
+                                $menu .= '-{getstring:admin}currenttheme{/getstring}|' . $url;
                             }
                         }
                     }
