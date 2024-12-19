@@ -1,13 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.6.2] 2024-12-16 (dev)
+## [2.6.2] 2024-12-19 (dev)
 ### Added
 - Performance optimization: Now caches login state.
 - New {firstnamephonetic} tag.
 - New {lastnamephonetic} tag.
 - New {middlename} tag.
 ### Updated
+- Only Site Administrators can access User: Profile Fields in Admin menu.
 - Fix-312: ifactivitycompleted and ifnotactivitycompleted now works correctly with graded activities.
 
 ## [2.6.1] 2024-11-20
