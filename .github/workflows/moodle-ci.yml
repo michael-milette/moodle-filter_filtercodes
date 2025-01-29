@@ -16,7 +16,7 @@ jobs:
   # Set the job key. The key is displayed as the job name when a job name is not provided
   test:
     # Virtual environment to use.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     # DB services you need for testing.
     services:
@@ -58,6 +58,19 @@ jobs:
         #   - php: '8.2'
         #     moodle-branch: 'main'
         #     database: 'mariadb'
+          # Moodle 4.5.x (MOODLE_405_STABLE).
+          - php: '8.3'
+            moodle-branch: 'MOODLE_405_STABLE'
+            database: 'pgsql'
+          - php: '8.3'
+            moodle-branch: 'MOODLE_405_STABLE'
+            database: 'mariadb'
+          - php: '8.2'
+            moodle-branch: 'MOODLE_405_STABLE'
+            database: 'mariadb'
+          - php: '8.1'
+            moodle-branch: 'MOODLE_405_STABLE'
+            database: 'pgsql'
           # Moodle 4.4.x (MOODLE_404_STABLE).
           - php: '8.3'
             moodle-branch: 'MOODLE_404_STABLE'
@@ -156,23 +169,16 @@ jobs:
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci phplint
 
-      - name: PHP Copy/Paste Detector
-        continue-on-error: true # This step will show errors but will not fail
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpcpd
-
       - name: PHP Mess Detector
         continue-on-error: true # This step will show errors but will not fail
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci phpmd
 
       - name: Moodle Code Checker
-        continue-on-error: true # This step will show errors but will not fail
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci phpcs --max-warnings 0
 
       - name: Moodle PHPDoc Checker
-        continue-on-error: true # This step will show errors but will not fail
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci phpdoc --max-warnings 0
 
