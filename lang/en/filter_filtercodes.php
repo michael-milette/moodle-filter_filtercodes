@@ -250,6 +250,6 @@ $string['teamcardslinktype_desc'] = 'Choose the type of link for the team member
 $string['unenrolme'] = 'Unenrol me from this course';
 $string['verbose'] = 'Verbose';
 $string['wishlist'] = 'Wishlist';
-$string['wishlist_nocourses'] = 'No courses in the list';
 $string['wishlist_add'] = 'Add this course to the list';
+$string['wishlist_nocourses'] = 'No courses in the list';
 $string['wishlist_remove'] = 'Remove this course from the list';
