@@ -1193,7 +1193,8 @@ class text_filter extends \filtercodes_base_text_filter {
                         $coursecontext->id,
                         'course',
                         'section',
-                        0);
+                        0
+                    );
                     $replace['/\{coursesummary\}/i'] = format_text(
                         $summary,
                         FORMAT_HTML,
