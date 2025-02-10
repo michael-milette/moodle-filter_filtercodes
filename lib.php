@@ -18,7 +18,7 @@
  * Library of functions for filtercodes.
  *
  * @package   filter_filtercodes
- * @copyright 2016-2024 TNG Consulting Inc. (https://tngconsulting.ca)
+ * @copyright 2016-2025 TNG Consulting Inc. (https://tngconsulting.ca)
  * @author    Michael Milette
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

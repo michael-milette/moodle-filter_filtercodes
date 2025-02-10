@@ -18,7 +18,7 @@
  * Main filter code for FilterCodes for Moodle up to v4.4.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2024 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
