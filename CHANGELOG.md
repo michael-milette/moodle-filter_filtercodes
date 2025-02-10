@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.6.2] 2024-12-19 (dev)
+## [2.6.2] 2025-02-10 (dev)
 ### Added
+- New {menubookmarks} tag. (PRO version only)
 - Performance optimization: Now caches login state.
 - New {firstnamephonetic} tag.
 - New {lastnamephonetic} tag.
@@ -11,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Managers can no longer access the Themes menu.
 - Only Site Administrators can access User: Profile Fields in Admin menu.
 - Fix-312: ifactivitycompleted and ifnotactivitycompleted now works correctly with graded activities.
+- Copyright notice to include 2025.
 
 ## [2.6.1] 2024-11-20
 ### Update

@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for filter_filtercodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2024 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,7 +28,7 @@ namespace filter_filtercodes\privacy;
 /**
  * Privacy Subsystem for filter_filtercodes implementing null_provider.
  *
- * @copyright  2017-2024 TNG Consulting Inc. <www.tngconsulting.ca>
+ * @copyright  2017-2025 TNG Consulting Inc. <www.tngconsulting.ca>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {
