@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.2] 2024-12-16 (dev)
 ### Updated
 - Managers can no longer access the Themes menu.
+- Refactored menuwishlist. No functional change.
 - Fixed coding style guidelines compliance issue.
 - Only Site Administrators can access User: Profile Fields in Admin menu.
 - Fix-312: ifactivitycompleted and ifnotactivitycompleted now works correctly with graded activities.

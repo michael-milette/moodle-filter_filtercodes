@@ -1147,7 +1147,7 @@ class text_filter extends \filtercodes_base_text_filter {
                             $menu .= "\n-###\n";
                         }
                         $action = in_array($PAGE->course->id, $wishlist) ? 'remove' : 'add';
-                        $url = (new \moodle_url('/filter/filtercodes/wishlist.php', [
+                        $url = (new \moodle_url('/filter/filtercodes/action.php', [
                             'courseid' => $PAGE->course->id,
                             'action' => $action,
                         ]))->out();
