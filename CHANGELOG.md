@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.6.2] 2025-02-10 (dev)
 ### Updated
+- The sitesummary tag now displays the site summary instead of site full name.
 - Managers can no longer access the Themes menu.
 - Refactored menuwishlist. No functional change.
 - Fixed coding style guidelines compliance issue.

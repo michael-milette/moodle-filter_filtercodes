@@ -2567,7 +2567,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Site summary as defined in the Front Page/Site Home Settings.
             // Parameters: None.
             if (stripos($text, '{sitesummary}') !== false) {
-                $replace['/\{sitesummary\}/i'] = $SITE->fullname;
+                $replace['/\{sitesummary\}/i'] = $SITE->summary;
             }
 
             // Tag: {siteyear}.
