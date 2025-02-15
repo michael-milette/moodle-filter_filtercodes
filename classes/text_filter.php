@@ -1243,7 +1243,7 @@ class text_filter extends \filtercodes_base_text_filter {
             }
 
             // Tag: {formsesskey}.
-            if (stripos($text, '{formsesskey}') !== false) {
+            if (get_config('filter_filtercodes', 'enable_sesskey') && stripos($text, '{formsesskey}') !== false) {
                 $replace['/\{formsesskey\}/i'] = '<input type="hidden" id="sesskey" name="sesskey" value="">';
                 $replace['/\{formsesskey\}/i'] .= '<script>document.getElementById(\'sesskey\').value = M.cfg.sesskey;</script>';
             }
