@@ -5520,7 +5520,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     // Remove HTML tags created by filters like Activity Name Auto-Linking and Convert URLs Into Links.
                     $url = strip_tags($matches[1]);
                     $label = $matches[2];
-                    return '<a href="' . $url . '" class="btn btn-primary">' . $label . '</a>';
+                    return '<a href="' . s($url) . '" class="btn btn-primary">' . $label . '</a>';
                 },
                 $text
             );
