@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.6.2] 2025-02-10 (dev)
+## [2.6.2] 2025-03-05 (dev)
 ### Updated
 - The sitesummary tag now displays the site summary instead of site full name.
 - Managers can no longer access the Themes menu.
@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Only Site Administrators can access User: Profile Fields in Admin menu.
 - Fix-312: ifactivitycompleted and ifnotactivitycompleted now works correctly with graded activities.
 - Fix-311: Global tags can now include numbers in their name.
+- Fix-322: Made settings path more specfic.
 - Copyright notice to include 2025.
 
 ## [2.6.1] 2024-11-20

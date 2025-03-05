@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
     if ($ADMIN->fulltree) {
-        require('settings/general.php');
-        require('settings/global.php');
+        require($CFG->dirroot . '/filter/filtercodes/settings/general.php');
+        require($CFG->dirroot . '/filter/filtercodes/settings/global.php');
     }
 }
