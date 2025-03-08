@@ -1243,7 +1243,7 @@ class text_filter extends \filtercodes_base_text_filter {
             }
 
             // Tag: {formsesskey}.
-            if (stripos($text, '{formsesskey}') !== false) {
+            if (get_config('filter_filtercodes', 'enable_sesskey') && stripos($text, '{formsesskey}') !== false) {
                 $replace['/\{formsesskey\}/i'] = '<input type="hidden" id="sesskey" name="sesskey" value="">';
                 $replace['/\{formsesskey\}/i'] .= '<script>document.getElementById(\'sesskey\').value = M.cfg.sesskey;</script>';
             }
@@ -5421,7 +5421,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     // Remove HTML tags created by filters like Activity Name Auto-Linking and Convert URLs Into Links.
                     $url = strip_tags($matches[1]);
                     $label = $matches[2];
-                    return '<a href="' . $url . '" class="btn btn-primary">' . $label . '</a>';
+                    return '<a href="' . s($url) . '" class="btn btn-primary">' . $label . '</a>';
                 },
                 $text
             );
