@@ -4077,7 +4077,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     $tag = 'ifprofile_field_' . $field->shortname;
 
                     // If the tag exists, user is logged-in and we are allowed to evaluate this field.
-                    if (isset($profiledata[$field->id]) && $isuser && ($field->visible != '0' || $allowall)) {
+                    if (!empty($field->id) && isset($profiledata[$field->id]) && $isuser && ($field->visible != '0' || $allowall)) {
                         $data = trim($profiledata[$field->id]);
                     } else {
                         $data = '';

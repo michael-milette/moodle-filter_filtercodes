@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.6.2] 2025-03-05 (dev)
+## [2.6.2] 2025-04-23 (dev)
 ### Updated
+- Fixed warning if ifprofile_field_shortname field does not exists.
 - The sitesummary tag now displays the site summary instead of site full name.
 - Managers can no longer access the Themes menu.
 - Refactored menuwishlist. No functional change.
