@@ -252,8 +252,12 @@ class text_filter extends \filtercodes_base_text_filter {
         global $PAGE;
 
         $sizes = ['sm' => 35, '2' => 35, 'md' => 100, '1' => 100, 'lg' => 512, '3' => 512];
-        if (empty($px = $sizes[$size])) {
+        if (isset($sizes[$size])) {
+            $px = $sizes[$size];
+        } else if (is_numeric($size)) {
             $px = $size; // Size was specified in pixels.
+        } else {
+            $px = 100; // Default size.
         }
         $userpicture = new \user_picture($user);
         $userpicture->size = $px; // Size in pixels.
