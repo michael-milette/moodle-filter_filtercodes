@@ -58,6 +58,9 @@ class text_filter extends \filtercodes_base_text_filter {
      */
     private static $customrolespermissions = [];
 
+    /** @var bool $infiltercodes Flag to track if a filter is being called recursively */
+    private static $infiltercodes = false;
+
     /**
      * Constructor: Get the role IDs associated with each of the archetypes.
      */
@@ -1571,7 +1574,7 @@ class text_filter extends \filtercodes_base_text_filter {
     public function filter($text, array $options = []) {
         global $CFG, $SITE, $PAGE, $USER, $DB;
 
-        if (strpos($text, '{') === false && strpos($text, '%7B') === false) {
+        if (strpos($text, '{') === false && strpos($text, '%7B') === false || self::$infiltercodes) {
             return $text;
         }
 
@@ -1586,6 +1589,7 @@ class text_filter extends \filtercodes_base_text_filter {
 
         // Handle escaped tags to be ignored. Remove them so they don't get processed if the option to [{escape braces}] is enabled.
         $text = $this->escapedtags($text);
+        self::$infiltercodes = true; // Prevent recursive calls to this function.
 
         // START: Process tags that may end up containing other tags first.
 
@@ -2368,6 +2372,7 @@ class text_filter extends \filtercodes_base_text_filter {
         if ($this->replacetags($text, $replace) == false) {
             // No more tags? Put back the escaped tags, if any, and return the string.
             $text = $this->escapedtags($text);
+            self::$infiltercodes = false;
             return $text;
         }
 
@@ -2594,6 +2599,7 @@ class text_filter extends \filtercodes_base_text_filter {
         if ($this->replacetags($text, $replace) == false) {
             // No more tags? Put back the escaped tags, if any, and return the string.
             $text = $this->escapedtags($text);
+            self::$infiltercodes = false;
             return $text;
         }
 
@@ -5350,6 +5356,7 @@ class text_filter extends \filtercodes_base_text_filter {
         if ($this->replacetags($text, $replace) == false) {
             // No more tags? Put back the escaped tags, if any, and return the string.
             $text = $this->escapedtags($text);
+            self::$infiltercodes = false;
             return $text;
         }
 
@@ -5436,6 +5443,7 @@ class text_filter extends \filtercodes_base_text_filter {
         $this->replacetags($text, $replace);
         // Put back the escaped tags.
         $text = $this->escapedtags($text);
+        self::$infiltercodes = false;
         return $text;
     }
 }
