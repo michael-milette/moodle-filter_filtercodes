@@ -2727,7 +2727,8 @@ class text_filter extends \filtercodes_base_text_filter {
                         '/\{userpictureimg\s+(\w+)\}/isuU',
                         function ($matches) use ($USER) {
                             $url = $this->getprofilepictureurl($USER, $matches[1]);
-                            $tag = '<img src="' . $url . '" alt="' . $USER->fullname . '" class="userpicture">';
+                            $fullname = get_string('fullnamedisplay', null, $USER);
+                            $tag = '<img src="' . $url . '" alt="' . $fullname . '" class="userpicture">';
                             return $tag;
                         },
                         $text
