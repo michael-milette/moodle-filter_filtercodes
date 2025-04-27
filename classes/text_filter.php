@@ -4171,7 +4171,7 @@ class text_filter extends \filtercodes_base_text_filter {
                                 break;
                             case 'contains':
                                 // If the specified field contains the specified value.
-                                // Example:{ifprofile email contains "@example.com"}...{/ifprofile}.
+                                // Example:{ifprofile email contains "@yoursite.com"}...{/ifprofile}.
                                 if (strpos($profilefields[$fieldname]->value, $value) !== false) {
                                     $content = $matches[4][$key];
                                 }
