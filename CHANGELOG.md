@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Fix-311: Global tags can now include numbers in their name.
 - Fix-322: Made settings path more specfic.
 - Fixed ALT text for {userpictureimg} tag.
+- Fixed compatibility issues with Moodle LMS 5.0.
 - Fixed issue with profile image if size was not specified.
 - Now prevents recursive calls.
 - Copyright notice to include 2025.

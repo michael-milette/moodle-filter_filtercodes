@@ -259,6 +259,7 @@ class text_filter extends \filtercodes_base_text_filter {
         } else {
             $px = 100; // Default size.
         }
+
         $userpicture = new \user_picture($user);
         $userpicture->size = $px; // Size in pixels.
         $url = $userpicture->get_url($PAGE);
@@ -3799,7 +3800,7 @@ class text_filter extends \filtercodes_base_text_filter {
         }
 
         // Tag: {sectionname}.
-        // Description: The name of the section in which the current activity is located. Blank if not in a course.
+        // Description: The name of the section in which the current activity is located. Blank if not in course or on course page.
         // Parameters: None.
         if (stripos($text, '{sectionname}') !== false) {
             // If in a course and section name.
@@ -5312,11 +5313,19 @@ class text_filter extends \filtercodes_base_text_filter {
             static $helpwrapper = [];
             if (!isset($help)) {
                 $help = get_string('help');
-                $helpwrapper[0] = '<a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover"'
+                if ($CFG->branch >= 500) {
+                    $helpwrapper[0] = '<a class="btn btn-link p-0" role="button" data-bs-container="body" data-bs-toggle="popover"'
+                            . ' data-bs-placement="right" data-bs-content="<div class=&quot;no-overflow&quot;><p>';
+                    $helpwrapper[1] = '</p></div>" data-bs-html="true" tabindex="0" data-bs-trigger="focus"><i class="icon'
+                            . ' fa fa-circle-question text-info fa-fw " title="' . $help . '" aria-label="' . $help . '"></i></a>';
+                } else {
+                    $helpwrapper[0] = '<a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover"'
                         . ' data-placement="right" data-content="<div class=&quot;no-overflow&quot;><p>';
-                $helpwrapper[1] = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
+                    $helpwrapper[1] = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
                         . ' fa fa-question-circle text-info fa-fw " title="' . $help . '" aria-label="' . $help . '"></i></a>';
+                }
             }
+
             $newtext = preg_replace_callback(
                 '/\{help\}(.*)\{\/help\}/isuU',
                 function ($matches) use ($helpwrapper) {
@@ -5338,10 +5347,17 @@ class text_filter extends \filtercodes_base_text_filter {
             static $infowrapper = [];
             if (!isset($info)) {
                 $info = get_string('info');
-                $infowrapper[0] = '<a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover"'
+                if ($CFG->branch >= 500) {
+                    $infowrapper[0] = '<a class="btn btn-link p-0" role="button" data-bs-container="body" data-bs-toggle="popover"'
+                        . ' data-bs-placement="right" data-bs-content="<div class=&quot;no-overflow&quot;><p>';
+                    $infowrapper[1] = '</p></div>" data-bs-html="true" tabindex="0" data-bs-trigger="focus"><i class="icon'
+                        . ' fa fa-circle-info text-info fa-fw " title="' . $info . '" aria-label="' . $info . '"></i></a>';
+                } else {
+                    $infowrapper[0] = '<a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover"'
                         . ' data-placement="right" data-content="<div class=&quot;no-overflow&quot;><p>';
-                $infowrapper[1] = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
+                    $infowrapper[1] = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
                         . ' fa fa-info-circle text-info fa-fw " title="' . $info . '" aria-label="' . $info . '"></i></a>';
+                }
             }
             $newtext = preg_replace_callback(
                 '/\{info\}(.*)\{\/info\}/isuU',
