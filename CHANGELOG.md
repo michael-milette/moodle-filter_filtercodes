@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Primary/Custom menu text, such as course or category names, can now contain a pipe (|) character.
 ### Updated
+- Issue #335: Refactor text_filter to construct archetypes only once.
 - Fixed several issues relating to Multi-language text.
 
 ## [2.6.3] 2025-04-27
