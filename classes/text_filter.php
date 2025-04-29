@@ -48,8 +48,8 @@ if (class_exists('\core_filters\text_filter')) {
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class text_filter extends \filtercodes_base_text_filter {
-    /** @var object $archetypes Object array of Moodle archetypes. */
-    public $archetypes = [];
+    /** @var array $archetyperoles Object array of Moodle archetypes. */
+    private static $archetyperoles = null;
     /** @var array $customroles array of Roles key is shortname and value is the id */
     private static $customroles = [];
     /**
@@ -68,13 +68,16 @@ class text_filter extends \filtercodes_base_text_filter {
 
         // Note: This array must correspond to the one in function hasminarchetype.
         $archetypelist = ['manager' => 1, 'coursecreator' => 2, 'editingteacher' => 3, 'teacher' => 4, 'student' => 5];
-        foreach ($archetypelist as $archetype => $level) {
-            $roleids = [];
-            // Build array of roles.
-            foreach (get_archetype_roles($archetype) as $role) {
-                $roleids[] = $role->id;
+        if (self::$archetyperoles === null) {
+            self::$archetyperoles = [];
+            foreach ($archetypelist as $archetype => $level) {
+                $roleids = [];
+                // Build array of roles.
+                foreach (get_archetype_roles($archetype) as $role) {
+                    $roleids[] = $role->id;
+                }
+                self::$archetyperoles[$archetype] = (object)['level' => $level, 'roleids' => $roleids];
             }
-            $this->archetypes[$archetype] = (object) ['level' => $level, 'roleids' => $roleids];
         }
     }
 
@@ -101,10 +104,10 @@ class text_filter extends \filtercodes_base_text_filter {
         if (is_role_switched($PAGE->course->id)) { // Has switched roles.
             $context = \context_course::instance($PAGE->course->id);
             $id = $USER->access['rsw'][$context->path];
-            $archetypes[$archetype] = in_array($id, $this->archetypes[$archetype]->roleids);
+            $archetypes[$archetype] = in_array($id, self::$archetyperoles[$archetype]->roleids);
         } else {
             // For each of the roles associated with the archetype, check if the user has one of the roles.
-            foreach ($this->archetypes[$archetype]->roleids as $roleid) {
+            foreach (self::$archetyperoles[$archetype]->roleids as $roleid) {
                 if (user_has_role_assignment($USER->id, $roleid, $PAGE->context->id)) {
                     $archetypes[$archetype] = true;
                 }
@@ -122,7 +125,7 @@ class text_filter extends \filtercodes_base_text_filter {
      */
     private function hasonlyarchetype($archetype) {
         if ($this->hasarchetype($archetype)) {
-            $archetypes = array_keys($this->archetypes);
+            $archetypes = array_keys(self::$archetyperoles);
             foreach ($archetypes as $archetypename) {
                 if ($archetypename != $archetype && $this->hasarchetype($archetypename)) {
                     return false;
@@ -150,7 +153,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Note: This array must start with one blank entry followed by the same list found in in __construct().
         $archetypelist = ['', 'manager', 'coursecreator', 'editingteacher', 'teacher', 'student'];
         // For each archetype level between the one specified and 'manager'.
-        for ($level = $this->archetypes[$minarchetype]->level; $level >= 1; $level--) {
+        for ($level = self::$archetyperoles[$minarchetype]->level; $level >= 1; $level--) {
             // Check to see if any of the user's roles correspond to the archetype.
             if ($this->hasarchetype($archetypelist[$level])) {
                 return true;
