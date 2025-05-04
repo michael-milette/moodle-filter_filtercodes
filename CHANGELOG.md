@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.6.4] 2025-05-04 (dev)
+### Updated
+- Fixed several issues relating to Multi-language text.
+
 ## [2.6.3] 2025-04-27
 ### Updated
 - Fixed warning if the {ifprofile_field_shortname} field does not exist.

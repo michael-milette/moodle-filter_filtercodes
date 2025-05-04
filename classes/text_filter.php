@@ -537,6 +537,8 @@ class text_filter extends \filtercodes_base_text_filter {
             $dimmed = '';
         }
 
+        $category->name = format_string($category->name);
+
         $url = (new \moodle_url('/course/index.php', ['categoryid' => $category->id]))->out();
         if ($categoryshowpic) {
             $imgurl = $OUTPUT->get_generated_image_for_id($category->id + 65535);
@@ -624,9 +626,9 @@ class text_filter extends \filtercodes_base_text_filter {
                 case 'horizontal':
                     global $DB;
                     $category = $DB->get_record('course_categories', ['id' => $course->category]);
-                    $category = $category->name;
+                    $category = format_string($category->name);
 
-                    $summary = $course->summary == null ? '' : $course->summary;
+                    $summary = $course->summary == null ? '' : format_string($course->summary, true, ['context' => $context]);
                     $summary = substr($summary, -4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
 
                     $content .= '
@@ -662,9 +664,9 @@ class text_filter extends \filtercodes_base_text_filter {
                 case 'table':
                     global $DB;
                     $category = $DB->get_record('course_categories', ['id' => $course->category]);
-                    $category = $category->name;
+                    $category = format_string($category->name);
 
-                    $summary = $course->summary == null ? '' : $course->summary;
+                    $summary = $course->summary == null ? '' : format_string($course->summary, true, ['context' => $context]);
                     $summary = substr($summary, -4) == '<br>' ? substr($summary, 0, strlen($summary) - 4) : $summary;
 
                     $content .= '
@@ -837,7 +839,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 $theme = $PAGE->theme->name;
                 $menu = '';
                 if ($this->hasminarchetype('editingteacher')) {
-                    $menu .= '{fa fa-wrench} {getstring}admin{/getstring}' . PHP_EOL;
+                    $menu .= '{getstring}admin{/getstring}' . PHP_EOL;
                 }
                 if ($this->hasminarchetype('coursecreator')) { // If a course creator or above.
                     $menu .= '-{getstring}administrationsite{/getstring}|/admin/search.php' . PHP_EOL;
@@ -847,7 +849,9 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
                 if ($this->hasminarchetype('manager')) { // If a manager or above.
                     $menu .= '-{getstring}user{/getstring}: {getstring:admin}usermanagement{/getstring}|/admin/user.php' . PHP_EOL;
-                    if (is_siteadmin()) {
+                    $menu .= '-{getstring}user{/getstring}: {getstring}addnewuser{/getstring}|/user/editadvanced.php?id=-1' . PHP_EOL;
+                    $menu .= '-{getstring}user{/getstring}: {getstring:tool_uploaduser}uploadusers{/getstring}|/admin/tool/uploaduser/index.php' . PHP_EOL;
+                    if (is_siteadmin() && !is_role_switched($PAGE->course->id)) {
                         $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' .
                             PHP_EOL;
                     }
@@ -2577,7 +2581,8 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Site summary as defined in the Front Page/Site Home Settings.
             // Parameters: None.
             if (stripos($text, '{sitesummary}') !== false) {
-                $replace['/\{sitesummary\}/i'] = $SITE->summary;
+                $sitecontext = \context_system::instance();
+                $replace['/\{sitesummary\}/i'] = format_string($SITE->summary, true, ['context' => $sitecontext]);
             }
 
             // Tag: {siteyear}.
@@ -3351,7 +3356,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     $list = '';
                     foreach ($mycourses as $mycourse) {
                         $list .= '<li><a href="' . (new \moodle_url('/course/view.php', ['id' => $mycourse->id]))->out() . '">' .
-                                $mycourse->fullname . '</a></li>';
+                            format_string($mycourse->fullname) . '</a></li>';
                     }
                     $replace['/\{mycourses\}/i'] = '<ul>' . (empty($list) ? "<li>$emptylist</li>" : $list) . '</ul>';
                     unset($list);
@@ -3362,9 +3367,9 @@ class text_filter extends \filtercodes_base_text_filter {
                 // Parameters: None.
                 if (stripos($text, '{myccourses}') !== false) {
                     $list = '';
-                    foreach ($myccourses as $myccourse) {
-                        $list .= '<li><a href="' . (new \moodle_url('/course/view.php', ['id' => $myccourse->id]))->out() . '">' .
-                                $myccourse->fullname . '</a></li>';
+                    foreach ($myccourses as $mycourse) {
+                        $list .= '<li><a href="' . (new \moodle_url('/course/view.php', ['id' => $mycourse->id]))->out() . '">' .
+                            format_string($mycourse->fullname) . '</a></li>';
                     }
                     $replace['/\{myccourses\}/i'] = '<ul>' . (empty($list) ? "<li>$emptycclist</li>" : $list) . '</ul>';
                     unset($list);
@@ -3376,7 +3381,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 if (stripos($text, '{mycoursesmenu}') !== false) {
                     $list = '';
                     foreach ($mycourses as $mycourse) {
-                        $list .= '-' . $mycourse->fullname . '|' .
+                        $list .= '-' . format_string($mycourse->fullname) . '|' .
                             (new \moodle_url('/course/view.php', ['id' => $mycourse->id]))->out() . PHP_EOL;
                     }
                     $replace['/\{mycoursesmenu\}/i'] = '-' . (empty($list) ? $emptylist : $list);
@@ -3496,7 +3501,7 @@ class text_filter extends \filtercodes_base_text_filter {
             if (stripos($text, '{categoryname}') !== false) {
                 if (!empty($catid)) {
                     // If category is not 0, get category name.
-                    $replace['/\{categoryname\}/i'] = $category->name;
+                    $replace['/\{categoryname\}/i'] = format_string($category->name);
                 } else {
                     // Otherwise, category has no name.
                     $replace['/\{categoryname\}/i'] = '';
@@ -3606,7 +3611,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     $list .= '<li' . $dimmed . '><a href="' . (new \moodle_url(
                         '/course/index.php',
                         ['categoryid' => $category->id]))->out()
-                        . '">' . $category->name . '</a></li>' . PHP_EOL;
+                        . '">' . format_string($category->name) . '</a></li>' . PHP_EOL;
                 }
                 $list = !empty($list) ? '<ul>' . $list . '</ul>' : '';
                 $categories->close();
@@ -3635,7 +3640,7 @@ class text_filter extends \filtercodes_base_text_filter {
                         // Skip if the category is not visible to the user.
                         continue;
                     }
-                    $list .= '-' . $category->name . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                    $list .= '-' . format_string($category->name) . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
                 }
                 $categories->close();
                 $replace['/\{categories0menu\}/i'] = $list;
@@ -3654,7 +3659,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
                 foreach ($categories as $category) {
                     $list .= '<li><a href="' . (new \moodle_url('/course/index.php', ['categoryid' => $category->id]))->out() . '">'
-                            . $category->name . '</a></li>' . PHP_EOL;
+                            . format_string($category->name) . '</a></li>' . PHP_EOL;
                 }
                 $list = !empty($list) ? '<ul>' . $list . '</ul>' : '';
                 $categories->close();
@@ -3673,7 +3678,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 $list = '';
                 $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
                 foreach ($categories as $category) {
-                    $list .= '-' . $category->name . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                    $list .= '-' . format_string($category->name) . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
                 }
                 $categories->close();
                 $replace['/\{categoriesxmenu\}/i'] = $list;
