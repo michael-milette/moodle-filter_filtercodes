@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - New {lastnamephonetic} tag.
 - New {middlename} tag.
 ### Updated
+- Fix-318: Language tags now work inside {global_...} tags.
 - Performance optimization: Now caches login state.
 - Issue #329: Increase maximum globaltagcount to 100.
 - Issue #335: Refactor text_filter to construct archetypes only once.

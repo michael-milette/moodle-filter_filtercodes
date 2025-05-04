@@ -1299,6 +1299,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 if (!empty($tag) && stripos($text, '{global_' . $tag . '}') !== false) {
                     // Replace the tag with new content.
                     $content = get_config('filter_filtercodes', 'globalcontent' . $i);
+                    $content = format_text($content, FORMAT_HTML, ['noclean' => true, 'para' => false, 'newlines' => false]);
                     $replace['/\{global_' . $tag . '\}/i'] = $content;
                 }
             }
