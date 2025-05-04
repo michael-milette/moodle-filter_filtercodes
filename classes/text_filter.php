@@ -818,6 +818,13 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * Escape text for use in custom menu.
+     */
+    private function format_custommenuitem($text): string {
+        return str_replace('|', '&#124;', format_string($text));
+    }
+
+    /**
      * Generator Tags
      *
      * This function processes tags that generate content that could potentially include additional tags.
@@ -1103,7 +1110,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     if (count($availablelanguages) > 1) {
                         foreach ($availablelanguages as $langcode => $langname) {
                             // Create a link for each language.
-                            $menu .= '-' . $langname . '|' . $url . 'lang=' . $langcode . PHP_EOL;
+                            $menu .= '-' . $this->format_custommenuitem($langname) . '|' . $url . 'lang=' . $langcode . PHP_EOL;
                         }
                         if (!empty($menu)) {
                             $menu = get_string('language') . '||' . get_string('languageselector') . PHP_EOL . $menu;
@@ -1138,7 +1145,7 @@ class text_filter extends \filtercodes_base_text_filter {
                         $course = $DB->get_record('course', ['id' => $courseid]);
                         if ($course) {
                             $courseurl = (new \moodle_url('/course/view.php', ['id' => $course->id]))->out();
-                            $menu .= '-' . format_string($course->fullname) . '|' . $courseurl . "\n";
+                            $menu .= '-' . $this->format_custommenuitem($course->fullname) . '|' . $courseurl . "\n";
                         }
                     }
                     if (!empty($menu)) {
@@ -1759,10 +1766,9 @@ class text_filter extends \filtercodes_base_text_filter {
             if (stripos($text, '{courseshortname}') !== false) {
                 $course = $PAGE->course;
                 if ($course->id == $SITE->id) { // Front page - use site name.
-                    $replace['/\{courseshortname\}/i'] = format_string($SITE->shortname);
+                    $replace['/\{courseshortname\}/i'] = $SITE->shortname;
                 } else { // In a course - use course full name.
-                    $coursecontext = \context_course::instance($course->id);
-                    $replace['/\{courseshortname\}/i'] = format_string($course->shortname, true, ['context' => $coursecontext]);
+                    $replace['/\{courseshortname\}/i'] = $course->shortname;
                 }
             }
         }
@@ -2572,7 +2578,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {sitename}.
             // Description: The full name of the site name.
             // Parameters: None.
-            if (stripos($text, '{sitename') !== false) {
+            if (stripos($text, '{sitename}') !== false) {
                 $sitecontext = \context_system::instance();
                 $replace['/\{sitename\}/i'] = format_string($SITE->fullname, true, ['context' => $sitecontext]);
             }
@@ -3381,7 +3387,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 if (stripos($text, '{mycoursesmenu}') !== false) {
                     $list = '';
                     foreach ($mycourses as $mycourse) {
-                        $list .= '-' . format_string($mycourse->fullname) . '|' .
+                        $list .= '-' . $this->format_custommenuitem($mycourse->fullname) . '|' .
                             (new \moodle_url('/course/view.php', ['id' => $mycourse->id]))->out() . PHP_EOL;
                     }
                     $replace['/\{mycoursesmenu\}/i'] = '-' . (empty($list) ? $emptylist : $list);
@@ -3579,7 +3585,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
                 $list = '';
                 foreach ($categories as $id => $name) {
-                    $list .= '-' . $name . '|/course/index.php?categoryid=' . $id . PHP_EOL;
+                    $list .= '-' . $this->format_custommenuitem($name) . '|/course/index.php?categoryid=' . $id . PHP_EOL;
                 }
                 $replace['/\{categoriesmenu\}/i'] = $list;
                 unset($tag);
@@ -3640,7 +3646,7 @@ class text_filter extends \filtercodes_base_text_filter {
                         // Skip if the category is not visible to the user.
                         continue;
                     }
-                    $list .= '-' . format_string($category->name) . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                    $list .= '-' . $this->format_custommenuitem($category->name) . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
                 }
                 $categories->close();
                 $replace['/\{categories0menu\}/i'] = $list;
@@ -3678,7 +3684,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 $list = '';
                 $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
                 foreach ($categories as $category) {
-                    $list .= '-' . format_string($category->name) . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                    $list .= '-' . $this->format_custommenuitem($category->name) . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
                 }
                 $categories->close();
                 $replace['/\{categoriesxmenu\}/i'] = $list;
@@ -4842,7 +4848,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
             }
 
-            // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
+            // Tag: {ifnotingrouping id|idnumber}...{/ifnotingrouping}.
             // Description: Display content if the user is NOT a member of the specified grouping.
             // Required Parameters: group id or idnumber.
             // Requires content between tags.
