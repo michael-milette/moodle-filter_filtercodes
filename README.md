@@ -1551,6 +1551,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* lucaboesch (Luca Bösch): Moodle 4.5 Plugin CI runs (2025).
 * andrewrowatt-masseyuni (Andrew Rowatt): Issue #329: Increase maximum globaltagcount to 100 (2025).
 * jaypha (Jason den Dulk): Issue #335: Refactor text_filter to construct archetypes only once (2025).
 * eimearcorrigansl: Made settings path more specific (2025).
