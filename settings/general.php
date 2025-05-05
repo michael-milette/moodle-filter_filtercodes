@@ -91,7 +91,7 @@ $setting = new admin_setting_configcheckbox($name, $title, $description, $defaul
 $settings->add($setting);
 
 // Option to enable sesskey tag globally.
-$default = 0; // Default is disabled.
+$default = 1; // Default is enabled.
 $name = 'filter_filtercodes/enable_sesskey';
 $title = get_string('enable_sesskey', 'filter_filtercodes');
 $description = get_string('enable_sesskey_description', 'filter_filtercodes');
