@@ -1553,6 +1553,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* FMCorz (Frédéric Massart): Fix-323: Escape arguments used to construct link from button code (2025).
 * erucjcomp (Erick de Azevedo Lima): Fix-211: {if*rolename*} tags now work correctly (2025).
 * lucaboesch (Luca Bösch): Moodle 4.5 Plugin CI runs (2025).
 * andrewrowatt-masseyuni (Andrew Rowatt): Issue #329: Increase maximum globaltagcount to 100 (2025).
