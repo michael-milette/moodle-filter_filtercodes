@@ -1,13 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.6.4] 2025-05-04 (dev)
+## [2.7.0] 2025-05-05
 ### Added
 - New {ifnotingroup} tag (without parameters).
 - Primary/Custom menu text, such as course or category names, can now contain a pipe (|) character.
 - New {firstnamephonetic} tag.
 - New {lastnamephonetic} tag.
 - New {middlename} tag.
+- New Add New User and Upload Users to {menuadmin} tag.
 ### Updated
 - Fix-323: Escape arguments used to construct link from button code.
 - Fix-210: {if*rolename*} tags now work correctly.

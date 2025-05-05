@@ -835,8 +835,16 @@ class text_filter extends \filtercodes_base_text_filter {
         return $progresspercent;
     }
 
+
     /**
-     * Escape text for use in custom menu.
+     * Format a custom menu item text
+     *
+     * This function ensures that text used in custom menu items is properly formatted,
+     * specifically by replacing pipe characters (|) with HTML entity representation
+     * to prevent them from being interpreted as menu separators.
+     *
+     * @param string $text The menu item text to be formatted
+     * @return string The formatted menu item text with pipes replaced with HTML entities
      */
     private function format_custommenuitem($text): string {
         return str_replace('|', '&#124;', format_string($text));
@@ -874,8 +882,10 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
                 if ($this->hasminarchetype('manager')) { // If a manager or above.
                     $menu .= '-{getstring}user{/getstring}: {getstring:admin}usermanagement{/getstring}|/admin/user.php' . PHP_EOL;
-                    $menu .= '-{getstring}user{/getstring}: {getstring}addnewuser{/getstring}|/user/editadvanced.php?id=-1' . PHP_EOL;
-                    $menu .= '-{getstring}user{/getstring}: {getstring:tool_uploaduser}uploadusers{/getstring}|/admin/tool/uploaduser/index.php' . PHP_EOL;
+                    $menu .= '-{getstring}user{/getstring}: {getstring}addnewuser{/getstring}'
+                        . '|/user/editadvanced.php?id=-1' . PHP_EOL;
+                    $menu .= '-{getstring}user{/getstring}: {getstring:tool_uploaduser}uploadusers{/getstring}'
+                        . '|/admin/tool/uploaduser/index.php' . PHP_EOL;
                     if (is_siteadmin() && !is_role_switched($PAGE->course->id)) {
                         $menu .= '-{getstring}user{/getstring}: {getstring:mnet}profilefields{/getstring}|/user/profile/index.php' .
                             PHP_EOL;
@@ -3642,10 +3652,9 @@ class text_filter extends \filtercodes_base_text_filter {
                         continue;
                     }
                     $dimmed = $category->visible ? '' : ' class="dimmed"';
-                    $list .= '<li' . $dimmed . '><a href="' . (new \moodle_url(
-                        '/course/index.php',
-                        ['categoryid' => $category->id]))->out()
-                        . '">' . format_string($category->name) . '</a></li>' . PHP_EOL;
+                    $link = new \moodle_url('/course/index.php', ['categoryid' => $category->id]);
+                    $link = $link->out();
+                    $list .= '<li' . $dimmed . '><a href="' . $link . '">' . format_string($category->name) . '</a></li>' . PHP_EOL;
                 }
                 $list = !empty($list) ? '<ul>' . $list . '</ul>' : '';
                 $categories->close();
@@ -3674,7 +3683,8 @@ class text_filter extends \filtercodes_base_text_filter {
                         // Skip if the category is not visible to the user.
                         continue;
                     }
-                    $list .= '-' . $this->format_custommenuitem($category->name) . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                    $list .= '-' . $this->format_custommenuitem($category->name)
+                         . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
                 }
                 $categories->close();
                 $replace['/\{categories0menu\}/i'] = $list;
@@ -3712,7 +3722,8 @@ class text_filter extends \filtercodes_base_text_filter {
                 $list = '';
                 $categories = $DB->get_recordset_sql($sql, ['contextcoursecat' => CONTEXT_COURSECAT]);
                 foreach ($categories as $category) {
-                    $list .= '-' . $this->format_custommenuitem($category->name) . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
+                    $list .= '-' . $this->format_custommenuitem($category->name)
+                        . '|/course/index.php?categoryid=' . $category->id . PHP_EOL;
                 }
                 $categories->close();
                 $replace['/\{categoriesxmenu\}/i'] = $list;
@@ -4601,7 +4612,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     $replace['/\{ifminstudent\}/i'] = '';
                     $replace['/\{\/ifminstudent\}/i'] = '';
                 } else {
-                    // Remove the ifassistant strings.
+                    // Remove the ifminstudent strings.
                     $replace['/\{ifminstudent\}(.*)\{\/ifminstudent\}/isuU'] = '';
                 }
             }
@@ -4818,7 +4829,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
             }
 
-            // Tag: {ifnotingroup...}...{/ifnotingroup}.
+            // Tag: {ifnotingroup...}...{/ifnotingroup} with and without parameters.
             if (stripos($text, '{ifnotingroup') !== false) {
                 // Tag: {ifnotingroup}...{/ifnotingroup}.
                 // Description: Display content if the user is NOT a member of any group.
