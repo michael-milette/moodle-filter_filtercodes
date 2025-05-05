@@ -4818,30 +4818,51 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
             }
 
-            // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
-            // Description: Display content if the user is NOT a member of the specified group.
-            // Required Parameters: group id or idnumber.
-            // Requires content between tags.
+            // Tag: {ifnotingroup...}...{/ifnotingroup}.
             if (stripos($text, '{ifnotingroup') !== false) {
-                if (!isset($mygroupslist)) { // Fetch my groups.
-                    $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
+                // Tag: {ifnotingroup}...{/ifnotingroup}.
+                // Description: Display content if the user is NOT a member of any group.
+                // Required Parameters: None.
+                // Requires content between tags.
+                if (stripos($text, '{ifnotingroup}') !== false) {
+                    if (!isset($mygroupslist)) { // Fetch my groups.
+                        $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
+                    }
+                    if (empty($mygroupslist)) {
+                        // User is not in any group, just remove the tags.
+                        $replace['/\{ifnotingroup\}/i'] = '';
+                        $replace['/\{\/ifnotingroup\}/i'] = '';
+                    } else {
+                        // User is in at least one group, remove tags and content.
+                        $replace['/\{ifnotingroup\}(.*)\{\/ifnotingroup\}/isuU'] = '';
+                    }
                 }
-                $re = '/{ifnotingroup\s+(.*)\}(.*)\{\/ifnotingroup\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $groupid) {
-                        $key = '/{ifnotingroup\s+' . $groupid . '\}(.*)\{\/ifnotingroup\}/isuU';
-                        $ismember = false;
-                        foreach ($mygroupslist as $group) {
-                            if ($groupid == $group->id || $groupid == $group->idnumber) {
-                                $ismember = true;
-                                break;
+
+                // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
+                // Description: Display content if the user is NOT a member of the specified group.
+                // Required Parameters: group id or idnumber.
+                // Requires content between tags.
+                if (stripos($text, '{ifnotingroup') !== false) {
+                    if (!isset($mygroupslist)) { // Fetch my groups.
+                        $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
+                    }
+                    $re = '/{ifnotingroup\s+(.*)\}(.*)\{\/ifnotingroup\}/isuU';
+                    $found = preg_match_all($re, $text, $matches);
+                    if ($found > 0) {
+                        foreach ($matches[1] as $groupid) {
+                            $key = '/{ifnotingroup\s+' . $groupid . '\}(.*)\{\/ifnotingroup\}/isuU';
+                            $ismember = false;
+                            foreach ($mygroupslist as $group) {
+                                if ($groupid == $group->id || $groupid == $group->idnumber) {
+                                    $ismember = true;
+                                    break;
+                                }
                             }
-                        }
-                        if ($ismember) { // Remove the ifnotingroup tags and content.
-                            $replace[$key] = '';
-                        } else { // Just remove the tags and keep the content.
-                            $replace[$key] = '$1';
+                            if ($ismember) { // Remove the ifnotingroup tags and content.
+                                $replace[$key] = '';
+                            } else { // Just remove the tags and keep the content.
+                                $replace[$key] = '$1';
+                            }
                         }
                     }
                 }
