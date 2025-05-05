@@ -372,6 +372,7 @@ Note: {if*rolename*} and {ifmin*rolename*} type tags are based on role archetype
 * {ifnotinsection}{/ifnotinsection} : Will only display the enclosed content if the user is not in a section of a course.
 * {ifingroup id|idnumber}{/ifingroup} : Will only display the content if the user is part of the specified course group ID or group ID number.
 * {ifnotingroup id|idnumber}{/ifnotingroup} : Will only display the content if the user is NOT part of the specified course group ID or group ID number.
+* {ifnotingroup}{/ifnotingroup} : Will only display the content if the user does not belong to any group at all in the course.
 * {ifingrouping id|idnumber}{/ifingrouping} : Will only display the content if the user is part of the specified course grouping ID or grouping ID number.
 * {ifnotingrouping id|idnumber}{/ifnotingrouping} : Will only display the content if the user is NOT part of the specified course grouping ID or grouping ID number.
 * {ifvisible}{/ifvisible} : Will only display the content if the course visibility is set to Show.
@@ -1371,6 +1372,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Is this Moodle Workplace? [{ifworkplace}]Yes[{/ifworkplace}]: {ifworkplace}Yes{/ifworkplace}
 * This is FilterCodes version [{filtercodes}]: {filtercodes} (It be blank if you do not have the Moodle capability to edit this tag.)
 * Are you a member of the ATEAM group [{ifingroup ATEAM}]Yes[{/ifingroup}][{ifnotingroup ATEAM}]No[{/ifnotingroup}] ? : {ifingroup ATEAM}Yes{/ifingroup}{ifnotingroup ATEAM}No{/ifnotingroup} Note: Only works in courses.
+* [{ifnotingroup}]You need to choose a group first.[{/ifnotingroup}] ? {ifnotingroup}You need to choose a group first.{/ifnotingroup}
 * Are you a member of the MCU grouping [{ifingrouping MCU}]Yes[{/ifingrouping}][{ifnotingrouping MCU}]No[{/ifnotingrouping}] ? : {ifingrouping MCU}Yes{/ifingrouping}{ifnotingrouping MCU}No{/ifnotingrouping} Note: Only works in courses.
 * [{ifvisible}]Notice: Course visibility is set to Show.[{/ifvisible}]: {ifvisible}Notice: Course visibility is set to Show.{/ifvisible}
 * [{ifnotvisible}]Warning: Course visibility is set to Hide.[{/ifnotvisible}]: {ifnotvisible}Warning: Course visibility is set to Hide.{/ifnotvisible}

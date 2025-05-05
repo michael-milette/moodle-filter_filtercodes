@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.6.4] 2025-05-04 (dev)
 ### Added
+- New {ifnotingroup} tag (without parameters).
 - Primary/Custom menu text, such as course or category names, can now contain a pipe (|) character.
 - New {firstnamephonetic} tag.
 - New {lastnamephonetic} tag.
