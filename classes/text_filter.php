@@ -1610,6 +1610,94 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * @param string $text
+     * @param array $replace
+     * @param string $tagname
+     * @param callable(string): bool $callableistrue
+     * @return void
+     */
+    private function if_tag(
+        string   $text,
+        array    &$replace,
+        string   $tagname,
+        callable $callableistrue,
+    ) {
+        $emit = function (array $stack) use (&$replace, $tagname) {
+            $key = '';
+            $value = '';
+            for($i = 0; $i < count($stack); $i++) {
+                [$isopening, $args, $istrue] = $stack[$i];
+                if ($isopening) {
+                    $key .= '{' . $tagname . '\s+' . $args . '}(.*)';
+                    if ($istrue) {
+                        $value .= '$' . ($i + 1);
+                    }
+                } else {
+                    $key .= '(.*){\/' . $tagname . '}';
+                    if ($istrue) {
+                        $value .= '$' . ($i + 1);
+                    }
+                }
+            }
+            $replace['/' . $key . '/isuU'] = $value;
+        };
+
+        if (stripos($text, '{' . $tagname) !== false) {
+            // Find opening and closing tags.
+            $re = '/{' . $tagname . '\s+(.*)}|{(\/)' . $tagname . '}/isuU';
+            $found = preg_match_all($re, $text, $matches, PREG_SET_ORDER);
+            if ($found > 0) {
+                $balance = 0;
+                $stack = [];
+                $istrue = [];
+                foreach ($matches as $match) {
+                    $isopening = (!isset($match[2]));
+                    if (empty($stack) && !$isopening) {
+                        continue; // No opening tag found.
+                    }
+                    $balance += $isopening ? 1 : -1;
+                    if ($isopening) {
+                        $lastistrue = empty($istrue) ? true : end($istrue);
+                        $istrue[] = $lastistrue && $callableistrue($match[1]);
+                    }
+
+                    $stack[] = [
+                        $isopening,
+                        $match[1], // args
+                        end($istrue),
+                    ];
+
+                    if (!$isopening) {
+                        // Pop the last element
+                        array_pop($istrue);
+                    }
+
+                    if ($balance == 0) {
+                        // We are balanced, generate replacement.
+                        $emit($stack);
+                        $stack = [];
+                    }
+                }
+                if (!empty($stack)) {
+                    // Drop opening tags till we are balanced.
+                    $newstack = [];
+                    foreach (array_reverse($stack) as $item) {
+                        if ($item[0] && $balance > 0) {
+                            // Need to remove opening tag.
+                            $balance--;
+                            continue;
+                        }
+                        $newstack[] = $item;
+                    }
+                    if (!empty($newstack)) {
+                        $emit(array_reverse($newstack));
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Main filter function called by Moodle.
      *
      * @param string $text   Content to be filtered.
@@ -4804,138 +4892,114 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Display content if the user is a member of the specified group.
             // Required Parameters: group id or idnumber.
             // Requires content between tags.
-            if (stripos($text, '{ifingroup') !== false) {
-                if (!isset($mygroupslist)) { // Fetch my groups.
-                    $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
-                }
-                $re = '/{ifingroup\s+(.*)\}(.*)\{\/ifingroup\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $groupid) {
-                        $key = '/{ifingroup\s+' . $groupid . '\}(.*)\{\/ifingroup\}/isuU';
-                        $ismember = false;
-                        foreach ($mygroupslist as $group) {
-                            if ($groupid == $group->id || $groupid == $group->idnumber) {
-                                $ismember = true;
-                                break;
-                            }
-                        }
-                        if ($ismember) { // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else { // Remove the ifingroup tags and content.
-                            $replace[$key] = '';
+            $this->if_tag(
+                $text,
+                $replace,
+                'ifingroup',
+                function ($groupid) use (&$mygroupslist, $PAGE, $USER) {
+                    if (!isset($mygroupslist)) { // Fetch my groups.
+                        $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
+                    }
+
+                    $ismember = false;
+                    foreach ($mygroupslist as $group) {
+                        if ($groupid == $group->id || $groupid == $group->idnumber) {
+                            $ismember = true;
+                            break;
                         }
                     }
-                }
-            }
+
+                    return $ismember;
+                },
+            );
 
             // Tag: {ifnotingroup...}...{/ifnotingroup} with and without parameters.
-            if (stripos($text, '{ifnotingroup') !== false) {
-                // Tag: {ifnotingroup}...{/ifnotingroup}.
-                // Description: Display content if the user is NOT a member of any group.
-                // Required Parameters: None.
-                // Requires content between tags.
-                if (stripos($text, '{ifnotingroup}') !== false) {
+            // Tag: {ifnotingroup}...{/ifnotingroup}.
+            // Description: Display content if the user is NOT a member of any group.
+            // Required Parameters: None.
+            // Requires content between tags.
+            // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
+            // Description: Display content if the user is NOT a member of the specified group.
+            // Required Parameters: group id or idnumber.
+            // Requires content between tags.
+            $this->if_tag(
+                $text,
+                $replace,
+                'ifnotingroup',
+                function ($groupid) use (&$mygroupslist, $PAGE, $USER) {
                     if (!isset($mygroupslist)) { // Fetch my groups.
                         $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
                     }
-                    if (empty($mygroupslist)) {
-                        // User is not in any group, just remove the tags.
-                        $replace['/\{ifnotingroup\}/i'] = '';
-                        $replace['/\{\/ifnotingroup\}/i'] = '';
-                    } else {
-                        // User is in at least one group, remove tags and content.
-                        $replace['/\{ifnotingroup\}(.*)\{\/ifnotingroup\}/isuU'] = '';
-                    }
-                }
 
-                // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
-                // Description: Display content if the user is NOT a member of the specified group.
-                // Required Parameters: group id or idnumber.
-                // Requires content between tags.
-                if (stripos($text, '{ifnotingroup') !== false) {
-                    if (!isset($mygroupslist)) { // Fetch my groups.
-                        $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
+                    if (empty($mygroupslist)) {
+                        return true;
                     }
-                    $re = '/{ifnotingroup\s+(.*)\}(.*)\{\/ifnotingroup\}/isuU';
-                    $found = preg_match_all($re, $text, $matches);
-                    if ($found > 0) {
-                        foreach ($matches[1] as $groupid) {
-                            $key = '/{ifnotingroup\s+' . $groupid . '\}(.*)\{\/ifnotingroup\}/isuU';
-                            $ismember = false;
-                            foreach ($mygroupslist as $group) {
-                                if ($groupid == $group->id || $groupid == $group->idnumber) {
-                                    $ismember = true;
-                                    break;
-                                }
-                            }
-                            if ($ismember) { // Remove the ifnotingroup tags and content.
-                                $replace[$key] = '';
-                            } else { // Just remove the tags and keep the content.
-                                $replace[$key] = '$1';
-                            }
+
+                    $ismember = false;
+                    foreach ($mygroupslist as $group) {
+                        if ($groupid == $group->id || $groupid == $group->idnumber) {
+                            $ismember = true;
+                            break;
                         }
                     }
-                }
-            }
+
+                    return !$ismember;
+                },
+            );
 
             // Tag: {ifingrouping id|idnumber}...{/ifingrouping}.
             // Description: Display content if the user is a member of the specified grouping.
             // Required Parameters: group id or idnumber.
             // Requires content between tags.
-            if (stripos($text, '{ifingrouping') !== false) {
-                if (!isset($mygroupingslist)) {
-                    $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
-                }
-                $re = '/{ifingrouping\s+(.*)\}(.*)\{\/ifingrouping\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $groupingid) {
-                        $key = '/{ifingrouping\s+' . $groupingid . '\}(.*)\{\/ifingrouping\}/isuU';
-                        $ismember = false;
-                        foreach ($mygroupingslist as $grouping) {
-                            if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
-                                $ismember = true;
-                                break;
-                            }
-                        }
-                        if ($ismember) { // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else { // Remove the ifingroup tags and content.
-                            $replace[$key] = '';
+            $this->if_tag(
+                $text,
+                $replace,
+                'ifingrouping',
+                function ($groupingid) use (&$mygroupingslist, $PAGE, $USER) {
+                    if (!isset($mygroupingslist)) {
+                        $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
+                    }
+
+                    $ismember = false;
+                    foreach ($mygroupingslist as $grouping) {
+                        if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
+                            $ismember = true;
+                            break;
                         }
                     }
-                }
-            }
+
+                    return $ismember;
+                },
+            );
 
             // Tag: {ifnotingrouping id|idnumber}...{/ifnotingrouping}.
             // Description: Display content if the user is NOT a member of the specified grouping.
             // Required Parameters: group id or idnumber.
             // Requires content between tags.
-            if (stripos($text, '{ifnotingrouping') !== false) {
-                if (!isset($mygroupingslist)) {
-                    $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
-                }
-                $re = '/{ifnotingrouping\s+(.*)\}(.*)\{\/ifnotingrouping\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $groupingid) {
-                        $key = '/{ifnotingrouping\s+' . $groupingid . '\}(.*)\{\/ifnotingrouping\}/isuU';
-                        $ismember = false;
-                        foreach ($mygroupingslist as $grouping) {
-                            if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
-                                $ismember = true;
-                                break;
-                            }
-                        }
-                        if ($ismember) { // Remove the ifnotingroup tags and content.
-                            $replace[$key] = '';
-                        } else { // Just remove the tags and keep the content.
-                            $replace[$key] = '$1';
+            $this->if_tag(
+                $text,
+                $replace,
+                'ifnotingrouping',
+                function ($groupingid) use (&$mygroupingslist, $PAGE, $USER) {
+                    if (!isset($mygroupingslist)) { // Fetch my groups.
+                        $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
+                    }
+
+                    if (empty($mygroupingslist)) {
+                        return true;
+                    }
+
+                    $ismember = false;
+                    foreach ($mygroupingslist as $grouping) {
+                        if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
+                            $ismember = true;
+                            break;
                         }
                     }
-                }
-            }
+
+                    return !$ismember;
+                },
+            );
 
             // Tag: {iftenant idnumber|tenantid}...{/iftenant}.
             // Description: Display content only if the user is part of the specified tenant on Moodle Workplace.
