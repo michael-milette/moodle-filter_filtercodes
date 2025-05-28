@@ -292,6 +292,22 @@ final class filter_test extends \advanced_testcase {
                 'before' => '{glyphicon glyphicon-name}',
                 'after'  => '<span class="glyphicon glyphicon-name" aria-hidden="true"></span>',
             ],
+            [
+                'before' => '{ifingrouping a}{ifingroup b}Hello World{/ifingroup}{/ifingrouping}',
+                'after'  => '',
+            ],
+            [
+                'before' => '{ifingroup b}{ifingrouping a}{ifingroup b}Hello World{/ifingroup}{/ifingrouping}{/ifingroup}',
+                'after'  => '',
+            ],
+            [
+                'before' => '{ifingroup a}{ifingroup b}Hello World{/ifingroup}{/ifingroup}',
+                'after'  => '',
+            ],
+            [
+                'before' => '{ifingrouping a}{ifingrouping b}Hello World{/ifingrouping}{/ifingrouping}',
+                'after'  => '',
+            ],
         ];
 
         foreach ($tests as $test) {
