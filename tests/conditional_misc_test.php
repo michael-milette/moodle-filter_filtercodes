@@ -299,6 +299,33 @@ final class conditional_misc_test extends \advanced_testcase {
     }
 
     /**
+     * Test nested ifprofile tags.
+     */
+    public function test_ifprofile_nested() {
+        global $USER;
+
+        // Set up user with specific profile fields for testing.
+        $USER->city = 'New York';
+        $USER->country = 'US';
+        $USER->email = 'testuser@example.com';
+
+        // Test nested conditions - both true.
+        $text = '{ifprofile city is "New York"}{ifprofile country is "US"}Welcome to NYC, USA{/ifprofile}{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('Welcome to NYC, USA', $result);
+
+        // Test nested conditions - outer true, inner false.
+        $text = '{ifprofile city is "New York"}{ifprofile country is "CA"}Welcome to NYC, Canada{/ifprofile}{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString('Welcome to NYC, Canada', $result);
+
+        // Test nested conditions - outer false, inner true (inner should not be evaluated).
+        $text = '{ifprofile city is "Los Angeles"}{ifprofile country is "US"}Welcome to LA, USA{/ifprofile}{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString('Welcome to LA, USA', $result);
+    }
+
+    /**
      * Test ifmobile conditional (mobile device detected).
      */
     public function test_ifmobile() {

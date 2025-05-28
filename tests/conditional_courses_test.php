@@ -215,6 +215,106 @@ final class conditional_courses_test extends \advanced_testcase {
     }
 
     /**
+     * Test nested ifingroup tags.
+     */
+    public function test_ifingroup_nested() {
+        global $USER;
+
+        $course = $this->getDataGenerator()->create_course();
+        $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
+        $context = \context_course::instance($course->id);
+
+        $group = $this->getDataGenerator()->create_group(['courseid' => $course->id, 'idnumber' => 'testgroup']);
+        $this->getDataGenerator()->create_group_member(['groupid' => $group->id, 'userid' => $USER->id]);
+
+        // True in true - nested tags both evaluating to true.
+        $text = '{ifingroup ' . $group->id . '}Hello {ifingroup ' . $group->id . '}World{/ifingroup}.{/ifingroup}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello World.', $result);
+
+        // False in true - outer true, inner false.
+        $text = '{ifingroup ' . $group->id . '}Hello {ifingroup none}World{/ifingroup}.{/ifingroup}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello .', $result);
+        $this->assertStringNotContainsString('World', $result);
+
+        // True in false - outer false, inner true (inner should not be evaluated).
+        $text = '{ifingroup none}Hello {ifingroup ' . $group->id . '}World{/ifingroup}.{/ifingroup}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringNotContainsString('Hello', $result);
+        $this->assertStringNotContainsString('World', $result);
+
+        // False in false - both evaluate to false.
+        $text = '{ifingroup none}Hello {ifingroup none}World{/ifingroup}.{/ifingroup}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringNotContainsString('Hello', $result);
+        $this->assertStringNotContainsString('World', $result);
+
+        // Side by side tags (not nested).
+        $text = '{ifingroup ' . $group->id . '}Hello{/ifingroup} {ifingroup none}World{/ifingroup}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello', $result);
+        $this->assertStringNotContainsString('World', $result);
+    }
+
+    /**
+     * Test partial/unbalanced ifingroup tags.
+     */
+    public function test_ifingroup_partial_tags() {
+        global $USER;
+
+        $course = $this->getDataGenerator()->create_course();
+        $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
+        $context = \context_course::instance($course->id);
+
+        $group = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
+        $this->getDataGenerator()->create_group_member(['groupid' => $group->id, 'userid' => $USER->id]);
+
+        // Scenario 1: Missing closing tag for outer (true condition).
+        $text = '{ifingroup ' . $group->id . '}Hello {ifingroup none}World{/ifingroup}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello {ifingroup none}World.', $result);
+
+        // Scenario 2: Extra closing tag with no opening.
+        $text = '{ifingroup none}Hello World{/ifingroup}{/ifingroup}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('{/ifingroup}.', $result);
+
+        // Scenario 3: Missing closing for outer (false condition).
+        $text = '{ifingroup none}Hello {ifingroup ' . $group->id . '}World{/ifingroup}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('.', $result);
+        $this->assertStringNotContainsString('Hello', $result);
+
+        // Scenario 4: Multiple unbalanced openings (2 opens, 1 close).
+        $text = '{ifingroup ' . $group->id . '}Hello {ifingroup none}{ifingroup none}World{/ifingroup}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello {ifingroup none}{ifingroup none}World.', $result);
+
+        // Scenario 5: Only opening tag, no closing.
+        $text = '{ifingroup ' . $group->id . '}Hello World';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello World', $result);
+
+        // Scenario 6: Only closing tag, no opening.
+        $text = 'Hello World{/ifingroup}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello World{/ifingroup}', $result);
+
+        // Scenario 7: Three levels deep, missing middle closing.
+        $text = '{ifingroup ' . $group->id . '}A{ifingroup ' . $group->id . '}B{ifingroup ' . $group->id . '}C{/ifingroup}{/ifingroup}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        // Should handle gracefully - expect partial processing.
+        $this->assertNotNull($result);
+
+        // Scenario 8: Interleaved different tags (mixing with other content).
+        $text = '{ifingroup ' . $group->id . '}Start {firstname} {ifingroup none}Middle{/ifingroup} End';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Start', $result);
+        $this->assertStringContainsString('End', $result);
+    }
+
+    /**
      * Test ifingrouping conditional.
      */
     public function test_ifingrouping() {
@@ -260,6 +360,88 @@ final class conditional_courses_test extends \advanced_testcase {
         // Should show content when user is NOT in the grouping.
         $this->assertStringContainsString('Not in the grouping', $result,
             sprintf("Should contain %s\nActual: '%s'", 'Not in the grouping', $result));
+    }
+
+    /**
+     * Test nested ifingrouping tags.
+     */
+    public function test_ifingrouping_nested() {
+        global $USER;
+
+        $course = $this->getDataGenerator()->create_course();
+        $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
+        $context = \context_course::instance($course->id);
+
+        $grouping = $this->getDataGenerator()->create_grouping(['courseid' => $course->id, 'idnumber' => 'testgrouping']);
+        $group = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
+        $this->getDataGenerator()->create_grouping_group(['groupingid' => $grouping->id, 'groupid' => $group->id]);
+        $this->getDataGenerator()->create_group_member(['groupid' => $group->id, 'userid' => $USER->id]);
+
+        // True in true - nested tags both evaluating to true.
+        $text = '{ifingrouping ' . $grouping->id . '}Hello {ifingrouping ' . $grouping->id . '}World{/ifingrouping}.{/ifingrouping}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello World.', $result);
+
+        // False in true - outer true, inner false.
+        $text = '{ifingrouping ' . $grouping->id . '}Hello {ifingrouping none}World{/ifingrouping}.{/ifingrouping}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello .', $result);
+        $this->assertStringNotContainsString('World', $result);
+
+        // True in false - outer false, inner true (inner should not be evaluated).
+        $text = '{ifingrouping none}Hello {ifingrouping ' . $grouping->id . '}World{/ifingrouping}.{/ifingrouping}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringNotContainsString('Hello', $result);
+        $this->assertStringNotContainsString('World', $result);
+
+        // False in false - both evaluate to false.
+        $text = '{ifingrouping none}Hello {ifingrouping none}World{/ifingrouping}.{/ifingrouping}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringNotContainsString('Hello', $result);
+        $this->assertStringNotContainsString('World', $result);
+
+        // Side by side tags (not nested).
+        $text = '{ifingrouping ' . $grouping->id . '}Hello{/ifingrouping} {ifingrouping none}World{/ifingrouping}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello', $result);
+        $this->assertStringNotContainsString('World', $result);
+    }
+
+    /**
+     * Test partial/unbalanced ifingrouping tags.
+     */
+    public function test_ifingrouping_partial_tags() {
+        global $USER;
+
+        $course = $this->getDataGenerator()->create_course();
+        $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
+        $context = \context_course::instance($course->id);
+
+        $grouping = $this->getDataGenerator()->create_grouping(['courseid' => $course->id]);
+        $group = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
+        $this->getDataGenerator()->create_grouping_group(['groupingid' => $grouping->id, 'groupid' => $group->id]);
+        $this->getDataGenerator()->create_group_member(['groupid' => $group->id, 'userid' => $USER->id]);
+
+        // Unbalanced - missing closing tag for inner.
+        $text = '{ifingrouping ' . $grouping->id . '}Hello {ifingrouping none}World{/ifingrouping}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello {ifingrouping none}World.', $result);
+
+        // Extra closing tag.
+        $text = '{ifingrouping none}Hello World{/ifingrouping}{/ifingrouping}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('{/ifingrouping}.', $result);
+
+        // Unbalanced - false outer with missing closing.
+        $text = '{ifingrouping none}Hello {ifingrouping ' . $grouping->id . '}World{/ifingrouping}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('.', $result);
+        $this->assertStringNotContainsString('Hello', $result);
+
+        // Multiple unbalanced openings.
+        $text = '{ifingrouping ' . $grouping->id . '}Hello {ifingrouping none}{ifingrouping none}World{/ifingrouping}.';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('Hello {ifingrouping none}{ifingrouping none}World.', $result);
     }
 
     /**
