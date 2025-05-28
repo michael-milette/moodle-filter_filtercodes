@@ -1614,14 +1614,14 @@ class text_filter extends \filtercodes_base_text_filter {
      * @param array $replace The array of replacement rules to add to
      * @param string $tagname The tagname to search for
      * @param callable(string): bool $callableistrue A callable that returns true if the content is to be shown
-     * @return void
+     * @return void Nothing
      */
     private function if_tag(
         string   $text,
         array    &$replace,
         string   $tagname,
         callable $callableistrue,
-    ) {
+    ): void {
         $emit = function (array $stack) use (&$replace, $tagname) {
             $key = '';
             $value = '';
