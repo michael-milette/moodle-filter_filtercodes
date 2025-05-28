@@ -1610,10 +1610,10 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
-     * @param string $text
-     * @param array $replace
-     * @param string $tagname
-     * @param callable(string): bool $callableistrue
+     * @param string $text The text to check fo tags in
+     * @param array $replace The array of replacement rules to add to
+     * @param string $tagname The tagname to search for
+     * @param callable(string): bool $callableistrue A callable that returns true if the content is to be shown
      * @return void
      */
     private function if_tag(
