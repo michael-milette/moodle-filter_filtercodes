@@ -244,59 +244,79 @@ final class conditional_misc_test extends \advanced_testcase {
     }
 
     /**
-     * Test ifprofile with "is:" operator.
+     * Test ifprofile with "is" operator.
      */
     public function test_ifprofile_is() {
         global $USER;
 
-        // Use a standard profile field.
-        $text = '{ifprofile is:' . $USER->firstname . '}Name matches{/ifprofile}';
-        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $USER->city = 'Toronto';
 
-        // Should show content when profile field equals value.
-        $this->assertStringContainsString('Name matches', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Name matches', $result));
+        // Field equals value: content shown.
+        $text = '{ifprofile city is "Toronto"}City match{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('City match', $result);
+
+        // Field does not equal value: content stripped.
+        $text = '{ifprofile city is "Paris"}City match{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString('City match', $result);
     }
 
     /**
-     * Test ifprofile with "not:" operator.
+     * Test ifprofile with "not" operator.
      */
     public function test_ifprofile_not() {
-        $text = '{ifprofile not:NonExistentValue99999}Does not match{/ifprofile}';
-        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        global $USER;
 
-        // Should show content when profile field does not equal value.
-        $this->assertStringContainsString('Does not match', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Does not match', $result));
+        $USER->city = 'Toronto';
+
+        // Field does not equal value: content shown.
+        $text = '{ifprofile city not "Paris"}Not Paris{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('Not Paris', $result);
+
+        // Field equals value: content stripped.
+        $text = '{ifprofile city not "Toronto"}Not Toronto{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString('Not Toronto', $result);
     }
 
     /**
-     * Test ifprofile with "contains:" operator.
+     * Test ifprofile with "contains" operator.
      */
     public function test_ifprofile_contains() {
         global $USER;
 
-        // Use a standard profile field (email typically contains @).
-        $text = '{ifprofile contains:@}Email contains @{/ifprofile}';
-        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $USER->email = 'user@example.com';
 
-        // Should show content when profile field contains substring.
-        $this->assertStringContainsString('Email contains @', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Email contains @', $result));
+        // Field contains value: content shown.
+        $text = '{ifprofile email contains "@example.com"}Has example domain{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('Has example domain', $result);
+
+        // Field does not contain value: content stripped.
+        $text = '{ifprofile email contains "@other.com"}Has other domain{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString('Has other domain', $result);
     }
 
     /**
-     * Test ifprofile with "in:" operator (comma-separated list).
+     * Test ifprofile with "in" operator (value contains field).
      */
     public function test_ifprofile_in() {
         global $USER;
 
-        $text = '{ifprofile in:' . $USER->firstname . ',OtherName,ThirdName}In the list{/ifprofile}';
-        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $USER->country = 'CA';
 
-        // Should show content when profile field is in the list.
-        $this->assertStringContainsString('In the list', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'In the list', $result));
+        // Field is in the value list: content shown.
+        $text = '{ifprofile country in "CA,US,UK"}North America or UK{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('North America or UK', $result);
+
+        // Field is not in the value list: content stripped.
+        $text = '{ifprofile country in "FR,DE,IT"}Europe{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString('Europe', $result);
     }
 
     /**
@@ -324,6 +344,51 @@ final class conditional_misc_test extends \advanced_testcase {
         $text = '{ifprofile city is "Los Angeles"}{ifprofile country is "US"}Welcome to LA, USA{/ifprofile}{/ifprofile}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
         $this->assertStringNotContainsString('Welcome to LA, USA', $result);
+
+        // Test nested conditions - both false.
+        $text = '{ifprofile city is "Paris"}{ifprofile country is "FR"}Bonjour Paris{/ifprofile}{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString('Bonjour Paris', $result);
+
+        // Side-by-side (not nested): one true, one false.
+        $text = '{ifprofile city is "New York"}Hello{/ifprofile} {ifprofile city is "Paris"}World{/ifprofile}.';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('Hello', $result);
+        $this->assertStringNotContainsString('World', $result);
+    }
+
+    /**
+     * Test partial/unbalanced ifprofile tags.
+     *
+     * Migration to the if_tag() helper unlocks graceful handling of incomplete
+     * tag pairs that the previous innermost-first regex approach did not handle.
+     */
+    public function test_ifprofile_partial_tags() {
+        global $USER;
+
+        $USER->city = 'New York';
+
+        // Scenario 1: Only opening tag, no closing. Should not strip surrounding content.
+        $text = '{ifprofile city is "New York"}Hello World';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('Hello World', $result);
+
+        // Scenario 2: Only closing tag, no opening. Helper should leave text alone.
+        $text = 'Hello World{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('Hello World', $result);
+
+        // Scenario 3: Extra closing tag (one open, two close). Excess closer remains.
+        $text = '{ifprofile city is "Paris"}Hello{/ifprofile}{/ifprofile}.';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString('Hello{/ifprofile}', $result);
+
+        // Scenario 4: Three levels deep, balanced — confirms helper handles arbitrary depth
+        // (the previous implementation capped iterations at 10).
+        $text = '{ifprofile city is "New York"}A{ifprofile city is "New York"}B'
+            . '{ifprofile city is "New York"}C{/ifprofile}{/ifprofile}{/ifprofile}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('ABC', $result);
     }
 
     /**

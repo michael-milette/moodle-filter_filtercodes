@@ -4336,73 +4336,49 @@ class text_filter extends \filtercodes_base_text_filter {
                     'department', 'city', 'country', 'timezone', 'lang'];
                 $profilefields = $this->getuserprofilefields($USER, $corefields);
 
-                // Process ifprofile tags recursively to handle nesting.
-                // Keep matching and replacing until no more tags are found.
-                $maxiterations = 10; // Prevent infinite loops.
-                $iteration = 0;
-                while (stripos($text, '{ifprofile') !== false && $iteration < $maxiterations) {
-                    // Find innermost (non-nested) ifprofile tags.
-                    // Use a regex that matches tags with content that doesn't contain other ifprofile tags.
-                    $re = '/{ifprofile\s+(\w+)\s+(is|not|contains|in)\s+"([^}]*)"}'
-                        . '((?:[^{]|{(?!(?:\/)?ifprofile))*?){\/ifprofile}/isuU';
-                    $found = preg_match_all($re, $text, $matches, PREG_SET_ORDER);
-                    if ($found === 0) {
-                        break;
-                    }
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    'ifprofile',
+                    function ($args) use ($profilefields) {
+                        $re = '/^(\w+)\s+(is|not|contains|in)\s+"(.*)"$/isuU';
+                        if (!preg_match($re, $args, $matches)) {
+                            return -1;
+                        }
+                        $fieldname = $matches[1];
+                        $operator = $matches[2];
+                        $value = $matches[3];
 
-                    foreach ($matches as $match) {
-                        $fieldname = $match[1];
-                        $operator = $match[2];
-                        $value = $match[3];
-                        $content = $match[4];
-                        $fullmatch = $match[0];
-
-                        $replacement = '';
-                        // Do not process tag if the specified profile field name does not exist or user is not logged in.
-                        if (array_key_exists($fieldname, $profilefields) && isloggedin() && !isguestuser()) {
-                            $fieldvalue = $profilefields[$fieldname]->value;
-                            if (!empty($value)) {
-                                $value = trim($value, '"'); // Trim quotation marks.
-                            }
-
-                            $matchescondition = false;
-                            switch ($operator) {
-                                case 'is':
-                                    // If the specified field is exactly the specified value.
-                                    // Example: {ifprofile country is "CA"}...{/ifprofile}.
-                                    // Example: {ifprofile city is ""}...{/ifprofile}.
-                                    $matchescondition = $fieldvalue === $value;
-                                    break;
-                                case 'not':
-                                    // Example: {ifprofile country not "CA"}...{/ifprofile}.
-                                    // Example: {ifprofile institution not ""}...{/ifprofile}.
-                                    $matchescondition = $fieldvalue !== $value;
-                                    break;
-                                case 'contains':
-                                    // If the specified field contains the specified value.
-                                    // Example:{ifprofile email contains "@yoursite.com"}...{/ifprofile}.
-                                    $matchescondition = strpos($fieldvalue, $value) !== false;
-                                    break;
-                                case 'in':
-                                    // If the specified value contains the value specified in the field.
-                                    // Example: {ifprofile country in "CA,US,UK,AU,NZ"}...{/ifprofile}.
-                                    $matchescondition = strpos($value, $fieldvalue) !== false;
-                                    break;
-                            }
-                            if ($matchescondition) {
-                                $replacement = $content;
-                            }
-                        } else {
-                            // User not logged in or field doesn't exist.
-                            if ($operator === 'not') {
-                                $replacement = $content;
-                            }
+                        // Skip if profile field does not exist or user is not logged in.
+                        // 'not' still matches in that case; other operators do not.
+                        if (!array_key_exists($fieldname, $profilefields) || !isloggedin() || isguestuser()) {
+                            return $operator === 'not';
                         }
 
-                        $text = str_replace($fullmatch, $replacement, $text);
+                        if (!empty($value)) {
+                            $value = trim($value, '"'); // Trim quotation marks.
+                        }
+
+                        $fieldvalue = $profilefields[$fieldname]->value;
+                        switch ($operator) {
+                            case 'is':
+                                // Example: {ifprofile country is "CA"}...{/ifprofile}.
+                                // Example: {ifprofile city is ""}...{/ifprofile}.
+                                return $fieldvalue === $value;
+                            case 'not':
+                                // Example: {ifprofile country not "CA"}...{/ifprofile}.
+                                // Example: {ifprofile institution not ""}...{/ifprofile}.
+                                return $fieldvalue !== $value;
+                            case 'contains':
+                                // Example: {ifprofile email contains "@yoursite.com"}...{/ifprofile}.
+                                return strpos($fieldvalue, $value) !== false;
+                            case 'in':
+                                // Example: {ifprofile country in "CA,US,UK,AU,NZ"}...{/ifprofile}.
+                                return strpos($value, $fieldvalue) !== false;
+                        }
+                        return false;
                     }
-                    $iteration++;
-                }
+                );
             }
 
             // Tag: {ifmobile}...{/ifmobile}.
