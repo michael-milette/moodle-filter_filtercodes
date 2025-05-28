@@ -308,6 +308,10 @@ final class filter_test extends \advanced_testcase {
                 'before' => '{ifingrouping a}{ifingrouping b}Hello World{/ifingrouping}{/ifingrouping}',
                 'after'  => '',
             ],
+            [
+                'before' => '{ifnotingrouping a}{ifnotingrouping b}Hello World{/ifnotingrouping}',
+                'after'  => '{ifnotingrouping b}Hello World',
+            ],
         ];
 
         foreach ($tests as $test) {
