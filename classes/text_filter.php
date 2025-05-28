@@ -1610,6 +1610,8 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * Helper function for creating if tags.
+     *
      * @param string $text The text to check fo tags in
      * @param array $replace The array of replacement rules to add to
      * @param string $tagname The tagname to search for
