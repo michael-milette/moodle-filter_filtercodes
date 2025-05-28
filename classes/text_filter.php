@@ -1615,7 +1615,7 @@ class text_filter extends \filtercodes_base_text_filter {
      * @param string $text The text to check fo tags in
      * @param array $replace The array of replacement rules to add to
      * @param string $tagname The tagname to search for
-     * @param callable(string): bool $callableistrue A callable that returns true if the content is to be shown
+     * @param callable $callableistrue Callable taking the arguments, returning true if the content is to be shown
      * @return void Nothing
      */
     private function if_tag(
@@ -1627,7 +1627,7 @@ class text_filter extends \filtercodes_base_text_filter {
         $emit = function (array $stack) use (&$replace, $tagname) {
             $key = '';
             $value = '';
-            for($i = 0; $i < count($stack); $i++) {
+            for ($i = 0; $i < count($stack); $i++) {
                 [$isopening, $args, $istrue] = $stack[$i];
                 if ($isopening) {
                     $key .= '{' . $tagname . '\s+' . $args . '}(.*)';
@@ -1665,12 +1665,12 @@ class text_filter extends \filtercodes_base_text_filter {
 
                     $stack[] = [
                         $isopening,
-                        $match[1], // args
+                        $match[1],
                         end($istrue),
                     ];
 
                     if (!$isopening) {
-                        // Pop the last element
+                        // Pop the last element.
                         array_pop($istrue);
                     }
 
