@@ -37,6 +37,9 @@ namespace filter_filtercodes;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class filter_test extends \advanced_testcase {
+    /**
+     * @var text_filter $filter The filter to test.
+     */
     private \filter_filtercodes\text_filter $filter;
 
     /**
@@ -150,7 +153,6 @@ final class filter_test extends \advanced_testcase {
             '{ifingroup ' . $group->id . '}Hello{/ifingroup} {ifingroup none}World{/ifingroup}.',
             'Hello .',
         );
-
 
         // Test partials.
         $this->assert_filter_eq(
