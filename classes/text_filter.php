@@ -1691,6 +1691,12 @@ class text_filter extends \filtercodes_base_text_filter {
                         }
                         $newstack[] = $item;
                     }
+                    // Fix istrue values for the new stack by assigning the value of the opening tags
+                    // to the closing tags in the final stack.
+                    for ($i = 0; $i < count($newstack) / 2; $i++) {
+                        $newstack[$i][2] = $newstack[count($newstack) - 1 - $i][2];
+                    }
+
                     if (!empty($newstack)) {
                         $emit(array_reverse($newstack));
                     }
@@ -1719,6 +1725,15 @@ class text_filter extends \filtercodes_base_text_filter {
         static $mygroupslist;
         static $mygroupingslist;
         static $mycohorts;
+
+        if ($options['no-cache'] ?? false) {
+            // Reset the static variables if cache is disabled.
+            $profilefields = null;
+            $profiledata = null;
+            $mygroupslist = null;
+            $mygroupingslist = null;
+            $mycohorts = null;
+        }
 
         $replace = []; // Array of key/value filterobjects.
 
