@@ -1610,6 +1610,108 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * Helper function for creating if tags.
+     *
+     * @param string $text The text to check fo tags in
+     * @param array $replace The array of replacement rules to add to
+     * @param string $tagname The tagname to search for
+     * @param callable $callableistrue Callable taking the arguments,
+     *                                 returning 1 if the content is to be shown,
+     *                                 0 for not show, -1 to ignore.
+     * @return void Nothing
+     */
+    private function if_tag(
+        string   $text,
+        array    &$replace,
+        string   $tagname,
+        callable $callableistrue,
+    ): void {
+        $emit = function (array $stack) use (&$replace, $tagname) {
+            $key = '';
+            $value = '';
+            for ($i = 0; $i < count($stack); $i++) {
+                [$isopening, $args, $istrue] = $stack[$i];
+                if ($isopening) {
+                    $key .= '{' . $tagname . '\s+' . $args . '}(.*)';
+                    if ($istrue) {
+                        $value .= '$' . ($i + 1);
+                    }
+                } else {
+                    $key .= '(.*){\/' . $tagname . '}';
+                    if ($istrue) {
+                        $value .= '$' . ($i + 1);
+                    }
+                }
+            }
+            $replace['/' . $key . '/isuU'] = $value;
+        };
+
+        if (stripos($text, '{' . $tagname) !== false && stripos($text, '{/' . $tagname . '}') !== false) {
+            // Find opening and closing tags.
+            $re = '/{' . $tagname . '\s+(.*)}|{(\/)' . $tagname . '}/isuU';
+            $found = preg_match_all($re, $text, $matches, PREG_SET_ORDER);
+            if ($found > 0) {
+                $balance = 0;
+                $stack = [];
+                $istrue = [];
+                foreach ($matches as $match) {
+                    $isopening = (!isset($match[2]));
+                    if (empty($stack) && !$isopening) {
+                        continue; // No opening tag found.
+                    }
+                    $balance += $isopening ? 1 : -1;
+                    if ($isopening) {
+                        $lastistrue = empty($istrue) ? true : end($istrue);
+                        $thisistrue = $callableistrue($match[1]);
+                        if ($thisistrue === -1) {
+                            continue;
+                        }
+                        $istrue[] = $lastistrue && $thisistrue;
+                    }
+
+                    $stack[] = [
+                        $isopening,
+                        $match[1],
+                        end($istrue),
+                    ];
+
+                    if (!$isopening) {
+                        // Pop the last element.
+                        array_pop($istrue);
+                    }
+
+                    if ($balance == 0) {
+                        // We are balanced, generate replacement.
+                        $emit($stack);
+                        $stack = [];
+                    }
+                }
+                if (!empty($stack)) {
+                    // Drop opening tags till we are balanced.
+                    $newstack = [];
+                    foreach (array_reverse($stack) as $item) {
+                        if ($item[0] && $balance > 0) {
+                            // Need to remove opening tag.
+                            $balance--;
+                            continue;
+                        }
+                        $newstack[] = $item;
+                    }
+                    // Fix istrue values for the new stack by assigning the value of the opening tags
+                    // to the closing tags in the final stack.
+                    for ($i = 0; $i < count($newstack) / 2; $i++) {
+                        $newstack[$i][2] = $newstack[count($newstack) - 1 - $i][2];
+                    }
+
+                    if (!empty($newstack)) {
+                        $emit(array_reverse($newstack));
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Main filter function called by Moodle.
      *
      * @param string $text   Content to be filtered.
@@ -1629,6 +1731,15 @@ class text_filter extends \filtercodes_base_text_filter {
         static $mygroupslist;
         static $mygroupingslist;
         static $mycohorts;
+
+        if ($options['no-cache'] ?? false) {
+            // Reset the static variables if cache is disabled.
+            $profilefields = null;
+            $profiledata = null;
+            $mygroupslist = null;
+            $mygroupingslist = null;
+            $mycohorts = null;
+        }
 
         $replace = []; // Array of key/value filterobjects.
 
@@ -4023,97 +4134,69 @@ class text_filter extends \filtercodes_base_text_filter {
             }
 
             // Tag: {ifactivitycompleted coursemoduleid}...{/ifactivitycompleted}.
-            // Description: Will display content if the specified activity has been completed.
-            // Required Parameter: coursemoduleid is the id of the instance of the content module.
-            // Requires content between tags.
-            if (stripos($text, '{/ifactivitycompleted}') !== false) {
-                $completion = new \completion_info($PAGE->course);
-
-                if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
-                    // Get a list of the the instances of this tag.
-                    $re = '/{ifactivitycompleted\s+([0-9]+)\}(.*)\{\/ifactivitycompleted\}/isuU';
-                    $found = preg_match_all($re, $text, $matches);
-
-                    if ($found > 0) {
-                        // Check if the activity is in the list.
-                        foreach ($matches[1] as $cmid) {
-                            $iscompleted = false;
-
-                            // Only process valid IDs.
-                            if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
-                                // Get the completion data for this activity if it exists.
-                                try {
-                                    $data = $completion->get_data($cm, false, $USER->id);
-                                    $iscompleted = ($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
-                                } catch (\moodle_exception $e) {
-                                    // Handle Moodle-specific exceptions.
-                                    unset($e);
-                                    continue;
-                                } catch (\Exception $e) {
-                                    unset($e);
-                                    continue;
-                                }
-                            }
-
-                            // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
-                            $key = '/{ifactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifactivitycompleted\}/isuU';
-                            if ($iscompleted) {
-                                // Completed. Keep the text and remove the tags.
-                                $replace[$key] = "$1";
-                            } else {
-                                // Activity not completed. Remove tags and content.
-                                $replace[$key] = '';
-                            }
-                        }
-                    }
-                }
-            }
-
             // Tag: {ifnotactivitycompleted coursemoduleid}...{/ifnotactivitycompleted}.
-            // Description: Will display content if the specified activity has been completed.
-            // Required Parameter: coursemoduleid is the id of the instance of the content module.
-            // Requires content between tags.
-            if (stripos($text, '{/ifnotactivitycompleted}') !== false) {
+            if ((
+                stripos($text, '{ifactivitycompleted') !== false
+                && stripos($text, '{/ifactivitycompleted}') !== false
+            ) || (
+                stripos($text, '{ifnotactivitycompleted') !== false
+                && stripos($text, '{/ifnotactivitycompleted}') !== false
+            )) {
                 $completion = new \completion_info($PAGE->course);
 
-                if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
-                    // Get a list of the the instances of this tag.
-                    $re = '/{ifnotactivitycompleted\s+([0-9]+)\}(.*)\{\/ifnotactivitycompleted\}/isuU';
-                    $found = preg_match_all($re, $text, $matches);
-
-                    if ($found > 0) {
-                        // Check if the activity is in the list.
-                        foreach ($matches[1] as $cmid) {
-                            $iscompleted = false;
-
-                            // Only process valid IDs.
-                            if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
-                                // Get the completion data for this activity if it exists.
-                                try {
-                                    $data = $completion->get_data($cm, false, $USER->id);
-                                    $iscompleted = ($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
-                                } catch (\moodle_exception $e) {
-                                    // Handle Moodle-specific exceptions.
-                                    unset($e);
-                                    continue;
-                                } catch (\Exception $e) {
-                                    unset($e);
-                                    continue;
-                                }
-                            }
-
-                            // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
-                            $key = '/{ifnotactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifnotactivitycompleted\}/isuU';
-                            if (!$iscompleted) {
-                                // Completed. Keep the text and remove the tags.
-                                $replace[$key] = "$1";
-                            } else {
-                                // Activity not completed. Remove tags and content.
-                                $replace[$key] = '';
+                // Tag: {ifactivitycompleted coursemoduleid}...{/ifactivitycompleted}.
+                // Description: Will display content if the specified activity has been completed.
+                // Required Parameter: coursemoduleid is the id of the instance of the content module.
+                // Requires content between tags.
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    'ifactivitycompleted',
+                    function ($cmid) use ($USER, $completion) {
+                        // Only process valid IDs.
+                        if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
+                            // Get the completion data for this activity if it exists.
+                            try {
+                                $data = $completion->get_data($cm, false, $USER->id);
+                                return $data->completionstate > COMPLETION_INCOMPLETE; // A completed state.
+                            } catch (\moodle_exception $e) {
+                                // Handle Moodle-specific exceptions.
+                                unset($e);
+                            } catch (\Exception $e) {
+                                unset($e);
                             }
                         }
-                    }
-                }
+
+                        return -1;
+                    },
+                );
+
+                // Tag: {ifnotactivitycompleted coursemoduleid}...{/ifnotactivitycompleted}.
+                // Description: Will display content if the specified activity has been completed.
+                // Required Parameter: coursemoduleid is the id of the instance of the content module.
+                // Requires content between tags.
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    'ifnotactivitycompleted',
+                    function ($cmid) use ($USER, $completion) {
+                        // Only process valid IDs.
+                        if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
+                            // Get the completion data for this activity if it exists.
+                            try {
+                                $data = $completion->get_data($cm, false, $USER->id);
+                                return !($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
+                            } catch (\moodle_exception $e) {
+                                // Handle Moodle-specific exceptions.
+                                unset($e);
+                            } catch (\Exception $e) {
+                                unset($e);
+                            }
+                        }
+
+                        return -1;
+                    },
+                );
             }
 
             // Tag: {ifprofile_field_shortname}...{ifprofile_field_shortname}.
@@ -4171,73 +4254,60 @@ class text_filter extends \filtercodes_base_text_filter {
             // 'in' to check if the value is in the fields content.
             // Parameters: "value": The text to compare the field against.
             // Requires content between tags.
-            if (stripos($text, '{/ifprofile}') !== false) {
+            if (stripos($text, '{/ifprofile}') !== false && stripos($text, '{ifprofile') !== false) {
                 // Retrieve all custom profile fields and specified core fields.
                 $corefields = ['id', 'username', 'auth', 'idnumber', 'email', 'institution',
                     'department', 'city', 'country', 'timezone', 'lang'];
                 $profilefields = $this->getuserprofilefields($USER, $corefields);
 
-                // Find all ifprofile tags.
-                $re = '/{ifprofile\s+(\w+)\s+(is|not|contains|in)\s+"([^}]*)"}(.*){\/ifprofile}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $key => $match) {
-                        $fieldname = $matches[1][$key];
-                        $string = $matches[0][$key]; // String found in $text.
-                        $operator = $matches[2][$key];
-                        $value = $matches[3][$key];
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    "ifprofile",
+                    function ($args) use ($corefields, $profilefields) {
+                        $re = '/^(\w+)\s+(is|not|contains|in)\s+"(.*)"$/isuU';
+                        $found = preg_match($re, $args, $matches);
+                        if ($found) {
+                            $fieldname = $matches[1];
+                            $operator = $matches[2];
+                            $value = $matches[3];
 
-                        // Do not process tag if the specified profile field name does not exist or user is not logged in.
-                        if (!array_key_exists($fieldname, $profilefields) || !isloggedin() || isguestuser()) {
-                            if ($operator == 'not') {
+                            // Do not process tag if the specified profile field name does not exist or user is not logged in.
+                            if (!array_key_exists($fieldname, $profilefields) || !isloggedin() || isguestuser()) {
                                 // It will always meet criteria of a "not" if the user doesn't have a profile.
-                                $replace['/' . preg_quote($string, '/') . '/isuU'] = $matches[4][$key];
-                            } else {
                                 // It will never match the criteria "is", "contains" or "in" if the user doesn't have a profile.
-                                $replace['/' . preg_quote($string, '/') . '/isuU'] = '';
+                                return $operator === 'not';
                             }
-                            continue;
+
+                            if (!empty($value)) {
+                                $value = trim($value, '"'); // Trim quotation marks.
+                            }
+
+                            switch ($operator) {
+                                case 'is':
+                                    // If the specified field is exactly the specified value.
+                                    // Example: {ifprofile country is "CA"}...{/ifprofile}.
+                                    // Example: {ifprofile city is ""}...{/ifprofile}.
+                                    return $profilefields[$fieldname]->value === $value;
+                                case 'not':
+                                    // Example: {ifprofile country not "CA"}...{/ifprofile}.
+                                    // Example: {ifprofile institution not ""}...{/ifprofile}.
+                                    return $profilefields[$fieldname]->value !== $value;
+                                case 'contains':
+                                    // If the specified field contains the specified value.
+                                    // Example:{ifprofile email contains "@yoursite.com"}...{/ifprofile}.
+                                    return str_contains($profilefields[$fieldname]->value, $value);
+                                case 'in':
+                                    // If the specified value contains the value specified in the field.
+                                    // Example: {ifprofile country in "CA,US,UK,AU,NZ"}...{/ifprofile}.
+                                    return str_contains($value, $profilefields[$fieldname]->value);
+                            }
+                            return false;
                         }
 
-                        if (!empty($value)) {
-                            $value = trim($value, '"'); // Trim quotation marks.
-                        }
-
-                        $content = '';
-                        switch ($operator) {
-                            case 'is':
-                                // If the specified field is exactly the specified value.
-                                // Example: {ifprofile country is "CA"}...{/ifprofile}.
-                                // Example: {ifprofile city is ""}...{/ifprofile}.
-                                if ($profilefields[$fieldname]->value === $value) {
-                                    $content = $matches[4][$key];
-                                }
-                                break;
-                            case 'not':
-                                // Example: {ifprofile country not "CA"}...{/ifprofile}.
-                                // Example: {ifprofile institution not ""}...{/ifprofile}.
-                                if ($profilefields[$fieldname]->value !== $value) {
-                                    $content = $matches[4][$key];
-                                }
-                                break;
-                            case 'contains':
-                                // If the specified field contains the specified value.
-                                // Example:{ifprofile email contains "@yoursite.com"}...{/ifprofile}.
-                                if (strpos($profilefields[$fieldname]->value, $value) !== false) {
-                                    $content = $matches[4][$key];
-                                }
-                                break;
-                            case 'in':
-                                // If the specified value contains the value specified in the field.
-                                // Example: {ifprofile country in "CA,US,UK,AU,NZ"}...{/ifprofile}.
-                                if (strpos($value, $profilefields[$fieldname]->value) !== false) {
-                                    $content = $matches[4][$key];
-                                }
-                                break;
-                        }
-                        $replace['/' . preg_quote($string, '/') . '/isuU'] = $content;
+                        return -1;
                     }
-                }
+                );
             }
 
             // Tag: {ifmobile}...{/ifmobile}.
@@ -4804,144 +4874,135 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Display content if the user is a member of the specified group.
             // Required Parameters: group id or idnumber.
             // Requires content between tags.
-            if (stripos($text, '{ifingroup') !== false) {
-                if (!isset($mygroupslist)) { // Fetch my groups.
-                    $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
-                }
-                $re = '/{ifingroup\s+(.*)\}(.*)\{\/ifingroup\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $groupid) {
-                        $key = '/{ifingroup\s+' . $groupid . '\}(.*)\{\/ifingroup\}/isuU';
-                        $ismember = false;
-                        foreach ($mygroupslist as $group) {
-                            if ($groupid == $group->id || $groupid == $group->idnumber) {
-                                $ismember = true;
-                                break;
-                            }
-                        }
-                        if ($ismember) { // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else { // Remove the ifingroup tags and content.
-                            $replace[$key] = '';
-                        }
-                    }
-                }
-            }
-
-            // Tag: {ifnotingroup...}...{/ifnotingroup} with and without parameters.
-            if (stripos($text, '{ifnotingroup') !== false) {
-                // Tag: {ifnotingroup}...{/ifnotingroup}.
-                // Description: Display content if the user is NOT a member of any group.
-                // Required Parameters: None.
-                // Requires content between tags.
-                if (stripos($text, '{ifnotingroup}') !== false) {
+            $this->if_tag(
+                $text,
+                $replace,
+                'ifingroup',
+                function ($groupid) use (&$mygroupslist, $PAGE, $USER) {
                     if (!isset($mygroupslist)) { // Fetch my groups.
                         $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
                     }
+
+                    $ismember = false;
+                    foreach ($mygroupslist as $group) {
+                        if ($groupid == $group->id || $groupid == $group->idnumber) {
+                            $ismember = true;
+                            break;
+                        }
+                    }
+
+                    return $ismember;
+                },
+            );
+
+            // Tag: {ifnotingroup}...{/ifnotingroup}.
+            // Description: Display content if the user is NOT a member of any group.
+            // Required Parameters: None.
+            // Requires content between tags.
+
+            // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
+            // Description: Display content if the user is NOT a member of the specified group.
+            // Required Parameters: group id or idnumber.
+            // Requires content between tags.
+            $this->if_tag(
+                $text,
+                $replace,
+                'ifnotingroup',
+                function ($groupid) use (&$mygroupslist, $PAGE, $USER) {
+                    if (!isset($mygroupslist)) { // Fetch my groups.
+                        $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
+                    }
+
                     if (empty($mygroupslist)) {
-                        // User is not in any group, just remove the tags.
-                        $replace['/\{ifnotingroup\}/i'] = '';
-                        $replace['/\{\/ifnotingroup\}/i'] = '';
-                    } else {
-                        // User is in at least one group, remove tags and content.
-                        $replace['/\{ifnotingroup\}(.*)\{\/ifnotingroup\}/isuU'] = '';
+                        return true;
                     }
-                }
 
-                // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
-                // Description: Display content if the user is NOT a member of the specified group.
-                // Required Parameters: group id or idnumber.
-                // Requires content between tags.
-                if (stripos($text, '{ifnotingroup') !== false) {
-                    if (!isset($mygroupslist)) { // Fetch my groups.
-                        $mygroupslist = groups_get_all_groups($PAGE->course->id, $USER->id);
+                    if (empty($groupid)) {
+                        // My groups list is not empty, but no group id was specified.
+                        return false;
                     }
-                    $re = '/{ifnotingroup\s+(.*)\}(.*)\{\/ifnotingroup\}/isuU';
-                    $found = preg_match_all($re, $text, $matches);
-                    if ($found > 0) {
-                        foreach ($matches[1] as $groupid) {
-                            $key = '/{ifnotingroup\s+' . $groupid . '\}(.*)\{\/ifnotingroup\}/isuU';
-                            $ismember = false;
-                            foreach ($mygroupslist as $group) {
-                                if ($groupid == $group->id || $groupid == $group->idnumber) {
-                                    $ismember = true;
-                                    break;
-                                }
-                            }
-                            if ($ismember) { // Remove the ifnotingroup tags and content.
-                                $replace[$key] = '';
-                            } else { // Just remove the tags and keep the content.
-                                $replace[$key] = '$1';
-                            }
+
+                    $ismember = false;
+                    foreach ($mygroupslist as $group) {
+                        if ($groupid == $group->id || $groupid == $group->idnumber) {
+                            $ismember = true;
+                            break;
                         }
                     }
-                }
-            }
+
+                    return !$ismember;
+                },
+            );
 
             // Tag: {ifingrouping id|idnumber}...{/ifingrouping}.
             // Description: Display content if the user is a member of the specified grouping.
             // Required Parameters: group id or idnumber.
             // Requires content between tags.
-            if (stripos($text, '{ifingrouping') !== false) {
-                if (!isset($mygroupingslist)) {
-                    $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
-                }
-                $re = '/{ifingrouping\s+(.*)\}(.*)\{\/ifingrouping\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $groupingid) {
-                        $key = '/{ifingrouping\s+' . $groupingid . '\}(.*)\{\/ifingrouping\}/isuU';
-                        $ismember = false;
-                        foreach ($mygroupingslist as $grouping) {
-                            if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
-                                $ismember = true;
-                                break;
-                            }
-                        }
-                        if ($ismember) { // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else { // Remove the ifingroup tags and content.
-                            $replace[$key] = '';
+            $this->if_tag(
+                $text,
+                $replace,
+                'ifingrouping',
+                function ($groupingid) use (&$mygroupingslist, $PAGE, $USER) {
+                    if (!isset($mygroupingslist)) {
+                        $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
+                    }
+
+                    $ismember = false;
+                    foreach ($mygroupingslist as $grouping) {
+                        if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
+                            $ismember = true;
+                            break;
                         }
                     }
-                }
-            }
+
+                    return $ismember;
+                },
+            );
+
+            // Tag: {ifnotingrouping}...{/ifnotingrouping}.
+            // Description: Display content if the user is NOT a member of any grouping.
+            // Required Parameters: None.
+            // Requires content between tags.
 
             // Tag: {ifnotingrouping id|idnumber}...{/ifnotingrouping}.
             // Description: Display content if the user is NOT a member of the specified grouping.
             // Required Parameters: group id or idnumber.
             // Requires content between tags.
-            if (stripos($text, '{ifnotingrouping') !== false) {
-                if (!isset($mygroupingslist)) {
-                    $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
-                }
-                $re = '/{ifnotingrouping\s+(.*)\}(.*)\{\/ifnotingrouping\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $groupingid) {
-                        $key = '/{ifnotingrouping\s+' . $groupingid . '\}(.*)\{\/ifnotingrouping\}/isuU';
-                        $ismember = false;
-                        foreach ($mygroupingslist as $grouping) {
-                            if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
-                                $ismember = true;
-                                break;
-                            }
-                        }
-                        if ($ismember) { // Remove the ifnotingroup tags and content.
-                            $replace[$key] = '';
-                        } else { // Just remove the tags and keep the content.
-                            $replace[$key] = '$1';
+            $this->if_tag(
+                $text,
+                $replace,
+                'ifnotingrouping',
+                function ($groupingid) use (&$mygroupingslist, $PAGE, $USER) {
+                    if (!isset($mygroupingslist)) { // Fetch my groups.
+                        $mygroupingslist = $this->getusergroupings($PAGE->course->id, $USER->id);
+                    }
+
+                    if (empty($mygroupingslist)) {
+                        return true;
+                    }
+
+                    if (empty($groupingid)) {
+                        // My groupings list is not empty, but no grouping id was specified.
+                        return false;
+                    }
+
+                    $ismember = false;
+                    foreach ($mygroupingslist as $grouping) {
+                        if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
+                            $ismember = true;
+                            break;
                         }
                     }
-                }
-            }
+
+                    return !$ismember;
+                },
+            );
 
             // Tag: {iftenant idnumber|tenantid}...{/iftenant}.
             // Description: Display content only if the user is part of the specified tenant on Moodle Workplace.
             // Required Parameter: tenant idnumber or tenantid.
             // Requires content between tags.
-            if (stripos($text, '{iftenant') !== false) {
+            if (stripos($text, '{iftenant') !== false && stripos($text, '{/iftenant}') !== false) {
                 if (class_exists('tool_tenant\tenancy')) {
                     // Moodle Workplace.
                     $tenants = \tool_tenant\tenancy::get_tenants();
@@ -4962,20 +5023,15 @@ class text_filter extends \filtercodes_base_text_filter {
                         $currenttenantidnumber = $tenant->idnumber ? $tenant->idnumber : $tenant->id;
                     }
                 }
-                $re = '/{iftenant\s+(.*)\}(.*)\{\/iftenant\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $tenantid) {
-                        $key = '/{iftenant\s+' . $tenantid . '\}(.*)\{\/iftenant\}/isuU';
-                        if ($tenantid == $currenttenantidnumber) {
-                            // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else {
-                            // Remove the iftenant strings.
-                            $replace[$key] = '';
-                        }
+
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    "iftenant",
+                    function ($tenantid) use ($currenttenantidnumber) {
+                        return $tenantid == $currenttenantidnumber;
                     }
-                }
+                );
             }
 
             // Tag: {ifworkplace}...{/ifworkplace}.
@@ -4997,105 +5053,78 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Display content only if user has the role specified by shortrolename in the current context.
             // Parameters: Short role name.
             // Requires content between tags.
-            if (stripos($text, '{ifcustomrole') !== false) {
-                $re = '/{ifcustomrole\s+(.*)\}(.*)\{\/ifcustomrole\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    $context = $PAGE->context;
-                    if ($context->contextlevel == CONTEXT_COURSE) {
-                        // We are in a course.
-                        $context = \context_course::instance($context->instanceid);
-                    } else if ($context->contextlevel == CONTEXT_MODULE) {
-                        // We are in an activity.
-                        $cm = get_coursemodule_from_id('', $context->instanceid, 0, false, MUST_EXIST);
-                        $context = \context_module::instance($cm->id);
-                        unset($cm);
-                    }
-
-                    // Get roles within this context.
-                    $roles = get_user_roles($context, $USER->id, true);
-                    $roles = array_column($roles, 'shortname');
-                    unset($context);
-
-                    // Replace all instances of a given ifcustomrole tag.
-                    foreach ($matches[1] as $roleshortname) {
-                        $key = '/{ifcustomrole\s+' . $roleshortname . '\}(.*)\{\/ifcustomrole\}/isuU';
-                        // We have a role that matches this tag.
-                        if (in_array($roleshortname, $roles)) {
-                            // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else {
-                            // Otherwise, remove the ifcustomrole tags and the string inside it.
-                            $replace[$key] = '';
-                        }
-                        unset($key);
-                    }
+            if (stripos($text, '{ifcustomrole') !== false && stripos($text, '{/ifcustomrole}') !== false) {
+                $context = $PAGE->context;
+                if ($context->contextlevel == CONTEXT_COURSE) {
+                    // We are in a course.
+                    $context = \context_course::instance($context->instanceid);
+                } else if ($context->contextlevel == CONTEXT_MODULE) {
+                    // We are in an activity.
+                    $cm = get_coursemodule_from_id('', $context->instanceid, 0, false, MUST_EXIST);
+                    $context = \context_module::instance($cm->id);
+                    unset($cm);
                 }
-                unset($re);
-                unset($found);
+
+                // Get roles within this context.
+                $roles = get_user_roles($context, $USER->id, true);
+                $roles = array_column($roles, 'shortname');
+                unset($context);
+
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    'ifcustomrole',
+                    function ($roleshortname) use ($roles) {
+                        return in_array($roleshortname, $roles);
+                    }
+                );
             }
 
             // Tag: {ifnotcustomrole shortrolename}...{/ifnotcustomrole}.
             // Description: Display content only if user does NOT have the role specified by shortrolename in the current context.
             // Required Parameters: Short role name.
             // Requires content between tags.
-            if (stripos($text, '{ifnotcustomrole') !== false) {
-                $re = '/{ifnotcustomrole\s+(.*)\}(.*)\{\/ifnotcustomrole\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    $context = $PAGE->context;
-                    if ($context->contextlevel == CONTEXT_COURSE) {
-                        // We are in a course.
-                        $context = \context_course::instance($context->instanceid);
-                    } else if ($context->contextlevel == CONTEXT_MODULE) {
-                        // We are in an activity.
-                        $cm = get_coursemodule_from_id('', $context->instanceid, 0, false, MUST_EXIST);
-                        $context = \context_module::instance($cm->id);
-                        unset($cm);
-                    }
-
-                    // Get roles within this context.
-                    $roles = get_user_roles($context, $USER->id, true);
-                    $roles = array_column($roles, 'shortname');
-                    unset($context);
-
-                    // Replace all instances of a given ifnotcustomrole tag.
-                    foreach ($matches[1] as $roleshortname) {
-                        $key = '/{ifnotcustomrole\s+' . $roleshortname . '\}(.*)\{\/ifnotcustomrole\}/isuU';
-                        // We do not have a role that matches this tag.
-                        if (!in_array($roleshortname, $roles)) {
-                            // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else {
-                            // Otherwise, remove the ifnotcustomrole strings.
-                            $replace[$key] = '';
-                        }
-                        unset($key);
-                    }
+            if (stripos($text, '{ifnotcustomrole') !== false
+                && stripos($text, '{/ifnotcustomrole}') !== false) {
+                $context = $PAGE->context;
+                if ($context->contextlevel == CONTEXT_COURSE) {
+                    // We are in a course.
+                    $context = \context_course::instance($context->instanceid);
+                } else if ($context->contextlevel == CONTEXT_MODULE) {
+                    // We are in an activity.
+                    $cm = get_coursemodule_from_id('', $context->instanceid, 0, false, MUST_EXIST);
+                    $context = \context_module::instance($cm->id);
+                    unset($cm);
                 }
-                unset($re);
-                unset($found);
+
+                // Get roles within this context.
+                $roles = get_user_roles($context, $USER->id, true);
+                $roles = array_column($roles, 'shortname');
+                unset($context);
+
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    'ifcustomrole',
+                    function ($roleshortname) use ($roles) {
+                        return !in_array($roleshortname, $roles);
+                    }
+                );
             }
 
             // Tag: {ifhasarolename roleshortname}...{/ifhasarolename}.
             // Description: Display content only if user has the role specified by shortrolename ANYWHERE on the site.
             // Parameters: Short role name.
             // Requires content between tags.
-            if (stripos($text, '{ifhasarolename') !== false) {
-                $re = '/{ifhasarolename\s+(.*)\}(.*)\{\/ifhasarolename\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $roleshortname) {
-                        $key = '/{ifhasarolename\s+' . $roleshortname . '\}(.*)\{\/ifhasarolename\}/isuU';
-                        if ($this->hasarole($roleshortname, $USER->id)) {
-                            // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else {
-                            // Remove the ifhasarolename strings.
-                            $replace[$key] = '';
-                        }
+            if (stripos($text, '{ifhasarolename') !== false && stripos($text, '{/ifhasarolename}') !== false) {
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    'ifhasarolename',
+                    function ($roleshortname) use ($USER) {
+                        return $this->hasarole($roleshortname, $USER->id);
                     }
-                }
+                );
             }
 
             // Tag: {iftheme themename}...{/iftheme}.
