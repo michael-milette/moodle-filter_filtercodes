@@ -5001,8 +5001,8 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {iftenant idnumber|tenantid}...{/iftenant}.
             // Description: Display content only if the user is part of the specified tenant on Moodle Workplace.
             // Required Parameter: tenant idnumber or tenantid.
-            // Requires content between tags. TODO move to $this->if_tag.
-            if (stripos($text, '{iftenant') !== false) {
+            // Requires content between tags.
+            if (stripos($text, '{iftenant') !== false && stripos($text, '{/iftenant}') !== false) {
                 if (class_exists('tool_tenant\tenancy')) {
                     // Moodle Workplace.
                     $tenants = \tool_tenant\tenancy::get_tenants();
@@ -5023,20 +5023,15 @@ class text_filter extends \filtercodes_base_text_filter {
                         $currenttenantidnumber = $tenant->idnumber ? $tenant->idnumber : $tenant->id;
                     }
                 }
-                $re = '/{iftenant\s+(.*)\}(.*)\{\/iftenant\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $tenantid) {
-                        $key = '/{iftenant\s+' . $tenantid . '\}(.*)\{\/iftenant\}/isuU';
-                        if ($tenantid == $currenttenantidnumber) {
-                            // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else {
-                            // Remove the iftenant strings.
-                            $replace[$key] = '';
-                        }
+
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    "iftenant",
+                    function ($tenantid) use ($currenttenantidnumber) {
+                        return $tenantid == $currenttenantidnumber;
                     }
-                }
+                );
             }
 
             // Tag: {ifworkplace}...{/ifworkplace}.
