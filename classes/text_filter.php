@@ -1615,7 +1615,9 @@ class text_filter extends \filtercodes_base_text_filter {
      * @param string $text The text to check fo tags in
      * @param array $replace The array of replacement rules to add to
      * @param string $tagname The tagname to search for
-     * @param callable $callableistrue Callable taking the arguments, returning 1 if the content is to be shown, 0 for not show, -1 to ignore.
+     * @param callable $callableistrue Callable taking the arguments,
+     *                                 returning 1 if the content is to be shown,
+     *                                 0 for not show, -1 to ignore.
      * @return void Nothing
      */
     private function if_tag(
@@ -4409,7 +4411,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifincohort idname|idnumber}...{/ifincohort}.
             // Description: Will display content if the user is part of the specified cohort.
             // Parameters: id name or id number of the cohort.
-            // Requires content between tags. TODO new if
+            // Requires content between tags.
             if (stripos($text, '{ifincohort ') !== false) {
                 if (empty($mycohorts)) { // Cache list of cohorts.
                     require_once($CFG->dirroot . '/cohort/lib.php');
@@ -4435,7 +4437,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifnotincohort idname|idnumber}...{/ifnotincohort}.
             // Description: Will display content if the user is not part of the specified cohort.
             // Parameters: id name or id number of the cohort.
-            // Requires content between tags. TODO new if
+            // Requires content between tags.
             if (stripos($text, '{ifnotincohort ') !== false) {
                 if (empty($mycohorts)) { // Cache list of cohorts.
                     require_once($CFG->dirroot . '/cohort/lib.php');
@@ -4999,7 +5001,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {iftenant idnumber|tenantid}...{/iftenant}.
             // Description: Display content only if the user is part of the specified tenant on Moodle Workplace.
             // Required Parameter: tenant idnumber or tenantid.
-            // Requires content between tags. TODO new function
+            // Requires content between tags. TODO move to $this->if_tag.
             if (stripos($text, '{iftenant') !== false) {
                 if (class_exists('tool_tenant\tenancy')) {
                     // Moodle Workplace.
@@ -5055,7 +5057,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifcustomrole shortrolename}...{/ifcustomrole}.
             // Description: Display content only if user has the role specified by shortrolename in the current context.
             // Parameters: Short role name.
-            // Requires content between tags. TODO new function
+            // Requires content between tags. TODO move to $this->if_tag.
             if (stripos($text, '{ifcustomrole') !== false) {
                 $re = '/{ifcustomrole\s+(.*)\}(.*)\{\/ifcustomrole\}/isuU';
                 $found = preg_match_all($re, $text, $matches);
@@ -5097,7 +5099,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifnotcustomrole shortrolename}...{/ifnotcustomrole}.
             // Description: Display content only if user does NOT have the role specified by shortrolename in the current context.
             // Required Parameters: Short role name.
-            // Requires content between tags. TODO new function
+            // Requires content between tags. TODO move to $this->if_tag.
             if (stripos($text, '{ifnotcustomrole') !== false) {
                 $re = '/{ifnotcustomrole\s+(.*)\}(.*)\{\/ifnotcustomrole\}/isuU';
                 $found = preg_match_all($re, $text, $matches);
@@ -5139,7 +5141,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifhasarolename roleshortname}...{/ifhasarolename}.
             // Description: Display content only if user has the role specified by shortrolename ANYWHERE on the site.
             // Parameters: Short role name.
-            // Requires content between tags. TODO new function
+            // Requires content between tags. TODO move to $this->if_tag.
             if (stripos($text, '{ifhasarolename') !== false) {
                 $re = '/{ifhasarolename\s+(.*)\}(.*)\{\/ifhasarolename\}/isuU';
                 $found = preg_match_all($re, $text, $matches);
