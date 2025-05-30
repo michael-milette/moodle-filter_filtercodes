@@ -1615,7 +1615,7 @@ class text_filter extends \filtercodes_base_text_filter {
      * @param string $text The text to check fo tags in
      * @param array $replace The array of replacement rules to add to
      * @param string $tagname The tagname to search for
-     * @param callable $callableistrue Callable taking the arguments, returning true if the content is to be shown
+     * @param callable $callableistrue Callable taking the arguments, returning 1 if the content is to be shown, 0 for not show, -1 to ignore.
      * @return void Nothing
      */
     private function if_tag(
@@ -1644,7 +1644,7 @@ class text_filter extends \filtercodes_base_text_filter {
             $replace['/' . $key . '/isuU'] = $value;
         };
 
-        if (stripos($text, '{' . $tagname) !== false) {
+        if (stripos($text, '{' . $tagname) !== false && stripos($text, '{/' . $tagname . '}') !== false) {
             // Find opening and closing tags.
             $re = '/{' . $tagname . '\s+(.*)}|{(\/)' . $tagname . '}/isuU';
             $found = preg_match_all($re, $text, $matches, PREG_SET_ORDER);
@@ -1660,7 +1660,11 @@ class text_filter extends \filtercodes_base_text_filter {
                     $balance += $isopening ? 1 : -1;
                     if ($isopening) {
                         $lastistrue = empty($istrue) ? true : end($istrue);
-                        $istrue[] = $lastistrue && $callableistrue($match[1]);
+                        $thisistrue = $callableistrue($match[1]);
+                        if ($thisistrue === -1) {
+                            continue;
+                        }
+                        $istrue[] = $lastistrue && $thisistrue;
                     }
 
                     $stack[] = [
@@ -4128,97 +4132,69 @@ class text_filter extends \filtercodes_base_text_filter {
             }
 
             // Tag: {ifactivitycompleted coursemoduleid}...{/ifactivitycompleted}.
-            // Description: Will display content if the specified activity has been completed.
-            // Required Parameter: coursemoduleid is the id of the instance of the content module.
-            // Requires content between tags.
-            if (stripos($text, '{/ifactivitycompleted}') !== false) {
-                $completion = new \completion_info($PAGE->course);
-
-                if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
-                    // Get a list of the the instances of this tag.
-                    $re = '/{ifactivitycompleted\s+([0-9]+)\}(.*)\{\/ifactivitycompleted\}/isuU';
-                    $found = preg_match_all($re, $text, $matches);
-
-                    if ($found > 0) {
-                        // Check if the activity is in the list.
-                        foreach ($matches[1] as $cmid) {
-                            $iscompleted = false;
-
-                            // Only process valid IDs.
-                            if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
-                                // Get the completion data for this activity if it exists.
-                                try {
-                                    $data = $completion->get_data($cm, false, $USER->id);
-                                    $iscompleted = ($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
-                                } catch (\moodle_exception $e) {
-                                    // Handle Moodle-specific exceptions.
-                                    unset($e);
-                                    continue;
-                                } catch (\Exception $e) {
-                                    unset($e);
-                                    continue;
-                                }
-                            }
-
-                            // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
-                            $key = '/{ifactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifactivitycompleted\}/isuU';
-                            if ($iscompleted) {
-                                // Completed. Keep the text and remove the tags.
-                                $replace[$key] = "$1";
-                            } else {
-                                // Activity not completed. Remove tags and content.
-                                $replace[$key] = '';
-                            }
-                        }
-                    }
-                }
-            }
-
             // Tag: {ifnotactivitycompleted coursemoduleid}...{/ifnotactivitycompleted}.
-            // Description: Will display content if the specified activity has been completed.
-            // Required Parameter: coursemoduleid is the id of the instance of the content module.
-            // Requires content between tags.
-            if (stripos($text, '{/ifnotactivitycompleted}') !== false) {
+            if ((
+                stripos($text, '{ifactivitycompleted') !== false
+                && stripos($text, '{/ifactivitycompleted}') !== false
+            ) || (
+                stripos($text, '{ifnotactivitycompleted') !== false
+                && stripos($text, '{/ifnotactivitycompleted}') !== false
+            )) {
                 $completion = new \completion_info($PAGE->course);
 
-                if ($completion->is_enabled_for_site() && $completion->is_enabled() == COMPLETION_ENABLED) {
-                    // Get a list of the the instances of this tag.
-                    $re = '/{ifnotactivitycompleted\s+([0-9]+)\}(.*)\{\/ifnotactivitycompleted\}/isuU';
-                    $found = preg_match_all($re, $text, $matches);
-
-                    if ($found > 0) {
-                        // Check if the activity is in the list.
-                        foreach ($matches[1] as $cmid) {
-                            $iscompleted = false;
-
-                            // Only process valid IDs.
-                            if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
-                                // Get the completion data for this activity if it exists.
-                                try {
-                                    $data = $completion->get_data($cm, false, $USER->id);
-                                    $iscompleted = ($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
-                                } catch (\moodle_exception $e) {
-                                    // Handle Moodle-specific exceptions.
-                                    unset($e);
-                                    continue;
-                                } catch (\Exception $e) {
-                                    unset($e);
-                                    continue;
-                                }
-                            }
-
-                            // If the activity has been completed, remove just the tags. Otherwise remove tags and content.
-                            $key = '/{ifnotactivitycompleted\s+' . $cmid . '\}(.*)\{\/ifnotactivitycompleted\}/isuU';
-                            if (!$iscompleted) {
-                                // Completed. Keep the text and remove the tags.
-                                $replace[$key] = "$1";
-                            } else {
-                                // Activity not completed. Remove tags and content.
-                                $replace[$key] = '';
+                // Tag: {ifactivitycompleted coursemoduleid}...{/ifactivitycompleted}.
+                // Description: Will display content if the specified activity has been completed.
+                // Required Parameter: coursemoduleid is the id of the instance of the content module.
+                // Requires content between tags.
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    'ifactivitycompleted',
+                    function ($cmid) use ($USER, $completion) {
+                        // Only process valid IDs.
+                        if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
+                            // Get the completion data for this activity if it exists.
+                            try {
+                                $data = $completion->get_data($cm, false, $USER->id);
+                                return $data->completionstate > COMPLETION_INCOMPLETE; // A completed state.
+                            } catch (\moodle_exception $e) {
+                                // Handle Moodle-specific exceptions.
+                                unset($e);
+                            } catch (\Exception $e) {
+                                unset($e);
                             }
                         }
-                    }
-                }
+
+                        return -1;
+                    },
+                );
+
+                // Tag: {ifnotactivitycompleted coursemoduleid}...{/ifnotactivitycompleted}.
+                // Description: Will display content if the specified activity has been completed.
+                // Required Parameter: coursemoduleid is the id of the instance of the content module.
+                // Requires content between tags.
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    'ifnotactivitycompleted',
+                    function ($cmid) use ($USER, $completion) {
+                        // Only process valid IDs.
+                        if (($cm = \get_coursemodule_from_id('', $cmid, 0)) !== false) {
+                            // Get the completion data for this activity if it exists.
+                            try {
+                                $data = $completion->get_data($cm, false, $USER->id);
+                                return !($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
+                            } catch (\moodle_exception $e) {
+                                // Handle Moodle-specific exceptions.
+                                unset($e);
+                            } catch (\Exception $e) {
+                                unset($e);
+                            }
+                        }
+
+                        return -1;
+                    },
+                );
             }
 
             // Tag: {ifprofile_field_shortname}...{ifprofile_field_shortname}.
@@ -4276,73 +4252,60 @@ class text_filter extends \filtercodes_base_text_filter {
             // 'in' to check if the value is in the fields content.
             // Parameters: "value": The text to compare the field against.
             // Requires content between tags.
-            if (stripos($text, '{/ifprofile}') !== false) {
+            if (stripos($text, '{/ifprofile}') !== false && stripos($text, '{ifprofile') !== false) {
                 // Retrieve all custom profile fields and specified core fields.
                 $corefields = ['id', 'username', 'auth', 'idnumber', 'email', 'institution',
                     'department', 'city', 'country', 'timezone', 'lang'];
                 $profilefields = $this->getuserprofilefields($USER, $corefields);
 
-                // Find all ifprofile tags.
-                $re = '/{ifprofile\s+(\w+)\s+(is|not|contains|in)\s+"([^}]*)"}(.*){\/ifprofile}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    foreach ($matches[1] as $key => $match) {
-                        $fieldname = $matches[1][$key];
-                        $string = $matches[0][$key]; // String found in $text.
-                        $operator = $matches[2][$key];
-                        $value = $matches[3][$key];
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    "ifprofile",
+                    function ($args) use ($corefields, $profilefields) {
+                        $re = '/^(\w+)\s+(is|not|contains|in)\s+"(.*)"$/isuU';
+                        $found = preg_match($re, $args, $matches);
+                        if ($found) {
+                            $fieldname = $matches[1];
+                            $operator = $matches[2];
+                            $value = $matches[3];
 
-                        // Do not process tag if the specified profile field name does not exist or user is not logged in.
-                        if (!array_key_exists($fieldname, $profilefields) || !isloggedin() || isguestuser()) {
-                            if ($operator == 'not') {
+                            // Do not process tag if the specified profile field name does not exist or user is not logged in.
+                            if (!array_key_exists($fieldname, $profilefields) || !isloggedin() || isguestuser()) {
                                 // It will always meet criteria of a "not" if the user doesn't have a profile.
-                                $replace['/' . preg_quote($string, '/') . '/isuU'] = $matches[4][$key];
-                            } else {
                                 // It will never match the criteria "is", "contains" or "in" if the user doesn't have a profile.
-                                $replace['/' . preg_quote($string, '/') . '/isuU'] = '';
+                                return $operator === 'not';
                             }
-                            continue;
+
+                            if (!empty($value)) {
+                                $value = trim($value, '"'); // Trim quotation marks.
+                            }
+
+                            switch ($operator) {
+                                case 'is':
+                                    // If the specified field is exactly the specified value.
+                                    // Example: {ifprofile country is "CA"}...{/ifprofile}.
+                                    // Example: {ifprofile city is ""}...{/ifprofile}.
+                                    return $profilefields[$fieldname]->value === $value;
+                                case 'not':
+                                    // Example: {ifprofile country not "CA"}...{/ifprofile}.
+                                    // Example: {ifprofile institution not ""}...{/ifprofile}.
+                                    return $profilefields[$fieldname]->value !== $value;
+                                case 'contains':
+                                    // If the specified field contains the specified value.
+                                    // Example:{ifprofile email contains "@yoursite.com"}...{/ifprofile}.
+                                    return str_contains($profilefields[$fieldname]->value, $value);
+                                case 'in':
+                                    // If the specified value contains the value specified in the field.
+                                    // Example: {ifprofile country in "CA,US,UK,AU,NZ"}...{/ifprofile}.
+                                    return str_contains($value, $profilefields[$fieldname]->value);
+                            }
+                            return false;
                         }
 
-                        if (!empty($value)) {
-                            $value = trim($value, '"'); // Trim quotation marks.
-                        }
-
-                        $content = '';
-                        switch ($operator) {
-                            case 'is':
-                                // If the specified field is exactly the specified value.
-                                // Example: {ifprofile country is "CA"}...{/ifprofile}.
-                                // Example: {ifprofile city is ""}...{/ifprofile}.
-                                if ($profilefields[$fieldname]->value === $value) {
-                                    $content = $matches[4][$key];
-                                }
-                                break;
-                            case 'not':
-                                // Example: {ifprofile country not "CA"}...{/ifprofile}.
-                                // Example: {ifprofile institution not ""}...{/ifprofile}.
-                                if ($profilefields[$fieldname]->value !== $value) {
-                                    $content = $matches[4][$key];
-                                }
-                                break;
-                            case 'contains':
-                                // If the specified field contains the specified value.
-                                // Example:{ifprofile email contains "@yoursite.com"}...{/ifprofile}.
-                                if (strpos($profilefields[$fieldname]->value, $value) !== false) {
-                                    $content = $matches[4][$key];
-                                }
-                                break;
-                            case 'in':
-                                // If the specified value contains the value specified in the field.
-                                // Example: {ifprofile country in "CA,US,UK,AU,NZ"}...{/ifprofile}.
-                                if (strpos($value, $profilefields[$fieldname]->value) !== false) {
-                                    $content = $matches[4][$key];
-                                }
-                                break;
-                        }
-                        $replace['/' . preg_quote($string, '/') . '/isuU'] = $content;
+                        return -1;
                     }
-                }
+                );
             }
 
             // Tag: {ifmobile}...{/ifmobile}.
@@ -4446,7 +4409,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifincohort idname|idnumber}...{/ifincohort}.
             // Description: Will display content if the user is part of the specified cohort.
             // Parameters: id name or id number of the cohort.
-            // Requires content between tags.
+            // Requires content between tags. TODO new if
             if (stripos($text, '{ifincohort ') !== false) {
                 if (empty($mycohorts)) { // Cache list of cohorts.
                     require_once($CFG->dirroot . '/cohort/lib.php');
@@ -4472,7 +4435,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifnotincohort idname|idnumber}...{/ifnotincohort}.
             // Description: Will display content if the user is not part of the specified cohort.
             // Parameters: id name or id number of the cohort.
-            // Requires content between tags.
+            // Requires content between tags. TODO new if
             if (stripos($text, '{ifnotincohort ') !== false) {
                 if (empty($mycohorts)) { // Cache list of cohorts.
                     require_once($CFG->dirroot . '/cohort/lib.php');
@@ -4930,11 +4893,11 @@ class text_filter extends \filtercodes_base_text_filter {
                 },
             );
 
-            // Tag: {ifnotingroup...}...{/ifnotingroup} with and without parameters.
             // Tag: {ifnotingroup}...{/ifnotingroup}.
             // Description: Display content if the user is NOT a member of any group.
             // Required Parameters: None.
             // Requires content between tags.
+
             // Tag: {ifnotingroup id|idnumber}...{/ifnotingroup}.
             // Description: Display content if the user is NOT a member of the specified group.
             // Required Parameters: group id or idnumber.
@@ -4950,6 +4913,11 @@ class text_filter extends \filtercodes_base_text_filter {
 
                     if (empty($mygroupslist)) {
                         return true;
+                    }
+
+                    if (empty($groupid)) {
+                        // My groups list is not empty, but no group id was specified.
+                        return false;
                     }
 
                     $ismember = false;
@@ -4989,6 +4957,11 @@ class text_filter extends \filtercodes_base_text_filter {
                 },
             );
 
+            // Tag: {ifnotingrouping}...{/ifnotingrouping}.
+            // Description: Display content if the user is NOT a member of any grouping.
+            // Required Parameters: None.
+            // Requires content between tags.
+
             // Tag: {ifnotingrouping id|idnumber}...{/ifnotingrouping}.
             // Description: Display content if the user is NOT a member of the specified grouping.
             // Required Parameters: group id or idnumber.
@@ -5006,6 +4979,11 @@ class text_filter extends \filtercodes_base_text_filter {
                         return true;
                     }
 
+                    if (empty($groupingid)) {
+                        // My groupings list is not empty, but no grouping id was specified.
+                        return false;
+                    }
+
                     $ismember = false;
                     foreach ($mygroupingslist as $grouping) {
                         if ($groupingid == $grouping->id || $groupingid == $grouping->idnumber) {
@@ -5021,7 +4999,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {iftenant idnumber|tenantid}...{/iftenant}.
             // Description: Display content only if the user is part of the specified tenant on Moodle Workplace.
             // Required Parameter: tenant idnumber or tenantid.
-            // Requires content between tags.
+            // Requires content between tags. TODO new function
             if (stripos($text, '{iftenant') !== false) {
                 if (class_exists('tool_tenant\tenancy')) {
                     // Moodle Workplace.
@@ -5077,7 +5055,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifcustomrole shortrolename}...{/ifcustomrole}.
             // Description: Display content only if user has the role specified by shortrolename in the current context.
             // Parameters: Short role name.
-            // Requires content between tags.
+            // Requires content between tags. TODO new function
             if (stripos($text, '{ifcustomrole') !== false) {
                 $re = '/{ifcustomrole\s+(.*)\}(.*)\{\/ifcustomrole\}/isuU';
                 $found = preg_match_all($re, $text, $matches);
@@ -5119,7 +5097,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifnotcustomrole shortrolename}...{/ifnotcustomrole}.
             // Description: Display content only if user does NOT have the role specified by shortrolename in the current context.
             // Required Parameters: Short role name.
-            // Requires content between tags.
+            // Requires content between tags. TODO new function
             if (stripos($text, '{ifnotcustomrole') !== false) {
                 $re = '/{ifnotcustomrole\s+(.*)\}(.*)\{\/ifnotcustomrole\}/isuU';
                 $found = preg_match_all($re, $text, $matches);
@@ -5161,7 +5139,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Tag: {ifhasarolename roleshortname}...{/ifhasarolename}.
             // Description: Display content only if user has the role specified by shortrolename ANYWHERE on the site.
             // Parameters: Short role name.
-            // Requires content between tags.
+            // Requires content between tags. TODO new function
             if (stripos($text, '{ifhasarolename') !== false) {
                 $re = '/{ifhasarolename\s+(.*)\}(.*)\{\/ifhasarolename\}/isuU';
                 $found = preg_match_all($re, $text, $matches);

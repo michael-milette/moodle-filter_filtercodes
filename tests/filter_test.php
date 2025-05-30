@@ -289,6 +289,68 @@ final class filter_test extends \advanced_testcase {
     }
 
     /**
+     * Test the ifprofile tag.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     *
+     * @return void
+     */
+    public function test_ifprofile(): void {
+        global $USER;
+
+        // Set up a user with specific profile fields.
+        $USER->city = 'New York';
+        $USER->country = 'US';
+        $USER->email = 'testuser@example.com';
+
+        // Test the 'is' condition.
+        $this->assert_filter_eq(
+            '{ifprofile city is "New York"}Welcome to New York{/ifprofile}',
+            'Welcome to New York'
+        );
+        $this->assert_filter_eq(
+            '{ifprofile city is "Los Angeles"}Welcome to LA{/ifprofile}',
+            ''
+        );
+
+        // Test the 'not' condition.
+        $this->assert_filter_eq(
+            '{ifprofile city not "Los Angeles"}Not in LA{/ifprofile}',
+            'Not in LA'
+        );
+        $this->assert_filter_eq(
+            '{ifprofile city not "New York"}Not in NY{/ifprofile}',
+            ''
+        );
+
+        // Test the 'contains' condition.
+        $this->assert_filter_eq(
+            '{ifprofile email contains "example.com"}Valid email{/ifprofile}',
+            'Valid email'
+        );
+        $this->assert_filter_eq(
+            '{ifprofile email contains "invalid.com"}Invalid email{/ifprofile}',
+            ''
+        );
+
+        // Test the 'in' condition.
+        $this->assert_filter_eq(
+            '{ifprofile country in "US,CA"}North America{/ifprofile}',
+            'North America'
+        );
+        $this->assert_filter_eq(
+            '{ifprofile country in "UK,FR"}Europe{/ifprofile}',
+            ''
+        );
+
+        // Nested conditions.
+        $this->assert_filter_eq(
+            '{ifprofile city is "New York"}{ifprofile country is "US"}Welcome to the US{/ifprofile}{/ifprofile}',
+            'Welcome to the US'
+        );
+    }
+
+    /**
      * Filter test.
      *
      * @covers \filter_filtercodes
@@ -539,6 +601,14 @@ final class filter_test extends \advanced_testcase {
             [
                 'before' => '{ifnotingrouping a}{ifnotingrouping b}Hello World{/ifnotingrouping}',
                 'after'  => '{ifnotingrouping b}Hello World',
+            ],
+            [
+                'before' => '{ifactivitycompleted 123456}Hello World{/ifactivitycompleted}',
+                'after'  => '{ifactivitycompleted 123456}Hello World{/ifactivitycompleted}',
+            ],
+            [
+                'before' => '{ifnotactivitycompleted 123456}Hello World{/ifnotactivitycompleted}',
+                'after'  => '{ifnotactivitycompleted 123456}Hello World{/ifnotactivitycompleted}',
             ],
         ];
 
