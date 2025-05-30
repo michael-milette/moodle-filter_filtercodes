@@ -5053,42 +5053,31 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Display content only if user has the role specified by shortrolename in the current context.
             // Parameters: Short role name.
             // Requires content between tags. TODO move to $this->if_tag.
-            if (stripos($text, '{ifcustomrole') !== false) {
-                $re = '/{ifcustomrole\s+(.*)\}(.*)\{\/ifcustomrole\}/isuU';
-                $found = preg_match_all($re, $text, $matches);
-                if ($found > 0) {
-                    $context = $PAGE->context;
-                    if ($context->contextlevel == CONTEXT_COURSE) {
-                        // We are in a course.
-                        $context = \context_course::instance($context->instanceid);
-                    } else if ($context->contextlevel == CONTEXT_MODULE) {
-                        // We are in an activity.
-                        $cm = get_coursemodule_from_id('', $context->instanceid, 0, false, MUST_EXIST);
-                        $context = \context_module::instance($cm->id);
-                        unset($cm);
-                    }
-
-                    // Get roles within this context.
-                    $roles = get_user_roles($context, $USER->id, true);
-                    $roles = array_column($roles, 'shortname');
-                    unset($context);
-
-                    // Replace all instances of a given ifcustomrole tag.
-                    foreach ($matches[1] as $roleshortname) {
-                        $key = '/{ifcustomrole\s+' . $roleshortname . '\}(.*)\{\/ifcustomrole\}/isuU';
-                        // We have a role that matches this tag.
-                        if (in_array($roleshortname, $roles)) {
-                            // Just remove the tags.
-                            $replace[$key] = '$1';
-                        } else {
-                            // Otherwise, remove the ifcustomrole tags and the string inside it.
-                            $replace[$key] = '';
-                        }
-                        unset($key);
-                    }
+            if (stripos($text, '{ifcustomrole') !== false && stripos($text, '{/ifcustomrole}') !== false) {
+                $context = $PAGE->context;
+                if ($context->contextlevel == CONTEXT_COURSE) {
+                    // We are in a course.
+                    $context = \context_course::instance($context->instanceid);
+                } else if ($context->contextlevel == CONTEXT_MODULE) {
+                    // We are in an activity.
+                    $cm = get_coursemodule_from_id('', $context->instanceid, 0, false, MUST_EXIST);
+                    $context = \context_module::instance($cm->id);
+                    unset($cm);
                 }
-                unset($re);
-                unset($found);
+
+                // Get roles within this context.
+                $roles = get_user_roles($context, $USER->id, true);
+                $roles = array_column($roles, 'shortname');
+                unset($context);
+
+                $this->if_tag(
+                    $text,
+                    $replace,
+                    'ifcustomrole',
+                    function ($roleshortname) use ($roles) {
+                        return in_array($roleshortname, $roles);
+                    }
+                );
             }
 
             // Tag: {ifnotcustomrole shortrolename}...{/ifnotcustomrole}.
