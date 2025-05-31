@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.7.0] 2025-05-31 (dev)
+### Updated
+- Fixed URL to Moodle reports.
+
 ## [2.7.0] 2025-05-05
 ### Added
 - New {ifnotingroup} tag (without parameters).
