@@ -26,7 +26,6 @@
 
 namespace filter_filtercodes;
 
-use filter_filtercodes;
 
 /**
  * Unit tests for FilterCodes filter.
@@ -38,6 +37,11 @@ use filter_filtercodes;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class filter_test extends \advanced_testcase {
+    /**
+     * @var text_filter $filter The filter to test.
+     */
+    private \filter_filtercodes\text_filter $filter;
+
     /**
      * Setup the test framework
      *
@@ -54,6 +58,296 @@ final class filter_test extends \advanced_testcase {
         filter_set_global_state('filtercodes', TEXTFILTER_ON);
 
         $PAGE->set_url(new \moodle_url('/'));
+        $this->filter = new \filter_filtercodes\text_filter();
+    }
+
+    /**
+     * Assert that the filter produces the expected output.
+     *
+     * @param string $before The text before filtering.
+     * @param string $after The expected text after filtering.
+     *
+     * @return void
+     */
+    private function assert_filter_eq(
+        string $before,
+        string $after,
+    ): void {
+        $filtered = $this->filter->filter($before, ['no-cache' => true]);
+        $this->assertEquals($after, $filtered);
+    }
+
+    /**
+     * Test the ifingroup tag.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     *
+     * @return void
+     */
+    public function test_filtercode_ifingroup(): void {
+        global $PAGE, $USER;
+
+        $course = $this->getDataGenerator()->create_course();
+        $context = \context_course::instance($course->id);
+
+        // Test the ifingroup tag with a grouping that does not exist.
+        $this->assert_filter_eq(
+            '{ifingroup none}Hello World{/ifingroup}',
+            ''
+        );
+
+        // Set up a group.
+        $group = $this->getDataGenerator()->create_group([
+            'courseid' => $PAGE->course->id,
+            'idnumber' => 'testgroup',
+            'name' => 'Test Group',
+        ]);
+
+        // Test the ifingroup tag with a group not assigned to the user.
+        $this->assert_filter_eq(
+            '{ifingroup ' . $group->id . '}Hello World{/ifingroup}',
+            '',
+        );
+
+        $this->getDataGenerator()->create_group_member([
+            'groupid' => $group->id,
+            'userid' => $USER->id,
+        ]);
+
+        // Test the ifingroup tag with a group assigned to the user.
+        $this->assert_filter_eq(
+            'Finally {ifingroup ' . $group->id . '}Hello World{/ifingroup}',
+            'Finally Hello World',
+        );
+        $this->assert_filter_eq(
+            'Finally with idnumber {ifingroup ' . $group->idnumber . '}Hello World{/ifingroup}',
+            'Finally with idnumber Hello World',
+        );
+
+        // True in true.
+        $this->assert_filter_eq(
+            '{ifingroup ' . $group->id . '}Hello {ifingroup ' . $group->id . '}World{/ifingroup}.{/ifingroup}',
+            'Hello World.',
+        );
+
+        // False in true.
+        $this->assert_filter_eq(
+            '{ifingroup ' . $group->id . '}Hello {ifingroup none}World{/ifingroup}.{/ifingroup}',
+            'Hello .',
+        );
+
+        // True in false.
+        $this->assert_filter_eq(
+            '{ifingroup none}Hello {ifingroup ' . $group->id . '}World{/ifingroup}.{/ifingroup}',
+            '',
+        );
+
+        // False in false.
+        $this->assert_filter_eq(
+            '{ifingroup none}Hello {ifingroup none}World{/ifingroup}.{/ifingroup}',
+            '',
+        );
+
+        // Side by side with ifingrouping.
+        $this->assert_filter_eq(
+            '{ifingroup ' . $group->id . '}Hello{/ifingroup} {ifingroup none}World{/ifingroup}.',
+            'Hello .',
+        );
+
+        // Test partials.
+        $this->assert_filter_eq(
+            '{ifingroup ' . $group->id . '}Hello {ifingroup none}World{/ifingroup}.',
+            'Hello {ifingroup none}World.',
+        );
+        $this->assert_filter_eq(
+            '{ifingroup none}Hello World{/ifingroup}{/ifingroup}.',
+            '{/ifingroup}.',
+        );
+        $this->assert_filter_eq(
+            '{ifingroup none}Hello {ifingroup ' . $group->id . '}World{/ifingroup}.',
+            '.',
+        );
+        $this->assert_filter_eq(
+            '{ifingroup none}Hello {ifingroup none}World{/ifingroup}.',
+            '.',
+        );
+        $this->assert_filter_eq(
+            '{ifingroup ' . $group->id . '}Hello {ifingroup none}{ifingroup none}World{/ifingroup}.',
+            'Hello {ifingroup none}{ifingroup none}World.',
+        );
+    }
+
+    /**
+     * Test the ifingrouping tag.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     *
+     * @return void
+     */
+    public function test_ifingrouping(): void {
+        global $PAGE, $USER;
+
+        $course = $this->getDataGenerator()->create_course();
+        $context = \context_course::instance($course->id);
+
+        // Test the ifingrouping tag with a grouping that does not exist.
+        $this->assert_filter_eq(
+            '{ifingrouping none}Hello World{/ifingrouping}',
+            ''
+        );
+
+        // Set up a grouping.
+        $grouping = $this->getDataGenerator()->create_grouping([
+            'courseid' => $PAGE->course->id,
+            'idnumber' => 'testgrouping',
+            'name' => 'Test Grouping',
+        ]);
+        $group = $this->getDataGenerator()->create_group([
+            'courseid' => $PAGE->course->id,
+            'idnumber' => 'testgroup',
+            'name' => 'Test Group',
+        ]);
+        $this->getDataGenerator()->create_grouping_group([
+            'groupingid' => $grouping->id,
+            'groupid' => $group->id,
+        ]);
+
+        // Test the ifingrouping tag with a grouping not assigned to the user.
+        $this->assert_filter_eq(
+            '{ifingrouping ' . $grouping->id . '}Hello World{/ifingrouping}',
+            '',
+        );
+
+        // Assign the user to the group.
+        $this->getDataGenerator()->create_group_member([
+            'groupid' => $group->id,
+            'userid' => $USER->id,
+        ]);
+
+        // Test the ifingrouping tag with a grouping assigned to the user.
+        $this->assert_filter_eq(
+            'Finally {ifingrouping ' . $grouping->id . '}Hello World{/ifingrouping}',
+            'Finally Hello World',
+        );
+
+        $this->assert_filter_eq(
+            'Finally with idnumber {ifingrouping ' . $grouping->idnumber . '}Hello World{/ifingrouping}',
+            'Finally with idnumber Hello World',
+        );
+
+        // True in true.
+        $this->assert_filter_eq(
+            '{ifingrouping ' . $grouping->id . '}Hello {ifingrouping ' . $grouping->id . '}World{/ifingrouping}.{/ifingrouping}',
+            'Hello World.',
+        );
+
+        // False in true.
+        $this->assert_filter_eq(
+            '{ifingrouping ' . $grouping->id . '}Hello {ifingrouping none}World{/ifingrouping}.{/ifingrouping}',
+            'Hello .',
+        );
+
+        // True in false.
+        $this->assert_filter_eq(
+            '{ifingrouping none}Hello {ifingrouping ' . $grouping->id . '}World{/ifingrouping}.{/ifingrouping}',
+            '',
+        );
+
+        // False in false.
+        $this->assert_filter_eq(
+            '{ifingrouping none}Hello {ifingrouping none}World{/ifingrouping}.{/ifingrouping}',
+            '',
+        );
+
+        // Side by side.
+        $this->assert_filter_eq(
+            '{ifingrouping ' . $grouping->id . '}Hello{/ifingrouping} {ifingrouping none}World{/ifingrouping}.',
+            'Hello .',
+        );
+
+        // Test partials.
+        $this->assert_filter_eq(
+            '{ifingrouping ' . $grouping->id . '}Hello {ifingrouping none}World{/ifingrouping}.',
+            'Hello {ifingrouping none}World.',
+        );
+        $this->assert_filter_eq(
+            '{ifingrouping none}Hello World{/ifingrouping}{/ifingrouping}.',
+            '{/ifingrouping}.',
+        );
+        $this->assert_filter_eq(
+            '{ifingrouping none}Hello {ifingrouping ' . $grouping->id . '}World{/ifingrouping}.',
+            '.',
+        );
+        $this->assert_filter_eq(
+            '{ifingrouping none}Hello {ifingrouping none}World{/ifingrouping}.',
+            '.',
+        );
+        $this->assert_filter_eq(
+            '{ifingrouping ' . $grouping->id . '}Hello {ifingrouping none}{ifingrouping none}World{/ifingrouping}.',
+            'Hello {ifingrouping none}{ifingrouping none}World.',
+        );
+    }
+
+    /**
+     * Test the ifprofile tag.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     *
+     * @return void
+     */
+    public function test_ifprofile(): void {
+        global $USER;
+
+        // Set up a user with specific profile fields.
+        $USER->city = 'New York';
+        $USER->country = 'US';
+        $USER->email = 'testuser@example.com';
+
+        // Test the 'is' condition.
+        $this->assert_filter_eq(
+            '{ifprofile city is "New York"}Welcome to New York{/ifprofile}',
+            'Welcome to New York'
+        );
+        $this->assert_filter_eq(
+            '{ifprofile city is "Los Angeles"}Welcome to LA{/ifprofile}',
+            ''
+        );
+
+        // Test the 'not' condition.
+        $this->assert_filter_eq(
+            '{ifprofile city not "Los Angeles"}Not in LA{/ifprofile}',
+            'Not in LA'
+        );
+        $this->assert_filter_eq(
+            '{ifprofile city not "New York"}Not in NY{/ifprofile}',
+            ''
+        );
+
+        // Test the 'contains' condition.
+        $this->assert_filter_eq(
+            '{ifprofile email contains "example.com"}Valid email{/ifprofile}',
+            'Valid email'
+        );
+        $this->assert_filter_eq(
+            '{ifprofile email contains "invalid.com"}Invalid email{/ifprofile}',
+            ''
+        );
+
+        // Test the 'in' condition.
+        $this->assert_filter_eq(
+            '{ifprofile country in "US,CA"}North America{/ifprofile}',
+            'North America'
+        );
+        $this->assert_filter_eq(
+            '{ifprofile country in "UK,FR"}Europe{/ifprofile}',
+            ''
+        );
+
+        // Nested conditions.
+        $this->assert_filter_eq(
+            '{ifprofile city is "New York"}{ifprofile country is "US"}Welcome to the US{/ifprofile}{/ifprofile}',
+            'Welcome to the US'
+        );
     }
 
     /**
@@ -65,10 +359,6 @@ final class filter_test extends \advanced_testcase {
      */
     public function test_filtercodes(): void {
         global $CFG, $USER, $DB, $PAGE;
-
-        // Create a test course.
-        $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
 
         $tests = [
             [
@@ -291,6 +581,34 @@ final class filter_test extends \advanced_testcase {
             [
                 'before' => '{glyphicon glyphicon-name}',
                 'after'  => '<span class="glyphicon glyphicon-name" aria-hidden="true"></span>',
+            ],
+            [
+                'before' => '{ifingrouping a}{ifingrouping b}Hello World{/ifingrouping}{/ifingrouping}',
+                'after'  => '',
+            ],
+            [
+                'before' => '{ifingroup a}{ifingroup b}Hello World{/ifingroup}{/ifingroup}',
+                'after'  => '',
+            ],
+            [
+                'before' => '{ifnotingrouping a}{ifnotingrouping b}Hello World{/ifnotingrouping}{/ifnotingrouping}',
+                'after'  => 'Hello World',
+            ],
+            [
+                'before' => '{ifnotingroup a}{ifnotingroup b}Hello World{/ifnotingroup}{/ifnotingroup}',
+                'after'  => 'Hello World',
+            ],
+            [
+                'before' => '{ifnotingrouping a}{ifnotingrouping b}Hello World{/ifnotingrouping}',
+                'after'  => '{ifnotingrouping b}Hello World',
+            ],
+            [
+                'before' => '{ifactivitycompleted 123456}Hello World{/ifactivitycompleted}',
+                'after'  => '{ifactivitycompleted 123456}Hello World{/ifactivitycompleted}',
+            ],
+            [
+                'before' => '{ifnotactivitycompleted 123456}Hello World{/ifnotactivitycompleted}',
+                'after'  => '{ifnotactivitycompleted 123456}Hello World{/ifnotactivitycompleted}',
             ],
         ];
 
