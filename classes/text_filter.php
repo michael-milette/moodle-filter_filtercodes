@@ -2480,7 +2480,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Parameters: None.
         foreach (['firstnamephonetic', 'lastnamephonetic', 'middlename'] as $field) {
             if (stripos($text, '{' . $field . '}') !== false) {
-                $replace['/\{' . $field . '\}/i'] = $this->isauthenticateduser() ? trim($USER->{$field}) : '';
+                $replace['/\{' . $field . '\}/i'] = $this->isauthenticateduser() ? trim($USER->{$field} ?? '') : '';
             }
         }
 
