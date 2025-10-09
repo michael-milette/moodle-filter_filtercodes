@@ -553,7 +553,7 @@ For example:
 -###
 {/ifminteacher}
 {ifminmanager}
--{getstring}site{/getstring}: System reports|/admin/category.php?category=reports
+-{getstring}site{/getstring}: System reports|/admin/search.php#linkreports
 {/ifminmanager}
 {ifadmin}
 -{getstring}site{/getstring}: {getstring:admin}additionalhtml{/getstring}|/admin/settings.php?section=additionalhtml
