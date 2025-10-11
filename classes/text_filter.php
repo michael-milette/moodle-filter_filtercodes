@@ -4522,7 +4522,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     $replace['/\{ifinsection\}(.*)\{\/ifinsection\}/isuU'] = '';
                 }
             } else {
-                if ($this->hasarchetype('student')) { // If user is enrolled in the course.
+                if ($this->hasarchetype('student')) { // If user is enrolled in the course as a student archetype.
                     // Remove the {ifnotincourse} strings if in a course.
                     if (stripos($text, '{ifnotincourse}') !== false) {
                         $replace['/\{ifnotincourse\}(.*)\{\/ifnotincourse\}/isuU'] = '';
