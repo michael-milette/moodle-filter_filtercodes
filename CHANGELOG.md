@@ -1,20 +1,28 @@
 # Change Log
+
 All notable changes to this project will be documented in this file.
 
-## [2.7.0] 2025-07-10 (dev)
-### Updated
+## [2.7.0] 2025-10-22 (dev)
+
+## Updated
+
+- Now detects encoded course tags (e.g. %7Bcoursecontextid%7D)
 - Fixed PHP issue with {firstnamephonetic}, {lastnamephonetic}, {middlename} tags when blank.
 - Fixed URL to Moodle reports.
 
 ## [2.7.0] 2025-05-05
+
 ### Added
+
 - New {ifnotingroup} tag (without parameters).
 - Primary/Custom menu text, such as course or category names, can now contain a pipe (|) character.
 - New {firstnamephonetic} tag.
 - New {lastnamephonetic} tag.
 - New {middlename} tag.
 - New Add New User and Upload Users to {menuadmin} tag.
+
 ### Updated
+
 - Fix-323: Escape arguments used to construct link from button code.
 - Fix-210: {if*rolename*} tags now work correctly.
 - Fix-319: Moodle 4.5 and 5.0 Plugin CI runs.
@@ -25,7 +33,9 @@ All notable changes to this project will be documented in this file.
 - Fixed several issues relating to Multi-language text.
 
 ## [2.6.3] 2025-04-27
+
 ### Updated
+
 - Fixed warning if the {ifprofile_field_shortname} field does not exist.
 - The {sitesummary} tag now displays the site summary instead of the site full name.
 - Managers can no longer access the Themes menu.
@@ -42,12 +52,16 @@ All notable changes to this project will be documented in this file.
 - Copyright notice to include 2025.
 
 ## [2.6.1] 2024-11-20
+
 ### Update
+
 - Fix-311: Global tags can now include numbers in their name.
 - Fix-308: Fixed compatibility issue with PHP 8.3.
 
 ## [2.6.0] 2024-10-07
+
 ### Added
+
 - New {menulanguages} tag.
 - New {keyboard}...{/keyboard} tag.
 - New {menuwishlist} tag.
@@ -63,7 +77,9 @@ All notable changes to this project will be documented in this file.
 - New {ifnotgrouping groupingid}...{/ifnotgrouping} tag.
 - New {mygroupings} tag.
 - New {ifnotincohort} tag.
+
 ### Updated
+
 - Fixed bug with ifactivitycompleted and ifnotactivitycompleted if activity does not exist.
 - Fixed issue with %7Bcoursemoduleid%7D leaving % symbol behind.
 - Fixed issue when {coursesummary} is used in a block.
@@ -80,12 +96,16 @@ All notable changes to this project will be documented in this file.
 - Fixed compatibility issue with Moodle LMS 4.5.
 
 ## [2.5.1] 2024-05-01
+
 ### Updated
+
 - {iftheme} tag now works even when at the beginning of a string.
 - Updated for Moodle coding guidelines.
 
 ## [2.5.0] 2024-04-24
+
 ### Added
+
 - New {menucoursemore} tag.
 - New {iftheme}{/iftheme} tag.
 - New {ifnottheme}{/ifnottheme} tag.
@@ -93,7 +113,9 @@ All notable changes to this project will be documented in this file.
 - New links to edit Advanced theme settings and current theme settings to {menuthemes} tag.
 - {ALPHA} New {dashboard_siteinfo} tag. Work in progress - doesn't display correctly in all themes.
 - GitHub actions workflow.
+
 ### Updated
+
 - Small performance optimization.
 - Corrected "Course: Badges" link in {menuadmin}.
 - Updated PHP and Moodle compatibility in CONTRIBUTING.md.
@@ -111,12 +133,16 @@ All notable changes to this project will be documented in this file.
 - Fixed compatibility issue with Moodle LMS 4.4.
 
 ## [2.4.3] 2023-11-20
+
 ### Added
+
 - New {menuthemes} tag.
 - New {sitename} tag.
 - New {sitesummary} tag.
 - New {ifminstudent} tag.
+
 ### Updated
+
 - {courseenddate} tag can now take an optional courseid parameter.
 - {courseenddate} tag will now display strftime date formats.
 - If support page is blank, the {supportpage} tag will be blank instead of displaying the tag.
@@ -130,20 +156,28 @@ All notable changes to this project will be documented in this file.
 - Fixed issue where a tel: link was unexpectedly created in {teamcards}.
 
 ## [2.4.2] 2023-10-25
+
 ### Updated
+
 - Fixed bug with rendering of coursecards in Moodle 3.10 and earlier.
 
 ## [2.4.1] 2023-10-23
+
 ### Added
+
 - New %7Bwwwroot%7D - alias for the {wwwroot} tag.
+
 ### Updated
+
 - Fixed: {coursecard}, {coursecards}, {mycoursescards} and {coursecardsbyenrol} now include visible courses without an end date.
 - Fixed a failed PHPUnit test for {coursemoduleid}.
 - Fix spacing for some failed CSS code checks.
 - Tested compatible with PHP 8.2.
 
 ## [2.4.0] 2023-10-20
+
 ### Added
+
 - Support for FontAwesome v6 syntax including fa-solid and fa-brands. E.g. {fa-solid fa-user}.
 - Fix-266: New {multilang}{/multilang} tag. Note: Depends on Moodle's `Multi-language content` filter.
 - Fix-198: Module level assigned roles detection to {ifcustomrole} and {ifnotcustomrole} tags.
@@ -163,7 +197,9 @@ All notable changes to this project will be documented in this file.
 - Alternative (alt) text to {qrcode} tag.
 - Documented tags in the source code.
 - Compatibility with Moodle 4.3.
+
 ### Updated
+
 - The {button} tag will now attempt to automatically strip HTML tags created by some other filters.
 - Fixed profile pictures including user picture, gravatar and faceless avatar.
 - {scrape} tag now automatically removes any HTML in case Moodle turned the URL into a link.
@@ -191,20 +227,26 @@ All notable changes to this project will be documented in this file.
 - Documentation (README.md)
 
 ## [2.3.6] 2023-05-07
+
 ### Updated
+
 - Partial fix for sizing issue of radial and pie charts in Moodle 4.1 and 4.2.
 - Copyright notice to include 2023.
 - Compatibility with Moodle 4.2.
 - Compatibility with PHP 8.1.
 
 ## [2.3.5] 2023-01-31
+
 ### Added
+
 - New {ifenrolpage}{/ifenrolpage} tags.
 - New {ifnotenrolpage}{/ifnotenrolpage} tags.
 - {courseid} tag now resolves to course id on enrolment pages.
 
 ## [2.3.4] 2022-12-11
+
 ### Added
+
 - New {courseunenrolurl} tag.
 - New {coursecount students} tag.
 - Setting to show hidden profile fields using the {profile_field_...} tag.
@@ -216,7 +258,9 @@ All notable changes to this project will be documented in this file.
 - Code of Conduct guidelines.
 - Compatibility with Moodle 4.1.
 - Compatibility with PHP 8.0.
+
 ### Updated
+
 - Fix-218: You can now use the {profile_field_...} tag inside the {chart} tag.
 - Fix-244: Blank avatars now appear in {coursecards} regardless of whether Gravatars are enabled.
 - Fix-217: You can now have up to 50 global tags.
@@ -227,15 +271,21 @@ All notable changes to this project will be documented in this file.
 - Tested to be compatible with PHP 7.4 and 8.0.
 
 ## [2.3.1] 2022-06-07
+
 ### Added
+
 - phpcs.xml.cont.dist file.
+
 ### Updated
+
 - .gitignore file.
 - Fix-221: Resolved conflict between {mygroups} and {ifingroup} tags when used at the same time.
 - Fix-222: Fixed PHPUnit v9.5 compatibility.
 
 ## [2.3.0] 2022-04-19
+
 ### Added
+
 - New {ifhasarolename roleshortname}{/ifhasarolename} tags.
 - Sample ALPHA code in the documentation to patch Moodle 4.0 themes for support in the custom menu.
 - New {courseprogresspercent} tag.
@@ -278,7 +328,9 @@ All notable changes to this project will be documented in this file.
 - Missing support for {supportname}, {supportemail} and {supportpage} tags.
 - Known limitation in README.md regarding Moodle's 'Download course content' feature.
 - Compatibility with Moodle 4.0
+
 ### Updated
+
 - Improve parsing of {scrape} tag. Improper syntax will no longer make Moodle crash, the tag just won't work properly.
 - {lang}, {idnumber} and {coursegradepercent} tags can now be used within other tags for example.
 - {coursesummary} tag is now processed through Moodle filters for multi-language support.
@@ -305,14 +357,18 @@ All notable changes to this project will be documented in this file.
 - Updated copyright notice to include 2022.
 
 ## [2.2.1] 2021-05-25
+
 ### Updated
+
 - Corrections in some of the language strings.
 - Completed French translation.
 - Clarification for {coursecards} and {categorycards} documentation in this README.md file.
 - There is no new or changed functionality in this release.
 
 ## [2.2.0] 2021-05-22
+
 ### Added
+
 - New {courseteachers} tag (ALPHA).
 - New %7Bcoursemoduleid%7D tag.
 - New define custom global {global_...} tags (up to 20).
@@ -327,7 +383,9 @@ All notable changes to this project will be documented in this file.
 - New {supportemail} tag.
 - New {supportpage} tag.
 - New {webpage} gets automatically substituted to {profile_field_webpage} as of Moodle 3.11.
+
 ### Updated
+
 - {coursesummary} can now include other FilterCodes.
 - {categorycards} titles now always display white.
 - Request a Course link is no longer included in {mycourses}. See new {courserequest} tag.
@@ -343,7 +401,9 @@ All notable changes to this project will be documented in this file.
 - Copyright notice for 2021.
 
 ## [2.1.0] 2020-11-23
+
 ### Added
+
 - New {ifingroup id|idnumber}{/ifingroup} tags.
 - New {filtercodes} tag. Note: Only works for teachers and above.
 - New {alert style}{/alert} tags (ALPHA).
@@ -366,6 +426,7 @@ All notable changes to this project will be documented in this file.
 - New option to format the date/time {now dateTimeFormat}.
 
 ### Updated
+
 - {courseprogress} and {courseprogressbar} now show zero progress if progress is 0.
 - {alert} to allow for optional contextual class stying.
 - Reorganized and grouped list of tags and made some corrections in the documentation.
@@ -379,7 +440,9 @@ All notable changes to this project will be documented in this file.
 - Tested to be compatible up to and including Moodle 3.10.
 
 ## [2.0.0] 2020-07-01
+
 ### Added
+
 - New configurable setting to enable/disable escaped [{braces}] (e.g. for creating documentation). Default is enabled.
 - You can now escape tags so they are not processed by wrapping them in [{brackets}]. {{double-braces}} are no longer supported.
 - New {diskfreespacedata} tag.
@@ -417,7 +480,9 @@ All notable changes to this project will be documented in this file.
 - composer.json
 - Separator in menu above Request a Course link (part of {mycoursesmenu} tag).
 - New question to FAQ regarding setting filter priorities so that all enabled filters works together.
+
 ### Updated
+
 - Tested to be compatible with PHP 7.3 and 7.4.
 - Tested to be compatible with Moodle 3.9.
 - Read-only name and email address fields are now also disabled in {form...} templates.
@@ -429,7 +494,9 @@ All notable changes to this project will be documented in this file.
 - .travis.yml and fixed issues.
 - Fixed example of Create Course menu item. Now creates a course in the current category.
 - Fixed {note} tag which was not working.
+
 ### Deprecated (no longer inluded)
+
 - You can no longer escape tags using {{double}} braces. This was causing issues with MathJAX. Bracket your [{tag}] instead.
 
 ### Important notes
@@ -448,7 +515,9 @@ They were found to be incompatible with the following Moodle themes:
 * Boost_Training
 
 ## [1.1.0] - 2019-11-17
+
 ### Added
+
 - You can now escape tags so they are not processed by using a double set of braces {{ and }} around tags.
 - If Request a Course is enabled, it will now be appended in {mycourses} and {mycoursesmenu}.
 - New {wwwcontactform} tag.
@@ -471,7 +540,9 @@ They were found to be incompatible with the following Moodle themes:
 - New {referrer} tag - alias of {referer} previously implemented.
 - Missing $string['pluginname'] to language file.
 - Added some unit tests.
+
 ### Updated
+
 - Fixed some unit tests.
 - Fix for {scrape} tag to better handle missing parameters.
 - Fixed {langx} tag so that it works correctly with language and culture codes.
@@ -480,7 +551,9 @@ They were found to be incompatible with the following Moodle themes:
 - Documentation to reflect new functionality.
 
 ## [1.0.1] - 2019-05-20
+
 ### Added
+
 - New {pagepath} tag.
 - New {editingtoggle} tag.
 - New {idnumber} tag (from user profile).
@@ -490,11 +563,15 @@ They were found to be incompatible with the following Moodle themes:
 - New {details}, {summary}, {/summary}, {/details} tags (experimental).
 - New .travis.yml configuration file for Travis.
 - Expanded compatibility - now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4, 3.5, 3.6 and now 3.7.
+
 ### Updated
+
 - Fixed {categories} filter code compatibility with Moodle 2.7 to 3.5.
 
 ## [1.0.0] - 2018-11-26
+
 ### Added
+
 - New settings page.
 - New {getstring} tag.
 - New {siteyear} tag - current 4 digit year - useful for copyright notices.
@@ -509,19 +586,27 @@ They were found to be incompatible with the following Moodle themes:
 - New {usersonline} tag.
 - New experimental support for Moodle Custom Menu filtering in Boost and Clean (bootstrapbase) themes. Must be enabled in FilterCodes settings and requires Moodle 3.2+.
 - Expanded compatibility - now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4, 3.5 and now 3.6.
+
 ### Updated
+
 - No major issues in the last 12 months of BETA - Project status is now STABLE.
 
 ## [0.4.6] - 2018-05-22
+
 ### Added
+
 - Added support for Privacy API.
 
 ## [0.4.5] - 2018-05-18
+
 ### Added
+
 - New %7Bsesskey%7D tag as an alternative to {sesskey} for use with encoded URLs.
 
 ## [0.4.4] - 2018-05-08
+
 ### Added
+
 - New %7Bcourseid%7D tag as an alternative to {courseid} for use with encoded URLs.
 - New %7Buserid%7D tag as an alternative to {userid} for use with encoded URLs.
 - New {coursestartdate} tag.
@@ -529,25 +614,36 @@ They were found to be incompatible with the following Moodle themes:
 - New {coursecompletiondate} tag.
 
 ## [0.4.3] - 2018-03-30
+
 ### Added
+
 - Support for reCAPTCHA v2 in Moodle 3.1.11+, 3.2.8+, 3.3.5+, 3.4.5+ and 3.5+.
 - FilterCodes upgrade notifications now works properly when a updates are available on Moodle.org.
 - Expanded compatibility - now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3, 3.4 and 3.5.
+
 ### Updated
+
 - Documentation - fixed errors and added FAQ for reCAPTCHA.
 - Copyright notice to include 2018.
 - Minor performance optimization.
 
 ## [0.4.2] - 2017-11-17
+
 ### Added
+
 - Example of enabling filters in custom menu and custom user menu in boost based themes.
+
 ### Updated
+
 - ReCAPTCHA will now work on https.
 - Fixed example of enabling filters in custom menu and custom user menu in bootstrapbase based themes.
 
 ## [0.4.0] - 2017-11-11
+
 ### Added
+
 Over a dozen new FilterCodes added including:
+
 - New {alternatename} tag.
 - New {city} tag.
 - New {categories} tag.
@@ -565,7 +661,9 @@ Over a dozen new FilterCodes added including:
 - Expanded compatibility now includes Moodle 2.7, 2.8, 2.9, 3.0, 3.1, 3,2, 3.3 and 3.4.
 - Added new useful examples of using FilterCodes in custom menus (see Usage section).
 - Added CONTRIBUTE.md.
+
 ### Updated
+
 - Project status is now BETA.
 - Reorganized README.md (New: logo, status badges, table of contents, contributing, etc).
 - Default Moodle role IDs are no longer hard coded. {ifrolename} and {ifminrolename} type tags now use role archetypes instead of role shortnames. (thanks @FMCorz !)
@@ -577,13 +675,17 @@ Over a dozen new FilterCodes added including:
 - Updated documentation and FAQ.
 
 ## [0.3.0] - 2017-09-08
+
 ### Added
+
 - Conditional role tags are now aware of switching roles.
 - New {ifminassistant}{/ifminassistant} set of tags.
 - New {ifminteacher}{/ifminteacher} set of tags.
 - New {ifmincreator}{/ifmincreator} set of tags.
 - New {ifminmanager}{/ifminmanager} set of tags.
+
 ### Updated
+
 - {ifrolename} type tags will now only display content if you have been assigned that particular role.
 - Identification of roles no longer depends on the verification of unique capabilities but by role assignment.
 - Bug fix: {ifstudent}{/ifstudent} set of tags now work. (thanks @gemguardian !)
@@ -591,13 +693,19 @@ Over a dozen new FilterCodes added including:
 - Updated documentation and FAQ.
 
 ## [0.2.0] - 2017-07-18
+
 ### Added
+
 - New tag: {ifnotenrolled} - Exact logical opposite of {ifenrolled} tag.
+
 ### Updated
+
 - Significant performance improvements.
 - Language strings are now correctly named.
 
 ## [0.1.0] - 2017-07-07
+
 ### Added
+
 - Initial public release on Moodle.org and GitHub.
 - Plugin officially compatible and tested with Moodle 3.1, 3.2 and 3.3.

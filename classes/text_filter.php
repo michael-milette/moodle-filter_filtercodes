@@ -1705,7 +1705,7 @@ class text_filter extends \filtercodes_base_text_filter {
         }
 
         // Tags: {courseid...
-        if (stripos($text, '{course') !== false || stripos($text, '%7Bcourseid') !== false) {
+        if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
             $courseid = 1; // Default to site.
             if ($PAGE->pagetype == 'enrol-index') {
                 // Make it work, even when we are on the enrolment page.
