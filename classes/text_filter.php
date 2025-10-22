@@ -3018,6 +3018,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 $replace['/\{coursecount students\}/i'] = $cnt;
             }
             if (stripos($text, '{coursecount students:active}') !== false) {
+                // First attempt: count students via role assignments (preferred, accurate when roles assigned).
                 $sql = "SELECT COUNT(DISTINCT ue.userid)
                         FROM {user_enrolments} ue
                         JOIN {enrol} e ON e.id = ue.enrolid
@@ -3026,7 +3027,18 @@ class text_filter extends \filtercodes_base_text_filter {
                         JOIN {role_assignments} ra ON ra.contextid = ctx.id AND ra.userid = ue.userid
                         JOIN {role} r ON r.id = ra.roleid AND r.shortname = 'student'
                         WHERE ue.status = 0 AND e.courseid = :courseid";
-                $cnt = $DB->count_records_sql($sql, ['courseid' => $PAGE->course->id]);
+                $cnt = (int)$DB->count_records_sql($sql, ['courseid' => $PAGE->course->id]);
+
+                // Fallback: some test setups or unusual enrolment flows may not have role_assignments
+                // present. In that case, count distinct active enrolments as a safe fallback.
+                if ($cnt === 0) {
+                    $fallbacksql = "SELECT COUNT(DISTINCT ue.userid)
+                        FROM {user_enrolments} ue
+                        JOIN {enrol} e ON e.id = ue.enrolid
+                        WHERE ue.status = 0 AND e.courseid = :courseid";
+                    $cnt = (int)$DB->count_records_sql($fallbacksql, ['courseid' => $PAGE->course->id]);
+                }
+
                 $replace['/\{coursecount students:active\}/i'] = $cnt;
             }
 

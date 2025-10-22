@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## Updated
 
+- {coursecount students:active} Added active enrolments fallback if no role_assignments present.
 - Now detects encoded course tags (e.g. %7Bcoursecontextid%7D)
 - Fixed PHP issue with {firstnamephonetic}, {lastnamephonetic}, {middlename} tags when blank.
 - Fixed URL to Moodle reports.
