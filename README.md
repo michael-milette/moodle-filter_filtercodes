@@ -1065,6 +1065,20 @@ Note: There have also been reported cases where some tags in URLs, like {wwwroot
 * If **nginx** is being used but not configured correctly.
 * If you are using Moodle's **Log In As** feature, there are several reports of Moodle re-writing HTML when logged in as another user. It does not just affect FilterCodes. See https://tracker.moodle.org/browse/MDL-65372
 
+## Known Compatibility Issues
+
+### Third-Party Plugin Compatibility
+
+**Edwiser Reports Plugin**: Some versions of the Edwiser Reports plugin (local_edwiserreports) contain a bug that can cause FilterCodes unit tests to fail. The issue occurs when the plugin attempts to access `$_SERVER['REQUEST_URI']` without checking if it exists, which can happen in PHPUnit test environments.
+
+**Symptoms**: Unit test failures with errors like "Undefined array key 'REQUEST_URI'" originating from the Edwiser Reports plugin.
+
+**Impact**: This only affects unit testing, not production functionality. The FilterCodes plugin works normally in production environments.
+
+**Workaround**: If you encounter this issue during testing, the problem is with the Edwiser Reports plugin, not FilterCodes. Please report the issue to the Edwiser Reports developers.
+
+**Note**: FilterCodes does not compensate for bugs in third-party plugins. This documentation is provided for awareness and troubleshooting purposes only.
+
 More helpful information can be found in the [FAQ](#faq) below.
 
 # FAQ

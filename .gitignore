@@ -93,6 +93,7 @@ test.php
 *.env
 
 ##### Backup
+backups/
 *.bak
 *.bakup
 *.gho
@@ -458,3 +459,10 @@ composer.lock
 *.css.map
 *.sass.map
 *.scss.map
+
+##### AI
+.claude
+.pnotes
+
+##### Developer documentation
+docs/

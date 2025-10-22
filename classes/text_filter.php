@@ -365,7 +365,7 @@ class text_filter extends \filtercodes_base_text_filter {
     private function iswebservice() {
         global $ME;
         // If this is a web service or the Moodle mobile app...
-        $isws = (WS_SERVER || (strstr($ME, "webservice/") !== false && optional_param('token', '', PARAM_ALPHANUM)));
+        $isws = (WS_SERVER || (strstr($ME ?? '', "webservice/") !== false && optional_param('token', '', PARAM_ALPHANUM)));
         return $isws;
     }
 
@@ -567,9 +567,13 @@ class text_filter extends \filtercodes_base_text_filter {
      * @return bool True if the user is logged in and not a guest user, false otherwise.
      */
     private function isauthenticateduser() {
+        global $USER;
         static $isauthenticateduser;
+        static $cacheduserId;
 
-        if (!isset($isauthenticateduser)) {
+        // Recalculate if user has changed or not yet cached.
+        if (!isset($cacheduserId) || $cacheduserId !== $USER->id) {
+            $cacheduserId = $USER->id;
             $isauthenticateduser = isloggedin() && !isguestuser();
         }
 
@@ -1630,6 +1634,17 @@ class text_filter extends \filtercodes_base_text_filter {
         static $mygroupslist;
         static $mygroupingslist;
         static $mycohorts;
+        static $cachedfilteruserid;
+
+        // Reset user-specific cached data if the user has changed.
+        if (!isset($cachedfilteruserid) || $cachedfilteruserid !== $USER->id) {
+            $cachedfilteruserid = $USER->id;
+            $profilefields = null;
+            $profiledata = null;
+            $mygroupslist = null;
+            $mygroupingslist = null;
+            $mycohorts = null;
+        }
 
         $replace = []; // Array of key/value filterobjects.
 
@@ -1863,8 +1878,10 @@ class text_filter extends \filtercodes_base_text_filter {
         }
 
         if (stripos($text, '{thisurl') !== false) {
-            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") .
-                    "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+            $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
+            $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+            $url = $protocol . "://" . $host . $uri;
 
             // Tag: {thisurl}.
             // Description: Complete URL of the current page.
@@ -2550,7 +2567,7 @@ class text_filter extends \filtercodes_base_text_filter {
             if ($CFG->branch >= 311) {
                 $text = str_replace('{webpage}', '{profile_field_webpage}', $text);
             } else {
-                $replace['/\{webpage\}/i'] = $this->isauthenticateduser() ? $USER->url : '';
+                $replace['/\{webpage\}/i'] = '';//$this->isauthenticateduser() ? $USER->url : '';
             }
         }
 
@@ -2587,7 +2604,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Support email address for the site from Moodle settings.
             // None.
             if (stripos($text, '{supportemail}') !== false) {
-                if (empty($CFG->supportname)) {
+                if (empty($CFG->supportemail)) {
                     $replace['/\{supportemail\}/i'] = get_string('notavailable', 'filter_filtercodes');
                 } else {
                     $replace['/\{supportemail\}/i'] = $CFG->supportemail;
@@ -3708,6 +3725,13 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: An unordered list of links to categories in the same level as the current course.
             // Parameters: None.
             if (stripos($text, '{categoriesx}') !== false) {
+                if (empty($PAGE->course->category)) {
+                    // If we are not in a course, check if categoryid is part of URL (ex: course lists).
+                    $catid = optional_param('categoryid', 0, PARAM_INT);
+                } else {
+                    // Retrieve the category id of the course we are in.
+                    $catid = $PAGE->course->category;
+                }
                 $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
                         FROM {course_categories} cc
                         WHERE cc.parent = $catid AND cc.visible = 1
@@ -3728,6 +3752,13 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: A list of links to categories in the same level as the current course - for use in the custom menu.
             // Parameters: None.
             if (stripos($text, '{categoriesxmenu}') !== false) {
+                if (empty($PAGE->course->category)) {
+                    // If we are not in a course, check if categoryid is part of URL (ex: course lists).
+                    $catid = optional_param('categoryid', 0, PARAM_INT);
+                } else {
+                    // Retrieve the category id of the course we are in.
+                    $catid = $PAGE->course->category;
+                }
                 $sql = "SELECT cc.id, cc.sortorder, cc.name, cc.visible, cc.parent
                         FROM {course_categories} cc
                         WHERE cc.parent = $catid AND cc.visible = 1
@@ -5487,7 +5518,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Parameters: None.
         // Requires content between tags.
         if (stripos($text, '{rawurlencode}') !== false) {
-            // Replace {urlencode} tags and content with encoded content.
+            // Replace {rawurlencode} tags and content with encoded content.
             $newtext = preg_replace_callback(
                 '/\{rawurlencode\}(.*)\{\/rawurlencode\}/isuU',
                 function ($matches) {
