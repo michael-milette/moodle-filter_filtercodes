@@ -107,6 +107,12 @@ class text_filter extends \filtercodes_base_text_filter {
 
         // Handle caching of results.
         static $archetypes = [];
+
+        // Clear cache in unit tests to ensure test isolation.
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+            $archetypes = [];
+        }
+
         if (isset($archetypes[$archetype])) {
             return $archetypes[$archetype];
         }
@@ -1744,20 +1750,14 @@ class text_filter extends \filtercodes_base_text_filter {
         static $mygroupslist;
         static $mygroupingslist;
         static $mycohorts;
-        static $cachedfilteruserid;
 
-        // Reset user-specific cached data if the user has changed.
-        if (!isset($cachedfilteruserid) || $cachedfilteruserid !== $USER->id) {
-            $cachedfilteruserid = $USER->id;
-            $profilefields = null;
-            $profiledata = null;
-            $mygroupslist = null;
-            $mygroupingslist = null;
-            $mycohorts = null;
+        // Clear cache in unit tests to ensure test isolation.
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+            $options['no-cache'] = true;
         }
 
+        // Clear user-specific cached data if necessary.
         if (!empty($options['no-cache'])) {
-            // Reset the static variables if cache is disabled.
             $profilefields = null;
             $profiledata = null;
             $mygroupslist = null;

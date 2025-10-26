@@ -298,7 +298,7 @@ final class ui_elements_test extends \advanced_testcase {
         global $CFG;
 
         // Enable course requests.
-        set_config('enablecourserequests', 1);
+        $CFG->enablecourserequests = 1;
 
         $text = '{courserequest}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);

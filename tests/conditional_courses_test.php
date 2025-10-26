@@ -48,7 +48,7 @@ final class conditional_courses_test extends \advanced_testcase {
     /**
      * Test ifenrolled conditional.
      */
-    public function test_ifenrolled() {
+    public function test_ifenrolled_when_enrolled() {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -75,8 +75,10 @@ final class conditional_courses_test extends \advanced_testcase {
         $this->setUser($user);
 
         $course = $this->getDataGenerator()->create_course();
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
+
         $PAGE->set_course($course);
+        $PAGE->set_context($context);
 
         $text = '{ifenrolled}You are enrolled{/ifenrolled}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
@@ -95,8 +97,10 @@ final class conditional_courses_test extends \advanced_testcase {
         $this->setUser($user);
 
         $course = $this->getDataGenerator()->create_course();
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
+
         $PAGE->set_course($course);
+        $PAGE->set_context($context);
 
         $text = '{ifnotenrolled}You are NOT enrolled{/ifnotenrolled}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
@@ -203,8 +207,10 @@ final class conditional_courses_test extends \advanced_testcase {
         $group = $this->getDataGenerator()->create_group(['courseid' => $course->id, 'name' => 'Test Group']);
         // User is not in the group.
 
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
+
         $PAGE->set_course($course);
+        $PAGE->set_context($context);
 
         $text = '{ifnotingroup ' . $group->id . '}Not in the group{/ifnotingroup}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
@@ -218,11 +224,13 @@ final class conditional_courses_test extends \advanced_testcase {
      * Test nested ifingroup tags.
      */
     public function test_ifingroup_nested() {
-        global $USER;
+        global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
         $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
         $context = \context_course::instance($course->id);
+
+        $PAGE->set_course($course);
 
         $group = $this->getDataGenerator()->create_group(['courseid' => $course->id, 'idnumber' => 'testgroup']);
         $this->getDataGenerator()->create_group_member(['groupid' => $group->id, 'userid' => $USER->id]);
@@ -261,11 +269,13 @@ final class conditional_courses_test extends \advanced_testcase {
      * Test partial/unbalanced ifingroup tags.
      */
     public function test_ifingroup_partial_tags() {
-        global $USER;
+        global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
         $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
         $context = \context_course::instance($course->id);
+
+        $PAGE->set_course($course);
 
         $group = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
         $this->getDataGenerator()->create_group_member(['groupid' => $group->id, 'userid' => $USER->id]);
@@ -351,8 +361,10 @@ final class conditional_courses_test extends \advanced_testcase {
         $grouping = $this->getDataGenerator()->create_grouping(['courseid' => $course->id, 'name' => 'Other Grouping']);
         // Don't add user to any group in this grouping.
 
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
+
         $PAGE->set_course($course);
+        $PAGE->set_context($context);
 
         $text = '{ifnotingrouping ' . $grouping->id . '}Not in the grouping{/ifnotingrouping}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
@@ -366,11 +378,13 @@ final class conditional_courses_test extends \advanced_testcase {
      * Test nested ifingrouping tags.
      */
     public function test_ifingrouping_nested() {
-        global $USER;
+        global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
         $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
         $context = \context_course::instance($course->id);
+
+        $PAGE->set_course($course);
 
         $grouping = $this->getDataGenerator()->create_grouping(['courseid' => $course->id, 'idnumber' => 'testgrouping']);
         $group = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
@@ -411,11 +425,13 @@ final class conditional_courses_test extends \advanced_testcase {
      * Test partial/unbalanced ifingrouping tags.
      */
     public function test_ifingrouping_partial_tags() {
-        global $USER;
+        global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
         $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
         $context = \context_course::instance($course->id);
+
+        $PAGE->set_course($course);
 
         $grouping = $this->getDataGenerator()->create_grouping(['courseid' => $course->id]);
         $group = $this->getDataGenerator()->create_group(['courseid' => $course->id]);

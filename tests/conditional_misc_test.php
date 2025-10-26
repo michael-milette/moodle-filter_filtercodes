@@ -71,6 +71,7 @@ final class conditional_misc_test extends \advanced_testcase {
 
         // Disable developer debugging.
         $CFG->debug = DEBUG_NORMAL;
+        $CFG->debugdisplay = 0;
 
         $text = '{ifdev}Developer mode active{/ifdev}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
@@ -140,7 +141,7 @@ final class conditional_misc_test extends \advanced_testcase {
         global $CFG;
 
         // Enable course requests.
-        set_config('enablecourserequests', 1);
+        $CFG->enablecourserequests = 1;
 
         $text = '{ifcourserequests}Course requests enabled{/ifcourserequests}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
@@ -157,7 +158,7 @@ final class conditional_misc_test extends \advanced_testcase {
         global $CFG;
 
         // Disable course requests.
-        set_config('enablecourserequests', 0);
+        $CFG->enablecourserequests = 0;
 
         $text = '{ifcourserequests}Course requests enabled{/ifcourserequests}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
@@ -332,9 +333,7 @@ final class conditional_misc_test extends \advanced_testcase {
         global $CFG;
 
         // Force mobile theme (simulates mobile detection).
-        if (method_exists($CFG, 'set_config')) {
-            set_config('enabledevicedetection', 1);
-        }
+        $CFG->enabledevicedetection = 1;
 
         $text = '{ifmobile}Mobile device detected{/ifmobile}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
@@ -384,7 +383,8 @@ final class conditional_misc_test extends \advanced_testcase {
 
         // Set some conditions.
         $CFG->debug = DEBUG_DEVELOPER;
-        set_config('enablecourserequests', 1);
+        $CFG->debugdisplay = 1;
+        $CFG->enablecourserequests = 1;
 
         $text = '{ifdev}Dev{/ifdev} {ifcourserequests}Requests{/ifcourserequests}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
