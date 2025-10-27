@@ -4552,12 +4552,12 @@ class text_filter extends \filtercodes_base_text_filter {
                 // If Request a course is enabled...
                 $context = \context_system::instance();
                 if (empty($CFG->enablecourserequests) || !has_capability('moodle/course:request', $context)) {
+                    // If Request a Course is not enabled, remove the ifcourserequests tags and contained content.
+                    $replace['/\{ifcourserequests\}(.*)\{\/ifcourserequests\}/isuU'] = '';
+                } else {
                     // Just remove the tags.
                     $replace['/\{ifcourserequests\}/i'] = '';
                     $replace['/\{\/ifcourserequests\}/i'] = '';
-                } else {
-                    // If Request a Course is not enabled, remove the ifcourserequests tags and contained content.
-                    $replace['/\{ifcourserequests\}(.*)\{\/ifcourserequests\}/isuU'] = '';
                 }
             }
 
