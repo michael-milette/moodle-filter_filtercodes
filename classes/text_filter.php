@@ -792,22 +792,19 @@ class text_filter extends \filtercodes_base_text_filter {
         if (!isloggedin() || isguestuser()) {
             $clinktype = ''; // No link, only name.
         }
-        switch ($clinktype) {
-            case 'email':
+
+        switch (true) {
+            case $clinktype == 'email':
                 $link = '<a href="mailto:' . $user->email . '">'  . $name . '</a>';
                 break;
-            case 'message':
+            case $clinktype == 'message':
                 $link = '<a href="' . (new \moodle_url('/message/index.php', ['id' => $user->id]))->out() . '">' . $name . '</a>';
                 break;
-            case 'profile':
+            case $clinktype == 'profile':
                 $link = '<a href="' . (new \moodle_url('/user/profile.php', ['id' => $user->id]))->out() . '">' . $name . '</a>';
                 break;
-            case 'phone1':
-                if (!empty($user->phone1)) {
-                    $link = '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
-                } else {
-                    $link = $name;
-                }
+            case $clinktype == 'phone' && !empty($user->phone1):
+                $link = '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
                 break;
             default:
                 $link = $name;
@@ -1356,7 +1353,7 @@ class text_filter extends \filtercodes_base_text_filter {
             global $OUTPUT, $DB;
 
             $sql = 'SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
-                    u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1
+                    u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1, u.phone2
                     FROM {course} c, {role_assignments} ra, {user} u, {context} ct
                     WHERE c.id = ct.instanceid AND ra.roleid in (?) AND ra.userid = u.id AND ct.id = ra.contextid
                         AND u.suspended = 0 AND u.deleted = 0
@@ -3044,7 +3041,7 @@ class text_filter extends \filtercodes_base_text_filter {
                             'email' => 'fa fa-envelope-o',
                             'message' => 'fa fa-comment-o',
                             'profile' => 'fa fa-user-o',
-                            'phone' => 'fa fa-mobile',
+                            'phone' => 'fa fa-phone',
                         ];
 
                         $cnt = 0;
@@ -3079,26 +3076,26 @@ class text_filter extends \filtercodes_base_text_filter {
 
                             $contacts .= '<span class="fc-coursecontactroles">' . implode(", ", $rolenames) . ': </span>';
 
-                            switch ($clinktype) {
-                                case 'email':
+                            switch (true) {
+                                case $clinktype == 'email':
                                     $contacts .= $icon . '<a href="mailto:' . $user->email . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case 'message':
+                                case $clinktype == 'message':
                                     $contacts .= $icon . '<a href="' . (new \moodle_url(
                                         '/message/index.php',
                                         ['id' => $coursecontact['user']->id]
                                     ))->out() . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case 'profile':
+                                case $clinktype == 'profile':
                                     $contacts .= $icon . '<a href="' . (new \moodle_url(
                                         '/user/profile.php',
                                         ['id' => $coursecontact['user']->id, 'course' => $PAGE->course->id]
                                     ))->out() . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case 'phone1' && !empty($user->phone1):
+                                case $clinktype == 'phone' && !empty($user->phone1):
                                     $contacts .= $icon . '<a href="tel:' . $user->phone1 . '">';
                                     $contacts .= $contactsclose;
                                     break;

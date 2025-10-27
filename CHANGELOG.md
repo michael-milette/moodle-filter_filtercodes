@@ -2,10 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.7.0] 2025-10-22 (dev)
+## [2.7.1] 2025-10-27 (dev)
 
 ## Updated
 
+- Fix 342: {coursecontact} will now display phone link when configured in the settings in newer versions of PHP.
 - {coursecount students:active} Added active enrolments fallback if no role_assignments present.
 - Now detects encoded course tags (e.g. %7Bcoursecontextid%7D)
 - Fixed PHP issue with {firstnamephonetic}, {lastnamephonetic}, {middlename} tags when blank.
