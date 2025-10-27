@@ -4912,7 +4912,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Requires content between tags.
             if (stripos($text, '{ifdev}') !== false) {
                 // If an administrator with debugging is set to DEVELOPER mode...
-                if ($CFG->debugdisplay == 1 && is_siteadmin() && !is_role_switched($PAGE->course->id)) {
+                if ($CFG->debug == DEBUG_DEVELOPER && is_siteadmin() && !is_role_switched($PAGE->course->id)) {
                     // Just remove the tags.
                     $replace['/\{ifdev\}/i'] = '';
                     $replace['/\{\/ifdev\}/i'] = '';
