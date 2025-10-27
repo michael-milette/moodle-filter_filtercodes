@@ -782,7 +782,7 @@ class text_filter extends \filtercodes_base_text_filter {
     /**
      * Generate a user link of a specified type if logged-in.
      *
-     * @param string $clinktype Type of link to generate. Options include: email, message, profile, phone1.
+     * @param string $clinktype Type of link to generate. Options include: email, message, profile, phone, mobile.
      * @param object $user A user object.
      * @param string $name The name to be displayed.
      *
@@ -805,6 +805,9 @@ class text_filter extends \filtercodes_base_text_filter {
                 break;
             case $clinktype == 'phone' && !empty($user->phone1):
                 $link = '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
+                break;
+            case $clinktype == 'mobile' && !empty($user->phone2):
+                $link = '<a href="tel:' . $user->phone2 . '">' . $name . '</a>';
                 break;
             default:
                 $link = $name;
@@ -1392,6 +1395,7 @@ class text_filter extends \filtercodes_base_text_filter {
                         'message' => get_string('message', 'message'),
                         'profile' => get_string('profile'),
                         'phone' => get_string('phone'),
+                        'mobile' => get_string('phone2'),
                 ];
                 if ($cardformat == 'verbose') {
                     if (empty($CFG->enablegravatar)) {
@@ -3036,12 +3040,14 @@ class text_filter extends \filtercodes_base_text_filter {
                             'message' => get_string('message', 'message'),
                             'profile' => get_string('profile'),
                             'phone' => get_string('phone'),
+                            'mobile' => get_string('phone2'),
                         ];
                         $iconclass = ['' => '',
                             'email' => 'fa fa-envelope-o',
                             'message' => 'fa fa-comment-o',
                             'profile' => 'fa fa-user-o',
                             'phone' => 'fa fa-phone',
+                            'mobile' => 'fa fa-mobile',
                         ];
 
                         $cnt = 0;
@@ -3097,6 +3103,10 @@ class text_filter extends \filtercodes_base_text_filter {
                                     break;
                                 case $clinktype == 'phone' && !empty($user->phone1):
                                     $contacts .= $icon . '<a href="tel:' . $user->phone1 . '">';
+                                    $contacts .= $contactsclose;
+                                    break;
+                                case $clinktype == 'mobile' && !empty($user->phone2):
+                                    $contacts .= $icon . '<a href="tel:' . $user->phone2 . '">';
                                     $contacts .= $contactsclose;
                                     break;
                                 default: // Default is no-link.

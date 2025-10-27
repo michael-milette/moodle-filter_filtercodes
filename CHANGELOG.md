@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [2.7.1] 2025-10-27 (dev)
 
+## Added
+
+* Added option to link to Mobile Phone in {coursecontact} tag.
+
 ## Updated
 
 - Fix 342: {coursecontact} will now display phone link when configured in the settings in newer versions of PHP.

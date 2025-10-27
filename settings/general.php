@@ -124,6 +124,7 @@ $choices = ['' => get_string('none'),
         'message' => get_string('message', 'message'),
         'profile' => get_string('profile'),
         'phone' => get_string('phone'),
+        'mobile' => get_string('phone2'),
 ];
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);
