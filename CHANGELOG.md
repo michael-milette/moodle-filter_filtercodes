@@ -2,19 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.7.1] 2025-10-27 (dev)
+## [2.7.2] 2025-10-27
 
 ## Added
 
-* Added option to link to Mobile Phone in {coursecontact} tag.
+- Now detects encoded course tags (e.g. %7Bcoursecontextid%7D)
+- Added option to link to Mobile Phone in {coursecontact} tag.
+- Added support for nested {if...} tags.
+- {coursecount students:active} Added active enrolments fallback if no role_assignments present.
 
 ## Updated
 
-- Fix 342: {coursecontact} will now display phone link when configured in the settings in newer versions of PHP.
-- {coursecount students:active} Added active enrolments fallback if no role_assignments present.
-- Now detects encoded course tags (e.g. %7Bcoursecontextid%7D)
-- Fixed PHP issue with {firstnamephonetic}, {lastnamephonetic}, {middlename} tags when blank.
+- Fix 342: {coursecontact} Phone link will now be displayed when configured in the settings.
+- Fixed logic of {ifcourserequest} tags.
+- Fix a Moodle coding guidelines compliance issue.
+- Improved 3rd party plugin detection for {menudev} tag.
+- Fixed PHP issue with blank {firstnamephonetic}, {lastnamephonetic}, {middlename} tags.
 - Fixed URL to Moodle reports.
+- Compatible with Moodle 2.7 to 5.1
+- Compatible with PHP 5.4 to 8.4
 
 ## [2.7.0] 2025-05-05
 
