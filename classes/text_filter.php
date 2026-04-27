@@ -41,10 +41,10 @@ if (class_exists('\core_filters\text_filter')) {
     class_alias('\moodle_text_filter', 'filtercodes_base_text_filter');
 }
 
-/**
- * str_contains() Polyfill for PHP < 8.0.
- */
 if (!function_exists('str_contains')) {
+    /**
+     * str_contains() Polyfill for PHP < 8.0.
+     */
     function str_contains($haystack, $needle) {
         if ($needle === '') {
             return true;  // Match PHP 8.0 behavior - empty string is always found.
@@ -593,11 +593,11 @@ class text_filter extends \filtercodes_base_text_filter {
     private function isauthenticateduser() {
         global $USER;
         static $isauthenticateduser;
-        static $cacheduserId;
+        static $cacheduserid;
 
         // Recalculate if user has changed or not yet cached.
-        if (!isset($cacheduserId) || $cacheduserId !== $USER->id) {
-            $cacheduserId = $USER->id;
+        if (!isset($cacheduserid) || $cacheduserid !== $USER->id) {
+            $cacheduserid = $USER->id;
             $isauthenticateduser = isloggedin() && !isguestuser();
         }
 
@@ -2704,7 +2704,7 @@ class text_filter extends \filtercodes_base_text_filter {
             if ($CFG->branch >= 311) {
                 $text = str_replace('{webpage}', '{profile_field_webpage}', $text);
             } else {
-                $replace['/\{webpage\}/i'] = '';//$this->isauthenticateduser() ? $USER->url : '';
+                $replace['/\{webpage\}/i'] = $this->isauthenticateduser() ? trim($USER->url ?? '') : '';
             }
         }
 
@@ -4343,7 +4343,8 @@ class text_filter extends \filtercodes_base_text_filter {
                 while (stripos($text, '{ifprofile') !== false && $iteration < $maxiterations) {
                     // Find innermost (non-nested) ifprofile tags.
                     // Use a regex that matches tags with content that doesn't contain other ifprofile tags.
-                    $re = '/{ifprofile\s+(\w+)\s+(is|not|contains|in)\s+"([^}]*)"}((?:[^{]|{(?!(?:\/)?ifprofile))*?){\/ifprofile}/isuU';
+                    $re = '/{ifprofile\s+(\w+)\s+(is|not|contains|in)\s+"([^}]*)"}'
+                        . '((?:[^{]|{(?!(?:\/)?ifprofile))*?){\/ifprofile}/isuU';
                     $found = preg_match_all($re, $text, $matches, PREG_SET_ORDER);
                     if ($found === 0) {
                         break;
@@ -4364,35 +4365,35 @@ class text_filter extends \filtercodes_base_text_filter {
                                 $value = trim($value, '"'); // Trim quotation marks.
                             }
 
-                            $matches_condition = false;
+                            $matchescondition = false;
                             switch ($operator) {
                                 case 'is':
                                     // If the specified field is exactly the specified value.
                                     // Example: {ifprofile country is "CA"}...{/ifprofile}.
                                     // Example: {ifprofile city is ""}...{/ifprofile}.
-                                    $matches_condition = $fieldvalue === $value;
+                                    $matchescondition = $fieldvalue === $value;
                                     break;
                                 case 'not':
                                     // Example: {ifprofile country not "CA"}...{/ifprofile}.
                                     // Example: {ifprofile institution not ""}...{/ifprofile}.
-                                    $matches_condition = $fieldvalue !== $value;
+                                    $matchescondition = $fieldvalue !== $value;
                                     break;
                                 case 'contains':
                                     // If the specified field contains the specified value.
                                     // Example:{ifprofile email contains "@yoursite.com"}...{/ifprofile}.
-                                    $matches_condition = strpos($fieldvalue, $value) !== false;
+                                    $matchescondition = strpos($fieldvalue, $value) !== false;
                                     break;
                                 case 'in':
                                     // If the specified value contains the value specified in the field.
                                     // Example: {ifprofile country in "CA,US,UK,AU,NZ"}...{/ifprofile}.
-                                    $matches_condition = strpos($value, $fieldvalue) !== false;
+                                    $matchescondition = strpos($value, $fieldvalue) !== false;
                                     break;
                             }
-                            if ($matches_condition) {
+                            if ($matchescondition) {
                                 $replacement = $content;
                             }
                         } else {
-                            // User not logged in or field doesn't exist
+                            // User not logged in or field doesn't exist.
                             if ($operator === 'not') {
                                 $replacement = $content;
                             }
