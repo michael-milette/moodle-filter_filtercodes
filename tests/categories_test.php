@@ -179,8 +179,8 @@ final class categories_test extends \advanced_testcase {
         // Should include top-level.
         $this->assertStringContainsString('Top Level', $filtered,
             sprintf("Should contain %s\nActual: '%s'", 'Top Level', $filtered));
-        // Should NOT include subcategory in the simple list.
-        // Note: This behavior may vary based on implementation.
+        $this->assertStringNotContainsString('Sub Level', $filtered,
+            sprintf("Top-level category list should not include nested categories\nActual: '%s'", $filtered));
         $this->assertStringContainsString('<ul', $filtered,
             sprintf("Should contain %s\nActual: '%s'", '<ul', $filtered));
     }
@@ -261,6 +261,8 @@ final class categories_test extends \advanced_testcase {
      * @return void
      */
     public function test_categoriesxmenu(): void {
+        global $PAGE;
+
         $parent = $this->getDataGenerator()->create_category(['name' => 'Parent']);
         $child = $this->getDataGenerator()->create_category([
             'name' => 'Child Menu',
@@ -269,11 +271,12 @@ final class categories_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course(['category' => $parent->id]);
         $context = \context_course::instance($course->id);
+        $PAGE->set_course($course);
 
         $filtered = format_text('{categoriesxmenu}', FORMAT_HTML, ['context' => $context]);
 
-        // Should be formatted for menu.
-        $this->assertIsString($filtered);
+        $this->assertStringContainsString('Child Menu', $filtered,
+            sprintf("Should contain child category menu item\nActual: '%s'", $filtered));
     }
 
     /**
@@ -335,6 +338,7 @@ final class categories_test extends \advanced_testcase {
         $filtered = format_text('{categories0}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $this->assertStringContainsString('Visible Cat', $filtered,
             sprintf("Should contain %s\nActual: '%s'", 'Visible Cat', $filtered));
-        // Hidden categories visibility depends on capabilities.
+        $this->assertStringContainsString('Hidden Cat', $filtered,
+            sprintf("Admin should see hidden categories\nActual: '%s'", $filtered));
     }
 }

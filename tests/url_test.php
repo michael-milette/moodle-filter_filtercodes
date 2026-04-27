@@ -62,9 +62,8 @@ final class url_test extends \advanced_testcase {
         $text = '{pagepath}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should contain current page path.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertEquals('/course/view.php?id=2', $result,
+            sprintf("Should contain current page path\nActual: '%s'", $result));
     }
 
     /**
@@ -101,58 +100,52 @@ final class url_test extends \advanced_testcase {
         // Should contain URL-encoded current URL.
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
-        // Encoded URLs typically contain %2F, %3D, etc.
+        $this->assertEquals(rawurlencode('http://localhost/course/view.php?id=2'), $result,
+            sprintf("Should contain the encoded current URL\nActual: '%s'", $result));
     }
 
     /**
      * Test urlencode tag.
      */
     public function test_urlencode() {
-        $text = '{urlencode:hello world & test}';
+        $text = '{urlencode}hello world & test{/urlencode}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should encode spaces as + and special characters.
-        $this->assertStringContainsString('hello', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'hello', $result));
-        $this->assertNotEquals('hello world & test', $result);
+        $this->assertEquals(urlencode('hello world &amp; test'), $result,
+            sprintf("Should encode spaces and special characters\nActual: '%s'", $result));
     }
 
     /**
      * Test urlencode with special characters.
      */
     public function test_urlencode_special_chars() {
-        $text = '{urlencode:name=value&foo=bar}';
+        $text = '{urlencode}name=value&foo=bar{/urlencode}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should encode = and & symbols.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
-        // Should not contain unencoded & or =.
+        $this->assertEquals(urlencode('name=value&amp;foo=bar'), $result,
+            sprintf("Should encode = and & symbols\nActual: '%s'", $result));
     }
 
     /**
      * Test rawurlencode tag.
      */
     public function test_rawurlencode() {
-        $text = '{rawurlencode:hello world & test}';
+        $text = '{rawurlencode}hello world & test{/rawurlencode}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should encode spaces as %20 (raw encoding).
-        $this->assertStringContainsString('hello', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'hello', $result));
-        $this->assertNotEquals('hello world & test', $result);
+        $this->assertEquals(rawurlencode('hello world &amp; test'), $result,
+            sprintf("Should encode spaces as %%20 and encode special characters\nActual: '%s'", $result));
     }
 
     /**
      * Test rawurlencode with special characters.
      */
     public function test_rawurlencode_special_chars() {
-        $text = '{rawurlencode:path/to/file.php?id=5}';
+        $text = '{rawurlencode}path/to/file.php?id=5{/rawurlencode}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should encode /, ?, = characters.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertEquals(rawurlencode('path/to/file.php?id=5'), $result,
+            sprintf("Should encode /, ?, and = characters\nActual: '%s'", $result));
     }
 
     /**
@@ -161,38 +154,42 @@ final class url_test extends \advanced_testcase {
     public function test_encode_difference() {
         $input = 'hello world';
 
-        $text1 = '{urlencode:' . $input . '}';
+        $text1 = '{urlencode}' . $input . '{/urlencode}';
         $result1 = format_text($text1, FORMAT_HTML, ['filter' => true]);
 
-        $text2 = '{rawurlencode:' . $input . '}';
+        $text2 = '{rawurlencode}' . $input . '{/rawurlencode}';
         $result2 = format_text($text2, FORMAT_HTML, ['filter' => true]);
 
-        // Both should encode the input.
-        $this->assertNotEmpty($result1);
-        $this->assertNotEmpty($result2);
-        // urlencode uses + for space, rawurlencode uses %20 (usually).
+        $this->assertEquals('hello+world', $result1);
+        $this->assertEquals('hello%20world', $result2);
     }
 
     /**
      * Test referer tag.
      */
     public function test_referer() {
+        global $CFG;
+
+        $_SERVER['HTTP_REFERER'] = $CFG->wwwroot . '/from';
+
         $text = '{referer}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should return HTTP referer or empty if not set.
-        $this->assertNotNull($result);
+        $this->assertEquals($CFG->wwwroot . '/from', $result);
     }
 
     /**
      * Test referrer tag (alternative spelling).
      */
     public function test_referrer() {
+        global $CFG;
+
+        $_SERVER['HTTP_REFERER'] = $CFG->wwwroot . '/referrer';
+
         $text = '{referrer}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should return HTTP referrer or empty if not set.
-        $this->assertNotNull($result);
+        $this->assertEquals($CFG->wwwroot . '/referrer', $result);
     }
 
     /**
@@ -230,8 +227,7 @@ final class url_test extends \advanced_testcase {
         // Should return session key.
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
-        // Session key is typically a 10-character alphanumeric string.
-        $this->assertIsString($result);
+        $this->assertEquals(sesskey(), $result);
     }
 
     /**
@@ -255,8 +251,7 @@ final class url_test extends \advanced_testcase {
         $text = '{wwwcontactform}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should return contact form URL or empty if plugin not installed.
-        $this->assertNotNull($result);
+        $this->assertEquals($CFG->wwwroot . '/local/contact/index.php', $result);
     }
 
     /**
@@ -283,22 +278,21 @@ final class url_test extends \advanced_testcase {
      * Test empty encoding.
      */
     public function test_urlencode_empty() {
-        $text = '{urlencode:}';
+        $text = '{urlencode}{/urlencode}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should handle empty input.
-        $this->assertNotNull($result);
+        $this->assertEquals('', $result,
+            sprintf("Empty urlencode content should encode to an empty string\nActual: '%s'", $result));
     }
 
     /**
      * Test encoding with nested braces.
      */
     public function test_urlencode_complex() {
-        $text = '{urlencode:url?param={value}}';
+        $text = '{urlencode}url?param={value}{/urlencode}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should encode the entire string including braces.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertEquals(urlencode('url?param={value}'), $result,
+            sprintf("Should encode the entire string including braces\nActual: '%s'", $result));
     }
 }

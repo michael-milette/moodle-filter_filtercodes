@@ -1757,6 +1757,17 @@ class text_filter extends \filtercodes_base_text_filter {
         static $mygroupslist;
         static $mygroupingslist;
         static $mycohorts;
+        static $cachedfilteruserid;
+
+        // Reset user-specific cached data if the user has changed.
+        if (!isset($cachedfilteruserid) || $cachedfilteruserid !== $USER->id) {
+            $cachedfilteruserid = $USER->id;
+            $profilefields = null;
+            $profiledata = null;
+            $mygroupslist = null;
+            $mygroupingslist = null;
+            $mycohorts = null;
+        }
 
         // Clear cache in unit tests to ensure test isolation.
         if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
@@ -5370,7 +5381,7 @@ class text_filter extends \filtercodes_base_text_filter {
             foreach ($matches as $match) {
                 $type = $match[1]; // Chart type: radial, pie, progressbar or progresspie.
                 $value = $match[2]; // Value between 0 and 100.
-                $match[3] = $match[3] == null ? '' : $match[3];
+                $match[3] = $match[3] ?? '';
                 $title = trim($match[3]); // Optional text label.
                 $percent = get_string('percents', '', $value);
                 switch ($type) { // Type of chart.

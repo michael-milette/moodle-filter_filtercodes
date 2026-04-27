@@ -343,8 +343,8 @@ final class content_test extends \advanced_testcase {
 
         $filtered = format_text('{recaptcha}', FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        // Should be blank when logged in as non-guest.
-        $this->assertIsString($filtered);
+        $this->assertEquals('', $filtered,
+            sprintf("Logged-in users should not receive a recaptcha\nActual: '%s'", $filtered));
     }
 
     /**
@@ -477,12 +477,12 @@ final class content_test extends \advanced_testcase {
      * @return void
      */
     public function test_global_tag(): void {
-        // Note: This would require setting up global tags in config.
-        // For now, just test that unset global tags remain unchanged.
+        // Unconfigured global tags should remain available for later filters/content handling.
         $before = '{global_customtag}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should either be replaced or remain as is if not configured.
-        $this->assertIsString($filtered);
+        $this->assertEquals($before, $filtered,
+            sprintf("Unset global tags should remain unchanged\nActual: '%s'", $filtered));
     }
 }

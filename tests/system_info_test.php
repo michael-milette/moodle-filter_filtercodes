@@ -240,9 +240,10 @@ final class system_info_test extends \advanced_testcase {
     public function test_sitesummary(): void {
         global $SITE;
 
+        $SITE->summary = 'A useful site summary';
         $filtered = format_text('{sitesummary}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertIsString($filtered,
-            sprintf("Tag {sitesummary} should return string\nActual: '%s'", $filtered));
+        $this->assertEquals('A useful site summary', $filtered,
+            sprintf("Tag {sitesummary} should return the site summary\nActual: '%s'", $filtered));
     }
 
     /**
@@ -255,10 +256,12 @@ final class system_info_test extends \advanced_testcase {
         $filtered = format_text('{diskfreespace}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $this->assertNotEmpty($filtered,
             sprintf("Tag {diskfreespace} should not be empty\nActual: '%s'", $filtered));
+        $this->assertStringNotContainsString('{diskfreespace}', $filtered);
 
         $filtered = format_text('{diskfreespacedata}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $this->assertNotEmpty($filtered,
             sprintf("Tag {diskfreespacedata} should not be empty\nActual: '%s'", $filtered));
+        $this->assertStringNotContainsString('{diskfreespacedata}', $filtered);
     }
 
     /**
@@ -270,14 +273,13 @@ final class system_info_test extends \advanced_testcase {
     public function test_support_tags(): void {
         global $CFG;
 
-        // These might be empty in test environment, just verify they return strings.
-        $tags = ['{supportname}', '{supportemail}', '{supportpage}'];
+        $CFG->supportname = 'Help Desk';
+        $CFG->supportemail = 'helpdesk@example.com';
+        $CFG->supportpage = 'https://example.com/support';
 
-        foreach ($tags as $tag) {
-            $filtered = format_text($tag, FORMAT_HTML, ['context' => \context_system::instance()]);
-            $this->assertIsString($filtered,
-                sprintf("Tag %s should return string\nActual: '%s'", $tag, $filtered));
-        }
+        $this->assertEquals('Help Desk', format_text('{supportname}', FORMAT_HTML, ['context' => \context_system::instance()]));
+        $this->assertEquals('helpdesk@example.com', format_text('{supportemail}', FORMAT_HTML, ['context' => \context_system::instance()]));
+        $this->assertEquals('https://example.com/support', format_text('{supportpage}', FORMAT_HTML, ['context' => \context_system::instance()]));
     }
 
     /**
@@ -291,9 +293,8 @@ final class system_info_test extends \advanced_testcase {
         // Should contain version information.
         $this->assertNotEmpty($filtered,
             sprintf("Tag {filtercodes} should not be empty\nActual: '%s'", $filtered));
-        // As admin, should see the version.
-        $this->assertIsString($filtered,
-            sprintf("Tag {filtercodes} should return string\nActual: '%s'", $filtered));
+        $this->assertMatchesRegularExpression('/^\d/', $filtered,
+            sprintf("Tag {filtercodes} should start with the plugin release/version\nActual: '%s'", $filtered));
     }
 
     /**
@@ -331,10 +332,15 @@ final class system_info_test extends \advanced_testcase {
      * @return void
      */
     public function test_now_tag(): void {
+        global $CFG;
+
         // Test basic now tag.
         $filtered = format_text('{now}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $this->assertNotEmpty($filtered,
             sprintf("Tag {now} should not be empty\nActual: '%s'", $filtered));
+
+        // Force %d to keep its leading zero so the regex below is deterministic.
+        $CFG->nofixday = true;
 
         // Test with format.
         $filtered = format_text('{now %Y-%m-%d}', FORMAT_HTML, ['context' => \context_system::instance()]);

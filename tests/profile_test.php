@@ -294,11 +294,7 @@ final class profile_test extends \advanced_testcase {
      * @return void
      */
     public function test_webpage(): void {
-        global $USER, $CFG;
-
-        // In Moodle 3.11 and earlier, 'url' was a standard user field.
-        // In Moodle 4.0+, it became a custom profile field called "webpage".
-        // We need to handle both cases for backwards compatibility.
+        global $USER, $DB;
 
         $user = $this->getDataGenerator()->create_user([
             'firstname' => 'John',
@@ -306,17 +302,22 @@ final class profile_test extends \advanced_testcase {
         ]);
         $this->setUser($user);
 
-        // Try to set the url field if it exists (Moodle 3.11 and earlier).
-        if (property_exists($USER, 'url')) {
-            $USER->url = 'https://example.com';
-            user_update_user($USER, false);
-        }
+        $fieldid = $DB->insert_record('user_info_field', [
+            'shortname' => 'webpage',
+            'name' => 'Web page',
+            'datatype' => 'text',
+            'visible' => 1,
+        ]);
+        $DB->insert_record('user_info_data', [
+            'userid' => $USER->id,
+            'fieldid' => $fieldid,
+            'data' => 'https://example.com',
+        ]);
 
         $filtered = format_text('{webpage}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        
-        // In newer Moodle versions without $USER->url, the tag should return empty or handle gracefully.
-        // In older versions with $USER->url, it should return the URL.
-        $this->assertIsString($filtered, 'The {webpage} tag should return a string');
+
+        $this->assertEquals('https://example.com', trim($filtered),
+            sprintf("Tag {webpage} should resolve the custom profile field\nActual: '%s'", $filtered));
     }
 
     /**
@@ -371,9 +372,8 @@ final class profile_test extends \advanced_testcase {
 
         foreach ($tests as $tag) {
             $filtered = format_text($tag, FORMAT_HTML, ['context' => \context_system::instance()]);
-            // When not logged in (guest user), these tags should return a string (empty or guest default).
-            // We just verify the filter doesn't crash and returns a string.
-            $this->assertIsString($filtered, sprintf("Tag %s failed for guest user\nActual: '%s'", $tag, $filtered));
+            $this->assertEquals('', $filtered,
+                sprintf("Tag %s should be blank for guest users\nActual: '%s'", $tag, $filtered));
         }
     }
 
@@ -384,24 +384,17 @@ final class profile_test extends \advanced_testcase {
      * @return void
      */
     public function test_multiple_profile_tags(): void {
-        // global $USER;
+        $user = $this->getDataGenerator()->create_user([
+            'firstname' => 'John',
+            'lastname' => 'Doe',
+            'email' => 'john@example.com',
+        ]);
+        $this->setUser($user);
 
-        // This test is failing for unknown reasons. Skipping for now.
-        // $user = $this->getDataGenerator()->create_user([
-        //     'firstname' => 'John',
-        //     'lastname' => 'Doe',
-        //     'email' => 'john@example.com',
-        // ]);
-        // $this->setUser($user);
+        $text = 'Hello {firstname} {lastname}, your email is {email}';
+        $filtered = format_text($text, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        // $text = 'Hello {firstname} {lastname}, your email is {email}';
-        // $expected = "Hello {$USER->firstname} {$USER->lastname}, your email is {$USER->email}";
-
-        // $filtered = format_text($text, FORMAT_HTML, ['context' => \context_system::instance()]);
-        // $this->assertEquals($expected, $filtered);
-
-        // This test is redundant as the functionality is already tested in test_basic_profile_tags
-        // which tests each tag individually. Multiple tags in one string work the same way.
-        $this->markTestSkipped('Functionality already covered by test_basic_profile_tags');
+        $this->assertEquals('Hello John Doe, your email is john@example.com', $filtered,
+            sprintf("Multiple profile tags should be replaced in one pass\nActual: '%s'", $filtered));
     }
 }

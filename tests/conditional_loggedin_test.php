@@ -271,7 +271,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
-        // Nested tags may not work as expected - testing the behavior.
         $before = '{ifloggedin}Outer{ifnotloggedinas}Inner{/ifnotloggedinas}{/ifloggedin}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 

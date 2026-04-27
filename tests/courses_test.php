@@ -299,25 +299,14 @@ final class courses_test extends \advanced_testcase {
         $DB->execute("UPDATE {user_enrolments} ue JOIN {enrol} e ON e.id = ue.enrolid SET ue.status = :s WHERE ue.userid = :uid AND e.courseid = :cid", ['s' => 0, 'uid' => $user1->id, 'cid' => $course->id]);
         $DB->execute("UPDATE {user_enrolments} ue JOIN {enrol} e ON e.id = ue.enrolid SET ue.status = :s WHERE ue.userid = :uid AND e.courseid = :cid", ['s' => ENROL_USER_SUSPENDED, 'uid' => $user2->id, 'cid' => $course->id]);
 
-        // Diagnostic: inspect user_enrolments rows and statuses.
         $rows = $DB->get_records_sql("SELECT ue.userid, ue.status FROM {user_enrolments} ue JOIN {enrol} e ON e.id = ue.enrolid WHERE e.courseid = :courseid", ['courseid' => $course->id]);
-        // Convert to a simple array for assertion messages.
         $statuses = array_map(function($r) { return $r->status; }, $rows);
         $this->assertNotEmpty($rows, 'No user_enrolments rows found for course');
-        // Count active enrolments as per filter (ue.status = 0).
         $activecount = $DB->count_records_sql("SELECT COUNT(DISTINCT ue.userid)
             FROM {user_enrolments} ue
             JOIN {enrol} e ON e.id = ue.enrolid
             WHERE ue.status = 0 AND e.courseid = :courseid", ['courseid' => $course->id]);
         $this->assertEquals(1, (int)$activecount, sprintf("Active enrolment count mismatch expected 1 got %d (statuses: %s)", $activecount, implode(',', $statuses)));
-
-        // Dump diagnostics to a temp file for investigation.
-        $debug = [];
-        $debug['courseid'] = $course->id;
-        $debug['rows'] = $rows;
-        $debug['activecount'] = $activecount;
-        $debugfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'filtercodes_coursecount_active_debug.log';
-        file_put_contents($debugfile, print_r($debug, true));
 
         $filtered = format_text('{coursecount students:active}', FORMAT_HTML, ['context' => $context]);
         $this->assertEquals(1, (int)$filtered);
@@ -337,10 +326,10 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_context($context);
         $PAGE->set_course($course);
 
-        $filtered = format_text('{coursestartdate}', FORMAT_HTML, ['context' => $context]);
-        $this->assertNotEmpty($filtered,
-            sprintf("Should not be empty\nActual: '%s'", $filtered));
-        $this->assertIsString($filtered);
+        $filtered = format_text('{coursestartdate %Y-%m-%d}', FORMAT_HTML, ['context' => $context]);
+        $expected = userdate($startdate, '%Y-%m-%d');
+        $this->assertEquals($expected, $filtered,
+            sprintf("Course start date should use the configured format\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
     }
 
     /**
@@ -357,10 +346,10 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_context($context);
         $PAGE->set_course($course);
 
-        $filtered = format_text('{courseenddate}', FORMAT_HTML, ['context' => $context]);
-        $this->assertNotEmpty($filtered,
-            sprintf("Should not be empty\nActual: '%s'", $filtered));
-        $this->assertIsString($filtered);
+        $filtered = format_text('{courseenddate %Y-%m-%d}', FORMAT_HTML, ['context' => $context]);
+        $expected = userdate($enddate, '%Y-%m-%d');
+        $this->assertEquals($expected, $filtered,
+            sprintf("Course end date should use the configured format\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
     }
 
     /**
@@ -370,19 +359,22 @@ final class courses_test extends \advanced_testcase {
      * @return void
      */
     public function test_courseenrolmentdate(): void {
-        global $PAGE;
+        global $PAGE, $CFG;
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($user->id, $course->id);
         $this->setUser($user);
 
+        // Force %d to keep its leading zero so the regex below is deterministic.
+        $CFG->nofixday = true;
+
         $context = \context_course::instance($course->id);
         $PAGE->set_context($context);
         $PAGE->set_course($course);
-        $filtered = format_text('{courseenrolmentdate}', FORMAT_HTML, ['context' => $context]);
+        $filtered = format_text('{courseenrolmentdate %Y-%m-%d}', FORMAT_HTML, ['context' => $context]);
 
-        $this->assertNotEmpty($filtered, sprintf("Should not be empty\nActual: '%s'", $filtered));
-        $this->assertIsString($filtered);
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', $filtered,
+            sprintf("Course enrolment date should be formatted as YYYY-MM-DD\nActual: '%s'", $filtered));
     }
 
     /**
@@ -448,11 +440,13 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_context($context);
 
         $filtered = format_text('{sectionid}', FORMAT_HTML, ['context' => $context]);
-        $this->assertIsString($filtered);
+        $this->assertEquals('', $filtered,
+            sprintf("Section ID should be empty outside an activity context\nActual: '%s'", $filtered));
 
         // Test encoded version.
         $filtered = format_text('%7Bsectionid%7D', FORMAT_HTML, ['context' => $context]);
-        $this->assertIsString($filtered);
+        $this->assertEquals('', $filtered,
+            sprintf("Encoded section ID should be empty outside an activity context\nActual: '%s'", $filtered));
     }
 
     /**

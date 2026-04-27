@@ -148,28 +148,37 @@ final class conditional_courses_test extends \advanced_testcase {
      * Test ifinsection conditional.
      */
     public function test_ifinsection() {
-        $course = $this->getDataGenerator()->create_course(['numsections' => 5]);
-        $context =\context_course::instance($course->id);
+        global $PAGE;
 
-        $text = '{ifinsection 2}In section 2{/ifinsection}';
+        $course = $this->getDataGenerator()->create_course(['numsections' => 5]);
+        $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id, 'section' => 2]);
+        $cm = get_coursemodule_from_instance('forum', $forum->id, $course->id);
+        $context = \context_module::instance($cm->id);
+        $PAGE->set_cm($cm, $course);
+
+        $text = '{ifinsection}In a section{/ifinsection}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
-        // Test implementation may vary - section detection depends on page context.
-        $this->assertNotNull($result);
+        $this->assertEquals('In a section', $result,
+            sprintf("Section content should show in an activity section\nActual: '%s'", $result));
     }
 
     /**
      * Test ifnotinsection conditional.
      */
     public function test_ifnotinsection() {
-        $course = $this->getDataGenerator()->create_course(['numsections' => 5]);
-        $context =\context_course::instance($course->id);
+        global $PAGE;
 
-        $text = '{ifnotinsection 2}Not in section 2{/ifnotinsection}';
+        $course = $this->getDataGenerator()->create_course(['numsections' => 5]);
+        $context = \context_course::instance($course->id);
+        $PAGE->set_course($course);
+        $PAGE->set_context($context);
+
+        $text = '{ifnotinsection}Not in an activity section{/ifnotinsection}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
-        // Test implementation may vary.
-        $this->assertNotNull($result);
+        $this->assertEquals('Not in an activity section', $result,
+            sprintf("Non-section content should show on the course page\nActual: '%s'", $result));
     }
 
     /**
@@ -314,8 +323,12 @@ final class conditional_courses_test extends \advanced_testcase {
         // Scenario 7: Three levels deep, missing middle closing.
         $text = '{ifingroup ' . $group->id . '}A{ifingroup ' . $group->id . '}B{ifingroup ' . $group->id . '}C{/ifingroup}{/ifingroup}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
-        // Should handle gracefully - expect partial processing.
-        $this->assertNotNull($result);
+        $this->assertStringContainsString('AB', $result,
+            sprintf("Outer true conditions should preserve reachable content\nActual: '%s'", $result));
+        $this->assertStringContainsString('C', $result,
+            sprintf("Innermost content should not be discarded\nActual: '%s'", $result));
+        $this->assertStringNotContainsString('{/ifingroup}', $result,
+            sprintf("Closing tags should be consumed when possible\nActual: '%s'", $result));
 
         // Scenario 8: Interleaved different tags (mixing with other content).
         $text = '{ifingroup ' . $group->id . '}Start {firstname} {ifingroup none}Middle{/ifingroup} End';
@@ -603,12 +616,13 @@ final class conditional_courses_test extends \advanced_testcase {
         // Set page to enrol page.
         $course = $this->getDataGenerator()->create_course();
         $PAGE->set_url('/enrol/index.php', ['id' => $course->id]);
+        $PAGE->set_pagetype('enrol-index');
 
         $text = '{ifenrolpage}On enrolment page{/ifenrolpage}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should show content when on enrolment page.
-        $this->assertNotNull($result);
+        $this->assertEquals('On enrolment page', $result,
+            sprintf("Enrol page content should show on enrolment page\nActual: '%s'", $result));
     }
 
     /**
@@ -619,12 +633,13 @@ final class conditional_courses_test extends \advanced_testcase {
 
         // Set page to something other than enrol page.
         $PAGE->set_url('/course/view.php', ['id' => 2]);
+        $PAGE->set_pagetype('course-view-topics');
 
         $text = '{ifnotenrolpage}Not on enrolment page{/ifnotenrolpage}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should show content when NOT on enrolment page.
-        $this->assertNotNull($result);
+        $this->assertEquals('Not on enrolment page', $result,
+            sprintf("Non-enrol page content should show away from enrolment page\nActual: '%s'", $result));
     }
 
     /**

@@ -422,7 +422,7 @@ final class conditional_roles_test extends \advanced_testcase {
         $tests = [
             '{ifminmanager}' => true,
             '{ifmincreator}' => true,
-            '{ifminteacher}' => false, // Not in a course context.
+            '{ifminteacher}' => true,
         ];
 
         foreach ($tests as $tag => $shouldShow) {
@@ -430,6 +430,10 @@ final class conditional_roles_test extends \advanced_testcase {
             $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
             if ($shouldShow) {
                 $this->assertStringContainsString('Content', $filtered, "Failed for: $tag");
+                $this->assertStringNotContainsString($tag, $filtered, "Opening tag was not removed for: $tag");
+            } else {
+                $this->assertEquals('', $filtered,
+                    sprintf("Content should be hidden for %s outside a course context\nActual: '%s'", $tag, $filtered));
             }
         }
     }

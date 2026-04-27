@@ -49,9 +49,13 @@ final class ui_elements_test extends \advanced_testcase {
      * Test teamcards tag.
      */
     public function test_teamcards() {
-        global $DB;
+        global $CFG, $DB;
 
-        // Create some users.
+        $course = $this->getDataGenerator()->create_course();
+        $context = \context_course::instance($course->id);
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher'], '*', MUST_EXIST);
+        $CFG->coursecontact = $teacherrole->id;
+
         $user1 = $this->getDataGenerator()->create_user([
             'firstname' => 'Alice',
             'lastname' => 'Smith',
@@ -62,14 +66,16 @@ final class ui_elements_test extends \advanced_testcase {
             'lastname' => 'Jones',
             'email' => 'bob@example.com',
         ]);
+        role_assign($teacherrole->id, $user1->id, $context->id);
+        role_assign($teacherrole->id, $user2->id, $context->id);
 
         $text = '{teamcards}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should contain user names if they are course contacts.
-        // For now, just check that the filter processed the tag (doesn't contain the literal tag)
-        $this->assertStringNotContainsString('{teamcards}', $result,
-            sprintf("Tag should have been processed\nActual: '%s'", $result));
+        $this->assertStringContainsString('Alice', $result,
+            sprintf("Should contain assigned course contact\nActual: '%s'", $result));
+        $this->assertStringContainsString('Bob', $result,
+            sprintf("Should contain assigned course contact\nActual: '%s'", $result));
     }
 
     /**
@@ -140,6 +146,8 @@ final class ui_elements_test extends \advanced_testcase {
         // Should contain enrolled course.
         $this->assertStringContainsString('Enrolled Course One', $result,
             sprintf("Should contain %s\nActual: '%s'", 'Enrolled Course One', $result));
+        $this->assertStringNotContainsString('Enrolled Course Two', $result,
+            sprintf("Should not contain courses the user is not enrolled in\nActual: '%s'", $result));
     }
 
     /**
@@ -185,11 +193,8 @@ final class ui_elements_test extends \advanced_testcase {
         $text = '{courseprogresspercent}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
-        // Should return a percentage (0-100) or similar numeric value.
-        $this->assertNotNull($result,
-            sprintf("Should not be null\nActual: '%s'", $result));
-        $this->assertIsString($result,
-            sprintf("Should be a string\nActual: %s", gettype($result)));
+        $this->assertMatchesRegularExpression('/^\d{1,3}$/', $result,
+            sprintf("Should return a numeric completion percentage\nActual: '%s'", $result));
     }
 
     /**
@@ -314,12 +319,16 @@ final class ui_elements_test extends \advanced_testcase {
      * Test chart radial tag.
      */
     public function test_chart_radial() {
-        $text = '{chart-radial 75}';
+        $text = '{chart radial 75}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain chart-related markup.
-        $this->assertStringContainsString('75', $result,
-            sprintf("Should contain %s\nActual: '%s'", '75', $result));
+        $this->assertStringContainsString('fc-chart-pie', $result,
+            sprintf("Should contain chart wrapper\nActual: '%s'", $result));
+        $this->assertStringContainsString('chart-area', $result,
+            sprintf("Should contain Moodle chart markup\nActual: '%s'", $result));
+        $this->assertStringNotContainsString('{chart radial 75}', $result,
+            sprintf("Tag should have been processed\nActual: '%s'", $result));
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
     }
@@ -328,12 +337,16 @@ final class ui_elements_test extends \advanced_testcase {
      * Test chart pie tag.
      */
     public function test_chart_pie() {
-        $text = '{chart-pie 60}';
+        $text = '{chart pie 60}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain chart-related markup.
-        $this->assertStringContainsString('60', $result,
-            sprintf("Should contain %s\nActual: '%s'", '60', $result));
+        $this->assertStringContainsString('fc-chart-pie', $result,
+            sprintf("Should contain chart wrapper\nActual: '%s'", $result));
+        $this->assertStringContainsString('chart-area', $result,
+            sprintf("Should contain Moodle chart markup\nActual: '%s'", $result));
+        $this->assertStringNotContainsString('{chart pie 60}', $result,
+            sprintf("Tag should have been processed\nActual: '%s'", $result));
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
     }
@@ -342,7 +355,7 @@ final class ui_elements_test extends \advanced_testcase {
      * Test chart progressbar tag.
      */
     public function test_chart_progressbar() {
-        $text = '{chart-progressbar 45}';
+        $text = '{chart progressbar 45}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain progress bar markup.
@@ -356,7 +369,7 @@ final class ui_elements_test extends \advanced_testcase {
      * Test chart progresspie tag.
      */
     public function test_chart_progresspie() {
-        $text = '{chart-progresspie 80}';
+        $text = '{chart progresspie 80}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain progress pie markup.
@@ -373,9 +386,10 @@ final class ui_elements_test extends \advanced_testcase {
         $text = '{dashboard_siteinfo}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should contain site information dashboard.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString('fcdashboard-siteinfo', $result,
+            sprintf("Should contain site information dashboard markup\nActual: '%s'", $result));
+        $this->assertStringContainsString('Available disk space', $result,
+            sprintf("Should contain dashboard content\nActual: '%s'", $result));
     }
 
     /**
@@ -399,8 +413,7 @@ final class ui_elements_test extends \advanced_testcase {
         $text = '{keyboard}{/keyboard}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should handle empty content.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString('kbd', $result,
+            sprintf("Empty keyboard tags should still render keyboard markup\nActual: '%s'", $result));
     }
 }

@@ -122,9 +122,10 @@ final class menu_test extends \advanced_testcase {
         $text = '{categoriesxmenu}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
-        // Should contain subcategories of the current category.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString('Sub Category One', $result,
+            sprintf("Should contain subcategories of the current category\nActual: '%s'", $result));
+        $this->assertStringContainsString('Sub Category Two', $result,
+            sprintf("Should contain subcategories of the current category\nActual: '%s'", $result));
     }
 
     /**
@@ -145,7 +146,9 @@ final class menu_test extends \advanced_testcase {
         // Should contain editing toggle menu item.
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
-        // Typically contains "Turn editing on/off" or similar.
+        $this->assertStringNotContainsString('{toggleeditingmenu}', $result);
+        $this->assertStringContainsString('/course/view.php', $result,
+            sprintf("Editing toggle menu should link back to the course\nActual: '%s'", $result));
     }
 
     /**
@@ -234,9 +237,8 @@ final class menu_test extends \advanced_testcase {
         $text = '{menuadmin}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should be empty or minimal for non-admin.
-        // Depending on implementation, might return empty string or basic structure.
-        $this->assertNotNull($result);
+        $this->assertEquals('', $result,
+            sprintf("Non-admin users should not receive admin menu items\nActual: '%s'", $result));
     }
 
     /**
@@ -262,14 +264,17 @@ final class menu_test extends \advanced_testcase {
      */
     public function test_menuthemes() {
         global $CFG;
-        $CFG->allowthemechangeonurl = 1;
+
+        // Force this core setting for the current process without writing to {config}.
+        $CFG->config_php_settings['allowthemechangeonurl'] = 1;
 
         $text = '{menuthemes}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should contain available themes menu (may be empty if no themes).
-        $this->assertNotNull($result,
-            sprintf("Should not be null\nActual: '%s'", $result));
+        $this->assertStringNotContainsString('{menuthemes}', $result,
+            sprintf("Themes menu tag should be consumed\nActual: '%s'", $result));
+        $this->assertStringContainsString('theme=', $result,
+            sprintf("Themes menu should include theme-switch URLs\nActual: '%s'", $result));
     }
 
     /**
@@ -294,9 +299,8 @@ final class menu_test extends \advanced_testcase {
         $text = '{menuwishlist}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should contain wishlist menu (may be empty if wishlist plugin not installed).
-        // At minimum should not error.
-        $this->assertNotNull($result);
+        $this->assertStringNotContainsString('{menuwishlist}', $result,
+            sprintf("Wishlist menu tag should be consumed even when optional plugins are absent\nActual: '%s'", $result));
     }
 
     /**
@@ -309,7 +313,9 @@ final class menu_test extends \advanced_testcase {
         $text = '{mycoursesmenu} {menuadmin}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Menus should handle logged out state gracefully.
-        $this->assertNotNull($result);
+        $this->assertStringNotContainsString('{mycoursesmenu}', $result);
+        $this->assertStringNotContainsString('{menuadmin}', $result);
+        $this->assertStringNotContainsString('Menu Course', $result,
+            sprintf("Logged-out users should not receive personal course menu entries\nActual: '%s'", $result));
     }
 }

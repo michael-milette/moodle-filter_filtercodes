@@ -296,12 +296,11 @@ final class html_lang_test extends \advanced_testcase {
      * @return void
      */
     public function test_nested_langx(): void {
-        // Nested langx tags - outer should work, inner might not.
         $before = '{langx es}Outer {langx fr}inner{/langx} outer{/langx}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        // At minimum, the outer tag should work.
         $this->assertStringContainsString('lang="es"', $filtered);
+        $this->assertStringNotContainsString('{langx es}', $filtered);
     }
 
     /**

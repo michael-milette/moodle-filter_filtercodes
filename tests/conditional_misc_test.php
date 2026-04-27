@@ -181,8 +181,8 @@ final class conditional_misc_test extends \advanced_testcase {
         $text = '{ifeditmode}Edit mode is ON{/ifeditmode}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Test result depends on whether user is editing.
-        $this->assertNotNull($result);
+        $this->assertEquals('', $result,
+            sprintf("Edit mode content should be hidden when editing is off\nActual: '%s'", $result));
     }
 
     /**
@@ -338,8 +338,8 @@ final class conditional_misc_test extends \advanced_testcase {
         $text = '{ifmobile}Mobile device detected{/ifmobile}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Test depends on device detection - at minimum should not error.
-        $this->assertNotNull($result);
+        $this->assertEquals('', $result,
+            sprintf("Default PHPUnit requests should not be detected as mobile\nActual: '%s'", $result));
     }
 
     /**
@@ -349,19 +349,19 @@ final class conditional_misc_test extends \advanced_testcase {
         $text = '{ifnotmobile}Desktop device{/ifnotmobile}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should show content on desktop (default in tests).
-        $this->assertNotNull($result);
+        $this->assertEquals('Desktop device', $result,
+            sprintf("Default PHPUnit requests should be treated as non-mobile\nActual: '%s'", $result));
     }
 
     /**
      * Test iftenant conditional (Moodle Workplace tenant).
      */
     public function test_iftenant() {
-        $text = '{iftenant}Workplace tenant detected{/iftenant}';
+        $text = '{iftenant 1}Classic tenant fallback detected{/iftenant}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Workplace-specific - should handle gracefully if not Workplace.
-        $this->assertNotNull($result);
+        $this->assertEquals('Classic tenant fallback detected', $result,
+            sprintf("Classic Moodle should simulate tenant 1 for compatible content\nActual: '%s'", $result));
     }
 
     /**
@@ -371,8 +371,8 @@ final class conditional_misc_test extends \advanced_testcase {
         $text = '{ifworkplace}Moodle Workplace detected{/ifworkplace}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Workplace-specific - should handle gracefully if not Workplace.
-        $this->assertNotNull($result);
+        $this->assertEquals('', $result,
+            sprintf("Classic Moodle should hide Workplace-only content\nActual: '%s'", $result));
     }
 
     /**
@@ -423,7 +423,7 @@ final class conditional_misc_test extends \advanced_testcase {
         $text = '{ifdev}{/ifdev}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should handle empty content.
-        $this->assertNotNull($result);
+        $this->assertEquals('', $result,
+            sprintf("Empty conditional content should remain empty after tags are removed\nActual: '%s'", $result));
     }
 }

@@ -17,8 +17,7 @@
 /**
  * Unit tests for form tags.
  *
- * Tests form-related tags that require the Contact Form plugin.
- * Tests will be skipped if the Contact Form plugin is not installed.
+ * Tests form-related tags that generate Contact Form-compatible markup.
  *
  * @package    filter_filtercodes
  * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
@@ -60,10 +59,6 @@ final class forms_test extends \advanced_testcase {
      * Test formquickquestion tag.
      */
     public function test_formquickquestion() {
-        if (!$this->is_contactform_installed()) {
-            $this->markTestSkipped('Contact Form plugin is not installed.');
-        }
-
         $text = '{formquickquestion}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
@@ -72,16 +67,14 @@ final class forms_test extends \advanced_testcase {
             sprintf("Should not be empty\nActual: '%s'", $result));
         $this->assertStringContainsString('form', strtolower($result),
             sprintf("Should contain %s\nActual: '%s'", 'form', $result));
+        $this->assertStringContainsString('formquickquestion', $result,
+            sprintf("Should contain the form class\nActual: '%s'", $result));
     }
 
     /**
      * Test formcontactus tag.
      */
     public function test_formcontactus() {
-        if (!$this->is_contactform_installed()) {
-            $this->markTestSkipped('Contact Form plugin is not installed.');
-        }
-
         $text = '{formcontactus}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
@@ -90,95 +83,82 @@ final class forms_test extends \advanced_testcase {
             sprintf("Should not be empty\nActual: '%s'", $result));
         $this->assertStringContainsString('contact', strtolower($result),
             sprintf("Should contain %s\nActual: '%s'", 'contact', $result));
+        $this->assertStringContainsString('action=', $result,
+            sprintf("Should contain a form action\nActual: '%s'", $result));
     }
 
     /**
      * Test formcourserequest tag.
      */
     public function test_formcourserequest() {
-        if (!$this->is_contactform_installed()) {
-            $this->markTestSkipped('Contact Form plugin is not installed.');
-        }
-
         $text = '{formcourserequest}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain course request form.
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString('formcourserequest', $result);
     }
 
     /**
      * Test formsupport tag.
      */
     public function test_formsupport() {
-        if (!$this->is_contactform_installed()) {
-            $this->markTestSkipped('Contact Form plugin is not installed.');
-        }
-
         $text = '{formsupport}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain support form.
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString('formsupport', $result);
     }
 
     /**
      * Test formcheckin tag.
      */
     public function test_formcheckin() {
-        if (!$this->is_contactform_installed()) {
-            $this->markTestSkipped('Contact Form plugin is not installed.');
-        }
-
         $text = '{formcheckin}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain check-in form.
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString('formcheckin', $result);
     }
 
     /**
      * Test form tag when Contact Form is not installed.
      */
     public function test_form_without_plugin() {
-        if ($this->is_contactform_installed()) {
-            $this->markTestSkipped('This test requires Contact Form plugin to NOT be installed.');
-        }
-
         $text = '{formcontactus}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should handle gracefully (return empty or original tag).
-        $this->assertNotNull($result);
+        $this->assertStringContainsString('/local/contact/index.php', $result,
+            sprintf("Form action should target the Contact Form endpoint regardless of install state\nActual: '%s'", $result));
     }
 
     /**
      * Test multiple form tags together.
      */
     public function test_multiple_form_tags() {
-        if (!$this->is_contactform_installed()) {
-            $this->markTestSkipped('Contact Form plugin is not installed.');
-        }
-
         $text = '{formquickquestion} {formcontactus} {formsupport}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should process all form tags.
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString('class="cf formquickquestion"', $result,
+            sprintf("Should render quick question form wrapper\nActual: '%s'", $result));
+        $this->assertStringContainsString('class="cf formcontactus"', $result,
+            sprintf("Should render contact form wrapper\nActual: '%s'", $result));
+        $this->assertStringContainsString('class="cf formsupport"', $result,
+            sprintf("Should render support form wrapper\nActual: '%s'", $result));
     }
 
     /**
      * Test form tag in course context.
      */
     public function test_form_in_course_context() {
-        if (!$this->is_contactform_installed()) {
-            $this->markTestSkipped('Contact Form plugin is not installed.');
-        }
-
         $course = $this->getDataGenerator()->create_course(['fullname' => 'Form Test Course']);
         $context =\context_course::instance($course->id);
 
@@ -188,41 +168,34 @@ final class forms_test extends \advanced_testcase {
         // Should work in course context.
         $this->assertNotEmpty($result,
             sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString('formcontactus', $result);
     }
 
     /**
      * Test form tag for logged out user.
      */
     public function test_form_logged_out() {
-        if (!$this->is_contactform_installed()) {
-            $this->markTestSkipped('Contact Form plugin is not installed.');
-        }
-
         // Log out.
         $this->setUser(null);
 
         $text = '{formcontactus}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should handle logged-out state (may show login prompt or simplified form).
-        $this->assertNotNull($result);
+        $this->assertStringContainsString('formcontactus', $result,
+            sprintf("Contact form should render for logged-out users\nActual: '%s'", $result));
     }
 
     /**
      * Test form tag for guest user.
      */
     public function test_form_guest_user() {
-        if (!$this->is_contactform_installed()) {
-            $this->markTestSkipped('Contact Form plugin is not installed.');
-        }
-
         // Set guest user.
         $this->setGuestUser();
 
         $text = '{formquickquestion}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        // Should handle guest user.
-        $this->assertNotNull($result);
+        $this->assertEquals('', $result,
+            sprintf("Quick question form should be hidden from guest users\nActual: '%s'", $result));
     }
 }
