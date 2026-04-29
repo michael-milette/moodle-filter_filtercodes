@@ -5176,7 +5176,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 $this->if_tag(
                     $text,
                     $replace,
-                    'ifcustomrole',
+                    'ifnotcustomrole',
                     function ($roleshortname) use ($roles) {
                         return !in_array($roleshortname, $roles);
                     }

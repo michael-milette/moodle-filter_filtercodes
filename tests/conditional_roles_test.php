@@ -410,6 +410,151 @@ final class conditional_roles_test extends \advanced_testcase {
     }
 
     /**
+     * Test ifcustomrole tag when user has the specified role.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_ifcustomrole_with_role(): void {
+        global $PAGE;
+        $course = $this->getDataGenerator()->create_course();
+        $user = $this->getDataGenerator()->create_user();
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
+        $this->setUser($user);
+
+        $context = \context_course::instance($course->id);
+        $PAGE->set_context($context);
+        $before = '{ifcustomrole student}You have the student role{/ifcustomrole}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
+
+        $this->assertEquals('You have the student role', $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You have the student role', $filtered));
+        $this->assertStringNotContainsString('{ifcustomrole', $filtered,
+            'Raw {ifcustomrole} opening tag leaked into output');
+    }
+
+    /**
+     * Test ifcustomrole tag when user does not have the specified role.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_ifcustomrole_without_role(): void {
+        global $PAGE;
+        $course = $this->getDataGenerator()->create_course();
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $context = \context_course::instance($course->id);
+        $PAGE->set_context($context);
+        $before = '{ifcustomrole student}You have the student role{/ifcustomrole}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
+
+        $this->assertEquals('', $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertStringNotContainsString('{ifcustomrole', $filtered,
+            'Raw {ifcustomrole} opening tag leaked into output');
+    }
+
+    /**
+     * Test ifnotcustomrole tag when user has the specified role (should hide).
+     *
+     * Regression test for Fix-356: a tag name typo caused {ifnotcustomrole} to be
+     * skipped entirely, leaving raw tags in the output.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_ifnotcustomrole_with_role(): void {
+        global $PAGE;
+        $course = $this->getDataGenerator()->create_course();
+        $user = $this->getDataGenerator()->create_user();
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
+        $this->setUser($user);
+
+        $context = \context_course::instance($course->id);
+        $PAGE->set_context($context);
+        $before = '{ifnotcustomrole student}You do NOT have the student role{/ifnotcustomrole}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
+
+        $this->assertEquals('', $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertStringNotContainsString('{ifnotcustomrole', $filtered,
+            'Raw {ifnotcustomrole} opening tag leaked into output (Fix-356 regression)');
+        $this->assertStringNotContainsString('{/ifnotcustomrole}', $filtered,
+            'Raw {/ifnotcustomrole} closing tag leaked into output (Fix-356 regression)');
+    }
+
+    /**
+     * Test ifnotcustomrole tag when user does not have the specified role (should show).
+     *
+     * Regression test for Fix-356.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_ifnotcustomrole_without_role(): void {
+        global $PAGE;
+        $course = $this->getDataGenerator()->create_course();
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $context = \context_course::instance($course->id);
+        $PAGE->set_context($context);
+        $before = '{ifnotcustomrole student}You do NOT have the student role{/ifnotcustomrole}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
+
+        $this->assertEquals('You do NOT have the student role', $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You do NOT have the student role', $filtered));
+        $this->assertStringNotContainsString('{ifnotcustomrole', $filtered,
+            'Raw {ifnotcustomrole} opening tag leaked into output (Fix-356 regression)');
+        $this->assertStringNotContainsString('{/ifnotcustomrole}', $filtered,
+            'Raw {/ifnotcustomrole} closing tag leaked into output (Fix-356 regression)');
+    }
+
+    /**
+     * Catch-all regression test: parametric role tags must never leak raw into output.
+     *
+     * The Fix-356 bug (tag name typo passed to if_tag) caused {ifnotcustomrole} to
+     * be skipped entirely, leaving raw tags in output. This test exercises every
+     * parametric role tag in both true and false branches and asserts no raw tag
+     * remnants survive filtering, regardless of whether the user has the role.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_parametric_role_tags_never_leak_raw(): void {
+        global $PAGE;
+        $course = $this->getDataGenerator()->create_course();
+
+        // User WITH the student role (course context).
+        $studentuser = $this->getDataGenerator()->create_user();
+        $this->getDataGenerator()->enrol_user($studentuser->id, $course->id, 'student');
+
+        // User WITHOUT the student role.
+        $otheruser = $this->getDataGenerator()->create_user();
+
+        $context = \context_course::instance($course->id);
+        $PAGE->set_context($context);
+
+        $tags = ['ifcustomrole', 'ifnotcustomrole', 'ifhasarolename'];
+        foreach ([$studentuser, $otheruser] as $user) {
+            $this->setUser($user);
+            foreach ($tags as $tag) {
+                $before = '{' . $tag . ' student}content{/' . $tag . '}';
+                $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
+
+                $this->assertStringNotContainsString('{' . $tag, $filtered,
+                    sprintf("Raw '{%s}' opening tag leaked for user id %d\nInput: '%s'\nOutput: '%s'",
+                        $tag, $user->id, $before, $filtered));
+                $this->assertStringNotContainsString('{/' . $tag . '}', $filtered,
+                    sprintf("Raw '{/%s}' closing tag leaked for user id %d\nInput: '%s'\nOutput: '%s'",
+                        $tag, $user->id, $before, $filtered));
+            }
+        }
+    }
+
+    /**
      * Test hierarchical role conditionals.
      *
      * @covers \filter_filtercodes\text_filter::filter
