@@ -446,13 +446,8 @@ composer.phar
 # You may choose to ignore a library lock file https://getcomposer.org/doc/02-libraries.md#lock-file
 composer.lock
 
-##### PHP CodeSniffer
-# gitignore for the PHP Codesniffer framework
-# website: https://github.com/squizlabs/PHP_CodeSniffer
-#
-# Recommended template: PHP.gitignore
-
-/wpcs/*
+##### Ignore wpcs directory - the WordPress Coding Standards ruleset.
+/wpcs/
 
 ##### SASS
 .sass-cache/
@@ -463,6 +458,8 @@ composer.lock
 ##### AI
 .claude
 .pnotes
+CLAUDE.md
+AGENTS.md
 
 ##### Developer documentation
 docs/

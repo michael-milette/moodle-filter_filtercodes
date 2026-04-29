@@ -20,7 +20,7 @@
  * Tests URL-related tags including current page URL, encoding, session keys, and referrer.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ namespace filter_filtercodes;
 /**
  * Test URL and encoding tags.
  *
- * @copyright  2017-2025 TNG Consulting Inc.
+ * @copyright  2017-2026 TNG Consulting Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \filter_filtercodes\text_filter
  */

@@ -3,8 +3,9 @@
 FilterCodes filter plugin for Moodle
 ====================================
 
-![PHP](https://img.shields.io/badge/PHP-v5.4%20to%20v8.4-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v5.1-orange.svg)
+[![Moodle Plugin CI](https://github.com/michael-milette/moodle-filter_filtercodes/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/actions/workflows/moodle-ci.yml)
+![PHP](https://img.shields.io/badge/PHP-v7.3%20to%20v8.4-blue.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v3.11%20to%20v5.2-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -49,13 +50,11 @@ FilterCodes filter plugin for Moodle
     - [Technique B: Patching your Moodle theme](#technique-b-patching-your-moodle-theme)
       - [For themes based on **boost** (Moodle 5.0+)](#for-themes-based-on-boost-moodle-50)
       - [For themes based on **boost** (Moodle 4.0 to 4.5)](#for-themes-based-on-boost-moodle-40-to-45)
-      - [For themes based on **boost** (Moodle 3.2 to 3.11 and some 4.0+ to 4.6 themes)](#for-themes-based-on-boost-moodle-32-to-311-and-some-40-to-46-themes)
-      - [For themes based on the older **bootstrapbase** (Moodle 2.7 to 3.6)](#for-themes-based-on-the-older-bootstrapbase-moodle-27-to-36)
+      - [For themes based on **boost** (Moodle 3.11 and 4.0 to 4.5 themes)](#for-themes-based-on-boost-moodle-311-and-40-to-45-themes)
   - [Enabling FilterCodes in HEAD](#enabling-filtercodes-in-head)
   - [Scrape'ing content](#scrapeing-content)
   - [Back to section / Back to course button](#back-to-section--back-to-course-button)
   - [Optional FilterCodes for Moodle settings](#optional-filtercodes-for-moodle-settings)
-    - [Custom navigation support](#custom-navigation-support)
     - [Escape tags](#escape-tags)
     - [Hide completed courses](#hide-completed-courses)
     - [Scrape tag support](#scrape-tag-support)
@@ -131,7 +130,7 @@ Usage of the FilterCodes tags requires no knowledge of HTML but could be importa
 
 # Requirements
 
-This plugin requires Moodle 2.7+ from https://moodle.org/ . Note that some tags may require more recent versions of Moodle.
+This plugin requires Moodle 3.11+ from https://moodle.org/ . Note that some tags may require more recent versions of Moodle.
 
 [(Back to top)](#table-of-contents)
 
@@ -237,10 +236,10 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courserequest} : Displays a Request a Course link.
 * {label type}{/label} : Display text over background colour. The Boost theme supports the following types: **info**, **important**, **secondary**, **success** and **warning**. Other themes may also support **primary**, **danger**, **light**, **dark** and more. Example: {label info}For your information{/label}. Actual foreground and background colours vary depending on the theme. If the type is not specified, it will default to **info**. If the type specified is not supported by your theme, it may default to secondary.
 * {button URL}Label{/button} : Create a clickable button link formatted like a primary button.
-* (ALPHA) {chart radial x caption text} : Create a radial (circle / doughnut) chart given it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the Heading text. (Requires PHP 7.0+ and Moodle 3.2+)
-* (ALPHA) {chart pie x caption text} : Create a pie chart given a value of x between 0 and 100 and an optional title. If you do not want a caption, just specify a blank space instead of the caption text. (Requires PHP 7.0+ and Moodle 3.2+)
-* (ALPHA) {chart progressbar x caption text} : Create a horizontal progress bar chart giving it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the caption text. (Requires PHP 7.0+ and Moodle 3.2+)
-* (ALPHA) {chart progresspie x --size:150px --border:20px --color:purple --bgcolor:#f0f0f0 --title:caption text}Create a (circle / doughnut) progress chart giving it a value of x between 0 and 100. You can specify the height/width (size) and the thickness (border) of the line in* **px** as well as the color and background color by name or by RGB value. You can also specify a caption. Note that all parameters that begin with two dashes (--) are optional. (Requires PHP 7.0+ and Moodle 3.2+)
+* (ALPHA) {chart radial x caption text} : Create a radial (circle / doughnut) chart given it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the Heading text.
+* (ALPHA) {chart pie x caption text} : Create a pie chart given a value of x between 0 and 100 and an optional title. If you do not want a caption, just specify a blank space instead of the caption text.
+* (ALPHA) {chart progressbar x caption text} : Create a horizontal progress bar chart giving it a value of x between 0 and 100 and an optional caption. If you do not want a caption, just specify a blank space instead of the caption text.
+* (ALPHA) {chart progresspie x --size:150px --border:20px --color:purple --bgcolor:#f0f0f0 --title:caption text}Create a (circle / doughnut) progress chart giving it a value of x between 0 and 100. You can specify the height/width (size) and the thickness (border) of the line in* **px** as well as the color and background color by name or by RGB value. You can also specify a caption. Note that all parameters that begin with two dashes (--) are optional.
 * {showmore}{/showmore} : Toggle showing content between opening and closing more tags. Limitations: Can only be used inline with text. Must now weave into other opening and closing tags.
 * {qrcode}{/qrcode} : Generate and display a QR Code for the content between the tags.
 * (ALPHA) {dashboard_siteinfo} : Only displays for admins - Use this on your dashboard to see system information like available disk space, number of courses, total number of users and users currently online (in the last 5 minutes). This is an early alpha release and will likely change in the future.
@@ -255,18 +254,18 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courseenddate dateTimeFormat} : Course end date. Will display "Open event" if there is no end date. For information on the optional dateTimeFormat format, see **Supported dateTimeFormats Formats** in the [FAQ](#faq) section of this documentation.
 * {courseenrolmentdate dateTimeFormat} : Date and time at which the user was enrolled in the current course. For information on the optional dateTimeFormat format, see **Supported dateTimeFormats Formats** in the [FAQ](#faq) section of this documentation.
 * {coursecompletiondate dateTimeFormat} : Course completion date. If not completed, will display "Not completed". Will also detect if completion is not enabled. For information on the optional dateTimeFormat format, see **Supported dateTimeFormats Formats** in the [FAQ](#faq) section of this documentation.
-* {coursegradepercent}: Displays the current accumulated course grade of the student without percentage symbol. (Requires PHP 7.0 or later)
-* {coursegrade} : Displays the student's current overall course grade with the percentage symbol. (Requires PHP 7.0 or later)
+* {coursegradepercent}: Displays the current accumulated course grade of the student without percentage symbol.
+* {coursegrade} : Displays the student's current overall course grade with the percentage symbol.
 * (ALPHA) {courseprogress} : Displays course progress status in words.
 * (ALPHA) {courseprogressbar}: Displays course progress status as a status bar.
-* {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting. (Requires Moodle 3.7 or later)
-* {course_field_shortname} : Display custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting. (Requires Moodle 3.7 or later)
+* {course_fields}: Displays the custom course fields. NOTE: Respects a custom course field's Visible To setting.
+* {course_field_shortname} : Display custom course field. Replace "shortname" with the shortname of a custom course field all in lowercase. NOTE: Respects a custom course field's Visible To setting.
 * {coursesummary} : Display the course summary. If placed on a site page, displays the site summary.
 * {coursesummary ID} : Display the course summary of the course with the specified course ID number.
 * {courseimage} : Display's the course image.
 * {courseimage-url} : Display's the URL of the course image. Useful if you want to use it as a background image.
 * {courseparticipantcount} : Displays the number of students enrolled in the current course.
-* {coursecount students} : Displays the number of all users with the role of 'student' in a course. (Requires Moodle 3.2 or later)
+* {coursecount students} : Displays the number of all users with the role of 'student' in a course.
 * {coursecount students:active} : Displays the number of users with the role of 'student' in a course who are not suspended in the course.
 * {courseid} or %7Bcourseid%7D : Display a course's ID within a course and on the course enrolment page. Set to site ID (1) if outside a course.
 * {coursecontextid} or %7Bcoursecontextid%7D : Display a course's context ID.
@@ -631,11 +630,9 @@ Note that this is a top level menu that will only be visible to Site Administrat
 
 ## Enabling FilterCodes in the Custom Menu / Primary Navigation
 
-Note: The source code in this section was last updated in May 2024 for Moodle 4.0 and last tested for compatibility up to Moodle 4.4.
+Note: The source code in this section was last updated in May 2024 for Moodle 4.0 and last tested for compatibility up to Moodle 4.5.
 
 FilterCodes can work in custom menus but, unfortunately, only if the theme supports it or you patched Moodle. If it does not work for you, contact the theme's developer and request that they add support for Moodle filters. See the instructions included below.
-
-**Note:** In version 1.0.0 of FilterCodes, an experimental FilterCodes setting was created for the Clean and Boost themes but was only compatible and visible in Moodle 3.2 to 3.4. Unfortunately, things changed in Moodle 3.5 and it has since no longer been possible for FilterCodes to do this on its own without patching the Moodle core or the Moodle theme.
 
 There are currently four ways to enable FilterCodes in the Custom menu/Primary Navigation. You can use any one of the following:
 
@@ -648,26 +645,25 @@ If you are still using a version of Moodle older than 4.1, we highly recommend t
 
 ### Technique A: Patching Moodle core
 
-Moodle 5.0+ does not require any patching of Moodle core. For Moodle 3.7 to 4.5, preferred method is to patch your instance of Moodle using Git. If you did not install Moodle using Git, you can still apply the changes but you will need to do so manually.
+Moodle 5.0+ does not require any patching of Moodle core. For Moodle 3.11 to 4.5, preferred method is to patch your instance of Moodle using Git. If you did not install Moodle using Git, you can still apply the changes but you will need to do so manually.
 
 To patch Moodle to handle this properly for most Moodle themes, cherry-pick the following patch to your Moodle site:
 
-* Moodle 3.7: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M37
-* Moodle 3.8: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M38
-* Moodle 3.9: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M39
-* Moodle 3.10: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M310
 * Moodle 3.11: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M311
 * Moodle 4.0: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M400
 * Moodle 4.1: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M401
 * Moodle 4.2: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M402
 * Moodle 4.3: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M403
 * Moodle 4.4: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M404
-* Moodle master: https://github.com/michael-milette/moodle/tree/MDL-63219v3-master
+* Moodle 4.4: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M404
+* Moodle 4.4: https://github.com/michael-milette/moodle/tree/MDL-63219v3-M405
 
-Example: To apply the patch for Moodle using git (change the "M403" for other versions):
+Note: The patch has since been integrated into Moodle LMS core as of release 5.0+.
+
+To apply the patch for Moodle using git (change the "M405" for other versions):
 
 ```bash
-    git fetch https://github.com/michael-milette/moodle MDL-63219v3-M403
+    git fetch https://github.com/michael-milette/moodle MDL-63219v3-M405
     git cherry-pick FETCH_HEAD
 ```
 
@@ -685,7 +681,7 @@ If you are using Moodle 5.0+, you should not need patch your theme. However, som
 
 There is no tested patch available for all 3rd party Moodle 4.0 themes. It is recommended to use Moodle core patch above which is known to work.
 
-The follow ALPHA code is based on information available in the Boost theme for Moodle 4.x. You will **also need** to apply the theme patch **For themes based on boost (Moodle 3.2 and later)** included below.
+The follow ALPHA code is based on information available in the Boost theme for Moodle 4.x. You will **also need** to apply the theme patch **For themes based on boost** included below.
 
 Add this code to the core_renderer section (probably located in /theme/yourtheme/classes/navigation/output/primary.php) of your theme. Note: Your theme may even already have such a class (they often do):
 
@@ -729,9 +725,9 @@ Add this code to the core_renderer section (probably located in /theme/yourtheme
     }
 ```
 
-#### For themes based on **boost** (Moodle 3.2 to 3.11 and some 4.0+ to 4.6 themes)
+#### For themes based on **boost** (Moodle 3.11 and 4.0 to 4.5 themes)
 
-Note: Supported in Moodle 3.2 to 3.11. Most Moodle 4.0 themes do not require this patch but some that were ported for 4.0+ still do.
+Note: Supported in Moodle 3.11. Most Moodle 4.0 themes do not require this patch but some that were ported for 4.0+ still do.
 
 Add the following code to core_renderer section (often found in /theme/yourtheme/classes/output/core_renderer.php) of your theme. Note: Your theme may even already have such a class (they often do):
 
@@ -801,50 +797,6 @@ Add the following code to core_renderer section (often found in /theme/yourtheme
             }
 
             return $custommenu->export_for_template($this);
-        }
-    }
-```
-
-#### For themes based on the older **bootstrapbase** (Moodle 2.7 to 3.6)
-
-Note: Supported in Moodle 2.7 to 3.6.
-
-Add the following code to core_renderer section (often found in /theme/yourtheme/classes/output/core_renderer.php) of your theme. Note: Your theme may even already have such a class (they often do). The important lines are chunk of code that starts with "// Filter custom menu items..." including the 5 lines that follow it:
-
-```php
-    class theme_themename_core_renderer extends theme_bootstrapbase_core_renderer {
-        /**
-         * Applies Moodle filters to the custom menu and custom user menu.
-         *
-         * Copyright: 2017-2025 TNG Consulting Inc.
-         * License:   GNU GPL v3+.
-         *
-         * @param string $custommenuitems Current custom menu object.
-         * @return Rendered custom_menu that has been filtered.
-         */
-        public function custom_menu($custommenuitems = '') {
-            global $CFG, $PAGE;
-
-            // Don't apply auto-linking filters.
-            $filtermanager = filter_manager::instance();
-            $filteroptions = ['originalformat' => FORMAT_HTML, 'noclean' => true];
-            $skipfilters = ['activitynames', 'data', 'glossary', 'sectionnames', 'bookchapters', 'urltolink'];
-
-            // Filter custom user menu.
-            // Don't filter custom user menu on the theme settings page. Otherwise it ends up
-            // filtering the edit field itself resulting in a loss of tags.
-            if ($PAGE->pagetype != 'admin-setting-themesettings') {
-                $CFG->customusermenuitems = $filtermanager->filter_text($CFG->customusermenuitems, $PAGE->context,
-                        $filteroptions, $skipfilters);
-            }
-
-            // Filter custom menu.
-            if (empty($custommenuitems) && !emty($CFG->custommenuitems)) {
-                $custommenuitems = $CFG->custommenuitems;
-            }
-            $custommenuitems = $filtermanager->filter_text($custommenuitems, $PAGE->context, $filteroptions, $skipfilters);
-            $custommenu = new custom_menu($custommenuitems, current_language());
-            return $this->render_custom_menu($custommenu);
         }
     }
 ```
@@ -932,14 +884,6 @@ If you are in a section and want to go directly back to the main course outline 
 FilterCodes for Moodle includes the following settings. These are available on the plugin's **Settings** page by going to:
 
 Site administration > Plugins > Filters > Filter Codes
-
-### Custom navigation support
-
-Experimental: Only available in Moodle 3.2, 3.3 and 3.4. Enable support for FilterCode tags in Moodle custom navigation menu. Note: Is known to be compatible with Clean and Boost-based themes.
-
-NOTE: Does not filter tags on the Moodle Theme Settings page. This is not a bug, just a limitation.
-
-For information on enabling FilterCodes in custom menus of other versions of Moodle, see [Enabling FilterCodes in the Custom Menu / Primary Navigation](#enabling-filtercodes-in-the-custom-menu--primary-navigation)
 
 ### Escape tags
 
@@ -1040,7 +984,7 @@ Note that, once uninstalled, any tags and content normally handled by this plugi
 
 # Limitations
 
-* Be aware that enabling the Moodle "Download course content" feature may not process some tags correctly or at all through Moodle filters. As a result, tags may be displayed instead of content. This is a known Moodle issue [MDL-72894](https://tracker.moodle.org/browse/MDL-72894) which was resolved in 3.10.8+ and 3.11.4+.
+* Be aware that enabling the Moodle "Download course content" feature may not process some tags correctly or at all through Moodle filters. As a result, tags may be displayed instead of content. This is a known Moodle issue [MDL-72894](https://tracker.moodle.org/browse/MDL-72894) which was resolved in 3.11.4+.
 * Do not use [For use in courses](#for-use-in-courses) type tags inside your course summary. Course listings and course descriptions pages are not displayed within the context of a course. These only work properly within courses. Keep context in mind.
 * The {langx xx}{/langx} tag only supports inline text, not blocks of text.
 * Unpredictable results may occur if you interweave HTML code with {FilterCodesTag} tags.
@@ -1483,8 +1427,6 @@ First, the reCAPTCHA is only made to work with forms processed by the Contact Fo
 
 For reCAPTCHA to work, you need to configure the site and secret keys in Moodle. For more information, log into your Moodle site as a Site Administrator and navigate to **Site Administration > Authentication > Manage Authentication** and configure the ReCAPTCHA site key and ReCAPTCHA secret key. You will also need to enable ReCAPTCHA in the settings of the Contact Form plugin.
 
-If you are using older versions of Moodle before 3.1.11+, 3.2.8+, 3.3.5+, 3.4.5+ and 3.5+, that implementation of ReCAPTCHA is no longer supported by Google.
-
 ### How can I get the tag to work?
 
 You need to enable this feature in the FilterCodes settings in Moodle.
@@ -1665,7 +1607,7 @@ https://github.com/michael-milette/moodle-filter_filtercodes
 
 # License
 
-Copyright © 2017-2025 TNG Consulting Inc. - https://www.tngconsulting.ca/
+Copyright © 2017-2026 TNG Consulting Inc. - https://www.tngconsulting.ca/
 
 This file is part of FilterCodes for Moodle - https://moodle.org/
 

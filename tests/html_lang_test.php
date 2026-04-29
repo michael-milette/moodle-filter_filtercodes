@@ -18,7 +18,7 @@
  * Unit tests for FilterCodes HTML and language tags.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \filter_filtercodes\text_filter
@@ -31,7 +31,7 @@ namespace filter_filtercodes;
  *
  * Test HTML/language tags like {langx}, {nbsp}, {hr}, {details}, etc.
  *
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class html_lang_test extends \advanced_testcase {
