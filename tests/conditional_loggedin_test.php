@@ -20,7 +20,7 @@
  * Tests conditionals based on user login status (logged in, logged out, guest).
  *
  * @package    filter_filtercodes
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,7 +32,7 @@ namespace filter_filtercodes;
  *
  * Test conditional tags like {ifloggedin}, {ifloggedout}, {ifguest}, etc.
  *
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class conditional_loggedin_test extends \advanced_testcase {

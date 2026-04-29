@@ -2,16 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] 2026-05-11
+
+### Added
+
+- 267 phpUnit tests and 469 assertions in 15 categories.
+- Security: Fixed SSRF/LFI in {scrape} tag (Issue #361).
+- Added support for nested {ifprofile} tags.
+
+### Updated
+
+- Removed internal str_contains polyfill (no longer needed on PHP 7.3+).
+- Fix-346: {ifactivitycompleted} now exclude COMPLETION_COMPLETE_FAIL (failed graded activities no longer count as completed).
+- Fix-356: {ifnotcustomrole} tag fixed (was broken since v2.7.0).
+- Added maximum width for {coursecontacts} tag. Now also inline.
+- Multiple bug and compatibility fixes.
+- Updated copyright notice for 2026.
+- Compatible with Moodle 3.11 to 5.2 (not Moodle 2.7 to 3.10)
+- Compatible with PHP 7.3 to 8.4 (not PHP 5.4 to 7.2)
+- Hardened the `{scrape}` tag against SSRF/LFI by allowing only HTTP(S) URLs, resolving root-relative URLs against `$CFG->wwwroot`, using Moodle's cURL security helper, rejecting non-HTML responses, limiting response size, and sanitizing scraped HTML before display.
+- Added `{scrape}` settings for allowed hosts, maximum response size, cache TTL, and whether missing scrape content should display a message or fail silently.
+- Improved `{scrape}` performance with configurable MUC caching, conservative request timeouts, redirect limits, and mid-download response size enforcement.
+- Changed missing `{scrape}` matches to return the configured fail output instead of falling back to the full remote page.
+- Added PHPUnit coverage for `{scrape}` URL handling, blocked schemes, host allowlists, response limits, output cleaning, XPath escaping, caching, content-type checks, and silent-failure mode.
+- Note: PHP 8.4 + Moodle 5.2 CI lane pending upstream moodle-plugin-ci fix; plugin tested manually on this combo.
+
 ## [2.7.2] 2025-10-27
 
-## Added
+### Added
 
 - Now detects encoded course tags (e.g. %7Bcoursecontextid%7D)
 - Added option to link to Mobile Phone in {coursecontact} tag.
 - Added support for nested {if...} tags.
 - {coursecount students:active} Added active enrolments fallback if no role_assignments present.
 
-## Updated
+### Updated
 
 - Fix 342: {coursecontact} Phone link will now be displayed when configured in the settings.
 - Fixed logic of {ifcourserequest} tags.
@@ -19,8 +44,8 @@ All notable changes to this project will be documented in this file.
 - Improved 3rd party plugin detection for {menudev} tag.
 - Fixed PHP issue with blank {firstnamephonetic}, {lastnamephonetic}, {middlename} tags.
 - Fixed URL to Moodle reports.
-- Compatible with Moodle 2.7 to 5.1
-- Compatible with PHP 5.4 to 8.4
+- Compatible with Moodle 3.11 to 5.1
+- Compatible with PHP 7.3 to 8.4
 
 ## [2.7.0] 2025-05-05
 
