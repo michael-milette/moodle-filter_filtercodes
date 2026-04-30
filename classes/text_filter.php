@@ -254,11 +254,8 @@ class text_filter extends \filtercodes_base_text_filter {
         global $PAGE, $CFG;
         $img = 'u/' . ($size > 100 ? 'f3' : ($size > 35 ? 'f1' : 'f2'));
         $renderer = $PAGE->get_renderer('core');
-        if ($CFG->branch >= 33) {
-            $url = $renderer->image_url($img);
-        } else {
-            $url = $renderer->pix_url($img); // Deprecated as of Moodle 3.3.
-        }
+        $url = $renderer->image_url($img);
+
         return (new \moodle_url($url))->out();
     }
 
@@ -367,21 +364,6 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
-     * Determine if running on http or https. Same as Moodle's is_https() except that it is backwards compatible to Moodle 2.7.
-     *
-     * @return boolean true if protocol is https, false if http.
-     */
-    private function ishttps() {
-        global $CFG;
-        if ($CFG->branch >= 28) {
-            $ishttps = is_https(); // Available as of Moodle 2.8.
-        } else {
-            $ishttps = (filter_input(INPUT_SERVER, 'HTTPS') === 'on');
-        }
-        return $ishttps;
-    }
-
-    /**
      * Determine if access is from a web service.
      *
      * @return boolean true if a web service, false if web browser.
@@ -405,15 +387,9 @@ class text_filter extends \filtercodes_base_text_filter {
             // If Moodle reCAPTCHA configured.
             if (!empty($CFG->recaptchaprivatekey) && !empty($CFG->recaptchapublickey)) {
                 // Yes? Generate reCAPTCHA.
-                if (file_exists($CFG->libdir . '/recaptchalib_v2.php')) {
-                    // For reCAPTCHA 2.0.
-                    require_once($CFG->libdir . '/recaptchalib_v2.php');
-                    return recaptcha_get_challenge_html(RECAPTCHA_API_URL, $CFG->recaptchapublickey);
-                } else {
-                    // For reCAPTCHA 1.0.
-                    require_once($CFG->libdir . '/recaptchalib.php');
-                    return recaptcha_get_html($CFG->recaptchapublickey, null, $this->ishttps());
-                }
+                // For reCAPTCHA 2.0.
+                require_once($CFG->libdir . '/recaptchalib_v2.php');
+                return recaptcha_get_challenge_html(RECAPTCHA_API_URL, $CFG->recaptchapublickey);
             } else if ($CFG->debugdisplay == 1) { // If debugging is set to DEVELOPER...
                 // Show indicator that {reCAPTCHA} tag is not required.
                 return 'Warning: The reCAPTCHA tag is not required here.';
@@ -1013,9 +989,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     $menu .= '-{getstring}reports{/getstring}|/report/view.php?courseid={courseid}' . PHP_EOL;
                     $menu .= '-###' . PHP_EOL;
                     $menu .= '-{getstring:question}questionbank{/getstring}|/question/edit.php?courseid={courseid}' . PHP_EOL;
-                    if ($CFG->branch >= 39) {
-                        $menu .= '-{getstring}contentbank{/getstring}|/contentbank/index.php?contextid={coursecontextid}' . PHP_EOL;
-                    }
+                    $menu .= '-{getstring}contentbank{/getstring}|/contentbank/index.php?contextid={coursecontextid}' . PHP_EOL;
                     $menu .= '-{getstring:completion}coursecompletion{/getstring}|/course/completion.php?id={courseid}' . PHP_EOL;
                     $menu .= '-{getstring:badges}badges{/getstring}|/badges/view.php?type=2&amp;id={courseid}' . PHP_EOL;
                 }
@@ -1449,36 +1423,34 @@ class text_filter extends \filtercodes_base_text_filter {
             unset($cards, $users, $sql, $info, $prewrap, $postwrap, $cardformat);
         }
 
-        // Custom Course Fields - First implemented in Moodle 3.7.
-        if ($CFG->branch >= 37) {
-            // Tag: {course_field_shortname}.
-            // Description: Content from the custom course field specified by its shortname.
-            // Required Parameters: shortname of a custom course field.
-            if (stripos($text, '{course_field_') !== false) {
-                // Cached the custom course field data.
-                static $coursefields;
-                if (!isset($coursefields)) {
-                    $handler = \core_course\customfield\course_handler::create();
-                    $coursefields = $handler->export_instance_data_object($PAGE->course->id, true);
-                    $fieldsvisible = $handler->export_instance_data_object($PAGE->course->id);
-                    // Blank out the fields that should not be displayed.
-                    foreach ($coursefields as $field => $value) {
-                        if (empty($fieldsvisible->$field)) {
-                            $coursefields->$field = '';
-                        }
+        // Custom Course Fields
+        // Tag: {course_field_shortname}.
+        // Description: Content from the custom course field specified by its shortname.
+        // Required Parameters: shortname of a custom course field.
+        if (stripos($text, '{course_field_') !== false) {
+            // Cached the custom course field data.
+            static $coursefields;
+            if (!isset($coursefields)) {
+                $handler = \core_course\customfield\course_handler::create();
+                $coursefields = $handler->export_instance_data_object($PAGE->course->id, true);
+                $fieldsvisible = $handler->export_instance_data_object($PAGE->course->id);
+                // Blank out the fields that should not be displayed.
+                foreach ($coursefields as $field => $value) {
+                    if (empty($fieldsvisible->$field)) {
+                        $coursefields->$field = '';
                     }
                 }
-                $coursecontext = \context_course::instance($PAGE->course->id);
-                foreach ($coursefields as $field => $value) {
-                    $shortname = strtolower($field);
-                    // If the tag exists and it is not hidden in the custom course field's settings.
-                    if (stripos($text, '{course_field_' . $shortname . '}') !== false) {
-                        $replace['/\{course_field_' . $shortname . '\}/i'] = format_text(
-                            $value,
-                            FORMAT_HTML,
-                            ['context' => $coursecontext]
-                        );
-                    }
+            }
+            $coursecontext = \context_course::instance($PAGE->course->id);
+            foreach ($coursefields as $field => $value) {
+                $shortname = strtolower($field);
+                // If the tag exists and it is not hidden in the custom course field's settings.
+                if (stripos($text, '{course_field_' . $shortname . '}') !== false) {
+                    $replace['/\{course_field_' . $shortname . '\}/i'] = format_text(
+                        $value,
+                        FORMAT_HTML,
+                        ['context' => $coursecontext]
+                    );
                 }
             }
 
@@ -1981,11 +1953,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: URL that brought the user to the current page.
             // Parameters: None.
             if (stripos($text, '{referrer}') !== false) {
-                if ($CFG->branch >= 28) {
-                    $replace['/\{referrer\}/i'] = get_local_referer(false);
-                } else {
-                    $replace['/\{referrer\}/i'] = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
-                }
+                $replace['/\{referrer\}/i'] = get_local_referer(false);
             }
         }
 
@@ -2038,7 +2006,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Description: Protocol used to access the website (http or https).
         // Parameters: None.
         if (stripos($text, '{protocol}') !== false) {
-            $replace['/\{protocol\}/i'] = 'http' . ($this->ishttps() ? 's' : '');
+            $replace['/\{protocol\}/i'] = 'http' . (is_https() ? 's' : '');
         }
 
         // Tag: {ipaddress}.
@@ -2087,7 +2055,7 @@ class text_filter extends \filtercodes_base_text_filter {
             $newtext = preg_replace_callback(
                 '/\{getstring:?(\w*)\}(\w+)\{\/getstring\}/isuU',
                 function ($matches) use ($CFG) {
-                    if ($strexists = get_string_manager()->string_exists($matches[2], $matches[1]) && $CFG->branch >= 28) {
+                    if ($strexists = get_string_manager()->string_exists($matches[2], $matches[1])) {
                         $strexists = !get_string_manager()->string_deprecated($matches[2], $matches[1]);
                     }
                     if ($strexists) {
@@ -3166,15 +3134,11 @@ class text_filter extends \filtercodes_base_text_filter {
             // Optional Parameters: "students:active" - Filter limiting to student who have not been suspended.
             // Description: Get just the number of "students" in the course.
             if (stripos($text, '{coursecount students}') !== false) {
-                if ($CFG->branch >= 32) {
-                    $coursecontext = \context_course::instance($PAGE->course->id);
-                    $role = $DB->get_record('role', ['shortname' => 'student']);
-                    $students = get_role_users($role->id, $coursecontext);
-                    $cnt = count($students);
-                    unset($students);
-                } else {
-                    $cnt = '';
-                }
+                $coursecontext = \context_course::instance($PAGE->course->id);
+                $role = $DB->get_record('role', ['shortname' => 'student']);
+                $students = get_role_users($role->id, $coursecontext);
+                $cnt = count($students);
+                unset($students);
                 $replace['/\{coursecount students\}/i'] = $cnt;
             }
             if (stripos($text, '{coursecount students:active}') !== false) {
@@ -3264,24 +3228,7 @@ class text_filter extends \filtercodes_base_text_filter {
 
             if (stripos($text, '{courseimage') !== false) {
                 $course = $PAGE->course;
-                if ($CFG->branch >= 33) {
-                    $imgurl = \core_course\external\course_summary_exporter::get_course_image($course);
-                } else { // Previous to Moodle 3.3.
-                    $imgurl = '';
-                    $context = \context_course::instance($course->id);
-                    if ($course instanceof stdClass) {
-                        $course = new \core_course_list_element($course);
-                    }
-                    $coursefiles = $course->get_course_overviewfiles();
-                    foreach ($coursefiles as $file) {
-                        if ($isimage = $file->is_valid_image()) {
-                            $filename = '/' . $file->get_contextid() . '/' . $file->get_component()
-                                . '/' . $file->get_filearea() . $file->get_filepath() . $file->get_filename();
-                            $imgurl = file_encode_url("/pluginfile.php", $filename, !$isimage);
-                            break;
-                        }
-                    }
-                }
+                $imgurl = \core_course\external\course_summary_exporter::get_course_image($course);
                 if (empty($imgurl)) {
                     global $OUTPUT;
                     $imgurl = $OUTPUT->get_generated_image_for_id($course->id);
@@ -3557,7 +3504,7 @@ class text_filter extends \filtercodes_base_text_filter {
 
                 // Messages to display if not enrolled in any courses or have not yet completed some courses.
                 // Start by assuming that we are not enrolled in any courses.
-                $emptylist = get_string(($CFG->branch >= 29 ? 'notenrolled' : 'nocourses'), 'grades');
+                $emptylist = get_string(('notenrolled'), 'grades');
                 $emptycclist = $emptylist;
                 if (!empty($mycourses)) { // Enrolled in some courses.
                     $emptylist = '';
@@ -3766,12 +3713,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Parameters: None.
             if (stripos($text, '{categories}') !== false) {
                 // Retrieve list of all categories.
-                if ($CFG->branch >= 36) { // Moodle 3.6+.
-                    $categories = \core_course_category::make_categories_list();
-                } else {
-                    require_once($CFG->libdir . '/coursecatlib.php');
-                    $categories = coursecat::make_categories_list();
-                }
+                $categories = \core_course_category::make_categories_list();
                 $list = '';
                 foreach ($categories as $id => $name) {
                     $list .= '<li><a href="' .
@@ -3788,12 +3730,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Parameters: None.
             if (stripos($text, '{categoriesmenu}') !== false) {
                 // Retrieve list of all categories.
-                if ($CFG->branch >= 36) { // Moodle 3.6+.
-                    $categories = \core_course_category::make_categories_list();
-                } else {
-                    require_once($CFG->libdir . '/coursecatlib.php');
-                    $categories = coursecat::make_categories_list();
-                }
+                $categories = \core_course_category::make_categories_list();
                 $list = '';
                 foreach ($categories as $id => $name) {
                     $list .= '-' . $this->format_custommenuitem($name) . '|/course/index.php?categoryid=' . $id . PHP_EOL;
@@ -5351,7 +5288,7 @@ class text_filter extends \filtercodes_base_text_filter {
         // Tag: {chart <type> <value> <title>}
         // Description: Easily display a chart in one of several styles.
         // Required Parameters: type=radial|pie|progressbar|progresspie, value=0-100, title=Title of the chart.
-        if ($CFG->branch >= 32 && version_compare(PHP_VERSION, '7.0.0') >= 0 && stripos($text, '{chart ') !== false) {
+        if (stripos($text, '{chart ') !== false) {
             global $OUTPUT;
             preg_match_all('/\{chart\s(\w+)\s([0-9]+)((?:\s)(.*))?\}/isuU', $text, $matches, PREG_SET_ORDER);
             $matches = array_unique($matches, SORT_REGULAR);
@@ -5371,9 +5308,7 @@ class text_filter extends \filtercodes_base_text_filter {
                         $series = new \core\chart_series('Percentage', [min($value, 100), 100 - min($value, 100)]);
                         $chart->add_series($series);
                         $chart->set_labels(['Completed', 'Remaining']);
-                        if ($CFG->branch >= 39) {
-                            $chart->set_legend_options(['display' => false]);  // Hide chart legend.
-                        }
+                        $chart->set_legend_options(['display' => false]);  // Hide chart legend.
                         $html = '<div class="fc-chart-pie">' . $OUTPUT->render_chart($chart, false) . '</div>';
                         break;
                     case 'pie': // Tag: {chart pie 99 Label to be displayed} - Display a pie chart.
@@ -5385,9 +5320,7 @@ class text_filter extends \filtercodes_base_text_filter {
                         $series = new \core\chart_series('Percentage', [min($value, 100), 100 - min($value, 100)]);
                         $chart->add_series($series);
                         $chart->set_labels(['Completed', 'Remaining']);
-                        if ($CFG->branch >= 39) {
-                            $chart->set_legend_options(['display' => false]);  // Hide chart legend.
-                        }
+                        $chart->set_legend_options(['display' => false]);  // Hide chart legend.
                         $html = '<div class="fc-chart-pie">' . $OUTPUT->render_chart($chart, false) . '</div>';
                         break;
                     case 'progressbar': // Tag: {chart progressbar 99 Label to be displayed} - Display a horizontal progress bar.
