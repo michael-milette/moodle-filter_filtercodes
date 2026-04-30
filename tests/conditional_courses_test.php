@@ -608,6 +608,52 @@ final class conditional_courses_test extends \advanced_testcase {
     }
 
     /**
+     * Test ifactivitycompleted with COMPLETION_COMPLETE_FAIL (issue #346).
+     *
+     * A graded activity that the user failed must NOT be treated as completed.
+     */
+    public function test_ifactivitycompleted_fail_state() {
+        global $DB, $USER;
+
+        $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
+        $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
+
+        $assign = $this->getDataGenerator()->create_module('assign', [
+            'course' => $course->id,
+            'completion' => COMPLETION_TRACKING_AUTOMATIC,
+        ]);
+
+        // Force a failed completion state by writing directly to the completion table.
+        // update_state() with TRACKING_AUTOMATIC recomputes via internal_get_state and
+        // would discard COMPLETION_COMPLETE_FAIL when no grade-based rules are configured.
+        $DB->insert_record('course_modules_completion', (object) [
+            'coursemoduleid' => $assign->cmid,
+            'userid' => $USER->id,
+            'completionstate' => COMPLETION_COMPLETE_FAIL,
+            'overrideby' => null,
+            'timemodified' => time(),
+        ]);
+        \cache_helper::purge_by_definition('core', 'completion');
+
+        $context = \context_module::instance($assign->cmid);
+
+        $text = '{ifactivitycompleted ' . $assign->cmid . '}YES{/ifactivitycompleted}'
+              . '{ifnotactivitycompleted ' . $assign->cmid . '}NO{/ifnotactivitycompleted}';
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+
+        $this->assertStringNotContainsString(
+            'YES',
+            $result,
+            sprintf("Failed activity must not be considered completed.\nActual: '%s'", $result)
+        );
+        $this->assertStringContainsString(
+            'NO',
+            $result,
+            sprintf("Failed activity must be considered not completed.\nActual: '%s'", $result)
+        );
+    }
+
+    /**
      * Test ifenrolpage conditional (on enrolment page).
      */
     public function test_ifenrolpage() {

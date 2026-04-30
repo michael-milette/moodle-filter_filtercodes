@@ -4171,7 +4171,12 @@ class text_filter extends \filtercodes_base_text_filter {
                             // Get the completion data for this activity if it exists.
                             try {
                                 $data = $completion->get_data($cm, false, $USER->id);
-                                return $data->completionstate > COMPLETION_INCOMPLETE; // A completed state.
+                                // Only COMPLETE and COMPLETE_PASS count as completed; COMPLETE_FAIL does not.
+                                return \in_array(
+                                    (int) $data->completionstate,
+                                    [COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS],
+                                    true
+                                );
                             } catch (\moodle_exception $e) {
                                 // Handle Moodle-specific exceptions.
                                 unset($e);
@@ -4198,7 +4203,12 @@ class text_filter extends \filtercodes_base_text_filter {
                             // Get the completion data for this activity if it exists.
                             try {
                                 $data = $completion->get_data($cm, false, $USER->id);
-                                return !($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
+                                // COMPLETE_FAIL is treated as not completed (matches Moodle completion logic).
+                                return !\in_array(
+                                    (int) $data->completionstate,
+                                    [COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS],
+                                    true
+                                );
                             } catch (\moodle_exception $e) {
                                 // Handle Moodle-specific exceptions.
                                 unset($e);
