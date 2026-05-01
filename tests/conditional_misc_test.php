@@ -32,9 +32,9 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2025 TNG Consulting Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class conditional_misc_test extends \advanced_testcase {
-
     /**
      * Setup test framework.
      */
@@ -47,8 +47,9 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifdev conditional (developer mode).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifdev() {
+    public function test_ifdev(): void {
         global $CFG;
 
         // Enable developer debugging.
@@ -59,14 +60,18 @@ final class conditional_misc_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content in developer mode.
-        $this->assertStringContainsString('Developer mode active', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Developer mode active', $result));
+        $this->assertStringContainsString(
+            'Developer mode active',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Developer mode active', $result)
+        );
     }
 
     /**
      * Test ifdev when not in developer mode.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifdev_not_dev() {
+    public function test_ifdev_not_dev(): void {
         global $CFG;
 
         // Disable developer debugging.
@@ -82,8 +87,9 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifhome conditional (on homepage).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifhome() {
+    public function test_ifhome(): void {
         global $PAGE;
 
         // Set page to homepage.
@@ -94,14 +100,18 @@ final class conditional_misc_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content on homepage.
-        $this->assertStringContainsString('You are on the homepage', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'You are on the homepage', $result));
+        $this->assertStringContainsString(
+            'You are on the homepage',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'You are on the homepage', $result)
+        );
     }
 
     /**
      * Test ifnothome conditional (not on homepage).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnothome() {
+    public function test_ifnothome(): void {
         global $PAGE;
 
         // Set page to something other than homepage.
@@ -112,14 +122,18 @@ final class conditional_misc_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content when not on homepage.
-        $this->assertStringContainsString('Not on homepage', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Not on homepage', $result));
+        $this->assertStringContainsString(
+            'Not on homepage',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Not on homepage', $result)
+        );
     }
 
     /**
      * Test ifdashboard conditional (on dashboard).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifdashboard() {
+    public function test_ifdashboard(): void {
         global $PAGE;
 
         // Set page to dashboard.
@@ -130,14 +144,18 @@ final class conditional_misc_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content on dashboard.
-        $this->assertStringContainsString('You are on the dashboard', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'You are on the dashboard', $result));
+        $this->assertStringContainsString(
+            'You are on the dashboard',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'You are on the dashboard', $result)
+        );
     }
 
     /**
      * Test ifcourserequests conditional (course requests enabled).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifcourserequests() {
+    public function test_ifcourserequests(): void {
         global $CFG;
 
         // Enable course requests.
@@ -147,14 +165,18 @@ final class conditional_misc_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content when course requests are enabled.
-        $this->assertStringContainsString('Course requests enabled', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Course requests enabled', $result));
+        $this->assertStringContainsString(
+            'Course requests enabled',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Course requests enabled', $result)
+        );
     }
 
     /**
      * Test ifcourserequests when disabled.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifcourserequests_disabled() {
+    public function test_ifcourserequests_disabled(): void {
         global $CFG;
 
         // Disable course requests.
@@ -169,8 +191,9 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifeditmode conditional (edit mode enabled).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifeditmode() {
+    public function test_ifeditmode(): void {
         global $PAGE;
 
         // Enable editing mode.
@@ -181,14 +204,18 @@ final class conditional_misc_test extends \advanced_testcase {
         $text = '{ifeditmode}Edit mode is ON{/ifeditmode}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertEquals('', $result,
-            sprintf("Edit mode content should be hidden when editing is off\nActual: '%s'", $result));
+        $this->assertEquals(
+            '',
+            $result,
+            sprintf("Edit mode content should be hidden when editing is off\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test iftheme conditional (specific theme active).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_iftheme() {
+    public function test_iftheme(): void {
         global $CFG, $PAGE;
 
         // Get current theme.
@@ -198,26 +225,34 @@ final class conditional_misc_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content when theme matches.
-        $this->assertStringContainsString('This theme is active', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'This theme is active', $result));
+        $this->assertStringContainsString(
+            'This theme is active',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'This theme is active', $result)
+        );
     }
 
     /**
      * Test ifnottheme conditional (specific theme not active).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnottheme() {
+    public function test_ifnottheme(): void {
         $text = '{ifnottheme nonexistenttheme12345}Not using this theme{/ifnottheme}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content when theme doesn't match.
-        $this->assertStringContainsString('Not using this theme', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Not using this theme', $result));
+        $this->assertStringContainsString(
+            'Not using this theme',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Not using this theme', $result)
+        );
     }
 
     /**
      * Test ifprofile_field_* conditional (custom profile field).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifprofile_field() {
+    public function test_ifprofile_field(): void {
         global $USER, $DB;
 
         // Create a custom profile field.
@@ -239,14 +274,18 @@ final class conditional_misc_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content when custom field has a value.
-        $this->assertStringContainsString('Custom field exists', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Custom field exists', $result));
+        $this->assertStringContainsString(
+            'Custom field exists',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Custom field exists', $result)
+        );
     }
 
     /**
      * Test ifprofile with "is" operator.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifprofile_is() {
+    public function test_ifprofile_is(): void {
         global $USER;
 
         $USER->city = 'Toronto';
@@ -264,8 +303,9 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifprofile with "not" operator.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifprofile_not() {
+    public function test_ifprofile_not(): void {
         global $USER;
 
         $USER->city = 'Toronto';
@@ -283,8 +323,9 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifprofile with "contains" operator.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifprofile_contains() {
+    public function test_ifprofile_contains(): void {
         global $USER;
 
         $USER->email = 'user@example.com';
@@ -302,8 +343,9 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifprofile with "in" operator (value contains field).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifprofile_in() {
+    public function test_ifprofile_in(): void {
         global $USER;
 
         $USER->country = 'CA';
@@ -321,8 +363,9 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test nested ifprofile tags.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifprofile_nested() {
+    public function test_ifprofile_nested(): void {
         global $USER;
 
         // Set up user with specific profile fields for testing.
@@ -362,8 +405,9 @@ final class conditional_misc_test extends \advanced_testcase {
      *
      * Migration to the if_tag() helper unlocks graceful handling of incomplete
      * tag pairs that the previous innermost-first regex approach did not handle.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifprofile_partial_tags() {
+    public function test_ifprofile_partial_tags(): void {
         global $USER;
 
         $USER->city = 'New York';
@@ -393,8 +437,9 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifmobile conditional (mobile device detected).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifmobile() {
+    public function test_ifmobile(): void {
         global $CFG;
 
         // Force mobile theme (simulates mobile detection).
@@ -403,47 +448,63 @@ final class conditional_misc_test extends \advanced_testcase {
         $text = '{ifmobile}Mobile device detected{/ifmobile}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertEquals('', $result,
-            sprintf("Default PHPUnit requests should not be detected as mobile\nActual: '%s'", $result));
+        $this->assertEquals(
+            '',
+            $result,
+            sprintf("Default PHPUnit requests should not be detected as mobile\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test ifnotmobile conditional (not mobile device).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotmobile() {
+    public function test_ifnotmobile(): void {
         $text = '{ifnotmobile}Desktop device{/ifnotmobile}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertEquals('Desktop device', $result,
-            sprintf("Default PHPUnit requests should be treated as non-mobile\nActual: '%s'", $result));
+        $this->assertEquals(
+            'Desktop device',
+            $result,
+            sprintf("Default PHPUnit requests should be treated as non-mobile\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test iftenant conditional (Moodle Workplace tenant).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_iftenant() {
+    public function test_iftenant(): void {
         $text = '{iftenant 1}Classic tenant fallback detected{/iftenant}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertEquals('Classic tenant fallback detected', $result,
-            sprintf("Classic Moodle should simulate tenant 1 for compatible content\nActual: '%s'", $result));
+        $this->assertEquals(
+            'Classic tenant fallback detected',
+            $result,
+            sprintf("Classic Moodle should simulate tenant 1 for compatible content\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test ifworkplace conditional (Moodle Workplace).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifworkplace() {
+    public function test_ifworkplace(): void {
         $text = '{ifworkplace}Moodle Workplace detected{/ifworkplace}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertEquals('', $result,
-            sprintf("Classic Moodle should hide Workplace-only content\nActual: '%s'", $result));
+        $this->assertEquals(
+            '',
+            $result,
+            sprintf("Classic Moodle should hide Workplace-only content\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test combined misc conditionals.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_combined_misc_conditionals() {
+    public function test_combined_misc_conditionals(): void {
         global $CFG;
 
         // Set some conditions.
@@ -455,16 +516,23 @@ final class conditional_misc_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Both conditions should be processed.
-        $this->assertStringContainsString('Dev', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Dev', $result));
-        $this->assertStringContainsString('Requests', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Requests', $result));
+        $this->assertStringContainsString(
+            'Dev',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Dev', $result)
+        );
+        $this->assertStringContainsString(
+            'Requests',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Requests', $result)
+        );
     }
 
     /**
      * Test nested misc conditionals.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_nested_misc_conditionals() {
+    public function test_nested_misc_conditionals(): void {
         global $CFG;
 
         $CFG->debug = DEBUG_DEVELOPER;
@@ -473,14 +541,18 @@ final class conditional_misc_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Nested conditions should work.
-        $this->assertStringContainsString('In dev', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'In dev', $result));
+        $this->assertStringContainsString(
+            'In dev',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'In dev', $result)
+        );
     }
 
     /**
      * Test empty conditional content.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_misc_conditional_empty() {
+    public function test_misc_conditional_empty(): void {
         global $CFG;
 
         $CFG->debug = DEBUG_DEVELOPER;
@@ -488,7 +560,10 @@ final class conditional_misc_test extends \advanced_testcase {
         $text = '{ifdev}{/ifdev}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertEquals('', $result,
-            sprintf("Empty conditional content should remain empty after tags are removed\nActual: '%s'", $result));
+        $this->assertEquals(
+            '',
+            $result,
+            sprintf("Empty conditional content should remain empty after tags are removed\nActual: '%s'", $result)
+        );
     }
 }

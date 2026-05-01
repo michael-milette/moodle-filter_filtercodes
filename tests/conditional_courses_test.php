@@ -32,9 +32,9 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2025 TNG Consulting Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class conditional_courses_test extends \advanced_testcase {
-
     /**
      * Setup test framework.
      */
@@ -47,28 +47,33 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifenrolled conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifenrolled_when_enrolled() {
+    public function test_ifenrolled_when_enrolled(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
         $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
 
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
         $PAGE->set_course($course);
 
         $text = '{ifenrolled}You are enrolled{/ifenrolled}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when enrolled.
-        $this->assertStringContainsString('You are enrolled', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'You are enrolled', $result));
+        $this->assertStringContainsString(
+            'You are enrolled',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'You are enrolled', $result)
+        );
     }
 
     /**
      * Test ifenrolled when not enrolled.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifenrolled_not_enrolled() {
+    public function test_ifenrolled_not_enrolled(): void {
         global $PAGE;
 
         $user = $this->getDataGenerator()->create_user();
@@ -89,8 +94,9 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotenrolled conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotenrolled() {
+    public function test_ifnotenrolled(): void {
         global $PAGE;
 
         $user = $this->getDataGenerator()->create_user();
@@ -106,14 +112,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when not enrolled.
-        $this->assertStringContainsString('You are NOT enrolled', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'You are NOT enrolled', $result));
+        $this->assertStringContainsString(
+            'You are NOT enrolled',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'You are NOT enrolled', $result)
+        );
     }
 
     /**
      * Test ifincourse with specific course ID.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifincourse() {
+    public function test_ifincourse(): void {
         global $USER;
 
         $course = $this->getDataGenerator()->create_course();
@@ -123,14 +133,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content when enrolled in specified course.
-        $this->assertStringContainsString('In this course', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'In this course', $result));
+        $this->assertStringContainsString(
+            'In this course',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'In this course', $result)
+        );
     }
 
     /**
      * Test ifnotincourse with specific course ID.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotincourse() {
+    public function test_ifnotincourse(): void {
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
@@ -140,14 +154,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should show content when NOT enrolled in specified course.
-        $this->assertStringContainsString('Not in this course', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Not in this course', $result));
+        $this->assertStringContainsString(
+            'Not in this course',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Not in this course', $result)
+        );
     }
 
     /**
      * Test ifinsection conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifinsection() {
+    public function test_ifinsection(): void {
         global $PAGE;
 
         $course = $this->getDataGenerator()->create_course(['numsections' => 5]);
@@ -159,14 +177,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $text = '{ifinsection}In a section{/ifinsection}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
-        $this->assertEquals('In a section', $result,
-            sprintf("Section content should show in an activity section\nActual: '%s'", $result));
+        $this->assertEquals(
+            'In a section',
+            $result,
+            sprintf("Section content should show in an activity section\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test ifnotinsection conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotinsection() {
+    public function test_ifnotinsection(): void {
         global $PAGE;
 
         $course = $this->getDataGenerator()->create_course(['numsections' => 5]);
@@ -177,14 +199,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $text = '{ifnotinsection}Not in an activity section{/ifnotinsection}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
-        $this->assertEquals('Not in an activity section', $result,
-            sprintf("Non-section content should show on the course page\nActual: '%s'", $result));
+        $this->assertEquals(
+            'Not in an activity section',
+            $result,
+            sprintf("Non-section content should show on the course page\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test ifingroup conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifingroup() {
+    public function test_ifingroup(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -193,21 +219,25 @@ final class conditional_courses_test extends \advanced_testcase {
         $group = $this->getDataGenerator()->create_group(['courseid' => $course->id, 'name' => 'Test Group']);
         $this->getDataGenerator()->create_group_member(['groupid' => $group->id, 'userid' => $USER->id]);
 
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
         $PAGE->set_course($course);
 
         $text = '{ifingroup ' . $group->id . '}In the group{/ifingroup}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when user is in the group.
-        $this->assertStringContainsString('In the group', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'In the group', $result));
+        $this->assertStringContainsString(
+            'In the group',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'In the group', $result)
+        );
     }
 
     /**
      * Test ifnotingroup conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotingroup() {
+    public function test_ifnotingroup(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -225,14 +255,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when user is not in the group.
-        $this->assertStringContainsString('Not in the group', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Not in the group', $result));
+        $this->assertStringContainsString(
+            'Not in the group',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Not in the group', $result)
+        );
     }
 
     /**
      * Test nested ifingroup tags.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifingroup_nested() {
+    public function test_ifingroup_nested(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -276,8 +310,9 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test partial/unbalanced ifingroup tags.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifingroup_partial_tags() {
+    public function test_ifingroup_partial_tags(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -321,14 +356,24 @@ final class conditional_courses_test extends \advanced_testcase {
         $this->assertStringContainsString('Hello World{/ifingroup}', $result);
 
         // Scenario 7: Three levels deep, missing middle closing.
-        $text = '{ifingroup ' . $group->id . '}A{ifingroup ' . $group->id . '}B{ifingroup ' . $group->id . '}C{/ifingroup}{/ifingroup}';
+        $text = '{ifingroup ' . $group->id . '}A{ifingroup ' . $group->id . '}B'
+            . '{ifingroup ' . $group->id . '}C{/ifingroup}{/ifingroup}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
-        $this->assertStringContainsString('AB', $result,
-            sprintf("Outer true conditions should preserve reachable content\nActual: '%s'", $result));
-        $this->assertStringContainsString('C', $result,
-            sprintf("Innermost content should not be discarded\nActual: '%s'", $result));
-        $this->assertStringNotContainsString('{/ifingroup}', $result,
-            sprintf("Closing tags should be consumed when possible\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            'AB',
+            $result,
+            sprintf("Outer true conditions should preserve reachable content\nActual: '%s'", $result)
+        );
+        $this->assertStringContainsString(
+            'C',
+            $result,
+            sprintf("Innermost content should not be discarded\nActual: '%s'", $result)
+        );
+        $this->assertStringNotContainsString(
+            '{/ifingroup}',
+            $result,
+            sprintf("Closing tags should be consumed when possible\nActual: '%s'", $result)
+        );
 
         // Scenario 8: Interleaved different tags (mixing with other content).
         $text = '{ifingroup ' . $group->id . '}Start {firstname} {ifingroup none}Middle{/ifingroup} End';
@@ -339,8 +384,9 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifingrouping conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifingrouping() {
+    public function test_ifingrouping(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -351,21 +397,25 @@ final class conditional_courses_test extends \advanced_testcase {
         $this->getDataGenerator()->create_grouping_group(['groupingid' => $grouping->id, 'groupid' => $group->id]);
         $this->getDataGenerator()->create_group_member(['groupid' => $group->id, 'userid' => $USER->id]);
 
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
         $PAGE->set_course($course);
 
         $text = '{ifingrouping ' . $grouping->id . '}In the grouping{/ifingrouping}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when user is in a group within the grouping.
-        $this->assertStringContainsString('In the grouping', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'In the grouping', $result));
+        $this->assertStringContainsString(
+            'In the grouping',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'In the grouping', $result)
+        );
     }
 
     /**
      * Test ifnotingrouping conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotingrouping() {
+    public function test_ifnotingrouping(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -383,14 +433,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when user is NOT in the grouping.
-        $this->assertStringContainsString('Not in the grouping', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Not in the grouping', $result));
+        $this->assertStringContainsString(
+            'Not in the grouping',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Not in the grouping', $result)
+        );
     }
 
     /**
      * Test nested ifingrouping tags.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifingrouping_nested() {
+    public function test_ifingrouping_nested(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -405,7 +459,8 @@ final class conditional_courses_test extends \advanced_testcase {
         $this->getDataGenerator()->create_group_member(['groupid' => $group->id, 'userid' => $USER->id]);
 
         // True in true - nested tags both evaluating to true.
-        $text = '{ifingrouping ' . $grouping->id . '}Hello {ifingrouping ' . $grouping->id . '}World{/ifingrouping}.{/ifingrouping}';
+        $text = '{ifingrouping ' . $grouping->id . '}Hello '
+            . '{ifingrouping ' . $grouping->id . '}World{/ifingrouping}.{/ifingrouping}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
         $this->assertStringContainsString('Hello World.', $result);
 
@@ -436,8 +491,9 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test partial/unbalanced ifingrouping tags.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifingrouping_partial_tags() {
+    public function test_ifingrouping_partial_tags(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -475,44 +531,53 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifvisible conditional (course visibility).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifvisible() {
+    public function test_ifvisible(): void {
         global $PAGE;
 
         $course = $this->getDataGenerator()->create_course(['visible' => 1]);
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
         $PAGE->set_course($course);
 
         $text = '{ifvisible}Course is visible{/ifvisible}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when course is visible.
-        $this->assertStringContainsString('Course is visible', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Course is visible', $result));
+        $this->assertStringContainsString(
+            'Course is visible',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Course is visible', $result)
+        );
     }
 
     /**
      * Test ifnotvisible conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotvisible() {
+    public function test_ifnotvisible(): void {
         global $PAGE;
 
         $course = $this->getDataGenerator()->create_course(['visible' => 0]);
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
         $PAGE->set_course($course);
 
         $text = '{ifnotvisible}Course is hidden{/ifnotvisible}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when course is hidden.
-        $this->assertStringContainsString('Course is hidden', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Course is hidden', $result));
+        $this->assertStringContainsString(
+            'Course is hidden',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Course is hidden', $result)
+        );
     }
 
     /**
      * Test ifinactivity conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifinactivity() {
+    public function test_ifinactivity(): void {
         global $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -528,14 +593,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $result = \format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when in activity context.
-        $this->assertStringContainsString('Inside an activity', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Inside an activity', $result));
+        $this->assertStringContainsString(
+            'Inside an activity',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Inside an activity', $result)
+        );
     }
 
     /**
      * Test ifnotinactivity conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotinactivity() {
+    public function test_ifnotinactivity(): void {
         global $PAGE;
 
         $course = $this->getDataGenerator()->create_course();
@@ -548,14 +617,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when NOT in activity context.
-        $this->assertStringContainsString('Not inside an activity', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Not inside an activity', $result));
+        $this->assertStringContainsString(
+            'Not inside an activity',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Not inside an activity', $result)
+        );
     }
 
     /**
      * Test ifactivitycompleted conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifactivitycompleted() {
+    public function test_ifactivitycompleted(): void {
         global $USER;
 
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
@@ -577,14 +650,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when activity is completed.
-        $this->assertStringContainsString('Activity completed!', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Activity completed!', $result));
+        $this->assertStringContainsString(
+            'Activity completed!',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Activity completed!', $result)
+        );
     }
 
     /**
      * Test ifnotactivitycompleted conditional.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotactivitycompleted() {
+    public function test_ifnotactivitycompleted(): void {
         global $USER;
 
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
@@ -603,16 +680,20 @@ final class conditional_courses_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should show content when activity is NOT completed.
-        $this->assertStringContainsString('Activity not completed yet', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Activity not completed yet', $result));
+        $this->assertStringContainsString(
+            'Activity not completed yet',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Activity not completed yet', $result)
+        );
     }
 
     /**
      * Test ifactivitycompleted with COMPLETION_COMPLETE_FAIL (issue #346).
      *
      * A graded activity that the user failed must NOT be treated as completed.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifactivitycompleted_fail_state() {
+    public function test_ifactivitycompleted_fail_state(): void {
         global $DB, $USER;
 
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
@@ -655,8 +736,9 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifenrolpage conditional (on enrolment page).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifenrolpage() {
+    public function test_ifenrolpage(): void {
         global $PAGE;
 
         // Set page to enrol page.
@@ -667,14 +749,18 @@ final class conditional_courses_test extends \advanced_testcase {
         $text = '{ifenrolpage}On enrolment page{/ifenrolpage}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertEquals('On enrolment page', $result,
-            sprintf("Enrol page content should show on enrolment page\nActual: '%s'", $result));
+        $this->assertEquals(
+            'On enrolment page',
+            $result,
+            sprintf("Enrol page content should show on enrolment page\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test ifnotenrolpage conditional (not on enrolment page).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_ifnotenrolpage() {
+    public function test_ifnotenrolpage(): void {
         global $PAGE;
 
         // Set page to something other than enrol page.
@@ -684,28 +770,38 @@ final class conditional_courses_test extends \advanced_testcase {
         $text = '{ifnotenrolpage}Not on enrolment page{/ifnotenrolpage}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertEquals('Not on enrolment page', $result,
-            sprintf("Non-enrol page content should show away from enrolment page\nActual: '%s'", $result));
+        $this->assertEquals(
+            'Not on enrolment page',
+            $result,
+            sprintf("Non-enrol page content should show away from enrolment page\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test combined course conditionals.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_combined_course_conditionals() {
+    public function test_combined_course_conditionals(): void {
         global $USER;
 
         $course = $this->getDataGenerator()->create_course();
         $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
 
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
 
         $text = '{ifenrolled}Enrolled{/ifenrolled} {ifnotincourse 999}Not in course 999{/ifnotincourse}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Both conditions should be processed.
-        $this->assertStringContainsString('Enrolled', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Enrolled', $result));
-        $this->assertStringContainsString('Not in course 999', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Not in course 999', $result));
+        $this->assertStringContainsString(
+            'Enrolled',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Enrolled', $result)
+        );
+        $this->assertStringContainsString(
+            'Not in course 999',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Not in course 999', $result)
+        );
     }
 }

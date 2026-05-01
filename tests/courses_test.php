@@ -66,9 +66,16 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_context($context);
         $PAGE->set_course($course);
 
-        $filtered = format_text('{coursename}', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals('Test Course Name', $filtered,
-        sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Test Course Name', $filtered));
+        $filtered = format_text(
+            '{coursename}',
+            FORMAT_HTML,
+            ['context' => $context]
+        );
+        $this->assertEquals(
+            'Test Course Name',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Test Course Name', $filtered)
+        );
     }
 
     /**
@@ -80,8 +87,11 @@ final class courses_test extends \advanced_testcase {
     public function test_coursename_on_site_page(): void {
         global $SITE;
         $filtered = format_text('{coursename}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals($SITE->fullname, $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $SITE->fullname, $filtered));
+        $this->assertEquals(
+            $SITE->fullname,
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $SITE->fullname, $filtered)
+        );
     }
 
     /**
@@ -93,9 +103,16 @@ final class courses_test extends \advanced_testcase {
     public function test_coursename_with_id(): void {
         $course = $this->getDataGenerator()->create_course(['fullname' => 'Specific Course']);
 
-        $filtered = format_text("{coursename {$course->id}}", FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('Specific Course', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Specific Course', $filtered));
+        $filtered = format_text(
+            "{coursename {$course->id}}",
+            FORMAT_HTML,
+            ['context' => \context_system::instance()]
+        );
+        $this->assertEquals(
+            'Specific Course',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Specific Course', $filtered)
+        );
     }
 
     /**
@@ -114,8 +131,11 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_course($course);
 
         $filtered = format_text('{courseshortname}', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals('TESTCOURSE101', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'TESTCOURSE101', $filtered));
+        $this->assertEquals(
+            'TESTCOURSE101',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'TESTCOURSE101', $filtered)
+        );
     }
 
     /**
@@ -132,13 +152,19 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_course($course);
 
         $filtered = format_text('{courseid}', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals($course->id, $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $course->id, $filtered));
+        $this->assertEquals(
+            $course->id,
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $course->id, $filtered)
+        );
 
         // Test encoded version.
         $filtered = format_text('%7Bcourseid%7D', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals($course->id, $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $course->id, $filtered));
+        $this->assertEquals(
+            $course->id,
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $course->id, $filtered)
+        );
     }
 
     /**
@@ -155,13 +181,19 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_course($course);
 
         $filtered = format_text('{coursecontextid}', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals($context->id, $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $context->id, $filtered));
+        $this->assertEquals(
+            $context->id,
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $context->id, $filtered)
+        );
 
         // Test encoded version.
         $filtered = format_text('%7Bcoursecontextid%7D', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals($context->id, $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $context->id, $filtered));
+        $this->assertEquals(
+            $context->id,
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $context->id, $filtered)
+        );
     }
 
     /**
@@ -178,8 +210,11 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_course($course);
 
         $filtered = format_text('{courseidnumber}', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals('COURSE-123', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'COURSE-123', $filtered));
+        $this->assertEquals(
+            'COURSE-123',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'COURSE-123', $filtered)
+        );
     }
 
     /**
@@ -197,8 +232,11 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_course($course);
 
         $filtered = format_text('{coursesummary}', FORMAT_HTML, ['context' => $context]);
-        $this->assertStringContainsString('This is a test course summary', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'This is a test course summary', $filtered));
+        $this->assertStringContainsString(
+            'This is a test course summary',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'This is a test course summary', $filtered)
+        );
     }
 
     /**
@@ -212,8 +250,11 @@ final class courses_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course(['summary' => $summary]);
 
         $filtered = format_text("{coursesummary {$course->id}}", FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertStringContainsString('Summary for specific course', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Summary for specific course', $filtered));
+        $this->assertStringContainsString(
+            'Summary for specific course',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Summary for specific course', $filtered)
+        );
     }
 
     /**
@@ -296,17 +337,42 @@ final class courses_test extends \advanced_testcase {
         role_assign($role->id, $user2->id, $context->id);
 
         // Ensure the user_enrolments statuses are explicitly set: user1 active (0), user2 suspended.
-        $DB->execute("UPDATE {user_enrolments} ue JOIN {enrol} e ON e.id = ue.enrolid SET ue.status = :s WHERE ue.userid = :uid AND e.courseid = :cid", ['s' => 0, 'uid' => $user1->id, 'cid' => $course->id]);
-        $DB->execute("UPDATE {user_enrolments} ue JOIN {enrol} e ON e.id = ue.enrolid SET ue.status = :s WHERE ue.userid = :uid AND e.courseid = :cid", ['s' => ENROL_USER_SUSPENDED, 'uid' => $user2->id, 'cid' => $course->id]);
+        $DB->set_field_select(
+            'user_enrolments',
+            'status',
+            0,
+            'userid = :uid AND enrolid IN (SELECT id FROM {enrol} WHERE courseid = :cid)',
+            ['uid' => $user1->id, 'cid' => $course->id]
+        );
+        $DB->set_field_select(
+            'user_enrolments',
+            'status',
+            ENROL_USER_SUSPENDED,
+            'userid = :uid AND enrolid IN (SELECT id FROM {enrol} WHERE courseid = :cid)',
+            ['uid' => $user2->id, 'cid' => $course->id]
+        );
 
-        $rows = $DB->get_records_sql("SELECT ue.userid, ue.status FROM {user_enrolments} ue JOIN {enrol} e ON e.id = ue.enrolid WHERE e.courseid = :courseid", ['courseid' => $course->id]);
-        $statuses = array_map(function($r) { return $r->status; }, $rows);
+        $rows = $DB->get_records_sql(
+            "SELECT ue.userid, ue.status FROM {user_enrolments} ue JOIN {enrol} e ON e.id = ue.enrolid"
+                . " WHERE e.courseid = :courseid",
+            ['courseid' => $course->id]
+        );
+        $statuses = array_map(
+            function ($r) {
+                return $r->status;
+            },
+            $rows
+        );
         $this->assertNotEmpty($rows, 'No user_enrolments rows found for course');
         $activecount = $DB->count_records_sql("SELECT COUNT(DISTINCT ue.userid)
             FROM {user_enrolments} ue
             JOIN {enrol} e ON e.id = ue.enrolid
             WHERE ue.status = 0 AND e.courseid = :courseid", ['courseid' => $course->id]);
-        $this->assertEquals(1, (int)$activecount, sprintf("Active enrolment count mismatch expected 1 got %d (statuses: %s)", $activecount, implode(',', $statuses)));
+        $this->assertEquals(
+            1,
+            (int)$activecount,
+            sprintf("Active enrolment count mismatch expected 1 got %d (statuses: %s)", $activecount, implode(',', $statuses))
+        );
 
         $filtered = format_text('{coursecount students:active}', FORMAT_HTML, ['context' => $context]);
         $this->assertEquals(1, (int)$filtered);
@@ -328,8 +394,11 @@ final class courses_test extends \advanced_testcase {
 
         $filtered = format_text('{coursestartdate %Y-%m-%d}', FORMAT_HTML, ['context' => $context]);
         $expected = userdate($startdate, '%Y-%m-%d');
-        $this->assertEquals($expected, $filtered,
-            sprintf("Course start date should use the configured format\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Course start date should use the configured format\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -348,8 +417,11 @@ final class courses_test extends \advanced_testcase {
 
         $filtered = format_text('{courseenddate %Y-%m-%d}', FORMAT_HTML, ['context' => $context]);
         $expected = userdate($enddate, '%Y-%m-%d');
-        $this->assertEquals($expected, $filtered,
-            sprintf("Course end date should use the configured format\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Course end date should use the configured format\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -373,8 +445,11 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_course($course);
         $filtered = format_text('{courseenrolmentdate %Y-%m-%d}', FORMAT_HTML, ['context' => $context]);
 
-        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', $filtered,
-            sprintf("Course enrolment date should be formatted as YYYY-MM-DD\nActual: '%s'", $filtered));
+        $this->assertMatchesRegularExpression(
+            '/^\d{4}-\d{2}-\d{2}$/',
+            $filtered,
+            sprintf("Course enrolment date should be formatted as YYYY-MM-DD\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -395,14 +470,26 @@ final class courses_test extends \advanced_testcase {
 
         $filtered = format_text('{mycourses}', FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('My Course 1', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'My Course 1', $filtered));
-        $this->assertStringContainsString('My Course 2', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'My Course 2', $filtered));
-        $this->assertStringContainsString('<ul', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", '<ul', $filtered));
-        $this->assertStringContainsString('<li', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", '<li', $filtered));
+        $this->assertStringContainsString(
+            'My Course 1',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'My Course 1', $filtered)
+        );
+        $this->assertStringContainsString(
+            'My Course 2',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'My Course 2', $filtered)
+        );
+        $this->assertStringContainsString(
+            '<ul',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", '<ul', $filtered)
+        );
+        $this->assertStringContainsString(
+            '<li',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", '<li', $filtered)
+        );
     }
 
     /**
@@ -440,13 +527,19 @@ final class courses_test extends \advanced_testcase {
         $PAGE->set_context($context);
 
         $filtered = format_text('{sectionid}', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals('', $filtered,
-            sprintf("Section ID should be empty outside an activity context\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Section ID should be empty outside an activity context\nActual: '%s'", $filtered)
+        );
 
         // Test encoded version.
         $filtered = format_text('%7Bsectionid%7D', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals('', $filtered,
-            sprintf("Encoded section ID should be empty outside an activity context\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Encoded section ID should be empty outside an activity context\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -468,12 +561,21 @@ final class courses_test extends \advanced_testcase {
         $text = 'Course: {coursename} ({courseshortname}) - ID: {courseid}';
         $filtered = format_text($text, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertStringContainsString('Test Course', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Test Course', $filtered));
-        $this->assertStringContainsString('TC101', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'TC101', $filtered));
-        $this->assertStringContainsString((string)$course->id, $filtered,
-            sprintf("Should contain %s\nActual: '%s'", (string)$course->id, $filtered));
+        $this->assertStringContainsString(
+            'Test Course',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Test Course', $filtered)
+        );
+        $this->assertStringContainsString(
+            'TC101',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'TC101', $filtered)
+        );
+        $this->assertStringContainsString(
+            (string)$course->id,
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", (string)$course->id, $filtered)
+        );
     }
 
     /**
@@ -487,8 +589,11 @@ final class courses_test extends \advanced_testcase {
 
         $filtered = format_text('{coursename}', FORMAT_HTML, ['context' => \context_system::instance()]);
         // Should default to site name.
-        $this->assertEquals($SITE->fullname, $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $SITE->fullname, $filtered));
+        $this->assertEquals(
+            $SITE->fullname,
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $SITE->fullname, $filtered)
+        );
 
         $filtered = format_text('{courseid}', FORMAT_HTML, ['context' => \context_system::instance()]);
         // Should be site ID (1).

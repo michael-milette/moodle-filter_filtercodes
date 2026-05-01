@@ -68,8 +68,11 @@ final class categories_test extends \advanced_testcase {
         $PAGE->set_course($course);
 
         $filtered = format_text('{categoryid}', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals($category->id, $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $category->id, $filtered));
+        $this->assertEquals(
+            $category->id,
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $category->id, $filtered)
+        );
     }
 
     /**
@@ -87,8 +90,11 @@ final class categories_test extends \advanced_testcase {
         $PAGE->set_course($course);
 
         $filtered = format_text('{categoryname}', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals('My Test Category', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'My Test Category', $filtered));
+        $this->assertEquals(
+            'My Test Category',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'My Test Category', $filtered)
+        );
     }
 
     /**
@@ -109,8 +115,11 @@ final class categories_test extends \advanced_testcase {
         $PAGE->set_course($course);
 
         $filtered = format_text('{categorynumber}', FORMAT_HTML, ['context' => $context]);
-        $this->assertEquals('CAT-123', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'CAT-123', $filtered));
+        $this->assertEquals(
+            'CAT-123',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'CAT-123', $filtered)
+        );
     }
 
     /**
@@ -132,8 +141,11 @@ final class categories_test extends \advanced_testcase {
         $PAGE->set_course($course);
 
         $filtered = format_text('{categorydescription}', FORMAT_HTML, ['context' => $context]);
-        $this->assertStringContainsString('test category description', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'test category description', $filtered));
+        $this->assertStringContainsString(
+            'test category description',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'test category description', $filtered)
+        );
     }
 
     /**
@@ -150,14 +162,26 @@ final class categories_test extends \advanced_testcase {
         $filtered = format_text('{categories}', FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should be an unordered list.
-        $this->assertStringContainsString('<ul', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", '<ul', $filtered));
-        $this->assertStringContainsString('<li', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", '<li', $filtered));
-        $this->assertStringContainsString('Category One', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Category One', $filtered));
-        $this->assertStringContainsString('Category Two', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Category Two', $filtered));
+        $this->assertStringContainsString(
+            '<ul',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", '<ul', $filtered)
+        );
+        $this->assertStringContainsString(
+            '<li',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", '<li', $filtered)
+        );
+        $this->assertStringContainsString(
+            'Category One',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Category One', $filtered)
+        );
+        $this->assertStringContainsString(
+            'Category Two',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Category Two', $filtered)
+        );
     }
 
     /**
@@ -177,12 +201,21 @@ final class categories_test extends \advanced_testcase {
         $filtered = format_text('{categories0}', FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should include top-level.
-        $this->assertStringContainsString('Top Level', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Top Level', $filtered));
-        $this->assertStringNotContainsString('Sub Level', $filtered,
-            sprintf("Top-level category list should not include nested categories\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('<ul', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", '<ul', $filtered));
+        $this->assertStringContainsString(
+            'Top Level',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Top Level', $filtered)
+        );
+        $this->assertStringNotContainsString(
+            'Sub Level',
+            $filtered,
+            sprintf("Top-level category list should not include nested categories\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            '<ul',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", '<ul', $filtered)
+        );
     }
 
     /**
@@ -209,8 +242,11 @@ final class categories_test extends \advanced_testcase {
         $filtered = format_text('{categoriesx}', FORMAT_HTML, ['context' => $context]);
 
         // Should list other categories in the same parent.
-        $this->assertStringContainsString('<ul', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", '<ul', $filtered));
+        $this->assertStringContainsString(
+            '<ul',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", '<ul', $filtered)
+        );
     }
 
     /**
@@ -226,12 +262,20 @@ final class categories_test extends \advanced_testcase {
         $filtered = format_text('{categoriesmenu}', FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should be formatted for custom menu use.
-        $this->assertNotEmpty($filtered,
-            sprintf("Should not be empty\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('Menu Category 1', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Menu Category 1', $filtered));
-        $this->assertStringContainsString('Menu Category 2', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Menu Category 2', $filtered));
+        $this->assertNotEmpty(
+            $filtered,
+            sprintf("Should not be empty\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'Menu Category 1',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Menu Category 1', $filtered)
+        );
+        $this->assertStringContainsString(
+            'Menu Category 2',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Menu Category 2', $filtered)
+        );
     }
 
     /**
@@ -250,8 +294,11 @@ final class categories_test extends \advanced_testcase {
         $filtered = format_text('{categories0menu}', FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should include top-level category.
-        $this->assertStringContainsString('Top Menu Cat', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Top Menu Cat', $filtered));
+        $this->assertStringContainsString(
+            'Top Menu Cat',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Top Menu Cat', $filtered)
+        );
     }
 
     /**
@@ -275,8 +322,11 @@ final class categories_test extends \advanced_testcase {
 
         $filtered = format_text('{categoriesxmenu}', FORMAT_HTML, ['context' => $context]);
 
-        $this->assertStringContainsString('Child Menu', $filtered,
-            sprintf("Should contain child category menu item\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            'Child Menu',
+            $filtered,
+            sprintf("Should contain child category menu item\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -292,8 +342,11 @@ final class categories_test extends \advanced_testcase {
 
         $filtered = format_text('{categoryname}', FORMAT_HTML, ['context' => \context_system::instance()]);
         // Should be empty outside a course.
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -316,12 +369,21 @@ final class categories_test extends \advanced_testcase {
         $text = 'Category: {categoryname} (ID: {categoryid}, Number: {categorynumber})';
         $filtered = format_text($text, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertStringContainsString('Test Category', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Test Category', $filtered));
-        $this->assertStringContainsString((string)$category->id, $filtered,
-            sprintf("Should contain %s\nActual: '%s'", (string)$category->id, $filtered));
-        $this->assertStringContainsString('TC-001', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'TC-001', $filtered));
+        $this->assertStringContainsString(
+            'Test Category',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Test Category', $filtered)
+        );
+        $this->assertStringContainsString(
+            (string)$category->id,
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", (string)$category->id, $filtered)
+        );
+        $this->assertStringContainsString(
+            'TC-001',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'TC-001', $filtered)
+        );
     }
 
     /**
@@ -336,9 +398,15 @@ final class categories_test extends \advanced_testcase {
 
         // As admin, should see all.
         $filtered = format_text('{categories0}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertStringContainsString('Visible Cat', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Visible Cat', $filtered));
-        $this->assertStringContainsString('Hidden Cat', $filtered,
-            sprintf("Admin should see hidden categories\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            'Visible Cat',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Visible Cat', $filtered)
+        );
+        $this->assertStringContainsString(
+            'Hidden Cat',
+            $filtered,
+            sprintf("Admin should see hidden categories\nActual: '%s'", $filtered)
+        );
     }
 }

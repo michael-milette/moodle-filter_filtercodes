@@ -164,8 +164,11 @@ final class profile_test extends \advanced_testcase {
         $this->setUser($user);
 
         $filtered = format_text('{alternatename}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('Johnny', $filtered, 
-            sprintf("Tag {alternatename} failed\nExpected: 'Johnny'\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            'Johnny',
+            $filtered,
+            sprintf("Tag {alternatename} failed\nExpected: 'Johnny'\nActual: '%s'", $filtered)
+        );
 
         // Test with empty alternatename (should fall back to firstname).
         $user2 = $this->getDataGenerator()->create_user([
@@ -175,8 +178,11 @@ final class profile_test extends \advanced_testcase {
         $this->setUser($user2);
 
         $filtered = format_text('{alternatename}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('Jane', $filtered,
-            sprintf("Tag {alternatename} (fallback) failed\nExpected: 'Jane'\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            'Jane',
+            $filtered,
+            sprintf("Tag {alternatename} (fallback) failed\nExpected: 'Jane'\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -196,8 +202,11 @@ final class profile_test extends \advanced_testcase {
         $this->setUser($user);
 
         $filtered = format_text('{middlename}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals($USER->middlename, $filtered,
-            sprintf("Tag {middlename} failed\nExpected: '%s'\nActual: '%s'", $USER->middlename, $filtered));
+        $this->assertEquals(
+            $USER->middlename,
+            $filtered,
+            sprintf("Tag {middlename} failed\nExpected: '%s'\nActual: '%s'", $USER->middlename, $filtered)
+        );
     }
 
     /**
@@ -218,12 +227,18 @@ final class profile_test extends \advanced_testcase {
         $this->setUser($user);
 
         $filtered = format_text('{firstnamephonetic}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals($USER->firstnamephonetic, $filtered,
-            sprintf("Tag {firstnamephonetic} failed\nExpected: '%s'\nActual: '%s'", $USER->firstnamephonetic, $filtered));
+        $this->assertEquals(
+            $USER->firstnamephonetic,
+            $filtered,
+            sprintf("Tag {firstnamephonetic} failed\nExpected: '%s'\nActual: '%s'", $USER->firstnamephonetic, $filtered)
+        );
 
         $filtered = format_text('{lastnamephonetic}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals($USER->lastnamephonetic, $filtered,
-            sprintf("Tag {lastnamephonetic} failed\nExpected: '%s'\nActual: '%s'", $USER->lastnamephonetic, $filtered));
+        $this->assertEquals(
+            $USER->lastnamephonetic,
+            $filtered,
+            sprintf("Tag {lastnamephonetic} failed\nExpected: '%s'\nActual: '%s'", $USER->lastnamephonetic, $filtered)
+        );
     }
 
     /**
@@ -241,8 +256,11 @@ final class profile_test extends \advanced_testcase {
         $this->setUser($user);
 
         $filtered = format_text('{timezone}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals($USER->timezone, $filtered,
-            sprintf("Tag {timezone} failed\nExpected: '%s'\nActual: '%s'", $USER->timezone, $filtered));
+        $this->assertEquals(
+            $USER->timezone,
+            $filtered,
+            sprintf("Tag {timezone} failed\nExpected: '%s'\nActual: '%s'", $USER->timezone, $filtered)
+        );
     }
 
     /**
@@ -261,10 +279,16 @@ final class profile_test extends \advanced_testcase {
 
         $filtered = format_text('{preferredlanguage}', FORMAT_HTML, ['context' => \context_system::instance()]);
         // Should contain the language string wrapped in a span with lang attribute.
-        $this->assertStringContainsString('English', $filtered,
-            sprintf("Tag {preferredlanguage} should contain 'English'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('lang="en"', $filtered,
-            sprintf("Tag {preferredlanguage} should contain lang attribute\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            'English',
+            $filtered,
+            sprintf("Tag {preferredlanguage} should contain 'English'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'lang="en"',
+            $filtered,
+            sprintf("Tag {preferredlanguage} should contain lang attribute\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -283,8 +307,11 @@ final class profile_test extends \advanced_testcase {
         $this->setUser($user);
 
         $filtered = format_text('{userdescription}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertStringContainsString($description, $filtered,
-            sprintf("Tag {userdescription} should contain '%s'\nActual: '%s'", $description, $filtered));
+        $this->assertStringContainsString(
+            $description,
+            $filtered,
+            sprintf("Tag {userdescription} should contain '%s'\nActual: '%s'", $description, $filtered)
+        );
     }
 
     /**
@@ -316,8 +343,11 @@ final class profile_test extends \advanced_testcase {
 
         $filtered = format_text('{webpage}', FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('https://example.com', trim($filtered),
-            sprintf("Tag {webpage} should resolve the custom profile field\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            'https://example.com',
+            trim($filtered),
+            sprintf("Tag {webpage} should resolve the custom profile field\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -337,17 +367,26 @@ final class profile_test extends \advanced_testcase {
         foreach ($sizes as $size) {
             $filtered = format_text("{userpictureurl $size}", FORMAT_HTML, ['context' => \context_system::instance()]);
             $this->assertNotEmpty($filtered, sprintf("Tag {userpictureurl %s} returned empty\nActual: '%s'", $size, $filtered));
-            $this->assertStringContainsString('http', $filtered,
-                sprintf("Tag {userpictureurl %s} should contain URL\nActual: '%s'", $size, $filtered));
+            $this->assertStringContainsString(
+                'http',
+                $filtered,
+                sprintf("Tag {userpictureurl %s} should contain URL\nActual: '%s'", $size, $filtered)
+            );
         }
 
         // Test userpictureimg with different sizes.
         foreach ($sizes as $size) {
             $filtered = format_text("{userpictureimg $size}", FORMAT_HTML, ['context' => \context_system::instance()]);
-            $this->assertStringContainsString('<img', $filtered,
-                sprintf("Tag {userpictureimg %s} should contain <img tag\nActual: '%s'", $size, $filtered));
-            $this->assertStringContainsString('src=', $filtered,
-                sprintf("Tag {userpictureimg %s} should contain src attribute\nActual: '%s'", $size, $filtered));
+            $this->assertStringContainsString(
+                '<img',
+                $filtered,
+                sprintf("Tag {userpictureimg %s} should contain <img tag\nActual: '%s'", $size, $filtered)
+            );
+            $this->assertStringContainsString(
+                'src=',
+                $filtered,
+                sprintf("Tag {userpictureimg %s} should contain src attribute\nActual: '%s'", $size, $filtered)
+            );
         }
     }
 
@@ -372,8 +411,11 @@ final class profile_test extends \advanced_testcase {
 
         foreach ($tests as $tag) {
             $filtered = format_text($tag, FORMAT_HTML, ['context' => \context_system::instance()]);
-            $this->assertEquals('', $filtered,
-                sprintf("Tag %s should be blank for guest users\nActual: '%s'", $tag, $filtered));
+            $this->assertEquals(
+                '',
+                $filtered,
+                sprintf("Tag %s should be blank for guest users\nActual: '%s'", $tag, $filtered)
+            );
         }
     }
 
@@ -394,7 +436,10 @@ final class profile_test extends \advanced_testcase {
         $text = 'Hello {firstname} {lastname}, your email is {email}';
         $filtered = format_text($text, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('Hello John Doe, your email is john@example.com', $filtered,
-            sprintf("Multiple profile tags should be replaced in one pass\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            'Hello John Doe, your email is john@example.com',
+            $filtered,
+            sprintf("Multiple profile tags should be replaced in one pass\nActual: '%s'", $filtered)
+        );
     }
 }

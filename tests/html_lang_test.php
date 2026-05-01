@@ -137,9 +137,16 @@ final class html_lang_test extends \advanced_testcase {
 
         foreach ($tests as $test) {
             $filtered = format_text($test['before'], FORMAT_HTML, ['context' => \context_system::instance()]);
-            $this->assertEquals($test['after'], $filtered,
-                sprintf("Nbsp tag test failed\nInput: '%s'\nExpected: '%s'\nActual: '%s'",
-                    $test['before'], $test['after'], $filtered));
+            $this->assertEquals(
+                $test['after'],
+                $filtered,
+                sprintf(
+                    "Nbsp tag test failed\nInput: '%s'\nExpected: '%s'\nActual: '%s'",
+                    $test['before'],
+                    $test['after'],
+                    $filtered
+                )
+            );
         }
     }
 
@@ -163,9 +170,16 @@ final class html_lang_test extends \advanced_testcase {
 
         foreach ($tests as $test) {
             $filtered = format_text($test['before'], FORMAT_HTML, ['context' => \context_system::instance()]);
-            $this->assertEquals($test['after'], $filtered,
-                sprintf("Soft hyphen tag test failed\nInput: '%s'\nExpected: '%s'\nActual: '%s'",
-                    $test['before'], $test['after'], $filtered));
+            $this->assertEquals(
+                $test['after'],
+                $filtered,
+                sprintf(
+                    "Soft hyphen tag test failed\nInput: '%s'\nExpected: '%s'\nActual: '%s'",
+                    $test['before'],
+                    $test['after'],
+                    $filtered
+                )
+            );
         }
     }
 
@@ -177,8 +191,11 @@ final class html_lang_test extends \advanced_testcase {
      */
     public function test_hr_tag(): void {
         $filtered = format_text('{hr}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertStringContainsString('<hr', $filtered,
-            sprintf("Tag {hr} should contain '<hr'\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            '<hr',
+            $filtered,
+            sprintf("Tag {hr} should contain '<hr'\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -191,18 +208,36 @@ final class html_lang_test extends \advanced_testcase {
         $before = '{details}{summary}Click to expand{/summary}Hidden content here{/details}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('<details', $filtered,
-            sprintf("Should contain '<details'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('<summary>', $filtered,
-            sprintf("Should contain '<summary>'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('Click to expand', $filtered,
-            sprintf("Should contain 'Click to expand'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('Hidden content here', $filtered,
-            sprintf("Should contain 'Hidden content here'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('</summary>', $filtered,
-            sprintf("Should contain '</summary>'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('</details>', $filtered,
-            sprintf("Should contain '</details>'\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            '<details',
+            $filtered,
+            sprintf("Should contain '<details'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            '<summary>',
+            $filtered,
+            sprintf("Should contain '<summary>'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'Click to expand',
+            $filtered,
+            sprintf("Should contain 'Click to expand'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'Hidden content here',
+            $filtered,
+            sprintf("Should contain 'Hidden content here'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            '</summary>',
+            $filtered,
+            sprintf("Should contain '</summary>'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            '</details>',
+            $filtered,
+            sprintf("Should contain '</details>'\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -215,10 +250,16 @@ final class html_lang_test extends \advanced_testcase {
         $before = '{details my-class}{summary}Title{/summary}Content{/details}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('class="my-class"', $filtered,
-            sprintf("Should contain class attribute\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('<details', $filtered,
-            sprintf("Should contain '<details'\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            'class="my-class"',
+            $filtered,
+            sprintf("Should contain class attribute\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            '<details',
+            $filtered,
+            sprintf("Should contain '<details'\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -233,12 +274,21 @@ final class html_lang_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should contain multilang span tags.
-        $this->assertStringContainsString('English', $filtered,
-            sprintf("Should contain 'English'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('Français', $filtered,
-            sprintf("Should contain 'Français'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('class="multilang"', $filtered,
-            sprintf("Should contain multilang class\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            'English',
+            $filtered,
+            sprintf("Should contain 'English'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'Français',
+            $filtered,
+            sprintf("Should contain 'Français'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'class="multilang"',
+            $filtered,
+            sprintf("Should contain multilang class\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -252,8 +302,11 @@ final class html_lang_test extends \advanced_testcase {
         $before = '[{firstname}] should not be replaced';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('{firstname}', $filtered,
-            sprintf("Escaped tag should remain\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            '{firstname}',
+            $filtered,
+            sprintf("Escaped tag should remain\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -267,8 +320,11 @@ final class html_lang_test extends \advanced_testcase {
         $before = '[%7Buserid%7D] should not be replaced';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('%7Buserid%7D', $filtered,
-            sprintf("Escaped encoded tag should remain\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            '%7Buserid%7D',
+            $filtered,
+            sprintf("Escaped encoded tag should remain\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -281,12 +337,21 @@ final class html_lang_test extends \advanced_testcase {
         $before = 'Text{nbsp}here {langx es}español{/langx} and{-}more';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('&nbsp;', $filtered,
-            sprintf("Should contain '&nbsp;'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('&shy;', $filtered,
-            sprintf("Should contain '&shy;'\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('<span lang="es">', $filtered,
-            sprintf("Should contain '<span lang=\"es\">'\nActual: '%s'", $filtered));
+        $this->assertStringContainsString(
+            '&nbsp;',
+            $filtered,
+            sprintf("Should contain '&nbsp;'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            '&shy;',
+            $filtered,
+            sprintf("Should contain '&shy;'\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            '<span lang="es">',
+            $filtered,
+            sprintf("Should contain '<span lang=\"es\">'\nActual: '%s'", $filtered)
+        );
     }
 
     /**

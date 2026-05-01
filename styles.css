@@ -73,6 +73,6 @@ kbd {
 /* Limit width of course contacts. */
 ul.fc-coursecontacts li {
     display: inline-block;
-    max-width:280px;
+    max-width: 280px;
     margin-right: 2%;
 }

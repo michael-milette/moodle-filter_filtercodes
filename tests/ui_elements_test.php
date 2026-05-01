@@ -32,9 +32,9 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2025 TNG Consulting Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class ui_elements_test extends \advanced_testcase {
-
     /**
      * Setup test framework.
      */
@@ -48,7 +48,7 @@ final class ui_elements_test extends \advanced_testcase {
     /**
      * Test teamcards tag.
      */
-    public function test_teamcards() {
+    public function test_teamcards(): void {
         global $CFG, $DB;
 
         $course = $this->getDataGenerator()->create_course();
@@ -72,16 +72,22 @@ final class ui_elements_test extends \advanced_testcase {
         $text = '{teamcards}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertStringContainsString('Alice', $result,
-            sprintf("Should contain assigned course contact\nActual: '%s'", $result));
-        $this->assertStringContainsString('Bob', $result,
-            sprintf("Should contain assigned course contact\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            'Alice',
+            $result,
+            sprintf("Should contain assigned course contact\nActual: '%s'", $result)
+        );
+        $this->assertStringContainsString(
+            'Bob',
+            $result,
+            sprintf("Should contain assigned course contact\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test coursecards tag.
      */
-    public function test_coursecards() {
+    public function test_coursecards(): void {
         // Create some courses.
         $course1 = $this->getDataGenerator()->create_course([
             'fullname' => 'Test Course Alpha',
@@ -98,16 +104,22 @@ final class ui_elements_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain course names (visible courses).
-        $this->assertStringContainsString('Test Course Alpha', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Test Course Alpha', $result));
-        $this->assertStringContainsString('Test Course Beta', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Test Course Beta', $result));
+        $this->assertStringContainsString(
+            'Test Course Alpha',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Test Course Alpha', $result)
+        );
+        $this->assertStringContainsString(
+            'Test Course Beta',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Test Course Beta', $result)
+        );
     }
 
     /**
      * Test coursecard tag with specific course ID.
      */
-    public function test_coursecard_with_id() {
+    public function test_coursecard_with_id(): void {
         $course = $this->getDataGenerator()->create_course([
             'fullname' => 'Specific Course Card',
             'shortname' => 'SC-CARD',
@@ -118,14 +130,17 @@ final class ui_elements_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain course information.
-        $this->assertStringContainsString('Specific Course Card', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Specific Course Card', $result));
+        $this->assertStringContainsString(
+            'Specific Course Card',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Specific Course Card', $result)
+        );
     }
 
     /**
      * Test coursecardsbyenrol tag - shows courses user is enrolled in.
      */
-    public function test_coursecardsbyenrol() {
+    public function test_coursecardsbyenrol(): void {
         global $USER;
 
         $course1 = $this->getDataGenerator()->create_course([
@@ -144,16 +159,22 @@ final class ui_elements_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain enrolled course.
-        $this->assertStringContainsString('Enrolled Course One', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Enrolled Course One', $result));
-        $this->assertStringNotContainsString('Enrolled Course Two', $result,
-            sprintf("Should not contain courses the user is not enrolled in\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            'Enrolled Course One',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Enrolled Course One', $result)
+        );
+        $this->assertStringNotContainsString(
+            'Enrolled Course Two',
+            $result,
+            sprintf("Should not contain courses the user is not enrolled in\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test courseprogress tag.
      */
-    public function test_courseprogress() {
+    public function test_courseprogress(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course([
@@ -170,14 +191,16 @@ final class ui_elements_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should contain progress information (could be 0% or formatted).
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertNotEmpty(
+            $result,
+            sprintf("Should not be empty\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test courseprogresspercent tag.
      */
-    public function test_courseprogresspercent() {
+    public function test_courseprogresspercent(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course([
@@ -193,14 +216,17 @@ final class ui_elements_test extends \advanced_testcase {
         $text = '{courseprogresspercent}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
-        $this->assertMatchesRegularExpression('/^\d{1,3}$/', $result,
-            sprintf("Should return a numeric completion percentage\nActual: '%s'", $result));
+        $this->assertMatchesRegularExpression(
+            '/^\d{1,3}$/',
+            $result,
+            sprintf("Should return a numeric completion percentage\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test courseprogressbar tag.
      */
-    public function test_courseprogressbar() {
+    public function test_courseprogressbar(): void {
         global $USER, $PAGE;
 
         $course = $this->getDataGenerator()->create_course([
@@ -217,14 +243,17 @@ final class ui_elements_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should contain progress bar HTML.
-        $this->assertStringContainsString('progress', strtolower($result),
-            sprintf("Should contain %s\nActual: '%s'", 'progress', $result));
+        $this->assertStringContainsString(
+            'progress',
+            strtolower($result),
+            sprintf("Should contain %s\nActual: '%s'", 'progress', $result)
+        );
     }
 
     /**
      * Test categorycards tag.
      */
-    public function test_categorycards() {
+    public function test_categorycards(): void {
         // Create some categories.
         $cat1 = $this->getDataGenerator()->create_category([
             'name' => 'Category Alpha',
@@ -239,16 +268,22 @@ final class ui_elements_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain category names.
-        $this->assertStringContainsString('Category Alpha', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Category Alpha', $result));
-        $this->assertStringContainsString('Category Beta', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Category Beta', $result));
+        $this->assertStringContainsString(
+            'Category Alpha',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Category Alpha', $result)
+        );
+        $this->assertStringContainsString(
+            'Category Beta',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Category Beta', $result)
+        );
     }
 
     /**
      * Test mycourses tag (list format).
      */
-    public function test_mycourses_list() {
+    public function test_mycourses_list(): void {
         global $USER;
 
         $course1 = $this->getDataGenerator()->create_course([
@@ -268,16 +303,22 @@ final class ui_elements_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain enrolled course names.
-        $this->assertStringContainsString('My Course One', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'My Course One', $result));
-        $this->assertStringContainsString('My Course Two', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'My Course Two', $result));
+        $this->assertStringContainsString(
+            'My Course One',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'My Course One', $result)
+        );
+        $this->assertStringContainsString(
+            'My Course Two',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'My Course Two', $result)
+        );
     }
 
     /**
      * Test mycoursescards tag (card format).
      */
-    public function test_mycoursescards() {
+    public function test_mycoursescards(): void {
         global $USER;
 
         $course = $this->getDataGenerator()->create_course([
@@ -292,14 +333,17 @@ final class ui_elements_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain course in card format.
-        $this->assertStringContainsString('Card Format Course', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Card Format Course', $result));
+        $this->assertStringContainsString(
+            'Card Format Course',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Card Format Course', $result)
+        );
     }
 
     /**
      * Test courserequest tag/link.
      */
-    public function test_courserequest() {
+    public function test_courserequest(): void {
         global $CFG;
 
         // Enable course requests.
@@ -309,111 +353,163 @@ final class ui_elements_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain course request link or button.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
-        $this->assertStringContainsString('course', strtolower($result),
-            sprintf("Should contain %s\nActual: '%s'", 'course', $result));
+        $this->assertNotEmpty(
+            $result,
+            sprintf("Should not be empty\nActual: '%s'", $result)
+        );
+        $this->assertStringContainsString(
+            'course',
+            strtolower($result),
+            sprintf("Should contain %s\nActual: '%s'", 'course', $result)
+        );
     }
 
     /**
      * Test chart radial tag.
      */
-    public function test_chart_radial() {
+    public function test_chart_radial(): void {
         $text = '{chart radial 75}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain chart-related markup.
-        $this->assertStringContainsString('fc-chart-pie', $result,
-            sprintf("Should contain chart wrapper\nActual: '%s'", $result));
-        $this->assertStringContainsString('chart-area', $result,
-            sprintf("Should contain Moodle chart markup\nActual: '%s'", $result));
-        $this->assertStringNotContainsString('{chart radial 75}', $result,
-            sprintf("Tag should have been processed\nActual: '%s'", $result));
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            'fc-chart-pie',
+            $result,
+            sprintf("Should contain chart wrapper\nActual: '%s'", $result)
+        );
+        $this->assertStringContainsString(
+            'chart-area',
+            $result,
+            sprintf("Should contain Moodle chart markup\nActual: '%s'", $result)
+        );
+        $this->assertStringNotContainsString(
+            '{chart radial 75}',
+            $result,
+            sprintf("Tag should have been processed\nActual: '%s'", $result)
+        );
+        $this->assertNotEmpty(
+            $result,
+            sprintf("Should not be empty\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test chart pie tag.
      */
-    public function test_chart_pie() {
+    public function test_chart_pie(): void {
         $text = '{chart pie 60}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain chart-related markup.
-        $this->assertStringContainsString('fc-chart-pie', $result,
-            sprintf("Should contain chart wrapper\nActual: '%s'", $result));
-        $this->assertStringContainsString('chart-area', $result,
-            sprintf("Should contain Moodle chart markup\nActual: '%s'", $result));
-        $this->assertStringNotContainsString('{chart pie 60}', $result,
-            sprintf("Tag should have been processed\nActual: '%s'", $result));
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            'fc-chart-pie',
+            $result,
+            sprintf("Should contain chart wrapper\nActual: '%s'", $result)
+        );
+        $this->assertStringContainsString(
+            'chart-area',
+            $result,
+            sprintf("Should contain Moodle chart markup\nActual: '%s'", $result)
+        );
+        $this->assertStringNotContainsString(
+            '{chart pie 60}',
+            $result,
+            sprintf("Tag should have been processed\nActual: '%s'", $result)
+        );
+        $this->assertNotEmpty(
+            $result,
+            sprintf("Should not be empty\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test chart progressbar tag.
      */
-    public function test_chart_progressbar() {
+    public function test_chart_progressbar(): void {
         $text = '{chart progressbar 45}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain progress bar markup.
-        $this->assertStringContainsString('45', $result,
-            sprintf("Should contain %s\nActual: '%s'", '45', $result));
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            '45',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", '45', $result)
+        );
+        $this->assertNotEmpty(
+            $result,
+            sprintf("Should not be empty\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test chart progresspie tag.
      */
-    public function test_chart_progresspie() {
+    public function test_chart_progresspie(): void {
         $text = '{chart progresspie 80}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain progress pie markup.
-        $this->assertStringContainsString('80', $result,
-            sprintf("Should contain %s\nActual: '%s'", '80', $result));
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            '80',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", '80', $result)
+        );
+        $this->assertNotEmpty(
+            $result,
+            sprintf("Should not be empty\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test dashboard_siteinfo tag.
      */
-    public function test_dashboard_siteinfo() {
+    public function test_dashboard_siteinfo(): void {
         $text = '{dashboard_siteinfo}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertStringContainsString('fcdashboard-siteinfo', $result,
-            sprintf("Should contain site information dashboard markup\nActual: '%s'", $result));
-        $this->assertStringContainsString('Available disk space', $result,
-            sprintf("Should contain dashboard content\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            'fcdashboard-siteinfo',
+            $result,
+            sprintf("Should contain site information dashboard markup\nActual: '%s'", $result)
+        );
+        $this->assertStringContainsString(
+            'Available disk space',
+            $result,
+            sprintf("Should contain dashboard content\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test keyboard tag for keyboard input display.
      */
-    public function test_keyboard_display() {
+    public function test_keyboard_display(): void {
         $text = '{keyboard}Ctrl+C{/keyboard}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should wrap text in keyboard styling.
-        $this->assertStringContainsString('Ctrl+C', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Ctrl+C', $result));
-        $this->assertStringContainsString('kbd', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'kbd', $result));
+        $this->assertStringContainsString(
+            'Ctrl+C',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Ctrl+C', $result)
+        );
+        $this->assertStringContainsString(
+            'kbd',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'kbd', $result)
+        );
     }
 
     /**
      * Test empty keyboard tag.
      */
-    public function test_keyboard_empty() {
+    public function test_keyboard_empty(): void {
         $text = '{keyboard}{/keyboard}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertStringContainsString('kbd', $result,
-            sprintf("Empty keyboard tags should still render keyboard markup\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            'kbd',
+            $result,
+            sprintf("Empty keyboard tags should still render keyboard markup\nActual: '%s'", $result)
+        );
     }
 }

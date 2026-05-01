@@ -33,6 +33,7 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class content_test extends \advanced_testcase {
     /**
@@ -63,8 +64,11 @@ final class content_test extends \advanced_testcase {
         $before = '{getstring}help{/getstring}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('Help', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Help', $filtered));
+        $this->assertEquals(
+            'Help',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Help', $filtered)
+        );
     }
 
     /**
@@ -77,8 +81,11 @@ final class content_test extends \advanced_testcase {
         $before = '{getstring:filter_filtercodes}pluginname{/getstring}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('Filter Codes', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Filter Codes', $filtered));
+        $this->assertEquals(
+            'Filter Codes',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Filter Codes', $filtered)
+        );
     }
 
     /**
@@ -99,8 +106,11 @@ final class content_test extends \advanced_testcase {
         foreach ($tests as $tag) {
             $filtered = format_text($tag, FORMAT_HTML, ['context' => \context_system::instance()]);
             $this->assertStringContainsString('<span class="', $filtered, "Failed for: $tag");
-            $this->assertStringContainsString('aria-hidden="true"', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'aria-hidden="true"', $filtered));
+            $this->assertStringContainsString(
+                'aria-hidden="true"',
+                $filtered,
+                sprintf("Should contain %s\nActual: '%s'", 'aria-hidden="true"', $filtered)
+            );
         }
     }
 
@@ -114,10 +124,16 @@ final class content_test extends \advanced_testcase {
         $before = '{glyphicon glyphicon-star}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('<span class="glyphicon glyphicon-star"', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", '<span class="glyphicon glyphicon-star"', $filtered));
-        $this->assertStringContainsString('aria-hidden="true"', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'aria-hidden="true"', $filtered));
+        $this->assertStringContainsString(
+            '<span class="glyphicon glyphicon-star"',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", '<span class="glyphicon glyphicon-star"', $filtered)
+        );
+        $this->assertStringContainsString(
+            'aria-hidden="true"',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'aria-hidden="true"', $filtered)
+        );
     }
 
     /**
@@ -132,10 +148,16 @@ final class content_test extends \advanced_testcase {
 
         // Note content should not be displayed.
         $this->assertStringNotContainsString('This is a note', $filtered);
-        $this->assertStringContainsString('Before', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Before', $filtered));
-        $this->assertStringContainsString('After', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'After', $filtered));
+        $this->assertStringContainsString(
+            'Before',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Before', $filtered)
+        );
+        $this->assertStringContainsString(
+            'After',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'After', $filtered)
+        );
     }
 
     /**
@@ -149,10 +171,15 @@ final class content_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should create a help icon/link.
-        $this->assertNotEmpty($filtered,
-            sprintf("Should not be empty\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('Help text here', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Help text here', $filtered));
+        $this->assertNotEmpty(
+            $filtered,
+            sprintf("Should not be empty\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'Help text here',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Help text here', $filtered)
+        );
     }
 
     /**
@@ -166,10 +193,15 @@ final class content_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should create an info icon/link.
-        $this->assertNotEmpty($filtered,
-            sprintf("Should not be empty\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('Info text here', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Info text here', $filtered));
+        $this->assertNotEmpty(
+            $filtered,
+            sprintf("Should not be empty\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'Info text here',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Info text here', $filtered)
+        );
     }
 
     /**
@@ -186,8 +218,11 @@ final class content_test extends \advanced_testcase {
             $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
             $this->assertStringContainsString('Alert message', $filtered, "Failed for style: $style");
-            $this->assertStringContainsString('alert', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'alert', $filtered));
+            $this->assertStringContainsString(
+                'alert',
+                $filtered,
+                sprintf("Should contain %s\nActual: '%s'", 'alert', $filtered)
+            );
         }
     }
 
@@ -201,8 +236,11 @@ final class content_test extends \advanced_testcase {
         $before = '{alert}Default alert{/alert}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('Default alert', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Default alert', $filtered));
+        $this->assertStringContainsString(
+            'Default alert',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Default alert', $filtered)
+        );
     }
 
     /**
@@ -215,8 +253,11 @@ final class content_test extends \advanced_testcase {
         $before = 'This is {highlight}highlighted text{/highlight} here';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('highlighted text', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'highlighted text', $filtered));
+        $this->assertStringContainsString(
+            'highlighted text',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'highlighted text', $filtered)
+        );
         // Should contain some highlighting markup.
         $this->assertNotEquals('This is highlighted text here', $filtered);
     }
@@ -231,10 +272,16 @@ final class content_test extends \advanced_testcase {
         $before = '{marktext}Marked text{/marktext}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('Marked text', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Marked text', $filtered));
-        $this->assertStringContainsString('fc-marktext', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'fc-marktext', $filtered));
+        $this->assertStringContainsString(
+            'Marked text',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Marked text', $filtered)
+        );
+        $this->assertStringContainsString(
+            'fc-marktext',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'fc-marktext', $filtered)
+        );
     }
 
     /**
@@ -247,10 +294,16 @@ final class content_test extends \advanced_testcase {
         $before = '{markborder}Bordered text{/markborder}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('Bordered text', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Bordered text', $filtered));
-        $this->assertStringContainsString('fc-markborder', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'fc-markborder', $filtered));
+        $this->assertStringContainsString(
+            'Bordered text',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Bordered text', $filtered)
+        );
+        $this->assertStringContainsString(
+            'fc-markborder',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'fc-markborder', $filtered)
+        );
     }
 
     /**
@@ -280,8 +333,11 @@ final class content_test extends \advanced_testcase {
         $before = '{label}Default label{/label}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('Default label', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Default label', $filtered));
+        $this->assertStringContainsString(
+            'Default label',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Default label', $filtered)
+        );
     }
 
     /**
@@ -294,12 +350,21 @@ final class content_test extends \advanced_testcase {
         $before = '{button https://example.com}Click Me{/button}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('Click Me', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Click Me', $filtered));
-        $this->assertStringContainsString('https://example.com', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'https://example.com', $filtered));
-        $this->assertStringContainsString('btn', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'btn', $filtered));
+        $this->assertStringContainsString(
+            'Click Me',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Click Me', $filtered)
+        );
+        $this->assertStringContainsString(
+            'https://example.com',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'https://example.com', $filtered)
+        );
+        $this->assertStringContainsString(
+            'btn',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'btn', $filtered)
+        );
     }
 
     /**
@@ -343,8 +408,11 @@ final class content_test extends \advanced_testcase {
 
         $filtered = format_text('{recaptcha}', FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Logged-in users should not receive a recaptcha\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Logged-in users should not receive a recaptcha\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -357,14 +425,25 @@ final class content_test extends \advanced_testcase {
         $filtered = format_text('{formsesskey}', FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should contain a hidden input field with sesskey.
-        $this->assertNotEmpty($filtered,
-            sprintf("Should not be empty\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('type="hidden"', $filtered,
-            sprintf("Should contain hidden input field\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('name="sesskey"', $filtered,
-            sprintf("Should contain sesskey name\nActual: '%s'", $filtered));
-        $this->assertStringContainsString('M.cfg.sesskey', $filtered,
-            sprintf("Should contain JavaScript to set sesskey\nActual: '%s'", $filtered));
+        $this->assertNotEmpty(
+            $filtered,
+            sprintf("Should not be empty\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'type="hidden"',
+            $filtered,
+            sprintf("Should contain hidden input field\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'name="sesskey"',
+            $filtered,
+            sprintf("Should contain sesskey name\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'M.cfg.sesskey',
+            $filtered,
+            sprintf("Should contain JavaScript to set sesskey\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -377,10 +456,13 @@ final class content_test extends \advanced_testcase {
         $before = '{urlencode}hello world & stuff{/urlencode}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        // Note: format_text() converts & to &amp; before the filter runs, so we expect the encoded version of &amp;
+        // Note: format_text() converts & to &amp; before the filter runs, so we expect the encoded version of &amp;.
         $expected = urlencode('hello world &amp; stuff');
-        $this->assertEquals($expected, $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -393,10 +475,13 @@ final class content_test extends \advanced_testcase {
         $before = '{rawurlencode}hello world & stuff{/rawurlencode}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        // Note: format_text() converts & to &amp; before the filter runs, so we expect the encoded version of &amp;
+        // Note: format_text() converts & to &amp; before the filter runs, so we expect the encoded version of &amp;.
         $expected = rawurlencode('hello world &amp; stuff');
-        $this->assertEquals($expected, $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -409,8 +494,11 @@ final class content_test extends \advanced_testcase {
         $before = '{keyboard}Ctrl+C{/keyboard}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('Ctrl+C', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Ctrl+C', $filtered));
+        $this->assertStringContainsString(
+            'Ctrl+C',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Ctrl+C', $filtered)
+        );
         // Should have some visual formatting.
         $this->assertNotEquals('Ctrl+C', $filtered);
     }
@@ -426,8 +514,10 @@ final class content_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should generate an image or SVG.
-        $this->assertNotEmpty($filtered,
-            sprintf("Should not be empty\nActual: '%s'", $filtered));
+        $this->assertNotEmpty(
+            $filtered,
+            sprintf("Should not be empty\nActual: '%s'", $filtered)
+        );
         $this->assertTrue(
             str_contains($filtered, '<img') || str_contains($filtered, '<svg'),
             'QR code should generate an image or SVG'
@@ -444,8 +534,11 @@ final class content_test extends \advanced_testcase {
         $before = '{showmore}Hidden content here{/showmore}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('Hidden content here', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Hidden content here', $filtered));
+        $this->assertStringContainsString(
+            'Hidden content here',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Hidden content here', $filtered)
+        );
         // Should have toggle functionality.
         $this->assertNotEquals('Hidden content here', $filtered);
     }
@@ -460,14 +553,26 @@ final class content_test extends \advanced_testcase {
         $before = '{fa fa-home} {getstring}help{/getstring} {nbsp} {highlight}important{/highlight}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('fa-home', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'fa-home', $filtered));
-        $this->assertStringContainsString('Help', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Help', $filtered));
-        $this->assertStringContainsString('&nbsp;', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", '&nbsp;', $filtered));
-        $this->assertStringContainsString('important', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'important', $filtered));
+        $this->assertStringContainsString(
+            'fa-home',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'fa-home', $filtered)
+        );
+        $this->assertStringContainsString(
+            'Help',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Help', $filtered)
+        );
+        $this->assertStringContainsString(
+            '&nbsp;',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", '&nbsp;', $filtered)
+        );
+        $this->assertStringContainsString(
+            'important',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'important', $filtered)
+        );
     }
 
     /**
@@ -482,7 +587,10 @@ final class content_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Should either be replaced or remain as is if not configured.
-        $this->assertEquals($before, $filtered,
-            sprintf("Unset global tags should remain unchanged\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            $before,
+            $filtered,
+            sprintf("Unset global tags should remain unchanged\nActual: '%s'", $filtered)
+        );
     }
 }

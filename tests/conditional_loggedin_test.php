@@ -66,8 +66,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifloggedin}You are logged in{/ifloggedin}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('You are logged in', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are logged in', $filtered));
+        $this->assertEquals(
+            'You are logged in',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are logged in', $filtered)
+        );
     }
 
     /**
@@ -82,8 +85,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifloggedin}You are logged in{/ifloggedin}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -99,8 +105,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Guest should NOT see ifloggedin content.
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -115,8 +124,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifloggedout}You are logged out{/ifloggedout}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('You are logged out', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are logged out', $filtered));
+        $this->assertEquals(
+            'You are logged out',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are logged out', $filtered)
+        );
     }
 
     /**
@@ -132,8 +144,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifloggedout}You are logged out{/ifloggedout}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -149,8 +164,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Guest should see ifloggedout content.
-        $this->assertEquals('You are logged out', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are logged out', $filtered));
+        $this->assertEquals(
+            'You are logged out',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are logged out', $filtered)
+        );
     }
 
     /**
@@ -165,8 +183,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifguest}You are a guest{/ifguest}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('You are a guest', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a guest', $filtered));
+        $this->assertEquals(
+            'You are a guest',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a guest', $filtered)
+        );
     }
 
     /**
@@ -182,8 +203,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifguest}You are a guest{/ifguest}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -198,8 +222,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifguest}You are a guest{/ifguest}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -215,14 +242,20 @@ final class conditional_loggedin_test extends \advanced_testcase {
 
         $before = '{ifloggedin}Welcome back!{/ifloggedin}{ifloggedout}Please log in{/ifloggedout}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('Welcome back!', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Welcome back!', $filtered));
+        $this->assertEquals(
+            'Welcome back!',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Welcome back!', $filtered)
+        );
 
         // Test when logged out.
         $this->setUser(null);
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('Please log in', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Please log in', $filtered));
+        $this->assertEquals(
+            'Please log in',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Please log in', $filtered)
+        );
     }
 
     /**
@@ -239,8 +272,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // When not logged in as, should be empty.
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -257,8 +293,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // When not logged in as, should show content.
-        $this->assertEquals('You are yourself', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are yourself', $filtered));
+        $this->assertEquals(
+            'You are yourself',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are yourself', $filtered)
+        );
     }
 
     /**
@@ -274,10 +313,16 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifloggedin}Outer{ifnotloggedinas}Inner{/ifnotloggedinas}{/ifloggedin}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString('Outer', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Outer', $filtered));
-        $this->assertStringContainsString('Inner', $filtered,
-            sprintf("Should contain %s\nActual: '%s'", 'Inner', $filtered));
+        $this->assertStringContainsString(
+            'Outer',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Outer', $filtered)
+        );
+        $this->assertStringContainsString(
+            'Inner',
+            $filtered,
+            sprintf("Should contain %s\nActual: '%s'", 'Inner', $filtered)
+        );
     }
 
     /**
@@ -293,8 +338,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = 'Hello {ifloggedin}{firstname}{/ifloggedin}{ifloggedout}Guest{/ifloggedout}!';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('Hello John!', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Hello John!', $filtered));
+        $this->assertEquals(
+            'Hello John!',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Hello John!', $filtered)
+        );
     }
 
     /**
@@ -310,8 +358,11 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifloggedin}A{/ifloggedin} and {ifloggedin}B{/ifloggedin} but {ifloggedout}C{/ifloggedout}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('A and B but ', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'A and B but ', $filtered));
+        $this->assertEquals(
+            'A and B but ',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'A and B but ', $filtered)
+        );
     }
 
     /**
@@ -327,7 +378,10 @@ final class conditional_loggedin_test extends \advanced_testcase {
         $before = '{ifloggedin}{/ifloggedin}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 }

@@ -38,15 +38,15 @@ trait test_helper_trait {
      * @param string $message Optional additional message
      * @return void
      */
-    protected function assertTagReplaced(string $expected, string $tag, string $actual, string $message = ''): void {
-        $fullMessage = sprintf(
+    protected function asserttagreplaced(string $expected, string $tag, string $actual, string $message = ''): void {
+        $fullmessage = sprintf(
             "FilterCodes tag replacement failed for '%s'\nExpected: '%s'\nActual: '%s'%s",
             $tag,
             $expected,
             $actual,
             $message ? "\n" . $message : ''
         );
-        $this->assertEquals($expected, $actual, $fullMessage);
+        $this->assertEquals($expected, $actual, $fullmessage);
     }
 
     /**
@@ -58,15 +58,15 @@ trait test_helper_trait {
      * @param string $message Optional additional message
      * @return void
      */
-    protected function assertTagContains(string $needle, string $tag, string $haystack, string $message = ''): void {
-        $fullMessage = sprintf(
+    protected function asserttagcontains(string $needle, string $tag, string $haystack, string $message = ''): void {
+        $fullmessage = sprintf(
             "FilterCodes tag '%s' output should contain '%s'\nActual output: '%s'%s",
             $tag,
             $needle,
             $haystack,
             $message ? "\n" . $message : ''
         );
-        $this->assertStringContainsString($needle, $haystack, $fullMessage);
+        $this->assertStringContainsString($needle, $haystack, $fullmessage);
     }
 
     /**
@@ -78,15 +78,15 @@ trait test_helper_trait {
      * @param string $message Optional additional message
      * @return void
      */
-    protected function assertTagNotContains(string $needle, string $tag, string $haystack, string $message = ''): void {
-        $fullMessage = sprintf(
+    protected function asserttagnotcontains(string $needle, string $tag, string $haystack, string $message = ''): void {
+        $fullmessage = sprintf(
             "FilterCodes tag '%s' output should NOT contain '%s'\nActual output: '%s'%s",
             $tag,
             $needle,
             $haystack,
             $message ? "\n" . $message : ''
         );
-        $this->assertStringNotContainsString($needle, $haystack, $fullMessage);
+        $this->assertStringNotContainsString($needle, $haystack, $fullmessage);
     }
 
     /**
@@ -97,14 +97,14 @@ trait test_helper_trait {
      * @param string $message Optional additional message
      * @return void
      */
-    protected function assertTagNotEmpty(string $tag, string $actual, string $message = ''): void {
-        $fullMessage = sprintf(
+    protected function asserttagnotempty(string $tag, string $actual, string $message = ''): void {
+        $fullmessage = sprintf(
             "FilterCodes tag '%s' should not return empty\nActual output: '%s'%s",
             $tag,
             $actual,
             $message ? "\n" . $message : ''
         );
-        $this->assertNotEmpty($actual, $fullMessage);
+        $this->assertNotEmpty($actual, $fullmessage);
     }
 
     /**
@@ -113,7 +113,7 @@ trait test_helper_trait {
      * @param string $text The text containing FilterCodes tags
      * @return string The filtered text
      */
-    protected function filterText(string $text): string {
+    protected function filtertext(string $text): string {
         return format_text($text, FORMAT_HTML, ['context' => \context_system::instance()]);
     }
 }

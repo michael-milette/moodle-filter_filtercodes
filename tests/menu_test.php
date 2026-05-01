@@ -32,9 +32,9 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2025 TNG Consulting Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class menu_test extends \advanced_testcase {
-
     /**
      * Setup test framework.
      */
@@ -54,8 +54,9 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test categoriesmenu tag (all categories).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_categoriesmenu() {
+    public function test_categoriesmenu(): void {
         // Create some categories.
         $cat1 = $this->getDataGenerator()->create_category(['name' => 'Menu Category Alpha']);
         $cat2 = $this->getDataGenerator()->create_category(['name' => 'Menu Category Beta']);
@@ -64,74 +65,89 @@ final class menu_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain category names in menu format.
-        $this->assertStringContainsString('Menu Category Alpha', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Menu Category Alpha', $result));
-        $this->assertStringContainsString('Menu Category Beta', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Menu Category Beta', $result));
+        $this->assertStringContainsString(
+            'Menu Category Alpha',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Menu Category Alpha', $result)
+        );
+        $this->assertStringContainsString(
+            'Menu Category Beta',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Menu Category Beta', $result)
+        );
     }
 
     /**
      * Test categories0menu tag (top-level categories only).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_categories0menu() {
+    public function test_categories0menu(): void {
         // Create top-level and nested categories.
         $topcat = $this->getDataGenerator()->create_category(['name' => 'Top Level Menu']);
-        $subcat = $this->getDataGenerator()->create_category([
-            'name' => 'Sub Level Menu',
-            'parent' => $topcat->id,
-        ]);
+        $subcat = $this->getDataGenerator()->create_category(['name' => 'Sub Level Menu', 'parent' => $topcat->id]);
 
         $text = '{categories0menu}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain top-level category.
-        $this->assertStringContainsString('Top Level Menu', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Top Level Menu', $result));
+        $this->assertStringContainsString(
+            'Top Level Menu',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Top Level Menu', $result)
+        );
         // Should NOT contain sub-category (only top-level).
         // Note: Depending on implementation, subcategories might be included as nested menu items.
     }
 
     /**
      * Test categoriesxmenu tag (subcategories of current category).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_categoriesxmenu() {
+    public function test_categoriesxmenu(): void {
         global $PAGE;
 
         // Create parent category.
         $parent = $this->getDataGenerator()->create_category(['name' => 'Parent Category']);
-        $current_cat = $this->getDataGenerator()->create_category([
+        $currentcat = $this->getDataGenerator()->create_category([
             'name' => 'Current Category',
             'parent' => $parent->id,
         ]);
-        
+
         // Create subcategories of the current category.
         $sub1 = $this->getDataGenerator()->create_category([
             'name' => 'Sub Category One',
-            'parent' => $current_cat->id,
+            'parent' => $currentcat->id,
         ]);
         $sub2 = $this->getDataGenerator()->create_category([
             'name' => 'Sub Category Two',
-            'parent' => $current_cat->id,
+            'parent' => $currentcat->id,
         ]);
 
         // Create a course in the current category to set context.
-        $course = $this->getDataGenerator()->create_course(['category' => $current_cat->id]);
+        $course = $this->getDataGenerator()->create_course(['category' => $currentcat->id]);
         $context = \context_course::instance($course->id);
         $PAGE->set_course($course);
 
         $text = '{categoriesxmenu}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
-        $this->assertStringContainsString('Sub Category One', $result,
-            sprintf("Should contain subcategories of the current category\nActual: '%s'", $result));
-        $this->assertStringContainsString('Sub Category Two', $result,
-            sprintf("Should contain subcategories of the current category\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            'Sub Category One',
+            $result,
+            sprintf("Should contain subcategories of the current category\nActual: '%s'", $result)
+        );
+        $this->assertStringContainsString(
+            'Sub Category Two',
+            $result,
+            sprintf("Should contain subcategories of the current category\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test toggleeditingmenu tag.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_toggleeditingmenu() {
+    public function test_toggleeditingmenu(): void {
         global $PAGE;
 
         // Create a course to set context.
@@ -144,17 +160,23 @@ final class menu_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should contain editing toggle menu item.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertNotEmpty(
+            $result,
+            sprintf("Should not be empty\nActual: '%s'", $result)
+        );
         $this->assertStringNotContainsString('{toggleeditingmenu}', $result);
-        $this->assertStringContainsString('/course/view.php', $result,
-            sprintf("Editing toggle menu should link back to the course\nActual: '%s'", $result));
+        $this->assertStringContainsString(
+            '/course/view.php',
+            $result,
+            sprintf("Editing toggle menu should link back to the course\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test mycoursesmenu tag.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_mycoursesmenu() {
+    public function test_mycoursesmenu(): void {
         global $USER;
 
         // Create and enrol in courses.
@@ -168,16 +190,23 @@ final class menu_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain enrolled course names in menu format.
-        $this->assertStringContainsString('Menu Course One', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Menu Course One', $result));
-        $this->assertStringContainsString('Menu Course Two', $result,
-            sprintf("Should contain %s\nActual: '%s'", 'Menu Course Two', $result));
+        $this->assertStringContainsString(
+            'Menu Course One',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Menu Course One', $result)
+        );
+        $this->assertStringContainsString(
+            'Menu Course Two',
+            $result,
+            sprintf("Should contain %s\nActual: '%s'", 'Menu Course Two', $result)
+        );
     }
 
     /**
      * Test courserequestmenu0 tag (basic course request menu).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_courserequestmenu0() {
+    public function test_courserequestmenu0(): void {
         global $CFG;
 
         // Enable course requests.
@@ -187,14 +216,14 @@ final class menu_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain course request menu item.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertNotEmpty($result, sprintf("Should not be empty\nActual: '%s'", $result));
     }
 
     /**
      * Test courserequestmenu tag.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_courserequestmenu() {
+    public function test_courserequestmenu(): void {
         global $CFG;
 
         // Enable course requests.
@@ -204,14 +233,14 @@ final class menu_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain course request menu item.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertNotEmpty($result, sprintf("Should not be empty\nActual: '%s'", $result));
     }
 
     /**
      * Test menuadmin tag (admin menu items).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_menuadmin() {
+    public function test_menuadmin(): void {
         global $PAGE;
 
         // Set a page URL.
@@ -222,14 +251,14 @@ final class menu_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain admin menu items for admin user.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertNotEmpty($result, sprintf("Should not be empty\nActual: '%s'", $result));
     }
 
     /**
      * Test menuadmin for non-admin user.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_menuadmin_nonadmin() {
+    public function test_menuadmin_nonadmin(): void {
         // Create and switch to regular user.
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -237,14 +266,14 @@ final class menu_test extends \advanced_testcase {
         $text = '{menuadmin}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertEquals('', $result,
-            sprintf("Non-admin users should not receive admin menu items\nActual: '%s'", $result));
+        $this->assertEquals('', $result, sprintf("Non-admin users should not receive admin menu items\nActual: '%s'", $result));
     }
 
     /**
      * Test menudev tag (developer menu items).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_menudev() {
+    public function test_menudev(): void {
         global $CFG;
 
         // Enable developer debugging.
@@ -255,14 +284,14 @@ final class menu_test extends \advanced_testcase {
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
         // Should contain developer menu items when debug is enabled.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertNotEmpty($result, sprintf("Should not be empty\nActual: '%s'", $result));
     }
 
     /**
      * Test menuthemes tag (themes menu).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_menuthemes() {
+    public function test_menuthemes(): void {
         global $CFG;
 
         // Force this core setting for the current process without writing to {config}.
@@ -271,42 +300,53 @@ final class menu_test extends \advanced_testcase {
         $text = '{menuthemes}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertStringNotContainsString('{menuthemes}', $result,
-            sprintf("Themes menu tag should be consumed\nActual: '%s'", $result));
-        $this->assertStringContainsString('theme=', $result,
-            sprintf("Themes menu should include theme-switch URLs\nActual: '%s'", $result));
+        $this->assertStringNotContainsString(
+            '{menuthemes}',
+            $result,
+            sprintf("Themes menu tag should be consumed\nActual: '%s'", $result)
+        );
+        $this->assertStringContainsString(
+            'theme=',
+            $result,
+            sprintf("Themes menu should include theme-switch URLs\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test menucoursemore tag (course additional menu items).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_menucoursemore() {
+    public function test_menucoursemore(): void {
         $course = $this->getDataGenerator()->create_course(['fullname' => 'Course More Menu']);
-        $context =\context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
 
         $text = '{menucoursemore}';
         $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
 
         // Should contain course-specific menu items.
-        $this->assertNotEmpty($result,
-            sprintf("Should not be empty\nActual: '%s'", $result));
+        $this->assertNotEmpty($result, sprintf("Should not be empty\nActual: '%s'", $result));
     }
 
     /**
      * Test menuwishlist tag (wishlist menu - if applicable).
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_menuwishlist() {
+    public function test_menuwishlist(): void {
         $text = '{menuwishlist}';
         $result = format_text($text, FORMAT_HTML, ['filter' => true]);
 
-        $this->assertStringNotContainsString('{menuwishlist}', $result,
-            sprintf("Wishlist menu tag should be consumed even when optional plugins are absent\nActual: '%s'", $result));
+        $this->assertStringNotContainsString(
+            '{menuwishlist}',
+            $result,
+            sprintf("Wishlist menu tag should be consumed even when optional plugins are absent\nActual: '%s'", $result)
+        );
     }
 
     /**
      * Test menu tags with logged out user.
+     * @covers \filter_filtercodes\text_filter::filter
      */
-    public function test_menus_logged_out() {
+    public function test_menus_logged_out(): void {
         // Log out.
         $this->setUser(null);
 
@@ -315,7 +355,10 @@ final class menu_test extends \advanced_testcase {
 
         $this->assertStringNotContainsString('{mycoursesmenu}', $result);
         $this->assertStringNotContainsString('{menuadmin}', $result);
-        $this->assertStringNotContainsString('Menu Course', $result,
-            sprintf("Logged-out users should not receive personal course menu entries\nActual: '%s'", $result));
+        $this->assertStringNotContainsString(
+            'Menu Course',
+            $result,
+            sprintf("Logged-out users should not receive personal course menu entries\nActual: '%s'", $result)
+        );
     }
 }

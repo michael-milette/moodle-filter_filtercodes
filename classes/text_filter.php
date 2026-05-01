@@ -44,6 +44,10 @@ if (class_exists('\core_filters\text_filter')) {
 if (!function_exists('str_contains')) {
     /**
      * str_contains() Polyfill for PHP < 8.0.
+     *
+     * @param string $haystack The string to search in.
+     * @param string $needle The string to search for.
+     * @return bool True if the needle is found, false otherwise.
      */
     function str_contains($haystack, $needle) {
         if ($needle === '') {
@@ -4148,13 +4152,10 @@ class text_filter extends \filtercodes_base_text_filter {
 
             // Tag: {ifactivitycompleted coursemoduleid}...{/ifactivitycompleted}.
             // Tag: {ifnotactivitycompleted coursemoduleid}...{/ifnotactivitycompleted}.
-            if ((
-                stripos($text, '{ifactivitycompleted') !== false
-                && stripos($text, '{/ifactivitycompleted}') !== false
-            ) || (
-                stripos($text, '{ifnotactivitycompleted') !== false
-                && stripos($text, '{/ifnotactivitycompleted}') !== false
-            )) {
+            if (
+                (stripos($text, '{ifactivitycompleted') !== false && stripos($text, '{/ifactivitycompleted}') !== false)
+                || (stripos($text, '{ifnotactivitycompleted') !== false && stripos($text, '{/ifnotactivitycompleted}') !== false)
+            ) {
                 $completion = new \completion_info($PAGE->course);
 
                 // Tag: {ifactivitycompleted coursemoduleid}...{/ifactivitycompleted}.
@@ -5102,8 +5103,7 @@ class text_filter extends \filtercodes_base_text_filter {
             // Description: Display content only if user does NOT have the role specified by shortrolename in the current context.
             // Required Parameters: Short role name.
             // Requires content between tags.
-            if (stripos($text, '{ifnotcustomrole') !== false
-                && stripos($text, '{/ifnotcustomrole}') !== false) {
+            if (stripos($text, '{ifnotcustomrole') !== false && stripos($text, '{/ifnotcustomrole}') !== false) {
                 $context = $PAGE->context;
                 if ($context->contextlevel == CONTEXT_COURSE) {
                     // We are in a course.

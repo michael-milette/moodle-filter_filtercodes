@@ -33,6 +33,7 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class system_info_test extends \advanced_testcase {
     /**
@@ -69,8 +70,11 @@ final class system_info_test extends \advanced_testcase {
         $filtered = format_text('{usercount}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $expected = $DB->count_records('user', ['deleted' => 0]) - 2; // Minus admin and guest.
 
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag {usercount} failed\nExpected: %d\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag {usercount} failed\nExpected: %d\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -89,8 +93,11 @@ final class system_info_test extends \advanced_testcase {
         $filtered = format_text('{usersactive}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $expected = $DB->count_records('user', ['deleted' => 0, 'suspended' => 0, 'confirmed' => 1]) - 2;
 
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag {usersactive} failed\nExpected: %d\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag {usersactive} failed\nExpected: %d\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -102,8 +109,11 @@ final class system_info_test extends \advanced_testcase {
     public function test_siteyear(): void {
         $filtered = format_text('{siteyear}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $expected = date('Y');
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag {siteyear} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag {siteyear} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -116,8 +126,11 @@ final class system_info_test extends \advanced_testcase {
         global $SITE;
 
         $filtered = format_text('{sitename}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals($SITE->fullname, $filtered,
-            sprintf("Tag {sitename} failed\nExpected: '%s'\nActual: '%s'", $SITE->fullname, $filtered));
+        $this->assertEquals(
+            $SITE->fullname,
+            $filtered,
+            sprintf("Tag {sitename} failed\nExpected: '%s'\nActual: '%s'", $SITE->fullname, $filtered)
+        );
     }
 
     /**
@@ -130,8 +143,11 @@ final class system_info_test extends \advanced_testcase {
         global $CFG;
 
         $filtered = format_text('{wwwroot}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals($CFG->wwwroot, $filtered,
-            sprintf("Tag {wwwroot} failed\nExpected: '%s'\nActual: '%s'", $CFG->wwwroot, $filtered));
+        $this->assertEquals(
+            $CFG->wwwroot,
+            $filtered,
+            sprintf("Tag {wwwroot} failed\nExpected: '%s'\nActual: '%s'", $CFG->wwwroot, $filtered)
+        );
     }
 
     /**
@@ -143,8 +159,11 @@ final class system_info_test extends \advanced_testcase {
     public function test_protocol(): void {
         $filtered = format_text('{protocol}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $expected = 'http' . (is_https() ? 's' : '');
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag {protocol} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag {protocol} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -163,8 +182,11 @@ final class system_info_test extends \advanced_testcase {
         $filtered = format_text('{coursecount}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $expected = $DB->count_records('course', []) - 1; // Minus frontpage.
 
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag {coursecount} failed\nExpected: %d\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag {coursecount} failed\nExpected: %d\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -183,8 +205,11 @@ final class system_info_test extends \advanced_testcase {
         $filtered = format_text('{coursesactive}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $expected = $DB->count_records('course', ['visible' => 1]) - 1; // Minus frontpage.
 
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag {coursesactive} failed\nExpected: %d\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag {coursesactive} failed\nExpected: %d\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -197,8 +222,11 @@ final class system_info_test extends \advanced_testcase {
         $filtered = format_text('{ipaddress}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $expected = getremoteaddr();
 
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag {ipaddress} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag {ipaddress} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -210,13 +238,19 @@ final class system_info_test extends \advanced_testcase {
     public function test_sesskey(): void {
         $filtered = format_text('{sesskey}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $expected = sesskey();
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag {sesskey} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag {sesskey} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
 
         // Test encoded version.
         $filtered = format_text('%7Bsesskey%7D', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag %%7Bsesskey%%7D (encoded) failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag %%7Bsesskey%%7D (encoded) failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -227,8 +261,11 @@ final class system_info_test extends \advanced_testcase {
      */
     public function test_pagepath(): void {
         $filtered = format_text('{pagepath}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('/?', $filtered,
-            sprintf("Tag {pagepath} failed\nExpected: '/?' (or empty)\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            '/?',
+            $filtered,
+            sprintf("Tag {pagepath} failed\nExpected: '/?' (or empty)\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -242,8 +279,11 @@ final class system_info_test extends \advanced_testcase {
 
         $SITE->summary = 'A useful site summary';
         $filtered = format_text('{sitesummary}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('A useful site summary', $filtered,
-            sprintf("Tag {sitesummary} should return the site summary\nActual: '%s'", $filtered));
+        $this->assertEquals(
+            'A useful site summary',
+            $filtered,
+            sprintf("Tag {sitesummary} should return the site summary\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -254,13 +294,17 @@ final class system_info_test extends \advanced_testcase {
      */
     public function test_diskfreespace(): void {
         $filtered = format_text('{diskfreespace}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertNotEmpty($filtered,
-            sprintf("Tag {diskfreespace} should not be empty\nActual: '%s'", $filtered));
+        $this->assertNotEmpty(
+            $filtered,
+            sprintf("Tag {diskfreespace} should not be empty\nActual: '%s'", $filtered)
+        );
         $this->assertStringNotContainsString('{diskfreespace}', $filtered);
 
         $filtered = format_text('{diskfreespacedata}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertNotEmpty($filtered,
-            sprintf("Tag {diskfreespacedata} should not be empty\nActual: '%s'", $filtered));
+        $this->assertNotEmpty(
+            $filtered,
+            sprintf("Tag {diskfreespacedata} should not be empty\nActual: '%s'", $filtered)
+        );
         $this->assertStringNotContainsString('{diskfreespacedata}', $filtered);
     }
 
@@ -277,9 +321,18 @@ final class system_info_test extends \advanced_testcase {
         $CFG->supportemail = 'helpdesk@example.com';
         $CFG->supportpage = 'https://example.com/support';
 
-        $this->assertEquals('Help Desk', format_text('{supportname}', FORMAT_HTML, ['context' => \context_system::instance()]));
-        $this->assertEquals('helpdesk@example.com', format_text('{supportemail}', FORMAT_HTML, ['context' => \context_system::instance()]));
-        $this->assertEquals('https://example.com/support', format_text('{supportpage}', FORMAT_HTML, ['context' => \context_system::instance()]));
+        $this->assertEquals(
+            'Help Desk',
+            format_text('{supportname}', FORMAT_HTML, ['context' => \context_system::instance()])
+        );
+        $this->assertEquals(
+            'helpdesk@example.com',
+            format_text('{supportemail}', FORMAT_HTML, ['context' => \context_system::instance()])
+        );
+        $this->assertEquals(
+            'https://example.com/support',
+            format_text('{supportpage}', FORMAT_HTML, ['context' => \context_system::instance()])
+        );
     }
 
     /**
@@ -291,10 +344,15 @@ final class system_info_test extends \advanced_testcase {
     public function test_filtercodes_version(): void {
         $filtered = format_text('{filtercodes}', FORMAT_HTML, ['context' => \context_system::instance()]);
         // Should contain version information.
-        $this->assertNotEmpty($filtered,
-            sprintf("Tag {filtercodes} should not be empty\nActual: '%s'", $filtered));
-        $this->assertMatchesRegularExpression('/^\d/', $filtered,
-            sprintf("Tag {filtercodes} should start with the plugin release/version\nActual: '%s'", $filtered));
+        $this->assertNotEmpty(
+            $filtered,
+            sprintf("Tag {filtercodes} should not be empty\nActual: '%s'", $filtered)
+        );
+        $this->assertMatchesRegularExpression(
+            '/^\d/',
+            $filtered,
+            sprintf("Tag {filtercodes} should start with the plugin release/version\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -306,8 +364,11 @@ final class system_info_test extends \advanced_testcase {
     public function test_readonly(): void {
         $filtered = format_text('{readonly}', FORMAT_HTML, ['context' => \context_system::instance()]);
         $expected = 'readonly="readonly"';
-        $this->assertEquals($expected, $filtered,
-            sprintf("Tag {readonly} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered));
+        $this->assertEquals(
+            $expected,
+            $filtered,
+            sprintf("Tag {readonly} failed\nExpected: '%s'\nActual: '%s'", $expected, $filtered)
+        );
     }
 
     /**
@@ -319,10 +380,15 @@ final class system_info_test extends \advanced_testcase {
     public function test_usersonline(): void {
         $filtered = format_text('{usersonline}', FORMAT_HTML, ['context' => \context_system::instance()]);
         // Should return a number (at least 1 since admin is online).
-        $this->assertIsNumeric($filtered,
-            sprintf("Tag {usersonline} should be numeric\nActual: '%s'", $filtered));
-        $this->assertGreaterThanOrEqual(0, (int)$filtered,
-            sprintf("Tag {usersonline} should be >= 0\nActual: %d", (int)$filtered));
+        $this->assertIsNumeric(
+            $filtered,
+            sprintf("Tag {usersonline} should be numeric\nActual: '%s'", $filtered)
+        );
+        $this->assertGreaterThanOrEqual(
+            0,
+            (int)$filtered,
+            sprintf("Tag {usersonline} should be >= 0\nActual: %d", (int)$filtered)
+        );
     }
 
     /**
@@ -336,16 +402,21 @@ final class system_info_test extends \advanced_testcase {
 
         // Test basic now tag.
         $filtered = format_text('{now}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertNotEmpty($filtered,
-            sprintf("Tag {now} should not be empty\nActual: '%s'", $filtered));
+        $this->assertNotEmpty(
+            $filtered,
+            sprintf("Tag {now} should not be empty\nActual: '%s'", $filtered)
+        );
 
         // Force %d to keep its leading zero so the regex below is deterministic.
         $CFG->nofixday = true;
 
         // Test with format.
         $filtered = format_text('{now %Y-%m-%d}', FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertMatchesRegularExpression('/\d{4}-\d{2}-\d{2}/', $filtered,
-            sprintf("Tag {now %%Y-%%m-%%d} should match date format\nActual: '%s'", $filtered));
+        $this->assertMatchesRegularExpression(
+            '/\d{4}-\d{2}-\d{2}/',
+            $filtered,
+            sprintf("Tag {now %%Y-%%m-%%d} should match date format\nActual: '%s'", $filtered)
+        );
     }
 
     /**
@@ -360,9 +431,15 @@ final class system_info_test extends \advanced_testcase {
         $text = 'Site: {sitename} at {wwwroot} - Year: {siteyear}';
         $filtered = format_text($text, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertStringContainsString($CFG->wwwroot, $filtered,
-            sprintf("Output should contain wwwroot '%s'\nActual: '%s'", $CFG->wwwroot, $filtered));
-        $this->assertStringContainsString(date('Y'), $filtered,
-            sprintf("Output should contain year '%s'\nActual: '%s'", date('Y'), $filtered));
+        $this->assertStringContainsString(
+            $CFG->wwwroot,
+            $filtered,
+            sprintf("Output should contain wwwroot '%s'\nActual: '%s'", $CFG->wwwroot, $filtered)
+        );
+        $this->assertStringContainsString(
+            date('Y'),
+            $filtered,
+            sprintf("Output should contain year '%s'\nActual: '%s'", date('Y'), $filtered)
+        );
     }
 }

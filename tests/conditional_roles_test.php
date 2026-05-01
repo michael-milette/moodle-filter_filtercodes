@@ -64,8 +64,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifadmin}You are an admin{/ifadmin}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('You are an admin', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are an admin', $filtered));
+        $this->assertEquals(
+            'You are an admin',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are an admin', $filtered)
+        );
     }
 
     /**
@@ -81,8 +84,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifadmin}You are an admin{/ifadmin}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -103,8 +109,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifstudent}You are a student{/ifstudent}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('You are a student', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a student', $filtered));
+        $this->assertEquals(
+            'You are a student',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a student', $filtered)
+        );
     }
 
     /**
@@ -124,8 +133,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
         // Teacher should not see student-only content.
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -146,8 +158,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifminstudent}You are at least a student{/ifminstudent}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('You are at least a student', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least a student', $filtered));
+        $this->assertEquals(
+            'You are at least a student',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least a student', $filtered)
+        );
     }
 
     /**
@@ -168,8 +183,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifteacher}You are a teacher{/ifteacher}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('You are a teacher', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a teacher', $filtered));
+        $this->assertEquals(
+            'You are a teacher',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a teacher', $filtered)
+        );
     }
 
     /**
@@ -190,8 +208,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifminteacher}You are at least a teacher{/ifminteacher}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('You are at least a teacher', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least a teacher', $filtered));
+        $this->assertEquals(
+            'You are at least a teacher',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least a teacher', $filtered)
+        );
     }
 
     /**
@@ -210,8 +231,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifminteacher}You are at least a teacher{/ifminteacher}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
     }
 
     /**
@@ -233,8 +257,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
         // Should show for non-editing teacher.
-        $this->assertEquals('You are an assistant', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are an assistant', $filtered));
+        $this->assertEquals(
+            'You are an assistant',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are an assistant', $filtered)
+        );
     }
 
     /**
@@ -255,8 +282,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifminassistant}You are at least an assistant{/ifminassistant}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('You are at least an assistant', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least an assistant', $filtered));
+        $this->assertEquals(
+            'You are at least an assistant',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least an assistant', $filtered)
+        );
     }
 
     /**
@@ -277,8 +307,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifmanager}You are a manager{/ifmanager}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('You are a manager', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a manager', $filtered));
+        $this->assertEquals(
+            'You are a manager',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a manager', $filtered)
+        );
     }
 
     /**
@@ -298,8 +331,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifminmanager}You are at least a manager{/ifminmanager}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('You are at least a manager', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least a manager', $filtered));
+        $this->assertEquals(
+            'You are at least a manager',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least a manager', $filtered)
+        );
     }
 
     /**
@@ -319,8 +355,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifcreator}You are a course creator{/ifcreator}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('You are a course creator', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a course creator', $filtered));
+        $this->assertEquals(
+            'You are a course creator',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are a course creator', $filtered)
+        );
     }
 
     /**
@@ -340,8 +379,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifmincreator}You are at least a creator{/ifmincreator}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
 
-        $this->assertEquals('You are at least a creator', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least a creator', $filtered));
+        $this->assertEquals(
+            'You are at least a creator',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are at least a creator', $filtered)
+        );
     }
 
     /**
@@ -364,14 +406,20 @@ final class conditional_roles_test extends \advanced_testcase {
         // Test with cohort ID.
         $before = "{ifincohort {$cohort->id}}You are in the cohort{/ifincohort}";
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('You are in the cohort', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are in the cohort', $filtered));
+        $this->assertEquals(
+            'You are in the cohort',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are in the cohort', $filtered)
+        );
 
         // Test with cohort idnumber.
         $before = "{ifincohort TESTCOHORT}You are in the cohort{/ifincohort}";
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('You are in the cohort', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are in the cohort', $filtered));
+        $this->assertEquals(
+            'You are in the cohort',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are in the cohort', $filtered)
+        );
     }
 
     /**
@@ -388,8 +436,11 @@ final class conditional_roles_test extends \advanced_testcase {
         // User is NOT in the cohort.
         $before = "{ifnotincohort {$cohort->id}}You are not in the cohort{/ifnotincohort}";
         $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
-        $this->assertEquals('You are not in the cohort', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are not in the cohort', $filtered));
+        $this->assertEquals(
+            'You are not in the cohort',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You are not in the cohort', $filtered)
+        );
     }
 
     /**
@@ -405,8 +456,11 @@ final class conditional_roles_test extends \advanced_testcase {
         $filtered = format_text($text, FORMAT_HTML, ['context' => \context_system::instance()]);
 
         // Admin should see admin content but not student content.
-        $this->assertEquals('Admin ', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Admin ', $filtered));
+        $this->assertEquals(
+            'Admin ',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'Admin ', $filtered)
+        );
     }
 
     /**
@@ -427,10 +481,16 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifcustomrole student}You have the student role{/ifcustomrole}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('You have the student role', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You have the student role', $filtered));
-        $this->assertStringNotContainsString('{ifcustomrole', $filtered,
-            'Raw {ifcustomrole} opening tag leaked into output');
+        $this->assertEquals(
+            'You have the student role',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You have the student role', $filtered)
+        );
+        $this->assertStringNotContainsString(
+            '{ifcustomrole',
+            $filtered,
+            'Raw {ifcustomrole} opening tag leaked into output'
+        );
     }
 
     /**
@@ -450,10 +510,16 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifcustomrole student}You have the student role{/ifcustomrole}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
-        $this->assertStringNotContainsString('{ifcustomrole', $filtered,
-            'Raw {ifcustomrole} opening tag leaked into output');
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
+        $this->assertStringNotContainsString(
+            '{ifcustomrole',
+            $filtered,
+            'Raw {ifcustomrole} opening tag leaked into output'
+        );
     }
 
     /**
@@ -477,12 +543,21 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifnotcustomrole student}You do NOT have the student role{/ifnotcustomrole}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered));
-        $this->assertStringNotContainsString('{ifnotcustomrole', $filtered,
-            'Raw {ifnotcustomrole} opening tag leaked into output (Fix-356 regression)');
-        $this->assertStringNotContainsString('{/ifnotcustomrole}', $filtered,
-            'Raw {/ifnotcustomrole} closing tag leaked into output (Fix-356 regression)');
+        $this->assertEquals(
+            '',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '', $filtered)
+        );
+        $this->assertStringNotContainsString(
+            '{ifnotcustomrole',
+            $filtered,
+            'Raw {ifnotcustomrole} opening tag leaked into output (Fix-356 regression)'
+        );
+        $this->assertStringNotContainsString(
+            '{/ifnotcustomrole}',
+            $filtered,
+            'Raw {/ifnotcustomrole} closing tag leaked into output (Fix-356 regression)'
+        );
     }
 
     /**
@@ -504,12 +579,21 @@ final class conditional_roles_test extends \advanced_testcase {
         $before = '{ifnotcustomrole student}You do NOT have the student role{/ifnotcustomrole}';
         $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-        $this->assertEquals('You do NOT have the student role', $filtered,
-            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You do NOT have the student role', $filtered));
-        $this->assertStringNotContainsString('{ifnotcustomrole', $filtered,
-            'Raw {ifnotcustomrole} opening tag leaked into output (Fix-356 regression)');
-        $this->assertStringNotContainsString('{/ifnotcustomrole}', $filtered,
-            'Raw {/ifnotcustomrole} closing tag leaked into output (Fix-356 regression)');
+        $this->assertEquals(
+            'You do NOT have the student role',
+            $filtered,
+            sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", 'You do NOT have the student role', $filtered)
+        );
+        $this->assertStringNotContainsString(
+            '{ifnotcustomrole',
+            $filtered,
+            'Raw {ifnotcustomrole} opening tag leaked into output (Fix-356 regression)'
+        );
+        $this->assertStringNotContainsString(
+            '{/ifnotcustomrole}',
+            $filtered,
+            'Raw {/ifnotcustomrole} closing tag leaked into output (Fix-356 regression)'
+        );
     }
 
     /**
@@ -544,12 +628,28 @@ final class conditional_roles_test extends \advanced_testcase {
                 $before = '{' . $tag . ' student}content{/' . $tag . '}';
                 $filtered = format_text($before, FORMAT_HTML, ['context' => $context]);
 
-                $this->assertStringNotContainsString('{' . $tag, $filtered,
-                    sprintf("Raw '{%s}' opening tag leaked for user id %d\nInput: '%s'\nOutput: '%s'",
-                        $tag, $user->id, $before, $filtered));
-                $this->assertStringNotContainsString('{/' . $tag . '}', $filtered,
-                    sprintf("Raw '{/%s}' closing tag leaked for user id %d\nInput: '%s'\nOutput: '%s'",
-                        $tag, $user->id, $before, $filtered));
+                $this->assertStringNotContainsString(
+                    '{' . $tag,
+                    $filtered,
+                    sprintf(
+                        "Raw '{%s}' opening tag leaked for user id %d\nInput: '%s'\nOutput: '%s'",
+                        $tag,
+                        $user->id,
+                        $before,
+                        $filtered
+                    )
+                );
+                $this->assertStringNotContainsString(
+                    '{/' . $tag . '}',
+                    $filtered,
+                    sprintf(
+                        "Raw '{/%s}' closing tag leaked for user id %d\nInput: '%s'\nOutput: '%s'",
+                        $tag,
+                        $user->id,
+                        $before,
+                        $filtered
+                    )
+                );
             }
         }
     }
@@ -570,15 +670,18 @@ final class conditional_roles_test extends \advanced_testcase {
             '{ifminteacher}' => true,
         ];
 
-        foreach ($tests as $tag => $shouldShow) {
+        foreach ($tests as $tag => $shouldshow) {
             $before = $tag . 'Content' . str_replace('ifmin', '/ifmin', $tag);
             $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
-            if ($shouldShow) {
+            if ($shouldshow) {
                 $this->assertStringContainsString('Content', $filtered, "Failed for: $tag");
                 $this->assertStringNotContainsString($tag, $filtered, "Opening tag was not removed for: $tag");
             } else {
-                $this->assertEquals('', $filtered,
-                    sprintf("Content should be hidden for %s outside a course context\nActual: '%s'", $tag, $filtered));
+                $this->assertEquals(
+                    '',
+                    $filtered,
+                    sprintf("Content should be hidden for %s outside a course context\nActual: '%s'", $tag, $filtered)
+                );
             }
         }
     }
