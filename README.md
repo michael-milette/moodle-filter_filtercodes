@@ -59,6 +59,10 @@ FilterCodes filter plugin for Moodle
     - [Escape tags](#escape-tags)
     - [Hide completed courses](#hide-completed-courses)
     - [Scrape tag support](#scrape-tag-support)
+    - [Scrape cache time-to-live](#scrape-cache-time-to-live)
+    - [Scrape maximum response size](#scrape-maximum-response-size)
+    - [Allowed scrape hosts](#allowed-scrape-hosts)
+    - [Display message when scrape content is unavailable](#display-message-when-scrape-content-is-unavailable)
     - [Show contact picture](#show-contact-picture)
     - [Show contact's profile description](#show-contacts-profile-description)
     - [Show hidden profile fields](#show-hidden-profile-fields)
@@ -881,7 +885,7 @@ Note: This feature must be enabled in FilterCodes settings.
 
 IMPORTANT: You cannot use this feature to scrape content from any website that requires you to be logged in to access the content. This includes your Moodle site. The {scrape} tag can only access content as a non-authenticated user, even if you are logged in.
 
-As of version 0.4.7, you can use FileterCodes to scrape content from another web page. Your mileage may vary and depends a lot on your configuration, the website from which you are scraping content and more.
+As of version 0.4.7, you can use FilterCodes to scrape content from another web page. Your mileage may vary and depends a lot on your configuration, the website from which you are scraping content and more.
 
 {scrape url="..." tag="..." class="..." id="..." code="..."}
 
@@ -889,21 +893,25 @@ Example:
 
 {scrape url="https://example.com" tag="h1"}
 
+The URL must be an `http://` or `https://` URL, or a root-relative URL such as `/local/page.html`, which will be resolved against your Moodle site's wwwroot. Other URL schemes are not supported. Requests are also subject to Moodle's cURL security settings and the FilterCodes scrape settings described below.
+
 When adding this tag in one of Moodle's WYSIWYG editors like Atto or TinyMCE, the tag may end up embedded in a set of HTML paragraph tags. If this happens, the content you are scraping may not result in valid HTML. To fix the problem, you will need to go into the source code view of the editor and replace the opening and closing P (paragraph) tags with div tags and then save. Alternatively, if there is nothing else in the editor, you can remove everything before and after the tag and save.
 
 Another potential issue that could result in the message "Content is missing. Please notify the webmaster." appearing is if the editor converts the URL parameter's value into a link. If this happens, simply use the editor's **Unlink** tool to remove the hyperlink from inside the tag's URL parameter.
 
 Parameters:
 
-* url = The URL of the webpage from which you want to grab its content.
+* url = The URL of the webpage from which you want to grab its content. Public `http://` and `https://` URLs are supported. Root-relative URLs such as `/local/page.html` are resolved against your Moodle site's wwwroot.
 * tag = The HTML tag you want to capture.
 * class = Optional. Default is blank (class is irrelevant). Class attribute of the HTML tag you want to capture. Must be an exact match for everything between the quotation marks.
 * id = Optional. Default is blank (id is irrelevant). id tag of the HTML tag you want to capture.
-* code = Optional. Default is blank (no code). This is URL encoded code that you want to insert after the content. Will be decoded before being inserted into the page. It can even be things like JavaScript for example. Be careful with this one. If not encoded, will result in an error.
+* code = Optional. Default is blank (no code). This is URL encoded HTML that you want to insert after the content. It will be URL-decoded and inserted as-is, on the same trust level as any other HTML the author types into Moodle. It can even be things like JavaScript for example. Be careful with this one. If not encoded, will result in an error.
 
-If the URL fails to produce any content (broken link for example), a message will be displayed on the page encouraging the visitor to contact the webmaster. This message can be customized through the Moodle Language editor.
+By default, scraped content that cannot be retrieved renders nothing (silent failure) so the surrounding page layout is preserved. Administrators who prefer the historical visible-error behaviour can enable the **Display message when scrape content is unavailable** setting; the displayed message can be customised through the Moodle Language editor.
 
-If the matching tag, class and/or id cannot be found, will return all of the page content without being filtered.
+The same display behaviour applies if the matching tag, class and/or id cannot be found.
+
+Externally scraped content is cleaned before display. Scripts, unsafe attributes, forms, embedded styles and other unsafe HTML may be removed by Moodle for security reasons. Cleaning is applied only to the content fetched from the remote site; the optional `code` attribute is appended raw because it is supplied by the course author.
 
 ## Back to section / Back to course button
 
@@ -944,6 +952,24 @@ Enable to filter out completed courses in {mycoursesmenu} tag listings. When che
 ### Scrape tag support
 
 Enable or disable the {scrape} tag.
+
+### Scrape cache time-to-live
+
+How long to cache successful {scrape} output. Choose **Disabled** to refetch the remote URL on every page render. The default is 30 seconds. Available values range from 30 seconds to 24 hours.
+
+### Scrape maximum response size
+
+Maximum amount of data {scrape} will retrieve from a remote page. The default is 1 MB. Available values range from 10 KB to 10 MB. Larger values allow longer remote pages but use more memory and bandwidth during page rendering.
+
+### Allowed scrape hosts
+
+Optional comma or newline separated list of hosts that {scrape} may request. Leave empty to allow public HTTP/HTTPS hosts subject to Moodle's cURL security settings. Use exact hosts such as `example.com` or leading wildcards such as `*.example.com`.
+
+Wildcard entries match subdomains only. For example, `*.example.com` allows `www.example.com` and `assets.example.com` but does not allow the bare apex `example.com`. To allow both, list the apex on a separate line.
+
+### Display message when scrape content is unavailable
+
+When enabled, the localised "Content is missing" message is displayed where the scraped content would have appeared if the request fails or no matching element is found. When disabled (default), the broken scrape renders nothing so page layout is preserved. The default matches the behaviour expected by most modern embed-style features such as oEmbed and shortcodes.
 
 ### Show contact picture
 
@@ -1551,7 +1577,9 @@ Note: The date and/or time format can vary depending on the language pack in use
 
 ### Are there any security considerations?
 
-There are no known security considerations at this time.
+Most FilterCodes tags only replace text using data that Moodle already has. The {scrape} tag is different: when it is enabled, users who can create filtered content can cause the Moodle server to request allowed public HTTP/HTTPS URLs. Moodle's cURL security settings and the FilterCodes scrape settings help restrict this, but administrators should only enable {scrape} if they need it.
+
+For production sites, consider configuring the Allowed scrape hosts setting so {scrape} can only request trusted domains.
 
 ### How can I get answers to other questions?
 
@@ -1571,6 +1599,7 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* TheVellichor: Reported security issue #361 in {scrape} tag (2026).
 * MMJan-png: Fix for {ifnotcustomrole} tag (2026)
 * 28Smiles (Leon Camus): Added support for nested {if} tags (2025).
 * FMCorz (Frédéric Massart): Fix-323: Escape arguments used to construct link from button code (2025).
@@ -1614,6 +1643,7 @@ Some of the features we are considering for future releases include:
 * Add the ability to list subcategories of the current category.
 * Add options in the FilterCodes settings to disable unused or unwanted filters.
 * Create a separate Atto add-on plugin to make it easier to insert FilterCodes tags into the editor.
+* Extend the {scrape} tag to support non-HTML content types such as plain text, XML and JSON (for example, programming class examples or API responses). Each format would need its own rendering path because `tag`/`class`/`id` extraction only applies to HTML.
 
 If you could use any of these features, or have other requirements, consider contributing or hiring us to accelerate development.
 

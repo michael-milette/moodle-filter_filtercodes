@@ -389,62 +389,6 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
-     * Scrape HTML (callback)
-     *
-     * Extract content from another web page.
-     * Example: Can be used to extract a shared privacy policy across your websites.
-     *
-     * @param string $url URL address of content source.
-     * @param string $tag HTML tag that contains the information we want to retrieve.
-     * @param string $class (optional) HTML tag class attribute we should match.
-     * @param string $id (optional) HTML tag id attribute we should match.
-     * @param string $code (optional) any URL encoded HTML code you want to insert after the retrieved content.
-     * @return string Extracted content+optional code. If content is unavailable, returns message to contact webmaster.
-     */
-    private function scrapehtml($url, $tag = '', $class = '', $id = '', $code = '') {
-        // Retrieve content. If the URL fails, return a message.
-        $content = @file_get_contents($url);
-        if (empty($content)) {
-            return get_string('contentmissing', 'filter_filtercodes');
-        }
-
-        // Disable warnings.
-        $libxmlpreviousstate = libxml_use_internal_errors(true);
-
-        // Load content into DOM object.
-        $dom = new \DOMDocument();
-        $dom->loadHTML($content);
-
-        // Clear suppressed warnings.
-        libxml_clear_errors();
-        libxml_use_internal_errors($libxmlpreviousstate);
-
-        // Scrape out the content we want. If not found, return everything.
-        $xpath = new \DOMXPath($dom);
-
-        // If a tag was not specified.
-        if (empty($tag)) {
-            $tag .= '*'; // Match any tag.
-        }
-        $query = "//{$tag}";
-
-        // If a class was specified.
-        if (!empty($class)) {
-            $query .= "[@class=\"{$class}\"]";
-        }
-
-        // If an id was specified.
-        if (!empty($id)) {
-            $query .= "[@id=\"{$id}\"]";
-        }
-
-        $tag = $xpath->query($query);
-        $tag = $tag->item(0);
-
-        return $dom->saveXML($tag) . urldecode($code);
-    }
-
-    /**
      * Convert a number of bytes (e.g. filesize) into human readable format.
      *
      * @param float $bytes Raw number of bytes.
@@ -2835,10 +2779,11 @@ class text_filter extends \filtercodes_base_text_filter {
         // Description: Scrapes content from an external HTML page. Cannot scrape secure pages from sites that requires login.
         // Optional parameters: You may use any combination of the following: tag="..." class="..." id="..." code="...".
         if (get_config('filter_filtercodes', 'enable_scrape') && stripos($text, '{scrape ') !== false) {
+            $scraper = new scraper();
             // Replace {scrape} tag and its attributes with retrieved content.
             $newtext = preg_replace_callback(
                 '/\{scrape\s+(.*)\}/isuU',
-                function ($matches) {
+                function ($matches) use ($scraper) {
                     // Parse the scrape tag's atributes.
                     $matches[0] = $matches[0] == null ? '' : strip_tags($matches[0]);
                     $attribs = substr($matches[0], 1, -1);
@@ -2853,7 +2798,7 @@ class text_filter extends \filtercodes_base_text_filter {
                         return "SCRAPE error: Missing or invalid required URL parameter.";
                     }
                     // Replace {scrape} tag and its attributes with retrieved content.
-                    return $this->scrapehtml($url, $tag, $class, $id, $code);
+                    return $scraper->scrapehtml($url, $tag, $class, $id, $code);
                 },
                 $text
             );

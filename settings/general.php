@@ -74,14 +74,6 @@ $description = get_string('ifprofilefiedonlyvisible_desc', 'filter_filtercodes')
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
-// Option to enable scrape tag.
-$default = 0; // Default is disabled.
-$name = 'filter_filtercodes/enable_scrape';
-$title = get_string('enable_scrape', 'filter_filtercodes');
-$description = get_string('enable_scrape_description', 'filter_filtercodes');
-$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
-$settings->add($setting);
-
 // Option to enable sesskey tag globally.
 $default = 1; // Default is enabled.
 $name = 'filter_filtercodes/enable_sesskey';
@@ -170,4 +162,80 @@ $title = get_string('coursecardsbyenrol', 'filter_filtercodes');
 $choices = range(0, 20);
 $description = get_string('coursecardsbyenrol_desc', 'filter_filtercodes');
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+$settings->add($setting);
+
+// Scrape tag settings.
+$name = 'filter_filtercodes/scrapeheading';
+$title = get_string('scrapeheading', 'filter_filtercodes');
+$description = get_string('scrapeheadingdesc', 'filter_filtercodes');
+$setting = new admin_setting_heading($name, $title, $description);
+$settings->add($setting);
+
+// Option to enable scrape tag.
+$default = 0; // Default is disabled.
+$name = 'filter_filtercodes/enable_scrape';
+$title = get_string('enable_scrape', 'filter_filtercodes');
+$description = get_string('enable_scrape_description', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
+// Option to cache successful scrape tag output.
+$default = 30; // Default is 30 seconds.
+$name = 'filter_filtercodes/scrape_cachettl';
+$title = get_string('scrape_cachettl', 'filter_filtercodes');
+$description = get_string('scrape_cachettl_desc', 'filter_filtercodes');
+$choices = [
+    0 => get_string('scrape_cachettl_disabled', 'filter_filtercodes'),
+    30 => get_string('numseconds', 'core', 30),
+    60 => get_string('numminutes', 'core', 1),
+    120 => get_string('numminutes', 'core', 2),
+    300 => get_string('numminutes', 'core', 5),
+    600 => get_string('numminutes', 'core', 10),
+    900 => get_string('numminutes', 'core', 15),
+    1800 => get_string('numminutes', 'core', 30),
+    3600 => get_string('numhours', 'core', 1),
+    7200 => get_string('numhours', 'core', 2),
+    28800 => get_string('numhours', 'core', 8),
+    57600 => get_string('numhours', 'core', 16),
+    86400 => get_string('numhours', 'core', 24),
+];
+$setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+$settings->add($setting);
+
+// Option to limit scrape tag response size.
+$default = 1024000; // Default is 1 MB (decimal).
+$name = 'filter_filtercodes/scrape_maxbytes';
+$title = get_string('scrape_maxbytes', 'filter_filtercodes');
+$description = get_string('scrape_maxbytes_desc', 'filter_filtercodes');
+$choices = [
+    10240 => '10 ' . get_string('sizekb', 'filter_filtercodes'),
+    25600 => '25 ' . get_string('sizekb', 'filter_filtercodes'),
+    51200 => '50 ' . get_string('sizekb', 'filter_filtercodes'),
+    102400 => '100 ' . get_string('sizekb', 'filter_filtercodes'),
+    512000 => '500 ' . get_string('sizekb', 'filter_filtercodes'),
+    1024000 => '1 ' . get_string('sizemb', 'filter_filtercodes'),
+    5120000 => '5 ' . get_string('sizemb', 'filter_filtercodes'),
+    10240000 => '10 ' . get_string('sizemb', 'filter_filtercodes'),
+];
+$setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+$settings->add($setting);
+
+// Option to restrict scrape tag hosts.
+$default = ''; // Default is to allow public HTTP/HTTPS hosts subject to Moodle cURL security.
+$name = 'filter_filtercodes/scrape_allowed_hosts';
+$title = get_string('scrape_allowed_hosts', 'filter_filtercodes');
+$description = get_string('scrape_allowed_hosts_desc', 'filter_filtercodes');
+$setting = new admin_setting_configtextarea($name, $title, $description, $default, PARAM_RAW);
+$settings->add($setting);
+
+// Option to display a message when scrape content is unavailable.
+$default = 0; // Default is to render nothing on failure (silent).
+$name = 'filter_filtercodes/scrape_show_missing';
+$title = get_string('scrape_show_missing', 'filter_filtercodes');
+$description = get_string(
+    'scrape_show_missing_desc',
+    'filter_filtercodes',
+    get_string('contentmissing', 'filter_filtercodes')
+);
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
