@@ -41,22 +41,6 @@ if (class_exists('\core_filters\text_filter')) {
     class_alias('\moodle_text_filter', 'filtercodes_base_text_filter');
 }
 
-if (!function_exists('str_contains')) {
-    /**
-     * str_contains() Polyfill for PHP < 8.0.
-     *
-     * @param string $haystack The string to search in.
-     * @param string $needle The string to search for.
-     * @return bool True if the needle is found, false otherwise.
-     */
-    function str_contains($haystack, $needle) {
-        if ($needle === '') {
-            return true;  // Match PHP 8.0 behavior - empty string is always found.
-        }
-        return mb_strpos($haystack, $needle) !== false;
-    }
-}
-
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *

@@ -519,7 +519,7 @@ final class content_test extends \advanced_testcase {
             sprintf("Should not be empty\nActual: '%s'", $filtered)
         );
         $this->assertTrue(
-            str_contains($filtered, '<img') || str_contains($filtered, '<svg'),
+            strpos($filtered, '<img') !== false || strpos($filtered, '<svg') !== false,
             'QR code should generate an image or SVG'
         );
     }
