@@ -18,7 +18,7 @@
  * Unit tests for FilterCodes filter.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers filter_filtercodes
@@ -34,7 +34,7 @@ use filter_filtercodes;
  * Test that the filter produces the right content. Note that this currently
  * only tests some of the filter logic. Future releases will test more of the tags.
  *
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class filter_test extends \advanced_testcase {
@@ -43,7 +43,7 @@ final class filter_test extends \advanced_testcase {
      *
      * @return void
      */
-    public function setUp(): void {
+    public function setUp() {
         global $PAGE;
         parent::setUp();
 
@@ -63,7 +63,7 @@ final class filter_test extends \advanced_testcase {
      *
      * @return void
      */
-    public function test_filtercodes(): void {
+    public function test_filtercodes() {
         global $CFG, $USER, $DB, $PAGE;
 
         // Create a test course.
@@ -145,7 +145,7 @@ final class filter_test extends \advanced_testcase {
             ],
             [
                 'before' => '{alternatename}',
-                'after'  => (!is_null($USER->alternatename) && !empty(trim($USER->alternatename))) ?
+                'after'  => (!is_null($USER->alternatename) && trim($USER->alternatename) !== '') ?
                         $USER->alternatename : $USER->firstname,
             ],
             [

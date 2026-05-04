@@ -1,7 +1,29 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.7.0] 2025-07-10 (dev)
+## [2.7.3] 2026-05-02
+### Note
+- This is the final legacy release for Moodle 2.7 to 3.11. This branch is no longer actively supported and is not expected to receive further updates. For additional features updates, bug and security fixes, please upgrade to a supported release of Moodle LMS.
+### Added
+- Explicit Moodle support metadata for Moodle 2.7 to 3.11.
+- Explicit incompatibility metadata for Moodle 4.0 and later.
+- New option to link {coursecontacts} and {teamcards} to a user's mobile phone.
+### Updated
+- Final legacy release for Moodle 2.7 to 3.11.
+- Included several backwards compatibility fixes for older Moodle and PHP versions.
+- Fixed PHP 5.4 compatibility issues including return types, class name references, null coalescing, array_column(), and empty() expressions.
+- Fixed compatibility guards and fallbacks for Moodle APIs that vary between Moodle 2.7 and 3.11.
+- Fixed detection of encoded course tags such as %7Bcoursecontextid%7D.
+- Improved {scrape} tag fetching by using Moodle's download_file_content() helper for better legacy Moodle compatibility.
+- Updated README compatibility information for this legacy branch.
+- Fixed {coursecontacts} phone links and icon handling.
+- Fixed {ifcourserequests} logic.
+- Fixed {ifactivitycompleted} and {ifnotactivitycompleted} handling of failed completion states.
+- Added an active enrolment fallback for {coursecount students:active}.
+- Improved {coursecontacts} display width.
+- Updated copyright notice for 2026.
+
+## [2.7.0] 2025-07-10
 ### Updated
 - Fixed PHP issue with {firstnamephonetic}, {lastnamephonetic}, {middlename} tags when blank.
 - Fixed URL to Moodle reports.

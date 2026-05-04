@@ -18,7 +18,7 @@
  * Main filter code for FilterCodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @author     Michael Milette
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,10 +27,6 @@ namespace filter_filtercodes;
 
 defined('MOODLE_INTERNAL') || die;
 
-use block_online_users\fetcher;
-use core_table\local\filter\integer_filter;
-use core_user\table\participants_filterset;
-use core_user\table\participants_search;
 use Endroid\QrCode\QrCode;
 
 require_once($CFG->dirroot . '/course/renderer.php');
@@ -44,7 +40,7 @@ if (class_exists('\core_filters\text_filter')) {
 /**
  * Extends the moodle_text_filter class to provide plain text support for new tags.
  *
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngconsulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class text_filter extends \filtercodes_base_text_filter {
@@ -303,7 +299,8 @@ class text_filter extends \filtercodes_base_text_filter {
             ORDER BY f.shortname;";
         $params = ['userid' => $user->id];
         // Determine if restricted to only visible fields.
-        if (!empty(get_config('filter_filtercodes', 'ifprofilefiedonlyvisible'))) {
+        $onlyvisible = get_config('filter_filtercodes', 'ifprofilefiedonlyvisible');
+        if (!empty($onlyvisible)) {
             $params['visible'] = 1;
         }
         $profilefields = $DB->get_records_sql($sql, $params);
@@ -415,7 +412,9 @@ class text_filter extends \filtercodes_base_text_filter {
      */
     private function scrapehtml($url, $tag = '', $class = '', $id = '', $code = '') {
         // Retrieve content. If the URL fails, return a message.
-        $content = @file_get_contents($url);
+        global $CFG;
+        require_once($CFG->libdir . '/filelib.php');
+        $content = \download_file_content($url);
         if (empty($content)) {
             return get_string('contentmissing', 'filter_filtercodes');
         }
@@ -525,6 +524,62 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * PHP 5.4-compatible helper for plucking values from record arrays.
+     *
+     * @param array $records Records to read from.
+     * @param string|null $column Column/property to return. Null returns the whole record.
+     * @param string|null $index Column/property to use as array key.
+     * @return array Values from the requested column.
+     */
+    private function arraypluck($records, $column, $index = null) {
+        $values = [];
+        foreach ($records as $record) {
+            if ($column === null) {
+                $value = $record;
+            } else if (is_object($record) && isset($record->$column)) {
+                $value = $record->$column;
+            } else if (is_array($record) && isset($record[$column])) {
+                $value = $record[$column];
+            } else {
+                continue;
+            }
+
+            if ($index === null) {
+                $values[] = $value;
+            } else if (is_object($record) && isset($record->$index)) {
+                $values[$record->$index] = $value;
+            } else if (is_array($record) && isset($record[$index])) {
+                $values[$record[$index]] = $value;
+            } else {
+                $values[] = $value;
+            }
+        }
+        return $values;
+    }
+
+    /**
+     * Get a generated placeholder image URL when Moodle supports it.
+     *
+     * @param int $id Stable identifier for the generated image.
+     * @return string Image URL.
+     */
+    private function getgeneratedimageurl($id) {
+        global $OUTPUT;
+
+        if (method_exists($OUTPUT, 'get_generated_image_for_id')) {
+            return $OUTPUT->get_generated_image_for_id($id);
+        }
+
+        if (method_exists($OUTPUT, 'image_url')) {
+            $url = $OUTPUT->image_url('i/course');
+            return (is_object($url) && method_exists($url, 'out')) ? $url->out() : (string)$url;
+        }
+
+        $url = $OUTPUT->pix_url('i/course');
+        return (is_object($url) && method_exists($url, 'out')) ? $url->out() : (string)$url;
+    }
+
+    /**
      * Render cards for provided category.
      *
      * @param object $category Category object.
@@ -544,7 +599,7 @@ class text_filter extends \filtercodes_base_text_filter {
 
         $url = (new \moodle_url('/course/index.php', ['categoryid' => $category->id]))->out();
         if ($categoryshowpic) {
-            $imgurl = $OUTPUT->get_generated_image_for_id($category->id + 65535);
+            $imgurl = $this->getgeneratedimageurl($category->id + 65535);
             $html = '<li class="card shadow mr-4 mb-4 ml-0" style="min-width:290px;max-width:290px;' . $dimmed . '">
                     <a href="' . $url . '" class="text-white h-100">
                     <div class="card-img" style="background-image: url(' . $imgurl . ');height:100px;"></div>
@@ -623,7 +678,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
             }
             if (empty($imgurl)) {
-                $imgurl = $OUTPUT->get_generated_image_for_id($courseid);
+                $imgurl = $this->getgeneratedimageurl($courseid);
             }
             $courseurl = (new \moodle_url('/course/view.php', ['id' => $courseid]))->out();
 
@@ -754,7 +809,7 @@ class text_filter extends \filtercodes_base_text_filter {
     /**
      * Generate a user link of a specified type if logged-in.
      *
-     * @param string $clinktype Type of link to generate. Options include: email, message, profile, phone1.
+     * @param string $clinktype Type of link to generate. Options include: email, message, profile, phone, mobile.
      * @param object $user A user object.
      * @param string $name The name to be displayed.
      *
@@ -764,22 +819,21 @@ class text_filter extends \filtercodes_base_text_filter {
         if (!isloggedin() || isguestuser()) {
             $clinktype = ''; // No link, only name.
         }
-        switch ($clinktype) {
-            case 'email':
+        switch (true) {
+            case $clinktype == 'email':
                 $link = '<a href="mailto:' . $user->email . '">'  . $name . '</a>';
                 break;
-            case 'message':
+            case $clinktype == 'message':
                 $link = '<a href="' . (new \moodle_url('/message/index.php', ['id' => $user->id]))->out() . '">' . $name . '</a>';
                 break;
-            case 'profile':
+            case $clinktype == 'profile':
                 $link = '<a href="' . (new \moodle_url('/user/profile.php', ['id' => $user->id]))->out() . '">' . $name . '</a>';
                 break;
-            case 'phone1':
-                if (!empty($user->phone1)) {
-                    $link = '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
-                } else {
-                    $link = $name;
-                }
+            case $clinktype == 'phone' && !empty($user->phone1):
+                $link = '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
+                break;
+            case $clinktype == 'mobile' && !empty($user->phone2):
+                $link = '<a href="tel:' . $user->phone2 . '">' . $name . '</a>';
                 break;
             default:
                 $link = $name;
@@ -827,6 +881,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     && isloggedin()
                     && !isguestuser()
                     && \context_system::instance() != 'page-site-index'
+                    && class_exists('\core_completion\progress')
             ) {
                 $progresspercent = (int) \core_completion\progress::get_course_progress_percentage($course);
             }
@@ -846,7 +901,7 @@ class text_filter extends \filtercodes_base_text_filter {
      * @param string $text The menu item text to be formatted
      * @return string The formatted menu item text with pipes replaced with HTML entities
      */
-    private function format_custommenuitem($text): string {
+    private function format_custommenuitem($text) {
         return str_replace('|', '&#124;', format_string($text));
     }
 
@@ -1328,7 +1383,7 @@ class text_filter extends \filtercodes_base_text_filter {
             global $OUTPUT, $DB;
 
             $sql = 'SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
-                    u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1
+                    u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1, u.phone2
                     FROM {course} c, {role_assignments} ra, {user} u, {context} ct
                     WHERE c.id = ct.instanceid AND ra.roleid in (?) AND ra.userid = u.id AND ct.id = ra.contextid
                         AND u.suspended = 0 AND u.deleted = 0
@@ -1367,6 +1422,7 @@ class text_filter extends \filtercodes_base_text_filter {
                         'message' => get_string('message', 'message'),
                         'profile' => get_string('profile'),
                         'phone' => get_string('phone'),
+                        'mobile' => get_string('phone2'),
                 ];
                 if ($cardformat == 'verbose') {
                     if (empty($CFG->enablegravatar)) {
@@ -1421,7 +1477,7 @@ class text_filter extends \filtercodes_base_text_filter {
         }
 
         // Custom Course Fields - First implemented in Moodle 3.7.
-        if ($CFG->branch >= 37) {
+        if ($CFG->branch >= 37 && class_exists('\core_course\customfield\course_handler')) {
             // Tag: {course_field_shortname}.
             // Description: Content from the custom course field specified by its shortname.
             // Required Parameters: shortname of a custom course field.
@@ -1460,7 +1516,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 // Display all custom course fields.
                 $customfields = '';
                 $thiscourse = new \core_course_list_element($PAGE->course);
-                if ($thiscourse->has_custom_fields()) {
+                if (method_exists($thiscourse, 'has_custom_fields') && $thiscourse->has_custom_fields()) {
                     $handler = \core_course\customfield\course_handler::create();
                     $customfields = $handler->display_custom_fields_data($thiscourse->get_custom_fields());
                 }
@@ -1544,7 +1600,8 @@ class text_filter extends \filtercodes_base_text_filter {
 
         // Don't process if this feature is disabled.
         if (!isset($escapebraces)) {
-            $escapebraces = !empty(get_config('filter_filtercodes', 'escapebraces'));
+            $escapebracesconfig = get_config('filter_filtercodes', 'escapebraces');
+            $escapebraces = !empty($escapebracesconfig);
             if (!$escapebraces) {
                 return $text;
             }
@@ -1705,7 +1762,7 @@ class text_filter extends \filtercodes_base_text_filter {
         }
 
         // Tags: {courseid...
-        if (stripos($text, '{course') !== false || stripos($text, '%7Bcourseid') !== false) {
+        if (stripos($text, '{course') !== false || stripos($text, '%7Bcourse') !== false) {
             $courseid = 1; // Default to site.
             if ($PAGE->pagetype == 'enrol-index') {
                 // Make it work, even when we are on the enrolment page.
@@ -1735,7 +1792,8 @@ class text_filter extends \filtercodes_base_text_filter {
                 require_once($CFG->libdir . '/gradelib.php');
                 require_once($CFG->dirroot . '/grade/querylib.php');
                 $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
-                if (!empty($grademax = floatval($gradeobj->item->grademax))) {
+                $grademax = floatval($gradeobj->item->grademax);
+                if (!empty($grademax)) {
                     // Avoid divide by 0 error if no grades have been defined.
                     $grade = floatval($grademax) > 0 ? (int) ($gradeobj->grade / floatval($grademax) * 100) : 0;
                 } else {
@@ -2469,7 +2527,8 @@ class text_filter extends \filtercodes_base_text_filter {
         // Parameters: None.
         if (stripos($text, '{alternatename}') !== false) {
             // If alternate name is empty, use firstname instead.
-            if ($this->isauthenticateduser() && (!is_null($USER->alternatename) && !empty(trim($USER->alternatename)))) {
+            $alternatename = is_null($USER->alternatename) ? '' : trim($USER->alternatename);
+            if ($this->isauthenticateduser() && !is_null($USER->alternatename) && !empty($alternatename)) {
                 $replace['/\{alternatename\}/i'] = $USER->alternatename;
             } else {
                 $replace['/\{alternatename\}/i'] = $u->firstname;
@@ -2481,7 +2540,8 @@ class text_filter extends \filtercodes_base_text_filter {
         // Parameters: None.
         foreach (['firstnamephonetic', 'lastnamephonetic', 'middlename'] as $field) {
             if (stripos($text, '{' . $field . '}') !== false) {
-                $replace['/\{' . $field . '\}/i'] = $this->isauthenticateduser() ? trim($USER->{$field} ?? '') : '';
+                $replace['/\{' . $field . '\}/i'] = ($this->isauthenticateduser() && isset($USER->{$field}))
+                    ? trim($USER->{$field}) : '';
             }
         }
 
@@ -2851,17 +2911,24 @@ class text_filter extends \filtercodes_base_text_filter {
                 // Get the user current group.
                 $thisgroup = $isseparategroups ? groups_get_course_group($PAGE->course) : null;
 
-                $onlineusers = new fetcher(
-                    $thisgroup,
-                    $now,
-                    $timetosee,
-                    $PAGE->context,
-                    $PAGE->context->contextlevel,
-                    $PAGE->course->id
-                );
-
-                // Count online users.
-                $usersonline = $onlineusers->count_users();
+                if (class_exists('\block_online_users\fetcher')) {
+                    $onlineusers = new \block_online_users\fetcher(
+                        $thisgroup,
+                        $now,
+                        $timetosee,
+                        $PAGE->context,
+                        $PAGE->context->contextlevel,
+                        $PAGE->course->id
+                    );
+                    $usersonline = $onlineusers->count_users();
+                } else {
+                    $params = ['lastaccess' => $now - $timetosee, 'deleted' => 0, 'suspended' => 0, 'confirmed' => 1];
+                    $usersonline = $DB->count_records_select(
+                        'user',
+                        'lastaccess > :lastaccess AND deleted = :deleted AND suspended = :suspended AND confirmed = :confirmed',
+                        $params
+                    );
+                }
                 $replace['/\{usersonline\}/i'] = $usersonline;
             }
 
@@ -2897,12 +2964,14 @@ class text_filter extends \filtercodes_base_text_filter {
                             'message' => get_string('message', 'message'),
                             'profile' => get_string('profile'),
                             'phone' => get_string('phone'),
+                            'mobile' => get_string('phone2'),
                         ];
                         $iconclass = ['' => '',
                             'email' => 'fa fa-envelope-o',
                             'message' => 'fa fa-comment-o',
                             'profile' => 'fa fa-user-o',
-                            'phone' => 'fa fa-mobile',
+                            'phone' => 'fa fa-phone',
+                            'mobile' => 'fa fa-mobile',
                         ];
 
                         $cnt = 0;
@@ -2937,27 +3006,31 @@ class text_filter extends \filtercodes_base_text_filter {
 
                             $contacts .= '<span class="fc-coursecontactroles">' . implode(", ", $rolenames) . ': </span>';
 
-                            switch ($clinktype) {
-                                case 'email':
+                            switch (true) {
+                                case $clinktype == 'email':
                                     $contacts .= $icon . '<a href="mailto:' . $user->email . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case 'message':
+                                case $clinktype == 'message':
                                     $contacts .= $icon . '<a href="' . (new \moodle_url(
                                         '/message/index.php',
                                         ['id' => $coursecontact['user']->id]
                                     ))->out() . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case 'profile':
+                                case $clinktype == 'profile':
                                     $contacts .= $icon . '<a href="' . (new \moodle_url(
                                         '/user/profile.php',
                                         ['id' => $coursecontact['user']->id, 'course' => $PAGE->course->id]
                                     ))->out() . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case 'phone1' && !empty($user->phone1):
+                                case $clinktype == 'phone' && !empty($user->phone1):
                                     $contacts .= $icon . '<a href="tel:' . $user->phone1 . '">';
+                                    $contacts .= $contactsclose;
+                                    break;
+                                case $clinktype == 'mobile' && !empty($user->phone2):
+                                    $contacts .= $icon . '<a href="tel:' . $user->phone2 . '">';
                                     $contacts .= $contactsclose;
                                     break;
                                 default: // Default is no-link.
@@ -3018,6 +3091,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 $replace['/\{coursecount students\}/i'] = $cnt;
             }
             if (stripos($text, '{coursecount students:active}') !== false) {
+                // First attempt: count students via role assignments.
                 $sql = "SELECT COUNT(DISTINCT ue.userid)
                         FROM {user_enrolments} ue
                         JOIN {enrol} e ON e.id = ue.enrolid
@@ -3026,7 +3100,14 @@ class text_filter extends \filtercodes_base_text_filter {
                         JOIN {role_assignments} ra ON ra.contextid = ctx.id AND ra.userid = ue.userid
                         JOIN {role} r ON r.id = ra.roleid AND r.shortname = 'student'
                         WHERE ue.status = 0 AND e.courseid = :courseid";
-                $cnt = $DB->count_records_sql($sql, ['courseid' => $PAGE->course->id]);
+                $cnt = (int) $DB->count_records_sql($sql, ['courseid' => $PAGE->course->id]);
+                if ($cnt === 0) {
+                    $fallbacksql = "SELECT COUNT(DISTINCT ue.userid)
+                        FROM {user_enrolments} ue
+                        JOIN {enrol} e ON e.id = ue.enrolid
+                        WHERE ue.status = 0 AND e.courseid = :courseid";
+                    $cnt = (int) $DB->count_records_sql($fallbacksql, ['courseid' => $PAGE->course->id]);
+                }
                 $replace['/\{coursecount students:active\}/i'] = $cnt;
             }
 
@@ -3112,7 +3193,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
                 if (empty($imgurl)) {
                     global $OUTPUT;
-                    $imgurl = $OUTPUT->get_generated_image_for_id($course->id);
+                    $imgurl = $this->getgeneratedimageurl($course->id);
                 }
 
                 // Tag: {courseimage}.
@@ -3163,7 +3244,8 @@ class text_filter extends \filtercodes_base_text_filter {
                 require_once($CFG->dirroot . '/grade/querylib.php');
                 $gradeobj = grade_get_course_grade($USER->id, $PAGE->course->id);
                 $grade = 0;
-                if (!empty($grademax = floatval($gradeobj->item->grademax))) {
+                $grademax = floatval($gradeobj->item->grademax);
+                if (!empty($grademax)) {
                     // Avoid divide by 0 error if no grades have been defined.
                     $grade = floatval($grademax) > 0 ? (int) ($gradeobj->grade / floatval($grademax) * 100) : 0;
                 }
@@ -3476,7 +3558,7 @@ class text_filter extends \filtercodes_base_text_filter {
                                 [$USER->id, $catid]
                             );
                             // Make an array of the course ids and render the course cards.
-                            $courseids = array_column($courses, 'id');
+                            $courseids = $this->arraypluck($courses, 'id');
                             $content .= $this->rendercoursecards($courseids, $card->format);
                         }
                         if (!empty($content)) {
@@ -3771,7 +3853,17 @@ class text_filter extends \filtercodes_base_text_filter {
                     $html = '';
                     foreach ($subcategories as $category) {
                         // Skip if user does not have permissions to view.
-                        if (!\core_course_category::can_view_category($category)) {
+                        if (
+                                class_exists('\core_course_category')
+                                && method_exists('\core_course_category', 'can_view_category')
+                                && !\core_course_category::can_view_category($category)
+                        ) {
+                            continue;
+                        } else if (
+                                !class_exists('\core_course_category')
+                                && empty($category->visible)
+                                && !has_capability('moodle/category:viewhiddencategories', \context_system::instance())
+                        ) {
                             continue;
                         }
 
@@ -4045,7 +4137,11 @@ class text_filter extends \filtercodes_base_text_filter {
                                 // Get the completion data for this activity if it exists.
                                 try {
                                     $data = $completion->get_data($cm, false, $USER->id);
-                                    $iscompleted = ($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
+                                    $iscompleted = in_array(
+                                        (int) $data->completionstate,
+                                        [COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS],
+                                        true
+                                    );
                                 } catch (\moodle_exception $e) {
                                     // Handle Moodle-specific exceptions.
                                     unset($e);
@@ -4092,7 +4188,11 @@ class text_filter extends \filtercodes_base_text_filter {
                                 // Get the completion data for this activity if it exists.
                                 try {
                                     $data = $completion->get_data($cm, false, $USER->id);
-                                    $iscompleted = ($data->completionstate > COMPLETION_INCOMPLETE); // A completed state.
+                                    $iscompleted = in_array(
+                                        (int) $data->completionstate,
+                                        [COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS],
+                                        true
+                                    );
                                 } catch (\moodle_exception $e) {
                                     // Handle Moodle-specific exceptions.
                                     unset($e);
@@ -4133,7 +4233,8 @@ class text_filter extends \filtercodes_base_text_filter {
                 }
 
                 // Determine if allowed to evaluate "Not visible" fields.
-                $allowall = empty(get_config('filter_filtercodes', 'ifprofilefiedonlyvisible'));
+                $onlyvisible = get_config('filter_filtercodes', 'ifprofilefiedonlyvisible');
+                $allowall = empty($onlyvisible);
 
                 // Process each custom of the available profile fields.
                 foreach ($profilefields as $field) {
@@ -4431,12 +4532,12 @@ class text_filter extends \filtercodes_base_text_filter {
                 // If Request a course is enabled...
                 $context = \context_system::instance();
                 if (empty($CFG->enablecourserequests) || !has_capability('moodle/course:request', $context)) {
+                    // If Request a Course is not enabled, remove the ifcourserequests tags and contained content.
+                    $replace['/\{ifcourserequests\}(.*)\{\/ifcourserequests\}/isuU'] = '';
+                } else {
                     // Just remove the tags.
                     $replace['/\{ifcourserequests\}/i'] = '';
                     $replace['/\{\/ifcourserequests\}/i'] = '';
-                } else {
-                    // If Request a Course is not enabled, remove the ifcourserequests tags and contained content.
-                    $replace['/\{ifcourserequests\}(.*)\{\/ifcourserequests\}/isuU'] = '';
                 }
             }
 
@@ -5015,7 +5116,7 @@ class text_filter extends \filtercodes_base_text_filter {
 
                     // Get roles within this context.
                     $roles = get_user_roles($context, $USER->id, true);
-                    $roles = array_column($roles, 'shortname');
+                    $roles = $this->arraypluck($roles, 'shortname');
                     unset($context);
 
                     // Replace all instances of a given ifcustomrole tag.
@@ -5057,7 +5158,7 @@ class text_filter extends \filtercodes_base_text_filter {
 
                     // Get roles within this context.
                     $roles = get_user_roles($context, $USER->id, true);
-                    $roles = array_column($roles, 'shortname');
+                    $roles = $this->arraypluck($roles, 'shortname');
                     unset($context);
 
                     // Replace all instances of a given ifnotcustomrole tag.
@@ -5219,7 +5320,7 @@ class text_filter extends \filtercodes_base_text_filter {
                             $role = $DB->get_record('role', ['shortname' => 'manager'], '*', MUST_EXIST);
                             $userfields = 'u.id, u.username, u.firstname, u.lastname';
                             $roleusers = get_role_users($role->id, $syscontext, false, $userfields);
-                            $issitemanager = array_key_exists($USER->id, array_column($roleusers, null, 'id'));
+                            $issitemanager = array_key_exists($USER->id, $this->arraypluck($roleusers, null, 'id'));
                         }
                     }
                     if ($issitemanager) {

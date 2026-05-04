@@ -69,3 +69,10 @@ kbd {
     white-space: nowrap;
     display: inline-block;
 }
+
+/* Limit width of course contacts. */
+ul.fc-coursecontacts li {
+    display: inline-block;
+    max-width: 280px;
+    margin-right: 2%;
+}

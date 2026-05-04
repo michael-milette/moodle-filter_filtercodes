@@ -18,7 +18,7 @@
  * Settings page for FilterCodes.
  *
  * @package    filter_filtercodes
- * @copyright  2017-2025 TNG Consulting Inc. - www.tngcosulting.ca
+ * @copyright  2017-2026 TNG Consulting Inc. - www.tngcosulting.ca
  * @author     Michael Milette
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -124,6 +124,7 @@ $choices = ['' => get_string('none'),
         'message' => get_string('message', 'message'),
         'profile' => get_string('profile'),
         'phone' => get_string('phone'),
+        'mobile' => get_string('phone2'),
 ];
 $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
 $settings->add($setting);

@@ -2,8 +2,8 @@
 
 FilterCodes filter plugin for Moodle
 ====================================
-![PHP](https://img.shields.io/badge/PHP-v5.6%20to%20v8.3-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v5.0-orange.svg)
+![PHP](https://img.shields.io/badge/PHP-Moodle%20supported%20versions-blue.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.7%20to%20v3.11-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -125,7 +125,11 @@ Usage of the FilterCodes tags requires no knowledge of HTML but could be importa
 
 # Requirements
 
-This plugin requires Moodle 2.7+ from https://moodle.org/ . Note that some tags may require more recent versions of Moodle.
+This branch of FilterCodes supports Moodle 2.7 to 3.11 from https://moodle.org/ . PHP support follows the PHP versions supported by your installed Moodle release. Unsupported Moodle/PHP combinations, such as Moodle 3.11 on PHP 8.4, are outside the scope of this plugin.
+
+FilterCodes 2.7.3 is the final legacy release for Moodle 2.7 to 3.11. This branch is no longer actively supported and is not expected to receive further updates.
+
+Note that some tags may require more recent versions of Moodle.
 
 [(Back to top)](#table-of-contents)
 
@@ -268,7 +272,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courseidnumber} : Display a course's ID number.
 * {sectionid} or %7Bsectionid%7D : Display the section ID (not to be confused with the section number).
 * {sectionname} : Display the section name in which the activity is located.
-* {coursecontacts}: List of course contacts with links to their profiles, email address or messaging or phone number, and their user description (there are settings for these). Note: This tag was formerly called {courseteachers}.
+* {coursecontacts}: List of course contacts with links to their profiles, email address, messaging, phone number or mobile phone number, and their user description (there are settings for these). Note: This tag was formerly called {courseteachers}.
 * {mygroups}: Displays a list of groups to which you are a member.
 * {mygroupings}: Displays a list of groupings to which you are a member.
 
@@ -808,7 +812,7 @@ Add the following code to core_renderer section (often found in /theme/yourtheme
         /**
          * Applies Moodle filters to the custom menu and custom user menu.
          *
-         * Copyright: 2017-2025 TNG Consulting Inc.
+         * Copyright: 2017-2026 TNG Consulting Inc.
          * License:   GNU GPL v3+.
          *
          * @param string $custommenuitems Current custom menu object.
@@ -955,7 +959,7 @@ If enabled, custom profile fields that are hidden from the user will be displaye
 
 ### Contact link type
 
-Choose the type of link for the teacher\s link in the {coursecontacts} tags. Profile, Messaging, Email address or None. Choose None if you don't want just the name without a link.
+Choose the type of link for the teacher's link in the {coursecontacts} and {teamcards} tags: profile, messaging, email address, phone number, mobile phone number or none. Choose None if you want the name without a link.
 
 ### Show {categorycards} background
 
@@ -1615,7 +1619,7 @@ https://github.com/michael-milette/moodle-filter_filtercodes
 
 # License
 
-Copyright © 2017-2025 TNG Consulting Inc. - https://www.tngconsulting.ca/
+Copyright © 2017-2026 TNG Consulting Inc. - https://www.tngconsulting.ca/
 
 This file is part of FilterCodes for Moodle - https://moodle.org/
 
