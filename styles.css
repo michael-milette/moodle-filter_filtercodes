@@ -1,9 +1,10 @@
+/* stylelint-disable -- @property not recognized by older stylelint configs (Moodle 3.11/4.0). */
 @property --percent {
     syntax: '<number>';
     inherits: true;
-    /* stylelint-disable-next-line -- not yet supported in FireFox. */
     initial-value: 0;
 }
+/* stylelint-enable */
 
 .fc-chart-pie .chart-area .chart-image {
     width: auto;
@@ -17,6 +18,7 @@
     --bgcolor: #f0f0f0;
 
     width: var(--size);
+    /* stylelint-disable-next-line -- aspect-ratio not recognized by older csstree validator. */
     aspect-ratio: 1;
     position: relative;
     display: inline-grid;
