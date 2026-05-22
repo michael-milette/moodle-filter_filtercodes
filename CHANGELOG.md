@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.1] 2026-05-22
+
+### Updated
+
+- Fix stylelint errors for @property and aspect-ratio.
+- Fixed PostgreSQL version moodle-ci testing issues.
+
 ## [3.0.0] 2026-05-11
 
 ### Added
