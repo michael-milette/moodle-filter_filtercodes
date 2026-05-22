@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Updated
 
+- Fix #365, #366, #367: Resolve issue with nested {if...} tags.
 - Fix stylelint errors for @property and aspect-ratio.
 - Fixed PostgreSQL version moodle-ci testing issues.
 

@@ -1557,17 +1557,21 @@ class text_filter extends \filtercodes_base_text_filter {
         $emit = function (array $stack) use (&$replace, $tagname) {
             $key = '';
             $value = '';
+            // Each capture group must not span a closing tag, preventing a nested pattern
+            // (e.g. {tag A}(.*){tag B}...{/tag}...{/tag}) from absorbing a preceding simple
+            // block's closing tag when the two patterns share the same argument.
+            $nocross = '((?:(?!\{\/' . $tagname . '\})[\s\S])*)';
             for ($i = 0; $i < count($stack); $i++) {
                 $isopening = $stack[$i][0];
                 $args = $stack[$i][1];
                 $istrue = $stack[$i][2];
                 if ($isopening) {
-                    $key .= '{' . $tagname . '\s+' . preg_quote($args, '/') . '}(.*)';
+                    $key .= '{' . $tagname . '\s+' . preg_quote($args, '/') . '}' . $nocross;
                     if ($istrue) {
                         $value .= '$' . ($i + 1);
                     }
                 } else {
-                    $key .= '(.*){\/' . $tagname . '}';
+                    $key .= $nocross . '{\/' . $tagname . '}';
                     if ($istrue) {
                         $value .= '$' . ($i + 1);
                     }
@@ -1584,6 +1588,7 @@ class text_filter extends \filtercodes_base_text_filter {
                 $balance = 0;
                 $stack = [];
                 $istrue = [];
+                $balancedgroups = [];
                 foreach ($matches as $match) {
                     $isopening = (!isset($match[2]));
                     if (empty($stack) && !$isopening) {
@@ -1611,11 +1616,28 @@ class text_filter extends \filtercodes_base_text_filter {
                     }
 
                     if ($balance == 0) {
-                        // We are balanced, generate replacement.
-                        $emit($stack);
+                        // We are balanced, collect for later emit.
+                        $balancedgroups[] = $stack;
                         $stack = [];
                     }
                 }
+
+                // Emit deepest (most-nested) patterns first so that a simple pattern like
+                // {tag A}(.*){/tag} does not consume tags belonging to a nested group
+                // {tag B}{tag A}...{/tag}{/tag} before the nested pattern has a chance to run.
+                usort($balancedgroups, function ($a, $b) {
+                    $da = count(array_filter($a, function ($item) {
+                        return $item[0];
+                    }));
+                    $db = count(array_filter($b, function ($item) {
+                        return $item[0];
+                    }));
+                    return $db - $da;
+                });
+                foreach ($balancedgroups as $group) {
+                    $emit($group);
+                }
+
                 if (!empty($stack)) {
                     // Drop opening tags till we are balanced.
                     $newstack = [];

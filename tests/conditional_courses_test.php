@@ -490,6 +490,55 @@ final class conditional_courses_test extends \advanced_testcase {
     }
 
     /**
+     * Test sequential ifingrouping blocks where one contains a nested same-type block.
+     * Regression test for GitHub issues #366 and #367.
+     * @covers \filter_filtercodes\text_filter::filter
+     */
+    public function test_ifingrouping_sequential_with_nested(): void {
+        global $USER, $PAGE;
+
+        $course = $this->getDataGenerator()->create_course();
+        $this->getDataGenerator()->enrol_user($USER->id, $course->id, 'student');
+        $context = \context_course::instance($course->id);
+
+        $PAGE->set_course($course);
+
+        // Two groupings: user is in groupingA but not groupingB.
+        $groupinga = $this->getDataGenerator()->create_grouping(['courseid' => $course->id, 'idnumber' => 'groupA']);
+        $groupa = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
+        $this->getDataGenerator()->create_grouping_group(['groupingid' => $groupinga->id, 'groupid' => $groupa->id]);
+        $this->getDataGenerator()->create_group_member(['groupid' => $groupa->id, 'userid' => $USER->id]);
+
+        $groupingb = $this->getDataGenerator()->create_grouping(['courseid' => $course->id, 'idnumber' => 'groupB']);
+
+        // Issue #366: {groupA}A{/} {groupB}{groupA}B{/}{/} {groupA}C{/}
+        // User is in A but not B. Expected: A and C visible, B hidden.
+        $gaid = $groupinga->id;
+        $gbid = $groupingb->id;
+        $text = "{ifingrouping $gaid}A{/ifingrouping}"
+            . "{ifingrouping $gbid}{ifingrouping $gaid}B{/ifingrouping}{/ifingrouping}"
+            . "{ifingrouping $gaid}C{/ifingrouping}";
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('A', $result, 'First A-block should be visible');
+        $this->assertStringNotContainsString('B', $result, 'B inside false outer should be hidden');
+        $this->assertStringContainsString('C', $result, 'Last A-block should be visible');
+        $this->assertStringNotContainsString('{ifingrouping', $result, 'No raw tags in output');
+
+        // Issue #367: same outer tag used twice, second one wrapping an inner tag.
+        // {groupA}A{/} {groupA}{groupB}B{/}{/} {groupB}C{/}
+        // User is in A but not B. Expected: A visible, B hidden (outer A false for B? no — outer IS true),
+        // inner B false so B not shown; C hidden (not in B).
+        $text = "{ifingrouping $gaid}A{/ifingrouping}"
+            . "{ifingrouping $gaid}{ifingrouping $gbid}B{/ifingrouping}{/ifingrouping}"
+            . "{ifingrouping $gbid}C{/ifingrouping}";
+        $result = format_text($text, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+        $this->assertStringContainsString('A', $result, 'First block (in A) should be visible');
+        $this->assertStringNotContainsString('B', $result, 'Inner B (not in groupB) should be hidden');
+        $this->assertStringNotContainsString('C', $result, 'Standalone B block should be hidden (not in groupB)');
+        $this->assertStringNotContainsString('{ifingrouping', $result, 'No raw tags in output');
+    }
+
+    /**
      * Test partial/unbalanced ifingrouping tags.
      * @covers \filter_filtercodes\text_filter::filter
      */
