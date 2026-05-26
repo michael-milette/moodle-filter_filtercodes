@@ -85,6 +85,41 @@ final class ui_elements_test extends \advanced_testcase {
     }
 
     /**
+     * Test teamcards tag can be disabled.
+     */
+    public function test_teamcards_disabled(): void {
+        global $CFG, $DB;
+
+        set_config('enableteamcards', 0, 'filter_filtercodes');
+
+        $course = $this->getDataGenerator()->create_course();
+        $context = \context_course::instance($course->id);
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher'], '*', MUST_EXIST);
+        $CFG->coursecontact = $teacherrole->id;
+
+        $user = $this->getDataGenerator()->create_user([
+            'firstname' => 'Alice',
+            'lastname' => 'Smith',
+            'email' => 'alice@example.com',
+        ]);
+        role_assign($teacherrole->id, $user->id, $context->id);
+
+        $text = '{teamcards}';
+        $result = format_text($text, FORMAT_HTML, ['filter' => true]);
+
+        $this->assertStringNotContainsString(
+            'Alice',
+            $result,
+            sprintf("Should not contain assigned course contact when {teamcards} is disabled\nActual: '%s'", $result)
+        );
+        $this->assertStringNotContainsString(
+            '{teamcards}',
+            $result,
+            sprintf("Should remove disabled {teamcards} tag\nActual: '%s'", $result)
+        );
+    }
+
+    /**
      * Test coursecards tag.
      */
     public function test_coursecards(): void {

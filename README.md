@@ -935,6 +935,10 @@ Choose the type of link for the teacher\s link in the {coursecontacts} tags. Pro
 
 Enable or disable the background pattern/image for {categorycards}. You can also optionally configure the look of {categorycards} using CSS on the .fc-categorycards class.
 
+### Enable {teamcards} tag
+
+Enable or disable the {teamcards} tag. When disabled, {teamcards} renders nothing and FilterCodes does not generate the site-wide team card list.
+
 ### Global custom tags
 
 Define your own custom global tags, sometimes also called global blocks. This feature enables you to create FilterCodes tags that are prefixed by **global_** . You can currently have up to 100 custom {global_...} tags.

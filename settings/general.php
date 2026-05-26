@@ -121,6 +121,14 @@ $description = get_string('categorycardshowpic_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
+// Option to enable {teamcards} tag.
+$default = 1; // Default is enabled for backwards compatibility.
+$name = 'filter_filtercodes/enableteamcards';
+$title = get_string('enableteamcards', 'filter_filtercodes');
+$description = get_string('enableteamcards_desc', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
 // Option to select link type for {teamcards} tag.
 $default = ''; // Default is to not link the teachers name.
 $name = 'filter_filtercodes/teamcardslinktype';
