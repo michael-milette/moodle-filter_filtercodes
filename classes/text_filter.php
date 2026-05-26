@@ -1259,96 +1259,99 @@ class text_filter extends \filtercodes_base_text_filter {
         // Note: Included selected roles in Site Administration > Appearance > Course > Course Contacts.
         // Parameters: None.
         if (stripos($text, '{teamcards}') !== false) {
-            global $OUTPUT, $DB;
-
-            $sql = 'SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
-                    u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1, u.phone2
-                    FROM {course} c, {role_assignments} ra, {user} u, {context} ct
-                    WHERE c.id = ct.instanceid AND ra.roleid in (?) AND ra.userid = u.id AND ct.id = ra.contextid
-                        AND u.suspended = 0 AND u.deleted = 0
-                    ORDER BY u.lastname desc, u.firstname';
-            $users = $DB->get_records_sql($sql, [$CFG->coursecontact]);
-
             $cards = '';
-            if (count($users)) {
-                $clinktype = get_config('filter_filtercodes', 'teamcardslinktype');
-                $cardformat = get_config('filter_filtercodes', 'teamcardsformat');
-                $narrowpage = get_config('filter_filtercodes', 'narrowpage');
 
-                switch ($cardformat) { // Show as info icon.
-                    case 'infoicon':
-                        $info = get_string('info');
-                        $prewrap = '<a class="btn btn-link p-0 m-0 align-baseline" role="button" data-container="body"'
-                                . ' data-toggle="popover" data-placement="right" data-content="<div class=&quot;no-overflow&quot;>'
-                                . '<p>';
-                        $postwrap = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
-                                . ' fa fa-info-circle text-info fa-fw " title="' . $info . '" aria-label="' . $info . '"></i></a>';
-                        break;
-                    case 'brief': // Show as text.
-                        $prewrap = '<br><p class="smaller">';
-                        $postwrap = '</p>';
-                        break;
-                    case 'verbose': // Show as text.
-                        break;
-                    default: // Don't show user description.
-                        $cardformat = '';
-                }
+            if (get_config('filter_filtercodes', 'enableteamcards') !== '0') {
+                global $OUTPUT, $DB;
 
-                // Prepare some strings.
-                $linksr = [
-                        '' => '',
-                        'email' => get_string('issueremail', 'badges'),
-                        'message' => get_string('message', 'message'),
-                        'profile' => get_string('profile'),
-                        'phone' => get_string('phone'),
-                        'mobile' => get_string('phone2'),
-                ];
-                if ($cardformat == 'verbose') {
-                    if (empty($CFG->enablegravatar)) {
-                        $blankavatarurl = $this->getblankavatarurl(150);
+                $sql = 'SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
+                        u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1, u.phone2
+                        FROM {course} c, {role_assignments} ra, {user} u, {context} ct
+                        WHERE c.id = ct.instanceid AND ra.roleid in (?) AND ra.userid = u.id AND ct.id = ra.contextid
+                            AND u.suspended = 0 AND u.deleted = 0
+                        ORDER BY u.lastname desc, u.firstname';
+                $users = $DB->get_records_sql($sql, [$CFG->coursecontact]);
+
+                if (count($users)) {
+                    $clinktype = get_config('filter_filtercodes', 'teamcardslinktype');
+                    $cardformat = get_config('filter_filtercodes', 'teamcardsformat');
+                    $narrowpage = get_config('filter_filtercodes', 'narrowpage');
+
+                    switch ($cardformat) { // Show as info icon.
+                        case 'infoicon':
+                            $info = get_string('info');
+                            $prewrap = '<a class="btn btn-link p-0 m-0 align-baseline" role="button" data-container="body"'
+                                    . ' data-toggle="popover" data-placement="right" data-content="<div class=&quot;no-overflow&quot;>'
+                                    . '<p>';
+                            $postwrap = '</p></div>" data-html="true" tabindex="0" data-trigger="focus"><i class="icon'
+                                    . ' fa fa-info-circle text-info fa-fw " title="' . $info . '" aria-label="' . $info . '"></i></a>';
+                            break;
+                        case 'brief': // Show as text.
+                            $prewrap = '<br><p class="smaller">';
+                            $postwrap = '</p>';
+                            break;
+                        case 'verbose': // Show as text.
+                            break;
+                        default: // Don't show user description.
+                            $cardformat = '';
                     }
-                    foreach ($users as $user) {
-                        $cards .= '<div class="clearfix mb-4">';
-                        $name = '<h3 class="h4">' . get_string('fullnamedisplay', null, $user) . '</h3>';
-                        $cards .= $this->userlink($clinktype, $user, $name);
-                        if (empty($user->picture) && empty($CFG->enablegravatar)) {
-                            $cards .= '<img src="' . $blankavatarurl . '" class="img-fluid" width="150" height="150" alt="">';
-                        } else {
-                            $cards .= $OUTPUT->user_picture($user, [
-                                    'size' => '150',
-                                    'class' => 'img-fluid pull-left p-1 border mr-4',
-                                    'link' => false, 'visibletoscreenreaders' => false,
-                            ]);
+
+                    // Prepare some strings.
+                    $linksr = [
+                            '' => '',
+                            'email' => get_string('issueremail', 'badges'),
+                            'message' => get_string('message', 'message'),
+                            'profile' => get_string('profile'),
+                            'phone' => get_string('phone'),
+                            'mobile' => get_string('phone2'),
+                    ];
+                    if ($cardformat == 'verbose') {
+                        if (empty($CFG->enablegravatar)) {
+                            $blankavatarurl = $this->getblankavatarurl(150);
                         }
-                        $cards .= format_string($user->description);
-                        $cards .= '</div><hr>';
-                    }
-                } else {
-                    if (empty($CFG->enablegravatar)) {
-                        $blankavatarurl = $this->getblankavatarurl(250);
-                    }
-                    $cards .= '<div class="row" id="fc_teamcards" style="width:99%;">';
-                    foreach ($users as $user) {
-                        $cards .= '<div class="col-sm-6 col-md-4 col-lg-3 col-xl-' . (empty($narrowpage) ? 4 : 3) . ' mt-3">';
-                        if (empty($user->picture) && empty($CFG->enablegravatar)) {
-                            $cards .= '<img src="' . $blankavatarurl . '" class="img-fluid" width="250" height="250" alt="">';
-                        } else {
-                            $cards .= $OUTPUT->user_picture($user, [
-                                    'size' => '250',
-                                    'class' => 'img-fluid',
-                                    'link' => false,
-                                    'visibletoscreenreaders' => false,
+                        foreach ($users as $user) {
+                            $cards .= '<div class="clearfix mb-4">';
+                            $name = '<h3 class="h4">' . get_string('fullnamedisplay', null, $user) . '</h3>';
+                            $cards .= $this->userlink($clinktype, $user, $name);
+                            if (empty($user->picture) && empty($CFG->enablegravatar)) {
+                                $cards .= '<img src="' . $blankavatarurl . '" class="img-fluid" width="150" height="150" alt="">';
+                            } else {
+                                $cards .= $OUTPUT->user_picture($user, [
+                                        'size' => '150',
+                                        'class' => 'img-fluid pull-left p-1 border mr-4',
+                                        'link' => false, 'visibletoscreenreaders' => false,
                                 ]);
+                            }
+                            $cards .= format_string($user->description);
+                            $cards .= '</div><hr>';
                         }
-                        $name = '<br><h3 class="h5 font-weight-bold d-inline">' . get_string('fullnamedisplay', null, $user) .
-                                '</h3>';
-                        $cards .= $this->userlink($clinktype, $user, $name);
-                        if (!empty($user->description) && !empty($cardformat)) {
-                            $cards .= $prewrap . format_string($user->description) . $postwrap;
+                    } else {
+                        if (empty($CFG->enablegravatar)) {
+                            $blankavatarurl = $this->getblankavatarurl(250);
+                        }
+                        $cards .= '<div class="row" id="fc_teamcards" style="width:99%;">';
+                        foreach ($users as $user) {
+                            $cards .= '<div class="col-sm-6 col-md-4 col-lg-3 col-xl-' . (empty($narrowpage) ? 4 : 3) . ' mt-3">';
+                            if (empty($user->picture) && empty($CFG->enablegravatar)) {
+                                $cards .= '<img src="' . $blankavatarurl . '" class="img-fluid" width="250" height="250" alt="">';
+                            } else {
+                                $cards .= $OUTPUT->user_picture($user, [
+                                        'size' => '250',
+                                        'class' => 'img-fluid',
+                                        'link' => false,
+                                        'visibletoscreenreaders' => false,
+                                    ]);
+                            }
+                            $name = '<br><h3 class="h5 font-weight-bold d-inline">' . get_string('fullnamedisplay', null, $user) .
+                                    '</h3>';
+                            $cards .= $this->userlink($clinktype, $user, $name);
+                            if (!empty($user->description) && !empty($cardformat)) {
+                                $cards .= $prewrap . format_string($user->description) . $postwrap;
+                            }
+                            $cards .= '</div>';
                         }
                         $cards .= '</div>';
                     }
-                    $cards .= '</div>';
                 }
             }
             $replace['/\{teamcards\}/i'] = $cards;
