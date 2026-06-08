@@ -1664,6 +1664,27 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * Dispatch text through the Pro Edition tag processor if installed.
+     *
+     * Loads classes/text_filter_pro.php via Moodle's PSR-4 autoloader. When the
+     * Pro Edition file is absent (free edition), this is a no-op pass-through.
+     * Called before the generatortags() loop so that pro tag output is fed through
+     * the existing nested-tag resolution machinery.
+     *
+     * @param string $text    Text being filtered.
+     * @param array  $options Filter options passed through from filter().
+     * @return string Text with pro tags substituted (or unchanged on free edition).
+     */
+    protected function apply_pro_filters($text, array $options) {
+        static $pro = null;
+        if ($pro === null) {
+            $proclass = '\\filter_filtercodes\\text_filter_pro';
+            $pro = class_exists($proclass) ? new $proclass($this->context ?? \context_system::instance()) : false;
+        }
+        return $pro ? $pro->apply($text, $options) : $text;
+    }
+
+    /**
      * Main filter function called by Moodle.
      *
      * @param string $text   Content to be filtered.
@@ -1720,6 +1741,10 @@ class text_filter extends \filtercodes_base_text_filter {
         // ...===================================================================================================================.
         // Tags that may create more content which could possibly include tags. These need to be processed first.
         // ...===================================================================================================================.
+
+        // Pro Edition tags run before the generator loop so that any free tags emitted
+        // by pro tag output are resolved by the existing nested-tag machinery below.
+        $text = $this->apply_pro_filters($text, $options);
 
         // Loop through the tags that may have embedded tags until these generator tags have all been proceseed.
 

@@ -103,6 +103,7 @@ FilterCodes filter plugin for Moodle
     - [What are the supported dateTimeFormat formats?](#what-are-the-supported-datetimeformat-formats)
     - [Are there any security considerations?](#are-there-any-security-considerations)
     - [How can I get answers to other questions?](#how-can-i-get-answers-to-other-questions)
+- [Pro Edition](#pro-edition)
 - [Contributing](#contributing)
   - [Contributors](#contributors)
   - [Pending Features](#pending-features)
@@ -1528,6 +1529,14 @@ For production sites, consider configuring the Allowed scrape hosts setting so {
 Got a burning question that is not covered here? If you can't find your answer, submit your question in the Moodle forums or open a new issue on Github at:
 
 https://github.com/michael-milette/moodle-filter_filtercodes/issues
+
+[(Back to top)](#table-of-contents)
+
+# Pro Edition
+
+FilterCodes Pro is a paid upgrade that adds extra tags on top of the free edition. The Pro Edition is a drop-in replacement: install it over the free edition and all existing free tags continue to work unchanged.
+
+For more information and to purchase FilterCodes Pro, visit [www.tngconsulting.ca](https://www.tngconsulting.ca/filtercodes-pro).
 
 [(Back to top)](#table-of-contents)
 

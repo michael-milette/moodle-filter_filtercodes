@@ -78,3 +78,11 @@ ul.fc-coursecontacts li {
     max-width: 280px;
     margin-right: 2%;
 }
+
+/* ============================================================
+   Pro Edition styles
+   Rules below apply only when Pro Edition DOM elements are
+   present. They are harmless on the free edition. Identical
+   on both branches — do not place non-pro rules below this
+   comment.
+   ============================================================ */

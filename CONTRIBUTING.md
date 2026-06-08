@@ -34,3 +34,12 @@ Once you have made all your changes, tests, and updated the documentation, make 
 Versioning
 -------------------
 We use [SemVer](https://semver.org/) for versioning.
+
+Pro Edition extension points
+-------------------
+This plugin maintains a separate Pro Edition distributed privately. The `master` branch contains two generic extension points that must not be removed:
+
+1. `apply_pro_filters()` in `classes/text_filter.php` — a protected method that forwards text through `classes/text_filter_pro.php` when that file is present. On the free edition the method is a no-op pass-through.
+2. A `file_exists` conditional in `settings.php` that loads `settings/pro.php` when the Pro Edition is installed. On the free edition the condition is silently false.
+
+Neither extension point reveals Pro feature names or locks functionality behind a paywall. They are safe to leave in the free codebase. See `docs/PRO_ARCHITECTURE.md` for the full Pro Edition developer guide.

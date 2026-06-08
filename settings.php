@@ -31,5 +31,9 @@ if ($hassiteconfig) {
     if ($ADMIN->fulltree) {
         require($CFG->dirroot . '/filter/filtercodes/settings/general.php');
         require($CFG->dirroot . '/filter/filtercodes/settings/global.php');
+        // Pro Edition settings are loaded when the Pro Edition is installed.
+        if (file_exists(__DIR__ . '/settings/pro.php')) {
+            require(__DIR__ . '/settings/pro.php');
+        }
     }
 }
