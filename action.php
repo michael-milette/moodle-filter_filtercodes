@@ -25,8 +25,9 @@
 
 require_once(__DIR__ . '/../../config.php');
 
-// Ensure the user is logged in.
+// Ensure the user is logged in and the request carries a valid session key (CSRF defense).
 require_login();
+require_sesskey();
 
 // Get the action to be taken.
 $action = required_param('action', PARAM_TEXT);
