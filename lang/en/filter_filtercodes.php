@@ -222,15 +222,6 @@ $string['photoeditor'] = 'Photo editor';
 $string['photoeditorlink'] = 'https://pixlr.com/editor/';
 $string['pluginname'] = 'Filter Codes';
 $string['privacy:metadata'] = 'The Filter Codes plugin does not store any personal data about any user.';
-// =================================================================
-// Pro Edition strings (pro_ prefix). Defined here so that AMOS
-// can index and translate them. Pro tag code is absent from the
-// free edition; these strings are dormant until the Pro Edition
-// is installed.
-// =================================================================
-// =================================================================
-// End of Pro Edition strings.
-// =================================================================
 $string['scrape_allowed_hosts'] = 'Allowed scrape hosts';
 $string['scrape_allowed_hosts_desc'] = 'Optional comma or newline separated list of hosts that the scrape tag may request. Leave empty to allow public HTTP/HTTPS hosts subject to Moodle cURL security. Use exact hosts such as example.com or leading wildcards such as *.example.com (matches subdomains only; list the apex separately to include it).';
 $string['scrape_cachettl'] = 'Scrape cache time-to-live';
