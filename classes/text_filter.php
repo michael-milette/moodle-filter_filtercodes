@@ -1446,6 +1446,10 @@ class text_filter extends \filtercodes_base_text_filter {
             }
         }
 
+        // Tag: {dashboard_siteinfo}.
+        // Description: (ALPHA) Displays a dashboard card of site information (available disk space, number of courses,
+        // total number of users and users currently online in the last 5 minutes). Only visible to administrators.
+        // Parameters: None.
         if (stripos($text, '{dashboard_siteinfo}') !== false) {
             if (is_siteadmin() && !is_role_switched($PAGE->course->id)) { // If an administrator.
                 $appbytes = @disk_free_space('.');

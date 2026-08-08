@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.2] DEV
+
+### Added
+
+- Added pre-existing tags {coursesactive}, {courseunenrolurl}, {menulanguages} to README.md.
+
+
 ## [3.0.1] 2026-07-22
 
 ### Updated

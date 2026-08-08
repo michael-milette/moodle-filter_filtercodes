@@ -213,6 +213,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {sitelogourl} : URL of the the site logo.
 * {now dateTimeFormat} : Display's the current date. For information on the optional dateTimeFormat format, see Supported dateTimeFormats Formats in the [FAQ](#faq) section of this documentation.
 * {coursecount} : Total number of courses on this Moodle site (not including Frontpage).
+* {coursesactive} : Total number of active, visible courses on this Moodle site (started, not ended, visibility set to Show).
 * {diskfreespace} : Display the amount of free disk space for the application folder. The infinite symbol will be displayed if greater than about 84,703.29 Yottabytes (YB), or if it fails to get the size from the operating system.
 * {diskfreespacedata} : Display the amount of free disk space for the moodledata folder. The infinite symbol will be displayed if greater than about 84,703.29 Yottabytes (YB), or if it fails to get the size from the operating system.
 * {wwwroot} : Root URL of the Moodle site.
@@ -271,6 +272,7 @@ FilterCodes are meant to be entered as regular text in the Moodle WYSIWYG editor
 * {courseid} or %7Bcourseid%7D : Display a course's ID within a course and on the course enrolment page. Set to site ID (1) if outside a course.
 * {coursecontextid} or %7Bcoursecontextid%7D : Display a course's context ID.
 * {coursemoduleid} or %7Bcoursemoduleid%7D : Display a course's activity module ID (activity id) - for use in URLs. Only for use in course activity modules.
+* {courseunenrolurl} : Display the URL to self-unenrol from the current course. Blank if not enrolled, not logged in, on the site course or if self-unenrolment is not available.
 * {courseidnumber} : Display a course's ID number.
 * {sectionid} or %7Bsectionid%7D : Display the section ID (not to be confused with the section number).
 * {sectionname} : Display the section name in which the activity is located.
@@ -304,6 +306,7 @@ Also, see Courses section below.
 * {menuadmin} : Useful dynamic menu for Moodle teachers, managers and administrators.
 * {menudev} : Useful dynamic menu for Moodle developers. Only visible when debugging is set to DEVELOPER mode.
 * {menuthemes} : Theme switcher. Only for administrators. Not available after POST. Allow Theme Changes on URL must be enabled. Will be visible even when Administrator is using the **Log In As** feature to log in as a different user.
+* {menulanguages} : Language switcher for custom menu. Only displayed if the site has more than one language installed. Not available after POST.
 * {menucoursemore} : Adds the content of the secondary menu to a menu called "More". Useful for themes with pre-4.x style navigation.
 * {menuwishlist} : Adds a Wishlist menu where you can bookmark courses you would like to take or just use it as a favourite course list. Tip: You can rename the Wishlist menu to Bookmarks, Favourites, etc. by customizing the **wishlist** language string in the language pack for FilterCodes.
 
@@ -1220,6 +1223,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * (ALPHA) Dashboard site information [{dashboard_siteinfo}]:
   {dashboard_siteinfo}
 * Total courses [{coursecount}]: {coursecount}
+* Total active courses [{coursesactive}]: {coursesactive}
 * Institution [{institution}]: {institution}
 * Department [{department}]: {department}
 * Course ID [{courseid}]: {courseid}
@@ -1229,6 +1233,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Course Module ID (encoded) [%7Bcoursemoduleid%7D]: %7Bcoursemoduleid%7D (Note: Only available in a course activity)
 * Course Module ID (not encoded) [{coursemoduleid}]: {coursemoduleid} (Note: Only available in a course activity)
 * Course ID number [{courseidnumber}]: {courseidnumber}
+* Course self-unenrolment URL [{courseunenrolurl}]: {courseunenrolurl}
 * Section ID [{sectionid}]: {sectionid}
 * Section ID (encoded) [%7Bsectionid%7D]: %7Bsectionid%7D
 * Section Name [{sectionname}]: {sectionname}
@@ -1253,6 +1258,7 @@ Create a Page on your Moodle site, preferably in a course, so that those tags wo
 * Moodle Admin custom menu items [{menuadmin}]: `<br><pre>`{menuadmin}`</pre>`
 * Moodle Dev custom menu items [{menudev}]: `<br><pre>`{menudev}`</pre>`
 * Moodle Admin theme switcher [{menuthemes}]: `<br><pre>`{menuthemes}`</pre>`
+* Language switcher menu [{menulanguages}]: `<br><pre>`{menulanguages}`</pre>`
 * Secondary menu for pre-4.x themes [{menucoursemore}]: `<br><pre>`{menucoursemore}`</pre>`
 * Wishlist menu [{menuwishlist}]: `<br><pre>`{menuwishlist}`</pre>`
 * Course's category ID (0 if not in a course or category list of course) [{categoryid}]: {categoryid}
