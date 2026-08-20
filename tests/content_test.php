@@ -368,6 +368,194 @@ final class content_test extends \advanced_testcase {
     }
 
     /**
+     * Test that a quote in a button URL cannot introduce an unwanted attribute.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_url_cannot_inject_attributes(): void {
+        $before = '{button #" onmouseover="alert(1)}x{/button}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        $this->assertStringNotContainsString(
+            'onmouseover=',
+            $filtered,
+            sprintf("Should not contain an event handler\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'href="#"',
+            $filtered,
+            sprintf("Should still link\nActual: '%s'", $filtered)
+        );
+    }
+
+    /**
+     * Test that button URLs using a scheme which can run script are dropped.
+     *
+     * @dataProvider button_unsafe_scheme_provider
+     * @covers \filter_filtercodes\text_filter::filter
+     * @param string $url URL to place in the tag.
+     * @return void
+     */
+    public function test_button_tag_rejects_unsafe_scheme(string $url): void {
+        $before = '{button ' . $url . '}x{/button}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        $this->assertStringNotContainsString(
+            'href=',
+            $filtered,
+            sprintf("Should not produce a link for '%s'\nActual: '%s'", $url, $filtered)
+        );
+    }
+
+    /**
+     * Data provider of URL schemes which must never reach the href attribute.
+     *
+     * @return array
+     */
+    public static function button_unsafe_scheme_provider(): array {
+        return [
+            'javascript' => ['javascript:alert(1)'],
+            'mixed case' => ['JaVaScRiPt:alert(1)'],
+            'encoded tab' => ['java&#9;script:alert(1)'],
+            'leading space' => ['  javascript:alert(1)'],
+            'vbscript' => ['vbscript:msgbox(1)'],
+            'data html' => ['data:text/html;base64,PHN2Zz4='],
+        ];
+    }
+
+    /**
+     * Test that button URLs which are merely unusual continue to work.
+     *
+     * @dataProvider button_safe_url_provider
+     * @covers \filter_filtercodes\text_filter::filter
+     * @param string $url URL to place in the tag.
+     * @param string $expected Expected href value.
+     * @return void
+     */
+    public function test_button_tag_allows_safe_url(string $url, string $expected): void {
+        $before = '{button ' . $url . '}x{/button}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        $this->assertStringContainsString(
+            'href="' . $expected . '"',
+            $filtered,
+            sprintf("Should link to '%s'\nActual: '%s'", $expected, $filtered)
+        );
+    }
+
+    /**
+     * Data provider of URLs which must continue to produce a link.
+     *
+     * @return array
+     */
+    public static function button_safe_url_provider(): array {
+        return [
+            'absolute' => ['https://example.com/a', 'https://example.com/a'],
+            'root relative' => ['/local/page.php', '/local/page.php'],
+            'relative' => ['page.php?a=1', 'page.php?a=1'],
+            'anchor' => ['#top', '#top'],
+            'protocol relative' => ['//cdn.example.com/x', '//cdn.example.com/x'],
+            'mailto' => ['mailto:someone@example.com', 'mailto:someone@example.com'],
+            'tel' => ['tel:+15551234567', 'tel:+15551234567'],
+            'scheme name in query' => [
+                'https://example.com/s?q=javascript:void',
+                'https://example.com/s?q=javascript:void',
+            ],
+        ];
+    }
+
+    /**
+     * Test that an ampersand in a button URL is not double encoded.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_ampersand_not_double_encoded(): void {
+        $before = '{button /course/view.php?id=1&amp;x=2}ok{/button}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        $this->assertStringContainsString(
+            'href="/course/view.php?id=1&amp;x=2"',
+            $filtered,
+            sprintf("Ampersand should be encoded exactly once\nActual: '%s'", $filtered)
+        );
+        $this->assertStringNotContainsString(
+            '&amp;amp;',
+            $filtered,
+            sprintf("Ampersand should not be double encoded\nActual: '%s'", $filtered)
+        );
+    }
+
+    /**
+     * Test that the documented way of opening a button in a new tab still works.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_target_attribute(): void {
+        $before = '{button https://example.com" target="_blank}Example{/button}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        $this->assertStringContainsString(
+            'target="_blank"',
+            $filtered,
+            sprintf("Should open in a new tab\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'rel="noopener noreferrer"',
+            $filtered,
+            sprintf("Should protect the opener\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'href="https://example.com"',
+            $filtered,
+            sprintf("Should keep the URL\nActual: '%s'", $filtered)
+        );
+    }
+
+    /**
+     * Test which additional button attributes are kept and which are discarded.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_attribute_allowlist(): void {
+        $before = '{button /x" title="Hello" class="btn btn-danger}Go{/button}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        $this->assertStringContainsString(
+            'title="Hello"',
+            $filtered,
+            sprintf("Should keep the title\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'class="btn btn-danger"',
+            $filtered,
+            sprintf("Should keep the author class\nActual: '%s'", $filtered)
+        );
+        $this->assertStringNotContainsString(
+            'btn-primary',
+            $filtered,
+            sprintf("Author class should replace the default\nActual: '%s'", $filtered)
+        );
+
+        $before = '{button /x" style="width:99vw" formaction="//evil.example}Go{/button}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        $this->assertStringNotContainsString(
+            'style=',
+            $filtered,
+            sprintf("Should discard style\nActual: '%s'", $filtered)
+        );
+        $this->assertStringNotContainsString(
+            'formaction=',
+            $filtered,
+            sprintf("Should discard formaction\nActual: '%s'", $filtered)
+        );
+    }
+
+    /**
      * Test editingtoggle tag.
      *
      * @covers \filter_filtercodes\text_filter::filter

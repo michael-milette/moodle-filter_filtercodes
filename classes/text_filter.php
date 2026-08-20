@@ -748,6 +748,93 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * Filter a URL destined for the href attribute of a generated link.
+     *
+     * Only schemes which cannot execute script are permitted. The list matches the schemes Moodle
+     * itself allows when cleaning HTML (URI.AllowedSchemes in lib/weblib.php), with the addition of
+     * tel and sms which this filter already generates elsewhere. Relative references have no scheme
+     * and are always allowed.
+     *
+     * The comparison is made on the scheme, not on the URL as a whole, so that an ordinary URL which
+     * happens to contain a scheme name in its query string is not rejected.
+     *
+     * @param string $url URL to filter.
+     * @return string The URL, or an empty string if it uses a scheme which is not permitted.
+     */
+    private function buttonurl($url) {
+        $allowedschemes = [
+            'http', 'https', 'ftp', 'irc', 'nntp', 'news',
+            'rtsp', 'rtmp', 'teamspeak', 'gopher', 'mms', 'mailto', 'tel', 'sms',
+        ];
+
+        // Browsers ignore control characters and spaces when parsing the scheme, so remove them
+        // before testing. Without this, "java&#9;script:" would not be recognised as a scheme.
+        $test = preg_replace('/[\x00-\x20\x7f]/', '', $url);
+
+        // No leading scheme means a relative reference such as /page.php, page.php, #anchor,
+        // ?id=1 or //example.com/page. Those are always allowed.
+        if (!preg_match('/^([a-z][a-z0-9+.-]*):/i', $test, $matches)) {
+            return $url;
+        }
+
+        return in_array(strtolower($matches[1]), $allowedschemes, true) ? $url : '';
+    }
+
+    /**
+     * Build the additional HTML attributes of a generated button link.
+     *
+     * The {button} tag has always allowed extra attributes to be added by closing the href attribute
+     * early, as in {button URL" target="_blank}. That form remains supported, but only for a fixed
+     * list of attributes which cannot execute script. Every value is escaped.
+     *
+     * @param string $tail The part of the tag which followed the first double quote.
+     * @return string Generated attributes, each preceded by a space, or an empty string.
+     */
+    private function buttonattributes($tail) {
+        $allowed = ['target', 'rel', 'title', 'id', 'class', 'aria-label', 'download'];
+
+        // Attribute values may be double quoted, single quoted or unquoted. The closing quote is
+        // optional because the legacy syntax borrows the closing quote of the href attribute.
+        $re = '/([a-z][a-z0-9-]*)(?:\s*=\s*(?:"([^"]*)"?|\'([^\']*)\'?|([^\s"\'>]*)))?/i';
+        if (!preg_match_all($re, $tail, $matches, PREG_SET_ORDER)) {
+            return '';
+        }
+
+        $attributes = [];
+        foreach ($matches as $match) {
+            $name = strtolower($match[1]);
+            if (!in_array($name, $allowed, true) || isset($attributes[$name])) {
+                continue;
+            }
+            // The value is whichever of the three quoting styles matched.
+            $value = '';
+            for ($i = 2; $i <= 4; $i++) {
+                if (isset($match[$i]) && $match[$i] !== '') {
+                    $value = $match[$i];
+                    break;
+                }
+            }
+            // A frame name, not a URL or script, but keep it to something a browser will accept.
+            if ($name === 'target' && !preg_match('/^[a-z_][a-z0-9_.-]*$/i', $value)) {
+                continue;
+            }
+            $attributes[$name] = $value;
+        }
+
+        // Opening a link in a new tab without this leaves the new document able to reach back
+        // through window.opener. Only a new browsing context is affected.
+        if (isset($attributes['target']) && $attributes['target'] === '_blank' && !isset($attributes['rel'])) {
+            $attributes['rel'] = 'noopener noreferrer';
+        }
+
+        $html = '';
+        foreach ($attributes as $name => $value) {
+            $html .= ' ' . $name . '="' . s($value) . '"';
+        }
+        return $html;
+    }
+
+    /**
      * Course completion progress percentage.
      *
      * @return int completion progress percentage
@@ -5545,11 +5632,30 @@ class text_filter extends \filtercodes_base_text_filter {
                 function ($matches) {
                     // Remove HTML tags created by filters like Activity Name Auto-Linking and Convert URLs Into Links.
                     $url = strip_tags($matches[1]);
-                    if (strpos($url, '&amp;') === 0) {
-                        $url = s($url);
+
+                    // Extra attributes may be supplied by closing the href attribute early, as in
+                    // {button URL" target="_blank}. Only safe attributes are kept.
+                    $attributes = '';
+                    $quotepos = strpos($url, '"');
+                    if ($quotepos !== false) {
+                        $attributes = $this->buttonattributes(substr($url, $quotepos + 1));
+                        $url = substr($url, 0, $quotepos);
                     }
-                    $label = $matches[2];
-                    return '<a href="' . $url . '" class="btn btn-primary">' . $label . '</a>';
+
+                    // Moodle turns a bare ampersand in text into &amp; when it cleans the content.
+                    // Decode before escaping again so query strings are not double encoded.
+                    $url = html_entity_decode($url, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+                    $url = $this->buttonurl($url);
+
+                    // As before, a class supplied by the author replaces the default one.
+                    if (strpos($attributes, ' class="') === false) {
+                        $attributes .= ' class="btn btn-primary"';
+                    }
+                    $link = '<a';
+                    if ($url !== '') {
+                        $link .= ' href="' . s($url) . '"';
+                    }
+                    return $link . $attributes . '>' . $matches[2] . '</a>';
                 },
                 $text
             );

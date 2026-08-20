@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Security
 
 - Fixed a vulnerability in the {qrcode} tag which allowed unwanted HTML attributes to be added to a page.
+- Fixed a vulnerability in the {button} tag which allowed unwanted HTML attributes and unsafe links to be added to a page.
 
 ## [3.0.1] 2026-07-22
 
