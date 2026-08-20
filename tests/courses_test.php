@@ -599,4 +599,153 @@ final class courses_test extends \advanced_testcase {
         // Should be site ID (1).
         $this->assertEquals('1', $filtered, sprintf("Assertion failed\nExpected: '%s'\nActual: '%s'", '1', $filtered));
     }
+    /**
+     * Create a course used by the course ID tag visibility tests.
+     *
+     * @param int $visible Whether the course is visible.
+     * @return object The new course.
+     */
+    private function create_tagged_course($visible) {
+        return $this->getDataGenerator()->create_course([
+            'fullname' => 'Follow Up Course',
+            'summary' => 'Follow up summary text.',
+            'startdate' => mktime(0, 0, 0, 1, 15, 2030),
+            'visible' => $visible,
+        ]);
+    }
+
+    /**
+     * Filter every course ID tag for a course and return the combined output.
+     *
+     * @param object $course The course to describe.
+     * @return string Filtered output.
+     */
+    private function filter_course_id_tags($course) {
+        $tags = '{coursename ' . $course->id . '}'
+            . '{coursesummary ' . $course->id . '}'
+            . '{coursestartdate ' . $course->id . '}';
+        return format_text($tags, FORMAT_HTML, ['context' => \context_system::instance()]);
+    }
+
+    /**
+     * Test that course ID tags do not describe a hidden course to an ordinary user.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_course_id_tags_omit_hidden_course(): void {
+        set_config('allowhiddencoursetags', 0, 'filter_filtercodes');
+        $course = $this->create_tagged_course(0);
+        $this->setUser($this->getDataGenerator()->create_user());
+
+        $filtered = $this->filter_course_id_tags($course);
+
+        $this->assertStringNotContainsString(
+            'Follow Up Course',
+            $filtered,
+            sprintf("Should not reveal the name of a hidden course
+Actual: '%s'", $filtered)
+        );
+        $this->assertStringNotContainsString(
+            'Follow up summary text.',
+            $filtered,
+            sprintf("Should not reveal the summary of a hidden course
+Actual: '%s'", $filtered)
+        );
+        $this->assertStringNotContainsString(
+            '2030',
+            $filtered,
+            sprintf("Should not reveal the start date of a hidden course
+Actual: '%s'", $filtered)
+        );
+    }
+
+    /**
+     * Test that hidden courses are still described when the site allows it.
+     *
+     * This is the behaviour existing sites keep when they upgrade.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_course_id_tags_describe_hidden_course_when_allowed(): void {
+        set_config('allowhiddencoursetags', 1, 'filter_filtercodes');
+        $course = $this->create_tagged_course(0);
+        $this->setUser($this->getDataGenerator()->create_user());
+
+        $filtered = $this->filter_course_id_tags($course);
+
+        $this->assertStringContainsString(
+            'Follow Up Course',
+            $filtered,
+            sprintf("Should describe the hidden course
+Actual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'Follow up summary text.',
+            $filtered,
+            sprintf("Should include the summary
+Actual: '%s'", $filtered)
+        );
+    }
+
+    /**
+     * Test that users allowed to see hidden courses still get a description of them.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_course_id_tags_describe_hidden_course_for_privileged_user(): void {
+        set_config('allowhiddencoursetags', 0, 'filter_filtercodes');
+        $course = $this->create_tagged_course(0);
+
+        // The setUp method already signed in as an administrator.
+        $filtered = $this->filter_course_id_tags($course);
+
+        $this->assertStringContainsString(
+            'Follow Up Course',
+            $filtered,
+            sprintf("Should describe the hidden course
+Actual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'Follow up summary text.',
+            $filtered,
+            sprintf("Should include the summary
+Actual: '%s'", $filtered)
+        );
+    }
+
+    /**
+     * Test that visible courses are unaffected by the hidden course restriction.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_course_id_tags_describe_visible_course(): void {
+        set_config('allowhiddencoursetags', 0, 'filter_filtercodes');
+        $course = $this->create_tagged_course(1);
+        $this->setUser($this->getDataGenerator()->create_user());
+
+        $filtered = $this->filter_course_id_tags($course);
+
+        $this->assertStringContainsString(
+            'Follow Up Course',
+            $filtered,
+            sprintf("Should describe a visible course
+Actual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'Follow up summary text.',
+            $filtered,
+            sprintf("Should include the summary
+Actual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            '2030',
+            $filtered,
+            sprintf("Should include the start date
+Actual: '%s'", $filtered)
+        );
+    }
 }

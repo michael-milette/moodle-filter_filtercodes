@@ -926,6 +926,14 @@ Enable or disable the display of a contact's profile picture in {coursecontacts}
 
 If enabled, will display the contact's profile description in {coursecontacts} tags.
 
+### Describe hidden courses
+
+If enabled, tags that accept a course ID, such as {coursename id}, {coursesummary id}, {coursestartdate id} and {courseenddate id}, will also describe courses that are hidden from students. Enable this if you promote a hidden course from within another course, for example a follow-up course that only becomes available once an earlier one is complete.
+
+If disabled, these tags only describe a hidden course for users who are allowed to see hidden courses, and display nothing for everyone else. Courses that are visible are not affected by this setting.
+
+Sites upgrading from an earlier version of FilterCodes have this option enabled so that existing pages continue to work as before. New installations have it disabled.
+
 ### Show hidden profile fields
 
 If enabled, custom profile fields that are hidden from the user will be displayed by the {profile_field_...} tag.

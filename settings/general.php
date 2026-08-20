@@ -58,6 +58,14 @@ $description = get_string('hidecompletedcourses_desc', 'filter_filtercodes');
 $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
 $settings->add($setting);
 
+// Allow tags which take a course ID to describe courses which are hidden.
+$default = '0';
+$name = 'filter_filtercodes/allowhiddencoursetags';
+$title = get_string('allowhiddencoursetags', 'filter_filtercodes');
+$description = get_string('allowhiddencoursetags_desc', 'filter_filtercodes');
+$setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+$settings->add($setting);
+
 // Show hidden custom profile fields.
 $default = '0';
 $name = 'filter_filtercodes/showhiddenprofilefields';

@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Added an "Allowed URL schemes" setting so administrators can control which URL schemes (protocols) the {button} tag may link to, one per line, instead of them being hard coded. Defaults to http, https, mailto, tel and sms; javascript and other script-capable schemes can be added but are intentionally excluded by default.
 - The {button} tag no longer links to ftp:, irc:, nntp:, news:, rtsp:, rtmp:, teamspeak:, gopher: or mms: addresses by default. Supported web browsers have not opened ftp: links since 2021. Administrators who still need any of these can add them to the "Allowed URL schemes" setting.
+- Added a "Describe hidden courses" setting, controlling whether tags which accept a course ID may describe hidden courses.
 - Added pre-existing tags {coursesactive}, {courseunenrolurl}, {menulanguages} to README.md.
 
 ### Updated
@@ -18,6 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Security
 
 - Fixed a vulnerability in the {qrcode} tag which allowed unwanted HTML attributes to be added to a page.
+- Fixed a vulnerability where tags which accept a course ID, such as {coursename id} and {coursesummary id}, could describe courses hidden from the user. New installs hide these courses from users who cannot see hidden courses. Existing sites keep their current behaviour after upgrading, because the new "Describe hidden courses" setting is enabled for them. Tags referring to a course that doesn't exist or that the user isn't allowed to see now display nothing instead of the tag itself.
 - Fixed a vulnerability in the {button} tag which allowed unwanted HTML attributes and unsafe links to be added to a page.
   - IMPORTANT: {button} no longer links to javascript: addresses, such as {button javascript:window.print()}. These buttons are still displayed, but do nothing when clicked. If your site relies on them, go to Site Administration > Plugins > Filters > Filter Codes and add `javascript` on its own line in the "Allowed URL schemes" setting. Only do this if you trust everyone who can edit content on your site, because it allows them to run scripts in the browser of anyone who clicks the button.
   - Extra attributes other than target, rel, title, id, class, aria-label, download and data-bs-toggle/data-toggle="modal" are now ignored. This includes onclick and style.

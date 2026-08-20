@@ -519,6 +519,39 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * Fetch a course by id, if the current user is allowed to see information about it.
+     *
+     * Tags which take a course id can refer to any course on the site. Unless the site allows it,
+     * a course which is not visible is only returned to users who are permitted to see hidden
+     * courses. Sites which deliberately advertise hidden courses, such as a follow-up course
+     * promoted from within an earlier one, can allow this with the allowhiddencoursetags setting.
+     *
+     * @param int $courseid Id of the course to retrieve.
+     * @return object|null The course record, or null if it does not exist or must not be shown.
+     */
+    private function getviewablecourse($courseid) {
+        global $DB;
+
+        $course = $DB->get_record('course', ['id' => $courseid]);
+        if (empty($course)) {
+            return null;
+        }
+
+        if (get_config('filter_filtercodes', 'allowhiddencoursetags')) {
+            return $course;
+        }
+
+        if (
+            empty($course->visible)
+            && !has_capability('moodle/course:viewhiddencourses', \context_course::instance($course->id))
+        ) {
+            return null;
+        }
+
+        return $course;
+    }
+
+    /**
      * Render course cards for list of course ids. Not visible for hidden courses or if it has expired.
      *
      * @param array $rcourseids Array of course ids.
@@ -1295,19 +1328,21 @@ class text_filter extends \filtercodes_base_text_filter {
                     preg_match_all('/\{coursesummary ([0-9]+)\}/', $text, $matches);
                     // Eliminate course IDs.
                     $courseids = array_unique($matches[1]);
-                    $coursecontext = \context_course::instance($PAGE->course->id);
                     foreach ($courseids as $id) {
-                        $course = $DB->get_record('course', ['id' => $id]);
+                        $course = $this->getviewablecourse($id);
+                        $summary = '';
                         if (!empty($course)) {
-                            $course->summary == null ? '' : $course->summary;
-                            $replace['/\{coursesummary ' . $course->id . '\}/isuU'] = format_text(
-                                $course->summary,
+                            // The summary belongs to the course being described, not to the
+                            // course the reader happens to be in.
+                            $summary = format_text(
+                                (string) $course->summary,
                                 FORMAT_HTML,
-                                ['context' => $coursecontext]
+                                ['context' => \context_course::instance($course->id)]
                             );
                         }
+                        $replace['/\{coursesummary ' . $id . '\}/isuU'] = $summary;
                     }
-                    unset($matches, $course, $courseids, $id);
+                    unset($matches, $course, $courseids, $id, $summary);
                 }
             }
 
@@ -1341,16 +1376,18 @@ class text_filter extends \filtercodes_base_text_filter {
                     $courseids = array_unique($matches[1]);
                     $coursecontext = \context_system::instance();
                     foreach ($courseids as $id) {
-                        $course = $DB->get_record('course', ['id' => $id]);
+                        $course = $this->getviewablecourse($id);
+                        $fullname = '';
                         if (!empty($course)) {
-                            $replace['/\{coursename ' . $course->id . '\}/isuU'] = format_string(
+                            $fullname = format_string(
                                 $course->fullname,
                                 true,
                                 ['context' => $coursecontext]
                             );
                         }
+                        $replace['/\{coursename ' . $id . '\}/isuU'] = $fullname;
                     }
-                    unset($matches, $course, $courseids, $id);
+                    unset($matches, $course, $courseids, $id, $fullname);
                 }
             }
         }
@@ -2420,7 +2457,7 @@ class text_filter extends \filtercodes_base_text_filter {
                                 );
                             }
                         } else { // Course ID was specifed.
-                            $course = $DB->get_record('course', ['id' => $matches[2]]);
+                            $course = $this->getviewablecourse($matches[2]);
                             if (!empty($course)) {
                                 $startdate = $course->startdate;
                                 if (!empty($course->startdate)) {
@@ -2512,7 +2549,7 @@ class text_filter extends \filtercodes_base_text_filter {
                                 );
                             }
                         } else { // Course ID was specifed.
-                            $course = $DB->get_record('course', ['id' => $matches[2]]);
+                            $course = $this->getviewablecourse($matches[2]);
                             if (!empty($course)) {
                                 $enddate = $course->enddate;
                                 if (!empty($course->enddate)) {
