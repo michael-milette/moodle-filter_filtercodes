@@ -135,48 +135,86 @@ class scraper {
             return false;
         }
 
-        $content = '';
+        // When an allowed hosts list is configured, redirects are followed here rather than by
+        // cURL, so that every host in the chain is checked against the list and not only the
+        // host of the first request. Without a list there is no additional boundary to apply,
+        // and Moodle's own cURL security settings already check each redirect.
+        $followredirectshere = $this->hasscrapeallowedhosts();
+        $maxredirects = 5;
         $maxbytes = $this->getscrapemaxbytes();
-        $curl = new \curl();
-        $options = [
-            'CURLOPT_CONNECTTIMEOUT' => 5,
-            'CURLOPT_TIMEOUT' => 10,
-            'CURLOPT_FOLLOWLOCATION' => 1,
-            'CURLOPT_MAXREDIRS' => 5,
-            'CURLOPT_RETURNTRANSFER' => false,
-            'CURLOPT_WRITEFUNCTION' => function ($curl, $data) use (&$content, $maxbytes) {
-                if (strlen($content) + strlen($data) > $maxbytes) {
-                    return 0;
+
+        for ($hop = 0; $hop <= $maxredirects; $hop++) {
+            $content = '';
+            $curl = new \curl();
+            $options = [
+                'CURLOPT_CONNECTTIMEOUT' => 5,
+                'CURLOPT_TIMEOUT' => 10,
+                'CURLOPT_FOLLOWLOCATION' => $followredirectshere ? 0 : 1,
+                'CURLOPT_MAXREDIRS' => $maxredirects,
+                'CURLOPT_RETURNTRANSFER' => false,
+                'CURLOPT_WRITEFUNCTION' => function ($curl, $data) use (&$content, $maxbytes) {
+                    if (strlen($content) + strlen($data) > $maxbytes) {
+                        return 0;
+                    }
+                    $content .= $data;
+                    return strlen($data);
+                },
+            ];
+
+            $result = $curl->get($url, [], $options);
+            // PHPUnit cURL mocks bypass CURLOPT_WRITEFUNCTION and return the body as a string.
+            // The size cap is still enforced below by the explicit length check, so partial content
+            // captured before the writefunction returned 0 is still rejected.
+            if (is_string($result) && $content === '') {
+                $content = $result;
+            }
+
+            $info = $curl->get_info();
+            // Moodle's curl::mock_response() helper only populates http_code; production responses
+            // should include a Content-Type header or are rejected below. Synthesise a default in
+            // PHPUnit so existing mock-based tests continue to exercise the success path.
+            if ((defined('PHPUNIT_TEST') && PHPUNIT_TEST) && !isset($info['content_type'])) {
+                $info['content_type'] = 'text/html';
+            }
+
+            if ($curl->get_errno()) {
+                return false;
+            }
+
+            // cURL reports where a redirect wanted to go whenever it was told not to follow it.
+            $redirecturl = $followredirectshere && !empty($info['redirect_url']) ? $info['redirect_url'] : '';
+            if ($redirecturl !== '') {
+                if ($hop === $maxredirects) {
+                    return false;
                 }
-                $content .= $data;
-                return strlen($data);
-            },
-        ];
+                $url = $this->normalizescrapeurl($redirecturl);
+                if ($url === false || !$this->isscrapehostallowed($url)) {
+                    return false;
+                }
+                continue;
+            }
 
-        $result = $curl->get($url, [], $options);
-        // PHPUnit cURL mocks bypass CURLOPT_WRITEFUNCTION and return the body as a string.
-        // The size cap is still enforced below by the explicit length check, so partial content
-        // captured before the writefunction returned 0 is still rejected.
-        if (is_string($result) && $content === '') {
-            $content = $result;
+            if (empty($info['http_code']) || $info['http_code'] != 200 || $content === '') {
+                return false;
+            }
+
+            if (strlen($content) > $maxbytes || !$this->isscrapecontenttypeallowed($info)) {
+                return false;
+            }
+
+            return $content;
         }
 
-        $info = $curl->get_info();
-        // Moodle's curl::mock_response() helper only populates http_code; production responses
-        // should include a Content-Type header or are rejected below. Synthesise a default in
-        // PHPUnit so existing mock-based tests continue to exercise the success path.
-        if ((defined('PHPUNIT_TEST') && PHPUNIT_TEST) && !isset($info['content_type'])) {
-            $info['content_type'] = 'text/html';
-        }
-        if ($curl->get_errno() || empty($info['http_code']) || $info['http_code'] != 200 || $content === '') {
-            return false;
-        }
+        return false;
+    }
 
-        if (strlen($content) > $maxbytes || !$this->isscrapecontenttypeallowed($info)) {
-            return false;
-        }
-
-        return $content;
+    /**
+     * Check whether an allowed hosts list has been configured for the scrape tag.
+     *
+     * @return bool True if at least one allowed host has been configured.
+     */
+    private function hasscrapeallowedhosts() {
+        return trim((string) get_config('filter_filtercodes', 'scrape_allowed_hosts')) !== '';
     }
 
     /**

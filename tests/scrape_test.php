@@ -451,4 +451,65 @@ final class scrape_test extends \advanced_testcase {
         $this->setfiltercodesconfig('scrape_cachettl', 0);
         $this->filtertext($tag);
     }
+    /**
+     * Test detection of whether an allowed hosts list has been configured.
+     *
+     * The scraper only takes over following redirects when a list is configured, so this
+     * decides whether each hop of a redirect chain is checked against the list.
+     *
+     * @covers \filter_filtercodes\scraper::scrapehtml
+     * @return void
+     */
+    public function test_scrape_allowed_hosts_detection(): void {
+        $scraper = new scraper();
+        $method = new \ReflectionMethod(scraper::class, 'hasscrapeallowedhosts');
+        $method->setAccessible(true);
+
+        $this->setfiltercodesconfig('scrape_allowed_hosts', '');
+        $this->assertFalse($method->invoke($scraper), 'An empty setting is not an allowed hosts list.');
+
+        $this->setfiltercodesconfig('scrape_allowed_hosts', '  ' . PHP_EOL . '  ');
+        $this->assertFalse($method->invoke($scraper), 'Whitespace only is not an allowed hosts list.');
+
+        $this->setfiltercodesconfig('scrape_allowed_hosts', 'allowed.example');
+        $this->assertTrue($method->invoke($scraper), 'A configured host is an allowed hosts list.');
+
+        $this->setfiltercodesconfig('scrape_allowed_hosts', '');
+    }
+
+    /**
+     * Test that a redirect target is judged against the allowed hosts list.
+     *
+     * Each hop of a redirect chain is passed through this check, so a host which is not on
+     * the list cannot be reached by redirecting to it from a host which is.
+     *
+     * @covers \filter_filtercodes\scraper::scrapehtml
+     * @return void
+     */
+    public function test_scrape_redirect_target_is_checked_against_allowed_hosts(): void {
+        $scraper = new scraper();
+        $method = new \ReflectionMethod(scraper::class, 'isscrapehostallowed');
+        $method->setAccessible(true);
+
+        $this->setfiltercodesconfig('scrape_allowed_hosts', 'allowed.example');
+
+        $this->assertTrue(
+            $method->invoke($scraper, 'https://allowed.example/page.html'),
+            'The allowed host should remain reachable.'
+        );
+        $this->assertFalse(
+            $method->invoke($scraper, 'https://elsewhere.example/page.html'),
+            'A redirect to another public host must be refused.'
+        );
+        $this->assertFalse(
+            $method->invoke($scraper, 'http://127.0.0.1/page.html'),
+            'A redirect to an internal address must be refused.'
+        );
+        $this->assertFalse(
+            $method->invoke($scraper, 'http://allowed.example.evil.test/page.html'),
+            'A host which merely starts with an allowed host must be refused.'
+        );
+
+        $this->setfiltercodesconfig('scrape_allowed_hosts', '');
+    }
 }
