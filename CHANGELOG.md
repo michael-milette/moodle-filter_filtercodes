@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 
 - Added pre-existing tags {coursesactive}, {courseunenrolurl}, {menulanguages} to README.md.
 
+### Security
+
+- Fixed a vulnerability in the {qrcode} tag which allowed unwanted HTML attributes to be added to a page.
 
 ## [3.0.1] 2026-07-22
 

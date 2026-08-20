@@ -5522,8 +5522,10 @@ class text_filter extends \filtercodes_base_text_filter {
                 function ($matches) {
                     $text = html_to_text($matches[1]);
                     $src = $this->qrcode($text);
-                    $src = '<img src="' . $src . '" style="width:100%;max-width:480px;height:auto;" class="fc-qrcode" alt="'
-                        . $text . '">';
+                    // The encoded text is also used as the alternative text, where it has to be
+                    // escaped so that it cannot end the attribute and add markup of its own.
+                    $src = '<img src="' . s($src) . '" style="width:100%;max-width:480px;height:auto;"'
+                        . ' class="fc-qrcode" alt="' . s($text) . '">';
                     return $src;
                 },
                 $text

@@ -525,6 +525,43 @@ final class content_test extends \advanced_testcase {
     }
 
     /**
+     * Test that QR code content cannot add attributes to the generated image.
+     *
+     * @dataProvider qrcode_injection_provider
+     * @covers \filter_filtercodes\text_filter::filter
+     * @param string $content Content to place between the tags.
+     * @return void
+     */
+    public function test_qrcode_tag_cannot_inject_attributes(string $content): void {
+        $before = '{qrcode}' . $content . '{/qrcode}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        // An escaped value reads onerror=&quot;, so a literal quote here means the attribute broke out.
+        $this->assertStringNotContainsString(
+            'onerror="',
+            $filtered,
+            sprintf("Should not produce an event handler\nActual: '%s'", $filtered)
+        );
+        $this->assertStringContainsString(
+            'alt="',
+            $filtered,
+            sprintf("Should still have alternative text\nActual: '%s'", $filtered)
+        );
+    }
+
+    /**
+     * Data provider of QR code content which must not escape the alt attribute.
+     *
+     * @return array
+     */
+    public static function qrcode_injection_provider(): array {
+        return [
+            'plain quote' => ['x" onerror="alert(1)" a="'],
+            'encoded quote' => ['x&quot; onerror=&quot;alert(1)'],
+        ];
+    }
+
+    /**
      * Test showmore tag.
      *
      * @covers \filter_filtercodes\text_filter::filter
