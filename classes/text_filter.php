@@ -2477,7 +2477,76 @@ class text_filter extends \filtercodes_base_text_filter {
             }
         }
 
-        // Tag: {courseenrolmentdate} or {courseenrolmentdate dateTimeFormat}.
+        // Tag: {courseenrolmentenddate} or {courseenrolmentenddate dateTimeFormat}.
+// Description: The course enrolment end date.
+// Optional Parameters: dateTimeFormat - either in a Moodle datetime format or a PHP strftime format.
+if (stripos($text, '{courseenrolmentenddate') !== false) {
+
+    $sql = '
+        SELECT ue.id, ue.timeend
+        FROM {user_enrolments} ue
+        JOIN {enrol} e ON ue.enrolid = e.id
+        WHERE ue.userid = :userid
+          AND e.courseid = :courseid
+          AND ue.status = 0
+        ORDER BY ue.timeend DESC
+    ';
+
+    $enrolments = $DB->get_records_sql(
+        $sql,
+        [
+            'userid' => $USER->id,
+            'courseid' => $PAGE->course->id
+        ]
+    );
+
+    $enddate = 0;
+
+    foreach ($enrolments as $enrolment) {
+        if (!empty($enrolment->timeend)) {
+            $enddate = $enrolment->timeend;
+            break;
+        }
+    }
+
+    if (!empty($enddate)) {
+
+        // {courseenrolmentenddate}
+        if (stripos($text, '{courseenrolmentenddate}') !== false) {
+            $replace['/\{courseenrolmentenddate\}/i'] =
+                userdate($enddate, get_string('strftimedatefullshort'));
+        }
+
+        // {courseenrolmentenddate dateTimeFormat}
+        if (stripos($text, '{courseenrolmentenddate ') !== false) {
+
+            $newtext = preg_replace_callback(
+                '/\{courseenrolmentenddate\s+(.+)\}/isuU',
+                function ($matches) use ($enddate) {
+
+                    if (
+                        !empty($matches[1]) &&
+                        get_string_manager()->string_exists($matches[1], 'langconfig')
+                    ) {
+                        $matches[1] = get_string($matches[1], 'langconfig');
+                    }
+
+                    return userdate($enddate, $matches[1]);
+                },
+                $text
+            );
+
+            if ($newtext !== false) {
+                $text = $newtext;
+            }
+        }
+
+    } else {
+        $replace['/\{courseenrolmentenddate(.*)\}/isuU'] = '';
+    }
+}
+
+// Tag: {courseenrolmentdate} or {courseenrolmentdate dateTimeFormat}.
         // Description: The course enrolment date.
         // Optional Parameters: dateTimeFormat - either in a Moodle datetime format or a PHP strftime format.
         if (stripos($text, '{courseenrolmentdate') !== false) {
