@@ -1429,21 +1429,21 @@ class text_filter extends \filtercodes_base_text_filter {
                     );
                 }
             }
+        }
 
-            // Tag: {course_fields}.
-            // Description: All content from the custom user profile fields specified by shortname as set in the user's profile.
-            // Parameters: None.
-            if (stripos($text, '{course_fields}') !== false) {
-                // Display all custom course fields.
-                $customfields = '';
-                $thiscourse = new \core_course_list_element($PAGE->course);
-                if ($thiscourse->has_custom_fields()) {
-                    $handler = \core_course\customfield\course_handler::create();
-                    $customfields = $handler->display_custom_fields_data($thiscourse->get_custom_fields());
-                }
-                $coursecontext = \context_course::instance($PAGE->course->id);
-                $replace['/\{course_fields\}/i'] = format_text($customfields, FORMAT_HTML, ['context' => $coursecontext]);
+        // Tag: {course_fields}.
+        // Description: All content from the custom user profile fields specified by shortname as set in the user's profile.
+        // Parameters: None.
+        if (stripos($text, '{course_fields}') !== false) {
+            // Display all custom course fields.
+            $customfields = '';
+            $thiscourse = new \core_course_list_element($PAGE->course);
+            if ($thiscourse->has_custom_fields()) {
+                $handler = \core_course\customfield\course_handler::create();
+                $customfields = $handler->display_custom_fields_data($thiscourse->get_custom_fields());
             }
+            $coursecontext = \context_course::instance($PAGE->course->id);
+            $replace['/\{course_fields\}/i'] = format_text($customfields, FORMAT_HTML, ['context' => $coursecontext]);
         }
 
         if (stripos($text, '{dashboard_siteinfo}') !== false) {
