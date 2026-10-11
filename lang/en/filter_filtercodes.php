@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['allowedurlschemes'] = 'Allowed URL schemes';
+$string['allowedurlschemes_desc'] = 'List of URL schemes (protocols) that FilterCodes will allow in the links it generates, such as the {button} tag. Enter one scheme per line, without the colon, for example <code>https</code> or <code>mailto</code>. Relative links, which have no scheme, are always allowed. If you leave this list empty, no URL schemes are allowed and only relative links will work.<br><br><strong>Warning:</strong> Adding <code>javascript</code>, or any other scheme that can run code, lets anyone who can edit content create links that run scripts in the browser of whoever clicks them. This is a security risk. Only add such schemes if you completely trust everyone who can create or edit filtered content on your site.';
 $string['brief'] = 'Brief';
 $string['categorycardshowpic'] = 'Show {categorycards} background';
 $string['categorycardshowpic_desc'] = 'If enabled, will display a background colour/pattern for {categorycards} tag similar to the course images when no image was specified.';

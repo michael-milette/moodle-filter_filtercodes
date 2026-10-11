@@ -48,6 +48,12 @@ if (class_exists('\core_filters\text_filter')) {
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class text_filter extends \filtercodes_base_text_filter {
+    /**
+     * Default value of the Allowed URL schemes setting, one scheme per line. It must match the
+     * default in settings/general.php, which is checked by a unit test.
+     */
+    const DEFAULT_URL_SCHEMES = "http\nhttps\nmailto\ntel\nsms";
+
     /** @var array $archetyperoles Object array of Moodle archetypes. */
     private static $archetyperoles = null;
     /** @var array $customroles array of Roles key is shortname and value is the id */
@@ -750,10 +756,9 @@ class text_filter extends \filtercodes_base_text_filter {
     /**
      * Filter a URL destined for the href attribute of a generated link.
      *
-     * Only schemes which cannot execute script are permitted. The list matches the schemes Moodle
-     * itself allows when cleaning HTML (URI.AllowedSchemes in lib/weblib.php), with the addition of
-     * tel and sms which this filter already generates elsewhere. Relative references have no scheme
-     * and are always allowed.
+     * Only schemes which the administrator has allowed are permitted. The list of allowed schemes is
+     * configured in the "Allowed URL schemes" plugin setting (see allowedurlschemes()). Relative
+     * references have no scheme and are always allowed.
      *
      * The comparison is made on the scheme, not on the URL as a whole, so that an ordinary URL which
      * happens to contain a scheme name in its query string is not rejected.
@@ -762,10 +767,7 @@ class text_filter extends \filtercodes_base_text_filter {
      * @return string The URL, or an empty string if it uses a scheme which is not permitted.
      */
     private function buttonurl($url) {
-        $allowedschemes = [
-            'http', 'https', 'ftp', 'irc', 'nntp', 'news',
-            'rtsp', 'rtmp', 'teamspeak', 'gopher', 'mms', 'mailto', 'tel', 'sms',
-        ];
+        $allowedschemes = $this->allowedurlschemes();
 
         // Browsers ignore control characters and spaces when parsing the scheme, so remove them
         // before testing. Without this, "java&#9;script:" would not be recognised as a scheme.
@@ -781,6 +783,38 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * Get the list of URL schemes which FilterCodes will allow in links it generates, such as the
+     * {button} tag.
+     *
+     * The list is configured by the administrator in the "Allowed URL schemes" setting, one scheme
+     * per line. Until that setting has been saved, for example on a site upgraded through the web
+     * interface before the new settings page is completed, the default list is used. Entries are
+     * lowercased and any trailing colon is ignored, so both "mailto" and "mailto:" are accepted. If
+     * the administrator empties the setting, no schemes are allowed and only relative links continue
+     * to work.
+     *
+     * Administrators may add javascript, or any other script-capable scheme, to the setting. Doing so
+     * is a security risk, which is why it is not part of the default.
+     *
+     * @return array Lowercased list of allowed scheme names, without the trailing colon.
+     */
+    private function allowedurlschemes() {
+        $configured = get_config('filter_filtercodes', 'allowedurlschemes');
+        if ($configured === false) {
+            $configured = self::DEFAULT_URL_SCHEMES;
+        }
+
+        // Accept one scheme per line, but also tolerate commas and other whitespace as separators.
+        // Each entry is lowercased and a trailing colon, if the author included one, is removed.
+        $schemes = preg_split('/[\s,]+/', strtolower($configured), -1, PREG_SPLIT_NO_EMPTY);
+        $schemes = array_map(function ($scheme) {
+            return rtrim($scheme, ':');
+        }, $schemes);
+
+        return array_values(array_filter($schemes, 'strlen'));
+    }
+
+    /**
      * Build the additional HTML attributes of a generated button link.
      *
      * The {button} tag has always allowed extra attributes to be added by closing the href attribute
@@ -791,7 +825,7 @@ class text_filter extends \filtercodes_base_text_filter {
      * @return string Generated attributes, each preceded by a space, or an empty string.
      */
     private function buttonattributes($tail) {
-        $allowed = ['target', 'rel', 'title', 'id', 'class', 'aria-label', 'download'];
+        $allowed = ['target', 'rel', 'title', 'id', 'class', 'aria-label', 'download', 'data-bs-toggle', 'data-toggle'];
 
         // Attribute values may be double quoted, single quoted or unquoted. The closing quote is
         // optional because the legacy syntax borrows the closing quote of the href attribute.
@@ -816,6 +850,11 @@ class text_filter extends \filtercodes_base_text_filter {
             }
             // A frame name, not a URL or script, but keep it to something a browser will accept.
             if ($name === 'target' && !preg_match('/^[a-z_][a-z0-9_.-]*$/i', $value)) {
+                continue;
+            }
+            // Bootstrap toggles (data-bs-toggle in Bootstrap 5, data-toggle in Bootstrap 4) are only
+            // allowed to open a modal, whose target is the link's #id address.
+            if (($name === 'data-bs-toggle' || $name === 'data-toggle') && $value !== 'modal') {
                 continue;
             }
             $attributes[$name] = $value;

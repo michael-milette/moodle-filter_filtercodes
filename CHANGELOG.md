@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added an "Allowed URL schemes" setting so administrators can control which URL schemes (protocols) the {button} tag may link to, one per line, instead of them being hard coded. Defaults to http, https, mailto, tel and sms; javascript and other script-capable schemes can be added but are intentionally excluded by default.
+- The {button} tag no longer links to ftp:, irc:, nntp:, news:, rtsp:, rtmp:, teamspeak:, gopher: or mms: addresses by default. Supported web browsers have not opened ftp: links since 2021. Administrators who still need any of these can add them to the "Allowed URL schemes" setting.
 - Added pre-existing tags {coursesactive}, {courseunenrolurl}, {menulanguages} to README.md.
 
 ### Security

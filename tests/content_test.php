@@ -466,6 +466,152 @@ final class content_test extends \advanced_testcase {
     }
 
     /**
+     * Test that a scheme which is not in the Allowed URL schemes setting is dropped by default.
+     *
+     * ftp is a perfectly safe scheme but is not part of the default allow list, so the button must
+     * not link to it unless an administrator adds it.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_rejects_scheme_not_in_allowed_list(): void {
+        $before = '{button ftp://files.example.com/x}x{/button}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        $this->assertStringNotContainsString(
+            'href=',
+            $filtered,
+            sprintf("ftp is not in the default allow list and should not link\nActual: '%s'", $filtered)
+        );
+    }
+
+    /**
+     * Test that a scheme added to the Allowed URL schemes setting is honoured.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_allows_configured_extra_scheme(): void {
+        set_config('allowedurlschemes', "http\nhttps\nmailto\ntel\nsms\nftp", 'filter_filtercodes');
+
+        $before = '{button ftp://files.example.com/x}x{/button}';
+        $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+
+        $this->assertStringContainsString(
+            'href="ftp://files.example.com/x"',
+            $filtered,
+            sprintf("ftp should link once added to the allow list\nActual: '%s'", $filtered)
+        );
+    }
+
+    /**
+     * Test that clearing the Allowed URL schemes setting disallows every scheme, leaving only
+     * relative links working. Clearing the setting must fail closed, never allow everything.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_allowedurlschemes_empty_allows_only_relative(): void {
+        set_config('allowedurlschemes', '', 'filter_filtercodes');
+
+        // With no schemes allowed, even a normally safe scheme such as mailto is dropped.
+        $mailto = format_text('{button mailto:a@example.com}x{/button}', FORMAT_HTML, [
+            'context' => \context_system::instance(),
+        ]);
+        $this->assertStringNotContainsString(
+            'href=',
+            $mailto,
+            sprintf("An empty setting must not allow any scheme\nActual: '%s'", $mailto)
+        );
+
+        // A relative link has no scheme and therefore still works.
+        $relative = format_text('{button /local/page.php}x{/button}', FORMAT_HTML, [
+            'context' => \context_system::instance(),
+        ]);
+        $this->assertStringContainsString(
+            'href="/local/page.php"',
+            $relative,
+            sprintf("Relative links have no scheme and should still work\nActual: '%s'", $relative)
+        );
+    }
+
+    /**
+     * Test that an Allowed URL schemes setting which has never been saved uses the default list.
+     *
+     * A site upgraded through the web interface has no value for a new setting until the
+     * administrator saves the new settings page. Existing buttons must keep working until then.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_allowedurlschemes_unset_uses_default(): void {
+        unset_config('allowedurlschemes', 'filter_filtercodes');
+
+        $https = format_text('{button https://example.com/a}x{/button}', FORMAT_HTML, [
+            'context' => \context_system::instance(),
+        ]);
+        $this->assertStringContainsString(
+            'href="https://example.com/a"',
+            $https,
+            sprintf("An unsaved setting should allow the default schemes\nActual: '%s'", $https)
+        );
+
+        $ftp = format_text('{button ftp://files.example.com/x}x{/button}', FORMAT_HTML, [
+            'context' => \context_system::instance(),
+        ]);
+        $this->assertStringNotContainsString(
+            'href=',
+            $ftp,
+            sprintf("An unsaved setting should only allow the default schemes\nActual: '%s'", $ftp)
+        );
+    }
+
+    /**
+     * Test that the Allowed URL schemes setting tolerates capitals, trailing colons and commas.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_allowedurlschemes_lenient_format(): void {
+        set_config('allowedurlschemes', "HTTPS:\r\nmailto:, Tel", 'filter_filtercodes');
+
+        foreach (['https://example.com/a', 'mailto:a@example.com', 'tel:+15551234567'] as $url) {
+            $filtered = format_text('{button ' . $url . '}x{/button}', FORMAT_HTML, [
+                'context' => \context_system::instance(),
+            ]);
+            $this->assertStringContainsString(
+                'href="' . $url . '"',
+                $filtered,
+                sprintf("%s should be allowed\nActual: '%s'", $url, $filtered)
+            );
+        }
+    }
+
+    /**
+     * Test that the default of the Allowed URL schemes setting matches the default used by the filter
+     * when the setting has not been saved.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_allowedurlschemes_default_matches_filter(): void {
+        global $CFG;
+        require_once($CFG->libdir . '/adminlib.php');
+
+        $this->setAdminUser();
+        $page = admin_get_root(true, true)->locate('filtersettingfiltercodes');
+        $this->assertNotNull($page, 'The FilterCodes settings page should exist');
+        // Moodle keys a page's settings by plugin name followed directly by the setting name.
+        $key = 'filter_filtercodesallowedurlschemes';
+        $this->assertTrue(isset($page->settings->$key), 'The Allowed URL schemes setting should exist');
+        $this->assertSame(
+            \filter_filtercodes\text_filter::DEFAULT_URL_SCHEMES,
+            $page->settings->$key->get_defaultsetting(),
+            'settings/general.php and text_filter::DEFAULT_URL_SCHEMES must have the same default'
+        );
+    }
+
+    /**
      * Test that an ampersand in a button URL is not double encoded.
      *
      * @covers \filter_filtercodes\text_filter::filter
@@ -553,6 +699,32 @@ final class content_test extends \advanced_testcase {
             $filtered,
             sprintf("Should discard formaction\nActual: '%s'", $filtered)
         );
+    }
+
+    /**
+     * Test that a button can open a Bootstrap modal, but cannot use other Bootstrap toggles.
+     *
+     * @covers \filter_filtercodes\text_filter::filter
+     * @return void
+     */
+    public function test_button_tag_bootstrap_modal_toggle(): void {
+        foreach (['data-bs-toggle', 'data-toggle'] as $attribute) {
+            $before = '{button #mymodal" ' . $attribute . '="modal}Open{/button}';
+            $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+            $this->assertStringContainsString(
+                'href="#mymodal" ' . $attribute . '="modal"',
+                $filtered,
+                sprintf("%s=\"modal\" should be kept\nActual: '%s'", $attribute, $filtered)
+            );
+
+            $before = '{button #x" ' . $attribute . '="popover}Open{/button}';
+            $filtered = format_text($before, FORMAT_HTML, ['context' => \context_system::instance()]);
+            $this->assertStringNotContainsString(
+                $attribute . '=',
+                $filtered,
+                sprintf("%s should only allow modal\nActual: '%s'", $attribute, $filtered)
+            );
+        }
     }
 
     /**
