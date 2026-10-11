@@ -27,6 +27,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Test form tags.
  *
@@ -57,7 +58,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test formquickquestion tag.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_formquickquestion(): void {
         $text = '{formquickquestion}';
@@ -82,7 +82,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test formcontactus tag.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_formcontactus(): void {
         $text = '{formcontactus}';
@@ -107,7 +106,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test formcourserequest tag.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_formcourserequest(): void {
         $text = '{formcourserequest}';
@@ -123,7 +121,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test formsupport tag.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_formsupport(): void {
         $text = '{formsupport}';
@@ -139,7 +136,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test formcheckin tag.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_formcheckin(): void {
         $text = '{formcheckin}';
@@ -155,7 +151,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test form tag when Contact Form is not installed.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_form_without_plugin(): void {
         $text = '{formcontactus}';
@@ -170,7 +165,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test multiple form tags together.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_multiple_form_tags(): void {
         $text = '{formquickquestion} {formcontactus} {formsupport}';
@@ -200,7 +194,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test form tag in course context.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_form_in_course_context(): void {
         $course = $this->getDataGenerator()->create_course(['fullname' => 'Form Test Course']);
@@ -219,7 +212,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test form tag for logged out user.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_form_logged_out(): void {
         // Log out.
@@ -237,7 +229,6 @@ final class forms_test extends \advanced_testcase {
 
     /**
      * Test form tag for guest user.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_form_guest_user(): void {
         // Set guest user.

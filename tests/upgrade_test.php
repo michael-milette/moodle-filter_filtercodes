@@ -32,6 +32,7 @@ global $CFG;
 require_once($CFG->libdir . '/upgradelib.php');
 require_once($CFG->dirroot . '/filter/filtercodes/db/upgrade.php');
 
+#[\PHPUnit\Framework\Attributes\CoversFunction('xmldb_filter_filtercodes_upgrade')]
 /**
  * Unit tests for the FilterCodes upgrade steps.
  *

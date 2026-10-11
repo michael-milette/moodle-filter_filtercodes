@@ -27,6 +27,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Unit tests for FilterCodes conditional logged in/out tags.
  *
@@ -34,6 +35,7 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class conditional_loggedin_test extends \advanced_testcase {
     /**
@@ -56,7 +58,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifloggedin tag when logged in.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifloggedin_when_logged_in(): void {
@@ -76,7 +77,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifloggedin tag when logged out.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifloggedin_when_logged_out(): void {
@@ -95,7 +95,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifloggedin tag when logged in as guest.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifloggedin_as_guest(): void {
@@ -115,7 +114,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifloggedout tag when logged out.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifloggedout_when_logged_out(): void {
@@ -134,7 +132,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifloggedout tag when logged in.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifloggedout_when_logged_in(): void {
@@ -154,7 +151,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifloggedout tag when logged in as guest.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifloggedout_as_guest(): void {
@@ -174,7 +170,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifguest tag when logged in as guest.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifguest_as_guest(): void {
@@ -193,7 +188,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifguest tag when logged in as regular user.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifguest_as_user(): void {
@@ -213,7 +207,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifguest tag when logged out.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifguest_when_logged_out(): void {
@@ -232,7 +225,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test combined ifloggedin and ifloggedout tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_combined_loggedin_loggedout(): void {
@@ -261,7 +253,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifloggedinas tag (requires login as functionality).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifloggedinas(): void {
@@ -282,7 +273,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test ifnotloggedinas tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifnotloggedinas(): void {
@@ -303,7 +293,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test nested conditional tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_nested_conditionals(): void {
@@ -328,7 +317,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test conditional with other content.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_conditional_with_other_content(): void {
@@ -348,7 +336,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test multiple conditional tags in same text.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_multiple_conditionals(): void {
@@ -368,7 +355,6 @@ final class conditional_loggedin_test extends \advanced_testcase {
     /**
      * Test empty conditional tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_empty_conditional_tags(): void {

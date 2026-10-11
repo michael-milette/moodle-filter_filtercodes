@@ -26,6 +26,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Unit tests for FilterCodes course tags.
  *
@@ -33,6 +34,7 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class courses_test extends \advanced_testcase {
     /**
@@ -56,7 +58,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test coursename tag in a course.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursename_in_course_context(): void {
@@ -81,7 +82,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test coursename tag outside of a course.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursename_on_site_page(): void {
@@ -97,7 +97,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test coursename tag with course ID parameter.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursename_with_id(): void {
@@ -118,7 +117,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test courseshortname tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_courseshortname(): void {
@@ -141,7 +139,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test courseid tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_courseid(): void {
@@ -170,7 +167,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test coursecontextid tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursecontextid(): void {
@@ -199,7 +195,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test courseidnumber tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_courseidnumber(): void {
@@ -220,7 +215,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test coursesummary tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursesummary(): void {
@@ -242,7 +236,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test coursesummary tag with course ID parameter.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursesummary_with_id(): void {
@@ -260,7 +253,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test courseparticipantcount tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_courseparticipantcount(): void {
@@ -284,7 +276,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test coursecount students tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursecount_students(): void {
@@ -313,7 +304,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test coursecount students:active tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursecount_students_active(): void {
@@ -381,7 +371,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test coursestartdate tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursestartdate(): void {
@@ -404,7 +393,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test courseenddate tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_courseenddate(): void {
@@ -427,7 +415,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test courseenrolmentdate tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_courseenrolmentdate(): void {
@@ -455,7 +442,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test mycourses tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_mycourses(): void {
@@ -495,7 +481,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test courseimage-url tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_courseimage_url(): void {
@@ -517,7 +502,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test sectionid tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_sectionid(): void {
@@ -545,7 +529,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test multiple course tags in one string.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_multiple_course_tags(): void {
@@ -581,7 +564,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test course tags outside of course context (should show site values).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_course_tags_outside_course(): void {
@@ -630,7 +612,6 @@ final class courses_test extends \advanced_testcase {
     /**
      * Test that course ID tags do not describe a hidden course to an ordinary user.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_course_id_tags_omit_hidden_course(): void {
@@ -665,7 +646,6 @@ Actual: '%s'", $filtered)
      *
      * This is the behaviour existing sites keep when they upgrade.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_course_id_tags_describe_hidden_course_when_allowed(): void {
@@ -692,7 +672,6 @@ Actual: '%s'", $filtered)
     /**
      * Test that users allowed to see hidden courses still get a description of them.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_course_id_tags_describe_hidden_course_for_privileged_user(): void {
@@ -719,7 +698,6 @@ Actual: '%s'", $filtered)
     /**
      * Test that visible courses are unaffected by the hidden course restriction.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_course_id_tags_describe_visible_course(): void {

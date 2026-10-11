@@ -26,6 +26,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Unit tests for FilterCodes content tags.
  *
@@ -57,7 +58,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test getstring tag with default component.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_getstring_default_component(): void {
@@ -74,7 +74,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test getstring tag with specified component.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_getstring_with_component(): void {
@@ -91,7 +90,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test FontAwesome icon tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_fontawesome_icons(): void {
@@ -117,7 +115,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test glyphicon tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_glyphicon(): void {
@@ -139,7 +136,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test note tag (should not display).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_note_tag(): void {
@@ -163,7 +159,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test help tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_help_tag(): void {
@@ -185,7 +180,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test info tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_info_tag(): void {
@@ -207,7 +201,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test alert tag with different styles.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_alert_tags(): void {
@@ -229,7 +222,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test alert tag without style (should default).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_alert_default(): void {
@@ -246,7 +238,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test highlight tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_highlight_tag(): void {
@@ -265,7 +256,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test marktext tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_marktext_tag(): void {
@@ -287,7 +277,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test markborder tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_markborder_tag(): void {
@@ -309,7 +298,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test label tag with different types.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_label_tags(): void {
@@ -326,7 +314,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test label tag without type (should default to info).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_label_default(): void {
@@ -343,7 +330,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test button tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag(): void {
@@ -370,7 +356,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test that a quote in a button URL cannot introduce an unwanted attribute.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_url_cannot_inject_attributes(): void {
@@ -389,11 +374,11 @@ final class content_test extends \advanced_testcase {
         );
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('button_unsafe_scheme_provider')]
     /**
      * Test that button URLs using a scheme which can run script are dropped.
      *
      * @dataProvider button_unsafe_scheme_provider
-     * @covers \filter_filtercodes\text_filter::filter
      * @param string $url URL to place in the tag.
      * @return void
      */
@@ -424,11 +409,11 @@ final class content_test extends \advanced_testcase {
         ];
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('button_safe_url_provider')]
     /**
      * Test that button URLs which are merely unusual continue to work.
      *
      * @dataProvider button_safe_url_provider
-     * @covers \filter_filtercodes\text_filter::filter
      * @param string $url URL to place in the tag.
      * @param string $expected Expected href value.
      * @return void
@@ -471,7 +456,6 @@ final class content_test extends \advanced_testcase {
      * ftp is a perfectly safe scheme but is not part of the default allow list, so the button must
      * not link to it unless an administrator adds it.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_rejects_scheme_not_in_allowed_list(): void {
@@ -488,7 +472,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test that a scheme added to the Allowed URL schemes setting is honoured.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_allows_configured_extra_scheme(): void {
@@ -508,7 +491,6 @@ final class content_test extends \advanced_testcase {
      * Test that clearing the Allowed URL schemes setting disallows every scheme, leaving only
      * relative links working. Clearing the setting must fail closed, never allow everything.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_allowedurlschemes_empty_allows_only_relative(): void {
@@ -541,7 +523,6 @@ final class content_test extends \advanced_testcase {
      * A site upgraded through the web interface has no value for a new setting until the
      * administrator saves the new settings page. Existing buttons must keep working until then.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_allowedurlschemes_unset_uses_default(): void {
@@ -569,7 +550,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test that the Allowed URL schemes setting tolerates capitals, trailing colons and commas.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_allowedurlschemes_lenient_format(): void {
@@ -591,7 +571,6 @@ final class content_test extends \advanced_testcase {
      * Test that the default of the Allowed URL schemes setting matches the default used by the filter
      * when the setting has not been saved.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_allowedurlschemes_default_matches_filter(): void {
@@ -614,7 +593,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test that an ampersand in a button URL is not double encoded.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_ampersand_not_double_encoded(): void {
@@ -636,7 +614,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test that the documented way of opening a button in a new tab still works.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_target_attribute(): void {
@@ -663,7 +640,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test which additional button attributes are kept and which are discarded.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_attribute_allowlist(): void {
@@ -704,7 +680,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test that a button can open a Bootstrap modal, but cannot use other Bootstrap toggles.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_button_tag_bootstrap_modal_toggle(): void {
@@ -730,7 +705,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test editingtoggle tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_editingtoggle(): void {
@@ -745,7 +719,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test lang tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_lang_tag(): void {
@@ -759,7 +732,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test recaptcha tag when logged in (should be blank).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_recaptcha_when_logged_in(): void {
@@ -778,7 +750,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test formsesskey tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_formsesskey(): void {
@@ -809,7 +780,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test urlencode tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_urlencode_tag(): void {
@@ -828,7 +798,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test rawurlencode tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_rawurlencode_tag(): void {
@@ -847,7 +816,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test keyboard tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_keyboard_tag(): void {
@@ -866,7 +834,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test qrcode tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_qrcode_tag(): void {
@@ -884,11 +851,11 @@ final class content_test extends \advanced_testcase {
         );
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('qrcode_injection_provider')]
     /**
      * Test that QR code content cannot add attributes to the generated image.
      *
      * @dataProvider qrcode_injection_provider
-     * @covers \filter_filtercodes\text_filter::filter
      * @param string $content Content to place between the tags.
      * @return void
      */
@@ -924,7 +891,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test showmore tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_showmore_tag(): void {
@@ -943,7 +909,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test multiple content tags in one string.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_multiple_content_tags(): void {
@@ -975,7 +940,6 @@ final class content_test extends \advanced_testcase {
     /**
      * Test global custom tags (if configured).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_global_tag(): void {

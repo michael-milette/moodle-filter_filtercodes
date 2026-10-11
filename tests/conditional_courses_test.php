@@ -27,6 +27,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Test course conditional tags.
  *
@@ -47,7 +48,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifenrolled conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifenrolled_when_enrolled(): void {
         global $USER, $PAGE;
@@ -71,7 +71,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifenrolled when not enrolled.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifenrolled_not_enrolled(): void {
         global $PAGE;
@@ -94,7 +93,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotenrolled conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotenrolled(): void {
         global $PAGE;
@@ -121,7 +119,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifincourse with specific course ID.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifincourse(): void {
         global $USER;
@@ -142,7 +139,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotincourse with specific course ID.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotincourse(): void {
         $user = $this->getDataGenerator()->create_user();
@@ -163,7 +159,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifinsection conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifinsection(): void {
         global $PAGE;
@@ -186,7 +181,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotinsection conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotinsection(): void {
         global $PAGE;
@@ -208,7 +202,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifingroup conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifingroup(): void {
         global $USER, $PAGE;
@@ -235,7 +228,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotingroup conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotingroup(): void {
         global $USER, $PAGE;
@@ -264,7 +256,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test nested ifingroup tags.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifingroup_nested(): void {
         global $USER, $PAGE;
@@ -310,7 +301,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test partial/unbalanced ifingroup tags.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifingroup_partial_tags(): void {
         global $USER, $PAGE;
@@ -384,7 +374,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifingrouping conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifingrouping(): void {
         global $USER, $PAGE;
@@ -413,7 +402,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotingrouping conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotingrouping(): void {
         global $USER, $PAGE;
@@ -442,7 +430,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test nested ifingrouping tags.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifingrouping_nested(): void {
         global $USER, $PAGE;
@@ -492,7 +479,6 @@ final class conditional_courses_test extends \advanced_testcase {
     /**
      * Test sequential ifingrouping blocks where one contains a nested same-type block.
      * Regression test for GitHub issues #366 and #367.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifingrouping_sequential_with_nested(): void {
         global $USER, $PAGE;
@@ -540,7 +526,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test partial/unbalanced ifingrouping tags.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifingrouping_partial_tags(): void {
         global $USER, $PAGE;
@@ -580,7 +565,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifvisible conditional (course visibility).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifvisible(): void {
         global $PAGE;
@@ -602,7 +586,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotvisible conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotvisible(): void {
         global $PAGE;
@@ -624,7 +607,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifinactivity conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifinactivity(): void {
         global $PAGE;
@@ -651,7 +633,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotinactivity conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotinactivity(): void {
         global $PAGE;
@@ -675,7 +656,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifactivitycompleted conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifactivitycompleted(): void {
         global $USER;
@@ -708,7 +688,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotactivitycompleted conditional.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotactivitycompleted(): void {
         global $USER;
@@ -740,7 +719,6 @@ final class conditional_courses_test extends \advanced_testcase {
      * Test ifactivitycompleted with COMPLETION_COMPLETE_FAIL (issue #346).
      *
      * A graded activity that the user failed must NOT be treated as completed.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifactivitycompleted_fail_state(): void {
         global $DB, $USER;
@@ -785,7 +763,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifenrolpage conditional (on enrolment page).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifenrolpage(): void {
         global $PAGE;
@@ -807,7 +784,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test ifnotenrolpage conditional (not on enrolment page).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotenrolpage(): void {
         global $PAGE;
@@ -828,7 +804,6 @@ final class conditional_courses_test extends \advanced_testcase {
 
     /**
      * Test combined course conditionals.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_combined_course_conditionals(): void {
         global $USER;

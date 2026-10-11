@@ -26,6 +26,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Unit tests for FilterCodes HTML and language tags.
  *
@@ -33,6 +34,7 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class html_lang_test extends \advanced_testcase {
     /**
@@ -56,7 +58,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test langx tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_langx_tags(): void {
@@ -96,7 +97,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test invalid langx tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_langx_invalid(): void {
@@ -120,7 +120,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test nbsp (non-breaking space) tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_nbsp(): void {
@@ -153,7 +152,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test soft hyphen tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_soft_hyphen(): void {
@@ -186,7 +184,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test hr (horizontal rule) tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_hr_tag(): void {
@@ -201,7 +198,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test details/summary tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_details_summary(): void {
@@ -243,7 +239,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test details with CSS class.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_details_with_class(): void {
@@ -265,7 +260,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test multilang tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_multilang(): void {
@@ -294,7 +288,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test escaping tags with brackets.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_escape_tags(): void {
@@ -312,7 +305,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test escaping encoded tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_escape_encoded_tags(): void {
@@ -330,7 +322,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test mixed HTML and lang tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_mixed_html_lang_tags(): void {
@@ -357,7 +348,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test nested langx tags (should not work).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_nested_langx(): void {
@@ -371,7 +361,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test multiple identical tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_multiple_identical_tags(): void {
@@ -385,7 +374,6 @@ final class html_lang_test extends \advanced_testcase {
     /**
      * Test langx with non-existent language code.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_langx_nonexistent_language(): void {

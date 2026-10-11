@@ -26,12 +26,15 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\scraper::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Unit tests for FilterCodes scrape tag.
  *
  * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \filter_filtercodes\scraper
+ * @covers     \filter_filtercodes\text_filter
  */
 final class scrape_test extends \advanced_testcase {
     /** @var array|null Original forced plugin settings for FilterCodes. */
@@ -110,6 +113,22 @@ final class scrape_test extends \advanced_testcase {
     }
 
     /**
+     * Get a private method of the scraper so that it can be tested directly.
+     *
+     * @param string $name Method name.
+     * @return \ReflectionMethod
+     */
+    private function getscrapermethod($name) {
+        $method = new \ReflectionMethod(scraper::class, $name);
+        // Private methods are accessible through reflection from PHP 8.1. Calling setAccessible()
+        // there does nothing and is deprecated from PHP 8.5, so only call it on older versions.
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
+        return $method;
+    }
+
+    /**
      * Skip tests that need Moodle's cURL mock hook when it is unavailable.
      *
      * @return void
@@ -127,7 +146,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test disabled scrape support leaves the tag unchanged.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_scrape_disabled_leaves_tag_unchanged(): void {
@@ -142,7 +160,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test non-HTTP schemes are rejected.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_rejects_non_http_scheme(): void {
@@ -155,7 +172,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test the file:// scheme is rejected (regression test for issue #361).
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_rejects_file_scheme(): void {
@@ -181,7 +197,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test root-relative URLs are resolved against wwwroot.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_supports_root_relative_url(): void {
@@ -197,7 +212,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test tag, class and id extraction.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_extracts_matching_node(): void {
@@ -213,7 +227,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test no matching node returns the missing content message (when enabled).
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_missing_node_returns_message(): void {
@@ -229,7 +242,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test scrape failure renders nothing when scrape_show_missing is disabled (default).
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_silent_failure_when_show_missing_disabled(): void {
@@ -247,7 +259,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test unsafe HTML in the scraped content is cleaned.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_cleans_external_content(): void {
@@ -270,7 +281,6 @@ final class scrape_test extends \advanced_testcase {
      * It is intentionally NOT cleaned, so existing courses that embed wrappers, scripts,
      * or other markup via code="..." continue to render unchanged.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_code_attribute_is_raw_for_bc(): void {
@@ -290,7 +300,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test host allowlist blocks non-matching hosts.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_allowed_hosts_blocks_other_hosts(): void {
@@ -304,7 +313,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test wildcard allowlist matches subdomains and rejects the apex.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_allowed_hosts_wildcard_semantics(): void {
@@ -336,7 +344,6 @@ final class scrape_test extends \advanced_testcase {
      * leak nodes the author did not intend to extract. After escaping, the literal
      * value matches no node and the failure path is taken.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_blocks_xpath_injection_via_class(): void {
@@ -359,7 +366,6 @@ final class scrape_test extends \advanced_testcase {
      *
      * Exercises the concat() branch of xpathliteral().
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_handles_class_with_mixed_quotes(): void {
@@ -379,7 +385,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test oversized responses are rejected.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_rejects_oversized_response(): void {
@@ -399,13 +404,11 @@ final class scrape_test extends \advanced_testcase {
      * helper does not populate the content_type field. A missing Content-Type header is
      * rejected because legitimate web servers should declare one.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_content_type_allowlist(): void {
         $scraper = new scraper();
-        $method = new \ReflectionMethod(scraper::class, 'isscrapecontenttypeallowed');
-        $method->setAccessible(true);
+        $method = $this->getscrapermethod('isscrapecontenttypeallowed');
 
         // Allowed types.
         $this->assertTrue($method->invoke($scraper, ['content_type' => 'text/html']));
@@ -428,7 +431,6 @@ final class scrape_test extends \advanced_testcase {
     /**
      * Test successful scrape output is cached for the configured TTL.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_caches_successful_output(): void {
@@ -457,13 +459,11 @@ final class scrape_test extends \advanced_testcase {
      * The scraper only takes over following redirects when a list is configured, so this
      * decides whether each hop of a redirect chain is checked against the list.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_allowed_hosts_detection(): void {
         $scraper = new scraper();
-        $method = new \ReflectionMethod(scraper::class, 'hasscrapeallowedhosts');
-        $method->setAccessible(true);
+        $method = $this->getscrapermethod('hasscrapeallowedhosts');
 
         $this->setfiltercodesconfig('scrape_allowed_hosts', '');
         $this->assertFalse($method->invoke($scraper), 'An empty setting is not an allowed hosts list.');
@@ -483,13 +483,11 @@ final class scrape_test extends \advanced_testcase {
      * Each hop of a redirect chain is passed through this check, so a host which is not on
      * the list cannot be reached by redirecting to it from a host which is.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @return void
      */
     public function test_scrape_redirect_target_is_checked_against_allowed_hosts(): void {
         $scraper = new scraper();
-        $method = new \ReflectionMethod(scraper::class, 'isscrapehostallowed');
-        $method->setAccessible(true);
+        $method = $this->getscrapermethod('isscrapehostallowed');
 
         $this->setfiltercodesconfig('scrape_allowed_hosts', 'allowed.example');
 
@@ -513,13 +511,13 @@ final class scrape_test extends \advanced_testcase {
         $this->setfiltercodesconfig('scrape_allowed_hosts', '');
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('www_counterpart_provider')]
     /**
      * Test that a redirect between a site's www and bare address is recognised as the same site.
      *
      * A redirect is followed if its target is on the allowed hosts list, or if it only adds or
      * removes "www." from the host which redirected.
      *
-     * @covers \filter_filtercodes\scraper::scrapehtml
      * @dataProvider www_counterpart_provider
      * @param string $from URL which redirected.
      * @param string $to URL it redirected to.
@@ -528,8 +526,7 @@ final class scrape_test extends \advanced_testcase {
      */
     public function test_scrape_redirect_www_counterpart(string $from, string $to, bool $expected): void {
         $scraper = new scraper();
-        $method = new \ReflectionMethod(scraper::class, 'iswwwcounterpart');
-        $method->setAccessible(true);
+        $method = $this->getscrapermethod('iswwwcounterpart');
 
         $this->assertSame($expected, $method->invoke($scraper, $from, $to));
     }

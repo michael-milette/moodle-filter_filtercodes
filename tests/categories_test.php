@@ -26,6 +26,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Unit tests for FilterCodes category tags.
  *
@@ -33,6 +34,7 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class categories_test extends \advanced_testcase {
     /**
@@ -56,7 +58,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categoryid tag in a course.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categoryid_in_course(): void {
@@ -78,7 +79,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categoryname tag in a course.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categoryname_in_course(): void {
@@ -100,7 +100,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categorynumber tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categorynumber(): void {
@@ -125,7 +124,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categorydescription tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categorydescription(): void {
@@ -151,7 +149,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categories tag (all categories).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categories_all(): void {
@@ -187,7 +184,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categories0 tag (top-level categories only).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categories0_toplevel_only(): void {
@@ -221,7 +217,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categoriesx tag (other categories in current category).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categoriesx(): void {
@@ -252,7 +247,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categoriesmenu tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categoriesmenu(): void {
@@ -281,7 +275,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categories0menu tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categories0menu(): void {
@@ -304,7 +297,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test categoriesxmenu tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_categoriesxmenu(): void {
@@ -332,7 +324,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test category tags outside course context.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_category_tags_outside_course(): void {
@@ -352,7 +343,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test multiple category tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_multiple_category_tags(): void {
@@ -389,7 +379,6 @@ final class categories_test extends \advanced_testcase {
     /**
      * Test hidden categories (admin should see, others should not).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_hidden_categories(): void {

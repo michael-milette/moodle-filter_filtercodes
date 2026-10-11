@@ -27,6 +27,7 @@
 namespace filter_filtercodes;
 use context_system;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Unit tests for FilterCodes profile tags.
  *
@@ -34,6 +35,7 @@ use context_system;
  *
  * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class profile_test extends \advanced_testcase {
     /**
@@ -56,7 +58,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test basic profile tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_basic_profile_tags(): void {
@@ -150,7 +151,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test alternatename tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_alternatename(): void {
@@ -188,7 +188,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test middlename tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_middlename(): void {
@@ -212,7 +211,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test phonetic name tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_phonetic_names(): void {
@@ -244,7 +242,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test timezone tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_timezone(): void {
@@ -266,7 +263,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test preferredlanguage tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_preferredlanguage(): void {
@@ -294,7 +290,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test userdescription tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_userdescription(): void {
@@ -317,7 +312,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test webpage tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_webpage(): void {
@@ -353,7 +347,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test user picture tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_userpicture_tags(): void {
@@ -393,7 +386,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test profile when logged out.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_profile_when_logged_out(): void {
@@ -422,7 +414,6 @@ final class profile_test extends \advanced_testcase {
     /**
      * Test multiple profile tags in one string.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_multiple_profile_tags(): void {

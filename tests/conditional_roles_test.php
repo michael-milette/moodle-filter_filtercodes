@@ -26,6 +26,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Unit tests for FilterCodes role-based conditional tags.
  *
@@ -33,6 +34,7 @@ namespace filter_filtercodes;
  *
  * @copyright  2017-2026 TNG Consulting Inc. - www.tngconsulting.ca
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_filtercodes\text_filter
  */
 final class conditional_roles_test extends \advanced_testcase {
     /**
@@ -55,7 +57,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifadmin tag as administrator.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifadmin_as_admin(): void {
@@ -74,7 +75,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifadmin tag as regular user.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifadmin_as_user(): void {
@@ -94,7 +94,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifstudent tag as student in course.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifstudent_as_student(): void {
@@ -119,7 +118,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifstudent tag as teacher (should not show).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifstudent_as_teacher(): void {
@@ -143,7 +141,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifminstudent tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifminstudent(): void {
@@ -168,7 +165,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifteacher tag as editing teacher.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifteacher_as_teacher(): void {
@@ -193,7 +189,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifminteacher tag as teacher (should show).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifminteacher_as_teacher(): void {
@@ -218,7 +213,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifminteacher tag as student (should not show).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifminteacher_as_student(): void {
@@ -241,7 +235,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifassistant tag (non-editing teacher).
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifassistant(): void {
@@ -267,7 +260,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifminassistant tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifminassistant(): void {
@@ -292,7 +284,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifmanager tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifmanager(): void {
@@ -317,7 +308,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifminmanager tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifminmanager(): void {
@@ -341,7 +331,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifcreator tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifcreator(): void {
@@ -365,7 +354,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifmincreator tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifmincreator(): void {
@@ -389,7 +377,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifincohort tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifincohort(): void {
@@ -425,7 +412,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifnotincohort tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifnotincohort(): void {
@@ -446,7 +432,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test combined role conditionals.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_combined_role_conditionals(): void {
@@ -466,7 +451,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifcustomrole tag when user has the specified role.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifcustomrole_with_role(): void {
@@ -496,7 +480,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test ifcustomrole tag when user does not have the specified role.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifcustomrole_without_role(): void {
@@ -528,7 +511,6 @@ final class conditional_roles_test extends \advanced_testcase {
      * Regression test for Fix-356: a tag name typo caused {ifnotcustomrole} to be
      * skipped entirely, leaving raw tags in the output.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifnotcustomrole_with_role(): void {
@@ -565,7 +547,6 @@ final class conditional_roles_test extends \advanced_testcase {
      *
      * Regression test for Fix-356.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ifnotcustomrole_without_role(): void {
@@ -604,7 +585,6 @@ final class conditional_roles_test extends \advanced_testcase {
      * parametric role tag in both true and false branches and asserts no raw tag
      * remnants survive filtering, regardless of whether the user has the role.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_parametric_role_tags_never_leak_raw(): void {
@@ -657,7 +637,6 @@ final class conditional_roles_test extends \advanced_testcase {
     /**
      * Test hierarchical role conditionals.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_hierarchical_roles(): void {

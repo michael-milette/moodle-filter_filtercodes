@@ -27,6 +27,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Test miscellaneous conditional tags.
  *
@@ -47,7 +48,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifdev conditional (developer mode).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifdev(): void {
         global $CFG;
@@ -69,7 +69,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifdev when not in developer mode.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifdev_not_dev(): void {
         global $CFG;
@@ -87,7 +86,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifhome conditional (on homepage).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifhome(): void {
         global $PAGE;
@@ -109,7 +107,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifnothome conditional (not on homepage).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnothome(): void {
         global $PAGE;
@@ -131,7 +128,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifdashboard conditional (on dashboard).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifdashboard(): void {
         global $PAGE;
@@ -153,7 +149,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifcourserequests conditional (course requests enabled).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifcourserequests(): void {
         global $CFG;
@@ -174,7 +169,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifcourserequests when disabled.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifcourserequests_disabled(): void {
         global $CFG;
@@ -191,7 +185,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifeditmode conditional (edit mode enabled).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifeditmode(): void {
         global $PAGE;
@@ -213,7 +206,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test iftheme conditional (specific theme active).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_iftheme(): void {
         global $CFG, $PAGE;
@@ -234,7 +226,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifnottheme conditional (specific theme not active).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnottheme(): void {
         $text = '{ifnottheme nonexistenttheme12345}Not using this theme{/ifnottheme}';
@@ -250,7 +241,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifprofile_field_* conditional (custom profile field).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifprofile_field(): void {
         global $USER, $DB;
@@ -283,7 +273,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifprofile with "is" operator.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifprofile_is(): void {
         global $USER;
@@ -303,7 +292,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifprofile with "not" operator.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifprofile_not(): void {
         global $USER;
@@ -323,7 +311,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifprofile with "contains" operator.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifprofile_contains(): void {
         global $USER;
@@ -343,7 +330,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifprofile with "in" operator (value contains field).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifprofile_in(): void {
         global $USER;
@@ -363,7 +349,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test nested ifprofile tags.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifprofile_nested(): void {
         global $USER;
@@ -405,7 +390,6 @@ final class conditional_misc_test extends \advanced_testcase {
      *
      * Migration to the if_tag() helper unlocks graceful handling of incomplete
      * tag pairs that the previous innermost-first regex approach did not handle.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifprofile_partial_tags(): void {
         global $USER;
@@ -437,7 +421,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifmobile conditional (mobile device detected).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifmobile(): void {
         global $CFG;
@@ -457,7 +440,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifnotmobile conditional (not mobile device).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifnotmobile(): void {
         $text = '{ifnotmobile}Desktop device{/ifnotmobile}';
@@ -472,7 +454,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test iftenant conditional (Moodle Workplace tenant).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_iftenant(): void {
         $text = '{iftenant 1}Classic tenant fallback detected{/iftenant}';
@@ -487,7 +468,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test ifworkplace conditional (Moodle Workplace).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_ifworkplace(): void {
         $text = '{ifworkplace}Moodle Workplace detected{/ifworkplace}';
@@ -502,7 +482,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test combined misc conditionals.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_combined_misc_conditionals(): void {
         global $CFG;
@@ -530,7 +509,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test nested misc conditionals.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_nested_misc_conditionals(): void {
         global $CFG;
@@ -550,7 +528,6 @@ final class conditional_misc_test extends \advanced_testcase {
 
     /**
      * Test empty conditional content.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_misc_conditional_empty(): void {
         global $CFG;

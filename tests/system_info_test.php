@@ -26,6 +26,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Unit tests for FilterCodes system information tags.
  *
@@ -57,7 +58,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test usercount tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_usercount(): void {
@@ -80,7 +80,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test usersactive tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_usersactive(): void {
@@ -103,7 +102,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test siteyear tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_siteyear(): void {
@@ -119,7 +117,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test sitename tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_sitename(): void {
@@ -136,7 +133,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test wwwroot tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_wwwroot(): void {
@@ -153,7 +149,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test protocol tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_protocol(): void {
@@ -169,7 +164,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test coursecount tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursecount(): void {
@@ -192,7 +186,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test coursesactive tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_coursesactive(): void {
@@ -215,7 +208,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test ipaddress tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_ipaddress(): void {
@@ -232,7 +224,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test sesskey tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_sesskey(): void {
@@ -256,7 +247,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test pagepath tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_pagepath(): void {
@@ -271,7 +261,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test sitesummary tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_sitesummary(): void {
@@ -289,7 +278,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test diskfreespace tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_diskfreespace(): void {
@@ -311,7 +299,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test support tags.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_support_tags(): void {
@@ -338,7 +325,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test filtercodes version tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_filtercodes_version(): void {
@@ -358,7 +344,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test readonly tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_readonly(): void {
@@ -374,7 +359,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test usersonline tag.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_usersonline(): void {
@@ -394,7 +378,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test now tag with date format.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_now_tag(): void {
@@ -422,7 +405,6 @@ final class system_info_test extends \advanced_testcase {
     /**
      * Test multiple system tags in one string.
      *
-     * @covers \filter_filtercodes\text_filter::filter
      * @return void
      */
     public function test_multiple_system_tags(): void {

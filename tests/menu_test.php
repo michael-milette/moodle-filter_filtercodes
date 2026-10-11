@@ -27,6 +27,7 @@
 
 namespace filter_filtercodes;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\filter_filtercodes\text_filter::class)]
 /**
  * Test menu tags.
  *
@@ -54,7 +55,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test categoriesmenu tag (all categories).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_categoriesmenu(): void {
         // Create some categories.
@@ -79,7 +79,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test categories0menu tag (top-level categories only).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_categories0menu(): void {
         // Create top-level and nested categories.
@@ -101,7 +100,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test categoriesxmenu tag (subcategories of current category).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_categoriesxmenu(): void {
         global $PAGE;
@@ -145,7 +143,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test toggleeditingmenu tag.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_toggleeditingmenu(): void {
         global $PAGE;
@@ -174,7 +171,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test mycoursesmenu tag.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_mycoursesmenu(): void {
         global $USER;
@@ -204,7 +200,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test courserequestmenu0 tag (basic course request menu).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_courserequestmenu0(): void {
         global $CFG;
@@ -221,7 +216,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test courserequestmenu tag.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_courserequestmenu(): void {
         global $CFG;
@@ -238,7 +232,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test menuadmin tag (admin menu items).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_menuadmin(): void {
         global $PAGE;
@@ -256,7 +249,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test menuadmin for non-admin user.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_menuadmin_nonadmin(): void {
         // Create and switch to regular user.
@@ -271,7 +263,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test menudev tag (developer menu items).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_menudev(): void {
         global $CFG;
@@ -289,7 +280,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test the links in the menudev tag and that it is only shown to site administrators.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_menudev_links(): void {
         $this->setAdminUser();
@@ -322,7 +312,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test menuthemes tag (themes menu).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_menuthemes(): void {
         global $CFG;
@@ -347,7 +336,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test menucoursemore tag (course additional menu items).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_menucoursemore(): void {
         $course = $this->getDataGenerator()->create_course(['fullname' => 'Course More Menu']);
@@ -362,7 +350,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test menuwishlist tag (wishlist menu - if applicable).
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_menuwishlist(): void {
         $text = '{menuwishlist}';
@@ -377,7 +364,6 @@ final class menu_test extends \advanced_testcase {
 
     /**
      * Test menu tags with logged out user.
-     * @covers \filter_filtercodes\text_filter::filter
      */
     public function test_menus_logged_out(): void {
         // Log out.
