@@ -1,11 +1,11 @@
 /* Older stylelint (Moodle 3.11/4.0) does not recognise @property, and its "-- reason" comments are not supported there. */
-/* stylelint-disable property-no-unknown, csstree/validator */
+/* stylelint-disable at-rule-no-unknown, property-no-unknown, csstree/validator */
 @property --percent {
     syntax: '<number>';
     inherits: true;
     initial-value: 0;
 }
-/* stylelint-enable property-no-unknown, csstree/validator */
+/* stylelint-enable at-rule-no-unknown, property-no-unknown, csstree/validator */
 
 .fc-chart-pie .chart-area .chart-image {
     width: auto;
