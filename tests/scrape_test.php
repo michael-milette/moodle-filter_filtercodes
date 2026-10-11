@@ -512,4 +512,45 @@ final class scrape_test extends \advanced_testcase {
 
         $this->setfiltercodesconfig('scrape_allowed_hosts', '');
     }
+
+    /**
+     * Test that a redirect between a site's www and bare address is recognised as the same site.
+     *
+     * A redirect is followed if its target is on the allowed hosts list, or if it only adds or
+     * removes "www." from the host which redirected.
+     *
+     * @covers \filter_filtercodes\scraper::scrapehtml
+     * @dataProvider www_counterpart_provider
+     * @param string $from URL which redirected.
+     * @param string $to URL it redirected to.
+     * @param bool $expected Whether the two are www counterparts.
+     * @return void
+     */
+    public function test_scrape_redirect_www_counterpart(string $from, string $to, bool $expected): void {
+        $scraper = new scraper();
+        $method = new \ReflectionMethod(scraper::class, 'iswwwcounterpart');
+        $method->setAccessible(true);
+
+        $this->assertSame($expected, $method->invoke($scraper, $from, $to));
+    }
+
+    /**
+     * Data provider for test_scrape_redirect_www_counterpart.
+     *
+     * @return array
+     */
+    public static function www_counterpart_provider(): array {
+        return [
+            'adds www' => ['https://example.com/a', 'https://www.example.com/a', true],
+            'removes www' => ['https://www.example.com/a', 'https://example.com/a', true],
+            'http to https with www' => ['http://example.com/a', 'https://www.example.com/a', true],
+            'ignores case' => ['https://Example.com/a', 'https://WWW.example.COM/a', true],
+            'same host' => ['https://example.com/a', 'https://example.com/b', false],
+            'other site with www' => ['https://example.com/a', 'https://www.elsewhere.example/a', false],
+            'other subdomain' => ['https://example.com/a', 'https://cdn.example.com/a', false],
+            'www without dot' => ['https://example.com/a', 'https://wwwexample.com/a', false],
+            'two www prefixes' => ['https://example.com/a', 'https://www.www.example.com/a', false],
+            'suffix match only' => ['https://evil.test/a', 'https://www.example.evil.test/a', false],
+        ];
+    }
 }

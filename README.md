@@ -914,7 +914,7 @@ Optional comma or newline separated list of hosts that {scrape} may request. Lea
 
 Wildcard entries match subdomains only. For example, `*.example.com` allows `www.example.com` and `assets.example.com` but does not allow the bare apex `example.com`. To allow both, list the apex on a separate line.
 
-When this list is in use, every host in a redirect chain is checked against it, not only the host you requested. An allowed host that redirects elsewhere will not be followed unless the destination is also on the list.
+When this list is in use, every host in a redirect chain is checked against it, not only the host you requested. An allowed host that redirects elsewhere will not be followed unless the destination is also on the list. The one exception is a site redirecting between its bare and www address, such as example.com to www.example.com or the reverse. That redirect is always followed, because it is the same site. A redirect from http to https on the same host is also followed.
 
 ### Display message when scrape content is unavailable
 

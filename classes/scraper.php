@@ -181,14 +181,21 @@ class scraper {
                 return false;
             }
 
-            // cURL reports where a redirect wanted to go whenever it was told not to follow it.
+            // Where a redirect wanted to go. Only reported when cURL was told not to follow it.
             $redirecturl = $followredirectshere && !empty($info['redirect_url']) ? $info['redirect_url'] : '';
             if ($redirecturl !== '') {
                 if ($hop === $maxredirects) {
                     return false;
                 }
+                $fromurl = $url;
                 $url = $this->normalizescrapeurl($redirecturl);
-                if ($url === false || !$this->isscrapehostallowed($url)) {
+                if ($url === false) {
+                    return false;
+                }
+                // A site moving between its www and bare address, such as example.com to
+                // www.example.com, is the same site, so it is followed even when only one of the
+                // two is listed. Any other host must be on the list.
+                if (!$this->isscrapehostallowed($url) && !$this->iswwwcounterpart($fromurl, $url)) {
                     return false;
                 }
                 continue;
@@ -271,6 +278,26 @@ class scraper {
         }
 
         return false;
+    }
+
+    /**
+     * Check whether two URLs are on the same host apart from a leading "www.".
+     *
+     * Used when following redirects, so that a site which redirects between example.com and
+     * www.example.com keeps working when only one of the two is in the allowed hosts list.
+     *
+     * @param string $fromurl URL which redirected.
+     * @param string $tourl URL it redirected to.
+     * @return bool True if one host is the other with "www." added or removed.
+     */
+    private function iswwwcounterpart($fromurl, $tourl) {
+        $from = strtolower((string) parse_url($fromurl, PHP_URL_HOST));
+        $to = strtolower((string) parse_url($tourl, PHP_URL_HOST));
+        if ($from === '' || $to === '' || $from === $to) {
+            return false;
+        }
+
+        return $to === 'www.' . $from || $from === 'www.' . $to;
     }
 
     /**
