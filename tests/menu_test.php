@@ -288,6 +288,39 @@ final class menu_test extends \advanced_testcase {
     }
 
     /**
+     * Test the links in the menudev tag and that it is only shown to site administrators.
+     * @covers \filter_filtercodes\text_filter::filter
+     */
+    public function test_menudev_links(): void {
+        $this->setAdminUser();
+        $result = format_text('{menudev}', FORMAT_HTML, ['filter' => true]);
+
+        foreach (['https://moodledev.io/', 'https://build.layoutit.com/', '/admin/phpinfo.php'] as $expected) {
+            $this->assertStringContainsString(
+                $expected,
+                $result,
+                sprintf("Developer menu should link to %s\nActual: '%s'", $expected, $result)
+            );
+        }
+        foreach (['moodle.org/development', 'moodledev.moodle.school', 'screenapp.io'] as $removed) {
+            $this->assertStringNotContainsString(
+                $removed,
+                $result,
+                sprintf("Developer menu should no longer link to %s\nActual: '%s'", $removed, $result)
+            );
+        }
+
+        // Not a site administrator, so the tag is removed without any menu items.
+        $this->setUser($this->getDataGenerator()->create_user());
+        $result = format_text('{menudev}', FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString(
+            'phpinfo',
+            $result,
+            sprintf("Non-admin users should not receive developer menu items\nActual: '%s'", $result)
+        );
+    }
+
+    /**
      * Test menuthemes tag (themes menu).
      * @covers \filter_filtercodes\text_filter::filter
      */

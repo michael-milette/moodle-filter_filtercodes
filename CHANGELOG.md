@@ -10,6 +10,11 @@ All notable changes to this project will be documented in this file.
 - The {button} tag no longer links to ftp:, irc:, nntp:, news:, rtsp:, rtmp:, teamspeak:, gopher: or mms: addresses by default. Supported web browsers have not opened ftp: links since 2021. Administrators who still need any of these can add them to the "Allowed URL schemes" setting.
 - Added pre-existing tags {coursesactive}, {courseunenrolurl}, {menulanguages} to README.md.
 
+### Updated
+
+- {menudev}: Dev docs now links to moodledev.io, Adminer to its current address and Page builder to build.layoutit.com. Removed the Screen recorder and Moodle Development School links, which no longer exist.
+- {menudev}: Corrected the documentation. The menu is shown to site administrators regardless of the debugging level.
+
 ### Security
 
 - Fixed a vulnerability in the {qrcode} tag which allowed unwanted HTML attributes to be added to a page.

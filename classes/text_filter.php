@@ -1088,7 +1088,7 @@ class text_filter extends \filtercodes_base_text_filter {
                     $menu .= '-{getstring:admin}purgecachespage{/getstring}|/admin/purgecaches.php' . PHP_EOL;
                     $menu .= '-###' . PHP_EOL;
                     if (file_exists($CFG->dirroot . '/local/adminer/version.php')) {
-                        $menu .= '-{getstring:local_adminer}pluginname{/getstring}|/local/adminer' . PHP_EOL;
+                        $menu .= '-{getstring:local_adminer}pluginname{/getstring}|/local/adminer/lib/run_adminer.php' . PHP_EOL;
                     }
                     if (file_exists($CFG->dirroot . '/local/codechecker/version.php')) {
                         $menu .= '-{getstring:local_codechecker}pluginname{/getstring}|/local/codechecker' . PHP_EOL;
@@ -1112,12 +1112,8 @@ class text_filter extends \filtercodes_base_text_filter {
                         . '{getstring:filter_filtercodes}photoeditorlink{/getstring}"'
                         . ' target="popup" onclick="window.open(\'{getstring:filter_filtercodes}photoeditorlink{/getstring}\''
                         . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
-                    $menu .= '-{getstring:filter_filtercodes}screenrec{/getstring}|'
-                        . '{getstring:filter_filtercodes}screenreclink{/getstring}"'
-                        . ' target="popup" onclick="window.open(\'{getstring:filter_filtercodes}screenreclink{/getstring}\''
-                        . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
                     $menu .= '-###' . PHP_EOL;
-                    $menu .= '-Dev docs|https://moodle.org/development|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
+                    $menu .= '-Dev docs|https://moodledev.io/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
                     $menu .= '-Dev forum|https://moodle.org/mod/forum/view.php?id=55|Moodle.org ({getstring}english{/getstring})' .
                             PHP_EOL;
                     $menu .= '-Tracker|https://moodle.atlassian.net/jira/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
@@ -1126,7 +1122,6 @@ class text_filter extends \filtercodes_base_text_filter {
                         . '&levels=aaa|W3C ({getstring}english{/getstring})' . PHP_EOL;
                     $menu .= '-###' . PHP_EOL;
                     $menu .= '-DevTuts|https://www.youtube.com/watch?v=UY_pcs4HdDM|{getstring}english{/getstring}' . PHP_EOL;
-                    $menu .= '-Moodle Development School|https://moodledev.moodle.school/|{getstring}english{/getstring}' . PHP_EOL;
                     $menuurl = 'https://moodle.academy/course/index.php?categoryid=4';
                     $menu .= '-Moodle Dev Academy|' . $menuurl . '|{getstring}english{/getstring}' . PHP_EOL;
                 }

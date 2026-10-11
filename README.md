@@ -304,7 +304,7 @@ Also, see Courses section below.
 * {courserequestmenu0} : Request a course / Course request in a top level custom menu.
 * {courserequestmenu} : Request a course / Course request in submenu.
 * {menuadmin} : Useful dynamic menu for Moodle teachers, managers and administrators.
-* {menudev} : Useful dynamic menu for Moodle developers. Only visible when debugging is set to DEVELOPER mode.
+* {menudev} : Useful dynamic menu for Moodle developers. Only visible to site administrators, and not while they have switched to another role. It does not depend on the debugging level; to show it only in developer debugging mode, place it inside {ifdev}{/ifdev}.
 * {menuthemes} : Theme switcher. Only for administrators. Not available after POST. Allow Theme Changes on URL must be enabled. Will be visible even when Administrator is using the **Log In As** feature to log in as a different user.
 * {menulanguages} : Language switcher for custom menu. Only displayed if the site has more than one language installed. Not available after POST.
 * {menucoursemore} : Adds the content of the secondary menu to a menu called "More". Useful for themes with pre-4.x style navigation.
@@ -604,16 +604,15 @@ This will display the enclosed content only if the user is logged in as an admin
     -###
     -Code checker|/local/codechecker
     -Moodle PHPdoc check|/local/moodlecheck
-    -Adminer|/local/adminer
+    -Adminer|/local/adminer/lib/run_adminer.php
     -{getstring}phpinfo{/getstring}|/admin/phpinfo.php
     -###
-    -Developer docs|https://moodle.org/development|Moodle.org
+    -Developer docs|https://moodledev.io/|Moodle.org
     -Developer forum|https://moodle.org/mod/forum/view.php?id=55|Moodle.org
     -Tracker|https://tracker.moodle.org/|Moodle.org
     -AMOS|https://lang.moodle.org/|Moodle.org
     -Moodle Academy for Developers|https://moodle.academy/course/index.php?categoryid=4
     -Development Tutorial|https://www.youtube.com/watch?v=UY_pcs4HdDM
-    -Moodle Development School|https://moodledev.moodle.school/
     {/ifdev}
 
 Notes:
