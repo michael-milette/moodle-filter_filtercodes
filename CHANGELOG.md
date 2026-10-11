@@ -19,6 +19,8 @@ All notable changes to this project will be documented in this file.
 
 - Fixed a vulnerability in the {qrcode} tag which allowed unwanted HTML attributes to be added to a page.
 - Fixed a vulnerability in the {button} tag which allowed unwanted HTML attributes and unsafe links to be added to a page.
+  - IMPORTANT: {button} no longer links to javascript: addresses, such as {button javascript:window.print()}. These buttons are still displayed, but do nothing when clicked. If your site relies on them, go to Site Administration > Plugins > Filters > Filter Codes and add `javascript` on its own line in the "Allowed URL schemes" setting. Only do this if you trust everyone who can edit content on your site, because it allows them to run scripts in the browser of anyone who clicks the button.
+  - Extra attributes other than target, rel, title, id, class, aria-label, download and data-bs-toggle/data-toggle="modal" are now ignored. This includes onclick and style.
 
 ## [3.0.1] 2026-07-22
 
