@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 - {menudev}: Dev docs now links to moodledev.io, Adminer to its current address and Page builder to build.layoutit.com. Removed the Screen recorder and Moodle Development School links, which no longer exist.
 - {menudev}: Corrected the documentation. The menu is shown to site administrators regardless of the debugging level.
+- {menudev}, {menuadmin}: Fixed the Page builder, Photo editor and Layoutit links going to an invalid address on Moodle 5.3 and later. Moodle 5.3's new navigation menu does not support popup windows, so on Moodle 5.3+ these links now open in the same window. On earlier versions they still open in a popup. The Layoutit link now uses the current Layoutit address.
 
 ### Security
 

@@ -787,6 +787,26 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * Build the address part of a custom menu item which opens in a popup window where possible.
+     *
+     * Before Moodle 5.3, custom menu items are rendered by Mustache templates which insert the
+     * address unescaped, so closing the address early adds target and onclick attributes to the
+     * link. From Moodle 5.3, the primary navigation is rendered by React, which only takes the
+     * address and escapes it, so those attributes would become part of a broken address. In that
+     * case the item is a plain link which opens in the same window.
+     *
+     * @param string $url Address of the page to open. May contain FilterCodes tags.
+     * @return string The custom menu item address, optionally followed by popup attributes.
+     */
+    private function popupmenuurl($url) {
+        if (method_exists('\core\navigation\output\primary', 'export_react_props')) {
+            return $url;
+        }
+        return $url . '" target="popup" onclick="window.open(\'' . $url . '\',\'popup\',\'width=1340,height=700\');'
+            . ' return false;';
+    }
+
+    /**
      * Filter a URL destined for the href attribute of a generated link.
      *
      * Only schemes which the administrator has allowed are permitted. The list of allowed schemes is
@@ -1010,9 +1030,9 @@ class text_filter extends \filtercodes_base_text_filter {
                         . '?id={courseid}' . PHP_EOL;
                     $menu .= '-{getstring}course{/getstring}: {getstring}reset{/getstring}|/course/reset.php?id={courseid}'
                         . PHP_EOL;
-                    $menu .= '-Course: Layoutit|https://www.layoutit.com/build" target="popup" ' .
-                        'onclick="window.open(\'https://www.layoutit.com/build\',\'popup\',\'width=1340,height=700\');' .
-                        ' return false;|Bootstrap Page Builder' . PHP_EOL;
+                    $menu .= '-Course: Layoutit|'
+                        . $this->popupmenuurl('{getstring:filter_filtercodes}pagebuilderlink{/getstring}')
+                        . '|Bootstrap Page Builder' . PHP_EOL;
                     $menu .= '{/ifincourse}' . PHP_EOL;
                     $menu .= '-###' . PHP_EOL;
                 }
@@ -1138,13 +1158,9 @@ class text_filter extends \filtercodes_base_text_filter {
                     $menu .= '-{getstring}phpinfo{/getstring}|/admin/phpinfo.php' . PHP_EOL;
                     $menu .= '-###' . PHP_EOL;
                     $menu .= '-{getstring:filter_filtercodes}pagebuilder{/getstring}|'
-                        . '{getstring:filter_filtercodes}pagebuilderlink{/getstring}"'
-                        . ' target="popup" onclick="window.open(\'{getstring:filter_filtercodes}pagebuilderlink{/getstring}\''
-                        . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
+                        . $this->popupmenuurl('{getstring:filter_filtercodes}pagebuilderlink{/getstring}') . PHP_EOL;
                     $menu .= '-{getstring:filter_filtercodes}photoeditor{/getstring}|'
-                        . '{getstring:filter_filtercodes}photoeditorlink{/getstring}"'
-                        . ' target="popup" onclick="window.open(\'{getstring:filter_filtercodes}photoeditorlink{/getstring}\''
-                        . ',\'popup\',\'width=1340,height=700\'); return false;' . PHP_EOL;
+                        . $this->popupmenuurl('{getstring:filter_filtercodes}photoeditorlink{/getstring}') . PHP_EOL;
                     $menu .= '-###' . PHP_EOL;
                     $menu .= '-Dev docs|https://moodledev.io/|Moodle.org ({getstring}english{/getstring})' . PHP_EOL;
                     $menu .= '-Dev forum|https://moodle.org/mod/forum/view.php?id=55|Moodle.org ({getstring}english{/getstring})' .

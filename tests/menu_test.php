@@ -248,6 +248,68 @@ final class menu_test extends \advanced_testcase {
     }
 
     /**
+     * Assert that a custom menu item address opens in a popup where the primary navigation allows it.
+     *
+     * From Moodle 5.3 the primary navigation is rendered by React, which escapes the whole address,
+     * so the item must be a plain link. Before that, popup attributes are appended to the address.
+     *
+     * @param string $url Address the menu item should open.
+     * @param string $result Filtered custom menu text.
+     * @return void
+     */
+    private function assert_popup_menu_url(string $url, string $result): void {
+        if (method_exists('\core\navigation\output\primary', 'export_react_props')) {
+            // The address is followed by the optional title, the next line or the end of the text.
+            $this->assertMatchesRegularExpression(
+                '/\|' . preg_quote($url, '/') . '(\||\r?\n|$)/',
+                $result,
+                sprintf("%s should be a plain link\nActual: '%s'", $url, $result)
+            );
+            $this->assertStringNotContainsString(
+                'onclick',
+                $result,
+                sprintf("Menu addresses should not contain popup attributes\nActual: '%s'", $result)
+            );
+        } else {
+            $this->assertStringContainsString(
+                '|' . $url . '" target="popup" onclick="window.open(\'' . $url . '\',\'popup\',\'width=1340,height=700\');'
+                    . ' return false;',
+                $result,
+                sprintf("%s should open in a popup\nActual: '%s'", $url, $result)
+            );
+        }
+    }
+
+    /**
+     * Test that the Layoutit item of the menuadmin tag links to the current page builder.
+     */
+    public function test_menuadmin_course_links(): void {
+        global $PAGE;
+
+        $course = $this->getDataGenerator()->create_course();
+        $PAGE->set_course($course);
+        $PAGE->set_url('/course/view.php', ['id' => $course->id]);
+
+        // Already logged in as admin from setUp().
+        $result = format_text('{menuadmin}', FORMAT_HTML, [
+            'context' => \context_course::instance($course->id),
+            'filter' => true,
+        ]);
+
+        $this->assertStringContainsString(
+            'Course: Layoutit|https://build.layoutit.com/',
+            $result,
+            sprintf("Should link to the Layoutit page builder\nActual: '%s'", $result)
+        );
+        $this->assert_popup_menu_url('https://build.layoutit.com/', $result);
+        $this->assertStringNotContainsString(
+            'www.layoutit.com',
+            $result,
+            sprintf("Should no longer link to the old Layoutit address\nActual: '%s'", $result)
+        );
+    }
+
+    /**
      * Test menuadmin for non-admin user.
      */
     public function test_menuadmin_nonadmin(): void {
@@ -299,6 +361,8 @@ final class menu_test extends \advanced_testcase {
                 sprintf("Developer menu should no longer link to %s\nActual: '%s'", $removed, $result)
             );
         }
+        $this->assert_popup_menu_url('https://build.layoutit.com/', $result);
+        $this->assert_popup_menu_url('https://pixlr.com/editor/', $result);
 
         // Not a site administrator, so the tag is removed without any menu items.
         $this->setUser($this->getDataGenerator()->create_user());
