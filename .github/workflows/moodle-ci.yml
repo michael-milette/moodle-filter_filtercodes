@@ -21,7 +21,8 @@ jobs:
     # DB services you need for testing.
     services:
       postgres:
-        image: ${{ contains(fromJSON('["main", "MOODLE_501_STABLE", "MOODLE_502_STABLE", "MOODLE_503_STABLE"]'), matrix.moodle-branch) && 'postgres:16' || 'postgres:14' }}
+        # Moodle 5.3 requires PostgreSQL 17 and Moodle 5.1-5.2 require PostgreSQL 16.
+        image: ${{ contains(fromJSON('["main", "MOODLE_503_STABLE"]'), matrix.moodle-branch) && 'postgres:17' || contains(fromJSON('["MOODLE_501_STABLE", "MOODLE_502_STABLE"]'), matrix.moodle-branch) && 'postgres:16' || 'postgres:14' }}
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -30,7 +31,8 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
 
       mariadb:
-        image: mariadb:10.11
+        # Moodle 5.3 requires MariaDB 11.4.
+        image: ${{ contains(fromJSON('["main", "MOODLE_503_STABLE"]'), matrix.moodle-branch) && 'mariadb:11.4' || 'mariadb:10.11' }}
         env:
           MYSQL_USER: 'root'
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
@@ -38,7 +40,8 @@ jobs:
           MYSQL_COLLATION_SERVER: "utf8mb4_unicode_ci"
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 3
+        # MariaDB 11 images no longer include mysqladmin; mariadb-admin exists in 10.11 and later.
+        options: --health-cmd="mariadb-admin ping" --health-interval 10s --health-timeout 5s --health-retries 3
 
     # Determines build matrix. This is a list of PHP versions, databases and
     # branches to test our project against. For each combination a separate
@@ -48,6 +51,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # Moodle 5.3.x (MOODLE_503_STABLE).
+          - php: '8.4'
+            moodle-branch: 'MOODLE_503_STABLE'
+            database: 'mariadb'
+          - php: '8.3'
+            moodle-branch: 'MOODLE_503_STABLE'
+            database: 'pgsql'
           # Moodle 5.2.x (MOODLE_502_STABLE).
           - php: '8.4'
             moodle-branch: 'MOODLE_502_STABLE'
