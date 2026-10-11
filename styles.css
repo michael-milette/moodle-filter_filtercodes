@@ -1,10 +1,11 @@
-/* stylelint-disable -- @property not recognized by older stylelint configs (Moodle 3.11/4.0). */
+/* Older stylelint (Moodle 3.11/4.0) does not recognise @property, and its "-- reason" comments are not supported there. */
+/* stylelint-disable property-no-unknown, csstree/validator */
 @property --percent {
     syntax: '<number>';
     inherits: true;
     initial-value: 0;
 }
-/* stylelint-enable */
+/* stylelint-enable property-no-unknown, csstree/validator */
 
 .fc-chart-pie .chart-area .chart-image {
     width: auto;
@@ -18,7 +19,8 @@
     --bgcolor: #f0f0f0;
 
     width: var(--size);
-    /* stylelint-disable-next-line -- aspect-ratio not recognized by older csstree validator. */
+    /* Older stylelint (Moodle 3.11/4.0) does not recognise aspect-ratio. */
+    /* stylelint-disable-next-line property-no-unknown, csstree/validator */
     aspect-ratio: 1;
     position: relative;
     display: inline-grid;

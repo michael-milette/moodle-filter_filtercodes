@@ -17,6 +17,8 @@ All notable changes to this project will be documented in this file.
 - {menudev}: Corrected the documentation. The menu is shown to site administrators regardless of the debugging level.
 - {menudev}, {menuadmin}: Fixed the Page builder, Photo editor and Layoutit links going to an invalid address on Moodle 5.3 and later. Moodle 5.3's new navigation menu does not support popup windows, so on Moodle 5.3+ these links now open in the same window. On earlier versions they still open in a popup. The Layoutit link now uses the current Layoutit address.
 
+- Fixed stylelint errors for @property and aspect-ratio on Moodle 3.11 and 4.0. The fix in 3.0.1 only worked on Moodle 4.1 and later.
+
 ### Security
 
 - Fixed a vulnerability in the {qrcode} tag which allowed unwanted HTML attributes to be added to a page.
