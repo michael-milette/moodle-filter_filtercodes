@@ -5,7 +5,7 @@ FilterCodes filter plugin for Moodle
 
 [![Moodle Plugin CI](https://github.com/michael-milette/moodle-filter_filtercodes/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/actions/workflows/moodle-ci.yml)
 ![PHP](https://img.shields.io/badge/PHP-v7.3%20to%20v8.4-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v3.11%20to%20v5.2-orange.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v3.11%20to%20v5.3-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-filter_filtercodes.svg)](https://github.com/michael-milette/moodle-filter_filtercodes/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -64,6 +64,7 @@ FilterCodes filter plugin for Moodle
     - [Display message when scrape content is unavailable](#display-message-when-scrape-content-is-unavailable)
     - [Show contact picture](#show-contact-picture)
     - [Show contact's profile description](#show-contacts-profile-description)
+    - [Describe hidden courses](#describe-hidden-courses)
     - [Show hidden profile fields](#show-hidden-profile-fields)
     - [Contact link type](#contact-link-type)
     - [Show background](#show-background)
@@ -935,7 +936,7 @@ If enabled, tags that accept a course ID, such as {coursename id}, {coursesummar
 
 If disabled, these tags only describe a hidden course for users who are allowed to see hidden courses, and display nothing for everyone else. Courses that are visible are not affected by this setting.
 
-Sites upgrading from an earlier version of FilterCodes have this option enabled so that existing pages continue to work as before. New installations have it disabled.
+Sites upgrading from an earlier version of FilterCodes prior to v3.1.0 have this option enabled so that existing pages continue to work as before. New installations have it disabled.
 
 ### Show hidden profile fields
 

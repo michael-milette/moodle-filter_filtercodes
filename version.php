@@ -25,9 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026082000;            // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2026101200;            // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2021051700;            // Requires Moodle version 3.11 or later.
 $plugin->component = 'filter_filtercodes';  // Full name of the plugin (used for diagnostics).
-$plugin->release   = '3.0.1';
-$plugin->supported = [311, 502];            // Explicitly supports Moodle 3.11 to 5.2.
+$plugin->release   = '3.1.0';
+$plugin->supported = [311, 503];            // Explicitly supports Moodle 3.11 to 5.3.
 $plugin->maturity  = MATURITY_STABLE;

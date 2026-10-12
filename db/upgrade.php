@@ -34,7 +34,7 @@ function xmldb_filter_filtercodes_upgrade($oldversion = 0) {
     // Moodle v2.7.0 release upgrade line.
     // Upgrade steps below.
 
-    if ($oldversion < 2026082000) {
+    if ($oldversion < 2026101200) {
         // Tags which take a course ID used to describe hidden courses to everyone. New sites now
         // restrict that, but existing sites keep the old behaviour so that pages which promote a
         // hidden course carry on working. Administrators can change this in the plugin settings.
@@ -42,7 +42,7 @@ function xmldb_filter_filtercodes_upgrade($oldversion = 0) {
             set_config('allowhiddencoursetags', 1, 'filter_filtercodes');
         }
 
-        upgrade_plugin_savepoint(true, 2026082000, 'filter', 'filtercodes');
+        upgrade_plugin_savepoint(true, 2026101200, 'filter', 'filtercodes');
     }
 
     return true;

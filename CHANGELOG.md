@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.0.2] DEV
+## [3.1.0] 2026-10-12
 
 ### Added
 
@@ -13,10 +13,17 @@ All notable changes to this project will be documented in this file.
 
 ### Updated
 
-- {menudev}: Dev docs now links to moodledev.io, Adminer to its current address and Page builder to build.layoutit.com. Removed the Screen recorder and Moodle Development School links, which no longer exist.
+- {menudev}: Dev docs now links to moodledev.io.
+- {menudev}: Adminer link now uses its current URL address.
+- {menudev}: Page builder now links to build.layoutit.com.
 - {menudev}: Corrected the documentation. The menu is shown to site administrators regardless of the debugging level.
-- {menudev}, {menuadmin}: Fixed the Page builder, Photo editor and Layoutit links going to an invalid address on Moodle 5.3 and later. Moodle 5.3's new navigation menu does not support popup windows, so on Moodle 5.3+ these links now open in the same window. On earlier versions they still open in a popup. The Layoutit link now uses the current Layoutit address.
+- {menudev}: Removed the Screen recorder link.
+- {menudev}: Removed Moodle Development School link - no longer exists.
+- {menudev} and {menuadmin}: Page builder/Layitout links now opens in current window starting in Moodle 5.3 due to its new React-based menu.
+- {menudev}: Photo editor link now opens in current window starting in Moodle 5.3 due to its new React-based menu.
+- {menudev}: Layoutit link now opens in current window starting in Moodle 5.3 due to its new React-based menu.
 - Fixed stylelint errors for @property and aspect-ratio on Moodle 3.11 and 4.0. The fix in 3.0.1 only worked on Moodle 4.1 and later.
+- {button} tag no longer links to ftp:, irc:, nntp:, news:, rtsp:, rtmp:, teamspeak:, gopher: or mms: addresses by default. Administrators who still need any of these can add them to the "Allowed URL schemes" setting.
 - CI: Failing PHP Lint, Grunt and PHPUnit steps now fail the build.
 - CI: Updated actions/checkout to v5, which runs on Node.js 24.
 - CI: Only start the database each job needs.
