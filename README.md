@@ -334,7 +334,7 @@ Also, see Courses section below.
 * {highlight}{/highlight} : Highlight text like a highlighter in bright yellow. NOTE: Must only be used within a paragraph.
 * {marktext}{/marktext} : Highlight text using HTML5's mark tag. You can style this tag using CSS in your theme using a fc-marktext class.
 * {markborder}{/markborder} : Surrounds text with a red dashed border. You can style this tag using CSS in your theme using a fc-markborder class (border and padding with !important to override).
-* {scrape url="..." tag="..." class="..." id="..." code="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
+* {scrape url="..." tag="..." class="..." id="..." code="..." headinglevel="..."} : Scrapes the content from another web page. Must be enabled in FilterCodes settings.
 * {getstring:component_name}stringidentifier{/getstring} or {getstring}stringidentifier{/getstring}: Display a Moodle language string in the current language. If no component name (plugin) is specified, will default to "moodle".
 * {fa/fas/fab/fa-solid/fa-brands fa-...} : Insert FontAwesome icon. Note: FontAwesome Font/CSS must be loaded as part of your theme. Supports FontAwesome 4.x and 6.0 included with Moodle. If you have the pro version installed, it the additional icons will be supported as well.
 * {glyphicon glyphicon-...} : Insert Glyphicons icon. Note: Glyphicons Font/CSS must be loaded as part of your theme.
@@ -842,7 +842,7 @@ IMPORTANT: You cannot use this feature to scrape content from any website that r
 
 As of version 0.4.7, you can use FilterCodes to scrape content from another web page. Your mileage may vary and depends a lot on your configuration, the website from which you are scraping content and more.
 
-{scrape url="..." tag="..." class="..." id="..." code="..."}
+{scrape url="..." tag="..." class="..." id="..." code="..." headinglevel="..."}
 
 Example:
 
@@ -860,13 +860,14 @@ Parameters:
 * tag = The HTML tag you want to capture.
 * class = Optional. Default is blank (class is irrelevant). Class attribute of the HTML tag you want to capture. Must be an exact match for everything between the quotation marks.
 * id = Optional. Default is blank (id is irrelevant). id tag of the HTML tag you want to capture.
-* code = Optional. Default is blank (no code). This is URL encoded HTML that you want to insert after the content. It will be URL-decoded and inserted as-is, on the same trust level as any other HTML the author types into Moodle. It can even be things like JavaScript for example. Be careful with this one. If not encoded, will result in an error.
+* code = Optional. Default is blank (no code). This is URL encoded HTML that you want to insert after the content. If not encoded, will result in an error. It gets the same treatment as the text the tag is in. Where Moodle does not clean that text, such as Page content, activity descriptions, labels, Text blocks, Books, Lessons and section summaries, the code is inserted as-is and can include JavaScript. It is also inserted as-is in site policy documents on the pages of Moodle's Policies tool, as only people allowed to manage policies can edit them. Everywhere else, such as forum posts, and when an administrator has set `$CFG->forceclean`, it is cleaned like other HTML: scripts, styles and event handlers such as onclick are removed, while ordinary HTML, including id attributes, is kept. Policies shown in a popup or in the Moodle app are cleaned too.
+* headinglevel = Optional. Default is blank (headings are not changed). Changes the level of the headings in the scraped content so they fit the page they are shown on. Use **+1** to **+5** to lower every heading by that many levels (with +1, h1 becomes h2, h2 becomes h3 and so on), or **-1** to **-5** to raise them. Use **1** to **6** to make the highest heading that level and move the others by the same amount, keeping their structure (with 3, h1 becomes h3 and h2 becomes h4). Headings stay between h1 and h6. Example: {scrape url="https://example.com/terms" tag="main" headinglevel="+1"}
 
 By default, scraped content that cannot be retrieved renders nothing (silent failure) so the surrounding page layout is preserved. Administrators who prefer the historical visible-error behaviour can enable the **Display message when scrape content is unavailable** setting; the displayed message can be customised through the Moodle Language editor.
 
 The same display behaviour applies if the matching tag, class and/or id cannot be found.
 
-Externally scraped content is cleaned before display. Scripts, unsafe attributes, forms, embedded styles and other unsafe HTML may be removed by Moodle for security reasons. Cleaning is applied only to the content fetched from the remote site; the optional `code` attribute is appended raw because it is supplied by the course author.
+Externally scraped content is cleaned before display. Scripts, unsafe attributes, forms, embedded styles and other unsafe HTML may be removed by Moodle for security reasons. The optional `code` attribute is cleaned in the same way unless Moodle leaves the surrounding text uncleaned, as described above.
 
 ## Back to section / Back to course button
 

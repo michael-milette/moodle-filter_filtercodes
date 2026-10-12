@@ -787,6 +787,58 @@ class text_filter extends \filtercodes_base_text_filter {
     }
 
     /**
+     * Whether the HTML in the code attribute of the {scrape} tag may be added to the page without cleaning.
+     *
+     * The code attribute is URL encoded, so Moodle cleans it as plain text and it only becomes markup
+     * when the tag is processed. It therefore gets the same treatment as the text it is in: it is
+     * only left uncleaned where Moodle left that text uncleaned, such as Page content, activity
+     * descriptions and Text blocks, where the author could add the same markup directly.
+     *
+     * Moodle cleans site policy documents, but only people allowed to manage policies can edit them,
+     * so the code attribute is also left uncleaned on the pages of the Policies tool which show them.
+     * When an administrator sets $CFG->forceclean, it is always cleaned.
+     *
+     * @param array $options Filter options passed by Moodle.
+     * @return bool True if the code attribute may be added without cleaning.
+     */
+    private function isscrapecodetrusted(array $options) {
+        global $CFG;
+
+        if (!empty($CFG->forceclean)) {
+            return false;
+        }
+        if (!empty($options['noclean'])) {
+            return true;
+        }
+        return $this->ispolicydocumentpage();
+    }
+
+    /**
+     * Whether the current page is a page of the Policies tool (tool_policy) which shows policy documents.
+     *
+     * These are the page where users accept the site policies, and the pages which view one policy or
+     * all policies. Policies shown in a popup or in the Moodle app are loaded through web services and
+     * are not on these pages.
+     *
+     * @return bool True if the current page shows site policy documents.
+     */
+    private function ispolicydocumentpage() {
+        global $PAGE;
+
+        if (empty($PAGE) || !$PAGE->has_set_url()) {
+            return false;
+        }
+        $path = $PAGE->url->get_path();
+        foreach (['index.php', 'view.php', 'viewall.php'] as $script) {
+            $policypage = '/admin/tool/policy/' . $script;
+            if (substr($path, -strlen($policypage)) === $policypage) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Build the address part of a custom menu item which opens in a popup window where possible.
      *
      * Before Moodle 5.3, custom menu items are rendered by Mustache templates which insert the
@@ -3046,13 +3098,15 @@ class text_filter extends \filtercodes_base_text_filter {
 
         // Tag: {scrape url="" <optional parameters>}.
         // Description: Scrapes content from an external HTML page. Cannot scrape secure pages from sites that requires login.
-        // Optional parameters: You may use any combination of the following: tag="..." class="..." id="..." code="...".
+        // Optional parameters: You may use any combination of the following: tag="..." class="..." id="..." code="..."
+        // headinglevel="...".
         if (get_config('filter_filtercodes', 'enable_scrape') && stripos($text, '{scrape ') !== false) {
             $scraper = new scraper();
+            $cleancode = !$this->isscrapecodetrusted($options);
             // Replace {scrape} tag and its attributes with retrieved content.
             $newtext = preg_replace_callback(
                 '/\{scrape\s+(.*)\}/isuU',
-                function ($matches) use ($scraper) {
+                function ($matches) use ($scraper, $cleancode) {
                     // Parse the scrape tag's atributes.
                     $matches[0] = $matches[0] == null ? '' : strip_tags($matches[0]);
                     $attribs = substr($matches[0], 1, -1);
@@ -3062,12 +3116,13 @@ class text_filter extends \filtercodes_base_text_filter {
                     $class = isset($scrape['class']) ? $scrape['class'] : '';
                     $id = isset($scrape['id']) ? $scrape['id'] : '';
                     $code = isset($scrape['code']) ? $scrape['code'] : '';
+                    $headinglevel = isset($scrape['headinglevel']) ? $scrape['headinglevel'] : '';
                     // If nothing else, we must have a URL parameter.
                     if (empty($url)) {
                         return "SCRAPE error: Missing or invalid required URL parameter.";
                     }
                     // Replace {scrape} tag and its attributes with retrieved content.
-                    return $scraper->scrapehtml($url, $tag, $class, $id, $code);
+                    return $scraper->scrapehtml($url, $tag, $class, $id, $code, $cleancode, $headinglevel);
                 },
                 $text
             );

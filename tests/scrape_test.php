@@ -92,11 +92,12 @@ final class scrape_test extends \advanced_testcase {
      * Filter text through Moodle filters.
      *
      * @param string $text Text to filter.
+     * @param array $options Additional filter options, such as noclean.
      * @return string Filtered text.
      */
-    private function filtertext($text) {
+    private function filtertext($text, array $options = []) {
         $filter = new text_filter();
-        return $filter->filter($text, ['context' => \context_system::instance()]);
+        return $filter->filter($text, $options + ['context' => \context_system::instance()]);
     }
 
     /**
@@ -274,27 +275,170 @@ final class scrape_test extends \advanced_testcase {
     }
 
     /**
-     * Test the code attribute is appended raw for backwards compatibility.
-     *
-     * Trust model: the code attribute is supplied by a course author (an editing role)
-     * and shares the same trust level as any other HTML the author types into Moodle.
-     * It is intentionally NOT cleaned, so existing courses that embed wrappers, scripts,
-     * or other markup via code="..." continue to render unchanged.
+     * Test that ordinary HTML in the code attribute, such as a wrapper with an id, is kept when cleaned.
      *
      * @return void
      */
-    public function test_scrape_code_attribute_is_raw_for_bc(): void {
+    public function test_scrape_code_attribute_keeps_ordinary_html(): void {
         $this->requirecurlmock();
 
         \curl::mock_response('<html><body><div>Body</div></body></html>');
 
-        // Safe HTML wrapper passed via code attribute should render verbatim.
         $filtered = $this->filtertext(
             '{scrape url="https://example.test/page" tag="div" code="%3Cdiv%20id%3D%22wrapper%22%3E%3C%2Fdiv%3E"}'
         );
 
         $this->assertStringContainsString('Body', $filtered);
         $this->assertStringContainsString('id="wrapper"', $filtered);
+    }
+
+    /**
+     * Test that a script in the code attribute is removed where Moodle cleaned the surrounding text.
+     *
+     * The code attribute is URL encoded, so Moodle's own cleaning does not see its markup. Without
+     * this, anyone who can post filtered text could add a script to the page.
+     *
+     * @return void
+     */
+    public function test_scrape_code_attribute_cleaned_with_text(): void {
+        $this->requirecurlmock();
+
+        \curl::mock_response('<html><body><div>Body</div></body></html>');
+
+        $filtered = $this->filtertext('{scrape url="https://example.test/page" tag="div" code="'
+            . rawurlencode('<p onclick="alert(1)">Extra</p><script>alert(2)</script>') . '"}');
+
+        $this->assertStringContainsString('Body', $filtered);
+        $this->assertStringContainsString('Extra', $filtered);
+        $this->assertStringNotContainsString('<script', $filtered);
+        $this->assertStringNotContainsString('onclick', $filtered);
+    }
+
+    /**
+     * Test that a script in the code attribute is kept where Moodle left the surrounding text uncleaned.
+     *
+     * Moodle does this for content such as Pages, activity descriptions and Text blocks, where the
+     * author could add a script directly.
+     *
+     * @return void
+     */
+    public function test_scrape_code_attribute_raw_with_uncleaned_text(): void {
+        $this->requirecurlmock();
+
+        \curl::mock_response('<html><body><div>Body</div></body></html>');
+
+        $filtered = $this->filtertext('{scrape url="https://example.test/page" tag="div" code="'
+            . rawurlencode('<script>alert(2)</script>') . '"}', ['noclean' => true]);
+
+        $this->assertStringContainsString('<script>alert(2)</script>', $filtered);
+    }
+
+    /**
+     * Test that the code attribute is always cleaned when the administrator forces cleaning.
+     *
+     * @return void
+     */
+    public function test_scrape_code_attribute_cleaned_with_forceclean(): void {
+        global $CFG;
+
+        $this->resetAfterTest();
+        $this->requirecurlmock();
+        $CFG->forceclean = true;
+
+        \curl::mock_response('<html><body><div>Body</div></body></html>');
+
+        $filtered = $this->filtertext('{scrape url="https://example.test/page" tag="div" code="'
+            . rawurlencode('<script>alert(2)</script>') . '"}', ['noclean' => true]);
+
+        $this->assertStringNotContainsString('<script', $filtered);
+    }
+
+    /**
+     * Test that the code attribute is kept in site policy documents shown by the Policies tool.
+     *
+     * Moodle cleans policy documents, but only people allowed to manage policies can edit them.
+     *
+     * @return void
+     */
+    public function test_scrape_code_attribute_raw_on_policy_pages(): void {
+        global $PAGE;
+
+        $this->resetAfterTest();
+        $this->requirecurlmock();
+        $code = rawurlencode('<script>alert(2)</script>');
+
+        foreach (['index.php', 'view.php', 'viewall.php'] as $script) {
+            \curl::mock_response('<html><body><div>Body</div></body></html>');
+            $PAGE = new \moodle_page();
+            $PAGE->set_url(new \moodle_url('/admin/tool/policy/' . $script));
+            $filtered = $this->filtertext('{scrape url="https://example.test/' . $script . '" tag="div" code="' . $code . '"}');
+            $this->assertStringContainsString('<script>alert(2)</script>', $filtered, $script);
+        }
+
+        // Any other page is cleaned as usual.
+        \curl::mock_response('<html><body><div>Body</div></body></html>');
+        $PAGE = new \moodle_page();
+        $PAGE->set_url(new \moodle_url('/admin/tool/policy/acceptances.php'));
+        $filtered = $this->filtertext('{scrape url="https://example.test/other" tag="div" code="' . $code . '"}');
+        $this->assertStringNotContainsString('<script', $filtered);
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('headinglevel_provider')]
+    /**
+     * Test changing the level of headings in the scraped content.
+     *
+     * @dataProvider headinglevel_provider
+     * @param string $headinglevel Value of the headinglevel attribute.
+     * @param string $expected Expected headings, in order.
+     * @return void
+     */
+    public function test_scrape_headinglevel(string $headinglevel, string $expected): void {
+        $this->requirecurlmock();
+
+        \curl::mock_response('<html><body><div id="terms"><h1 class="title">Terms</h1><p>Text</p>'
+            . '<h2>Part</h2><h3>Detail</h3></div></body></html>');
+
+        $filtered = $this->filtertext('{scrape url="https://example.test/' . md5($headinglevel)
+            . '" tag="div" id="terms" headinglevel="' . $headinglevel . '"}');
+
+        preg_match_all('/<(h[1-6])\b[^>]*>/', $filtered, $matches);
+        $this->assertSame($expected, implode(',', $matches[1]), $filtered);
+        // Attributes and content of a heading are kept.
+        $this->assertMatchesRegularExpression('/<h[1-6] class="title">Terms<\/h[1-6]>/', $filtered);
+        $this->assertStringContainsString('<p>Text</p>', $filtered);
+    }
+
+    /**
+     * Data provider for test_scrape_headinglevel.
+     *
+     * @return array
+     */
+    public static function headinglevel_provider(): array {
+        return [
+            'not set' => ['', 'h1,h2,h3'],
+            'lower by one' => ['+1', 'h2,h3,h4'],
+            'lower by four, kept at h6' => ['+4', 'h5,h6,h6'],
+            'raise by one, kept at h1' => ['-1', 'h1,h1,h2'],
+            'highest becomes h3' => ['3', 'h3,h4,h5'],
+            'highest already h1' => ['1', 'h1,h2,h3'],
+            'invalid value ignored' => ['h2', 'h1,h2,h3'],
+            'out of range ignored' => ['+6', 'h1,h2,h3'],
+        ];
+    }
+
+    /**
+     * Test that the scraped element itself is changed when it is a heading.
+     *
+     * @return void
+     */
+    public function test_scrape_headinglevel_on_heading_element(): void {
+        $this->requirecurlmock();
+
+        \curl::mock_response('<html><body><h1 class="top">Title</h1></body></html>');
+
+        $filtered = $this->filtertext('{scrape url="https://example.test/heading" tag="h1" headinglevel="+2"}');
+
+        $this->assertStringContainsString('<h3 class="top">Title</h3>', $filtered);
     }
 
     /**

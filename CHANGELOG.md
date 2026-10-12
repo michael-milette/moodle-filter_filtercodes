@@ -6,10 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Added an "Allowed URL schemes" setting so administrators can control which URL schemes (protocols) the {button} tag may link to, one per line, instead of them being hard coded. Defaults to http, https, mailto, tel and sms; javascript and other script-capable schemes can be added but are intentionally excluded by default.
-- The {button} tag no longer links to ftp:, irc:, nntp:, news:, rtsp:, rtmp:, teamspeak:, gopher: or mms: addresses by default. Supported web browsers have not opened ftp: links since 2021. Administrators who still need any of these can add them to the "Allowed URL schemes" setting.
-- Added a "Describe hidden courses" setting, controlling whether tags which accept a course ID may describe hidden courses.
-- Added pre-existing tags {coursesactive}, {courseunenrolurl}, {menulanguages} to README.md.
+- "Allowed URL schemes" setting so administrators can control which URL schemes (protocols) the {button} tag may link to, one per line, instead of them being hard coded. Defaults to http, https, mailto, tel and sms; javascript and other script-capable schemes can be added but are intentionally excluded by default.
+- "Describe hidden courses" setting, controlling whether tags which accept a course ID may describe hidden courses.
+- Missing tags {coursesactive}, {courseunenrolurl}, {menulanguages} to README.md.
+- {scrape}: New headinglevel option to change the level of the headings in the scraped content so they fit the page, e.g. headinglevel="+1" turns h1 into h2 and h2 into h3. See README.md.
 
 ### Updated
 
@@ -23,11 +23,15 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-- Fixed a vulnerability in the {qrcode} tag which allowed unwanted HTML attributes to be added to a page.
-- Fixed a vulnerability where tags which accept a course ID, such as {coursename id} and {coursesummary id}, could describe courses hidden from the user. New installs hide these courses from users who cannot see hidden courses. Existing sites keep their current behaviour after upgrading, because the new "Describe hidden courses" setting is enabled for them. Tags referring to a course that doesn't exist or that the user isn't allowed to see now display nothing instead of the tag itself.
-- Fixed the {scrape} allowed hosts list being bypassed when an allowed host redirected elsewhere. When an allowed hosts list is configured, every host in a redirect chain must now be on the list. A redirect between a site's bare and www address, such as example.com to www.example.com, is still followed. This only affects sites that use an allowed hosts list and scrape a page that redirects to a different site. To fix it, add that site to the list.
-- Fixed a vulnerability in the {button} tag which allowed unwanted HTML attributes and unsafe links to be added to a page.
-  - IMPORTANT: {button} no longer links to javascript: addresses, such as {button javascript:window.print()}. These buttons are still displayed, but do nothing when clicked. If your site relies on them, go to Site Administration > Plugins > Filters > Filter Codes and add `javascript` on its own line in the "Allowed URL schemes" setting. Only do this if you trust everyone who can edit content on your site, because it allows them to run scripts in the browser of anyone who clicks the button.
+- {qrcode} tag now limits HTML attributes.
+- {coursename id} no longer accepts a course ID of course that is hidden from the user. Sites upgrading from an earlier version are not affected: the "Describe hidden courses" setting is enabled for them.
+- {coursesummary id} no longer accepts a course ID when the course is hidden from the user. Sites upgrading from an earlier version are not affected: the "Describe hidden courses" setting is enabled for them.
+- {coursestartdate id} no longer accepts a course ID when the course is hidden from the user. Sites upgrading from an earlier version are not affected: the "Describe hidden courses" setting is enabled for them.
+- {courseenddate id} no longer accepts a course ID when the course is hidden from the user. Sites upgrading from an earlier version are not affected: the "Describe hidden courses" setting is enabled for them.
+- {scrape}: When an allowed hosts list is configured, every address a page redirects to must also be on the list, except a redirect between a site's bare and www address (e.g. example.com to www.example.com). If the list is empty, redirects are not restricted.
+- {scrape}: The code option is now cleaned like other HTML, unless Moodle leaves the text it is in uncleaned (e.g. Pages, activity descriptions, labels, Text blocks) or it is in a site policy document shown on the Policies tool pages. Elsewhere, such as in forum posts, scripts, styles and event handlers such as onclick are removed. If you used JavaScript in code to adjust headings, use the new headinglevel option instead.W
+- {button} tag no longer supports unwanted HTML attributes and unsafe links.
+  - IMPORTANT: {button} no longer supports links to javascript: (e.g. {button javascript:window.print()}). These buttons are still displayed, but do nothing when clicked. If your site relies on them, go to Site Administration > Plugins > Filters > Filter Codes and add `javascript` on its own line in the "Allowed URL schemes" setting. Only do this if you trust everyone who can edit content on your site.
   - Extra attributes other than target, rel, title, id, class, aria-label, download and data-bs-toggle/data-toggle="modal" are now ignored. This includes onclick and style.
 
 ## [3.0.1] 2026-07-22

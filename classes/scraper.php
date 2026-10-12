@@ -43,10 +43,15 @@ class scraper {
      * @param string $class Optional HTML tag class attribute we should match.
      * @param string $id Optional HTML tag id attribute we should match.
      * @param string $code Optional URL encoded HTML code to insert after the retrieved content.
+     * @param bool $cleancode Whether the HTML in $code must be cleaned. Pass false only where Moodle did not
+     *     clean the text containing the tag, so that $code gets the same treatment as that text.
+     * @param string $headinglevel Optional change to the level of headings in the retrieved content. See
+     *     changeheadinglevels().
      * @return string Extracted content and optional code, or fail output if the content is unavailable.
      */
-    public function scrapehtml($url, $tag = '', $class = '', $id = '', $code = '') {
-        $cachekey = sha1(implode('|', [$url, $tag, $class, $id, $code]));
+    public function scrapehtml($url, $tag = '', $class = '', $id = '', $code = '', $cleancode = true, $headinglevel = '') {
+        $cleancode = (bool) $cleancode;
+        $cachekey = sha1(implode('|', [$url, $tag, $class, $id, $code, (int) $cleancode, $headinglevel]));
         $cachettl = $this->getscrapecachettl();
         $cache = null;
         if ($cachettl > 0) {
@@ -106,17 +111,97 @@ class scraper {
             return $this->getfailoutput();
         }
 
-        // Clean only the scraped (untrusted, external) fragment. The code attribute is author-supplied
-        // content with the same trust level as any other HTML the author types into Moodle, so it is
-        // appended raw to preserve backwards compatibility with existing courses.
+        if ($headinglevel !== '') {
+            $node = $this->changeheadinglevels($xpath, $node, $headinglevel);
+        }
+
+        // The scraped fragment comes from an external site and is always cleaned. The code attribute
+        // is URL encoded, so Moodle's own cleaning sees it as plain text and it only becomes markup
+        // here. It is cleaned too, unless Moodle left the text containing the tag uncleaned, in which
+        // case its author could have added the same markup directly. Ids are kept because wrapping
+        // the scraped content in an element with an id is a documented use.
         $scraped = clean_text($dom->saveXML($node), FORMAT_HTML);
-        $content = $scraped . urldecode($code);
+        $code = urldecode($code);
+        if ($cleancode && $code !== '') {
+            $code = clean_text($code, FORMAT_HTML, ['allowid' => true]);
+        }
+        $content = $scraped . $code;
 
         if ($cachettl > 0 && $cache !== null) {
             $cache->set($cachekey, ['timecreated' => time(), 'content' => $content]);
         }
 
         return $content;
+    }
+
+    /**
+     * Change the level of the headings in the retrieved content.
+     *
+     * This lets a page from another site fit the heading structure of the Moodle page it is shown on,
+     * without a script. The value is either relative or absolute:
+     *
+     * - "+1" to "+5" lowers every heading by that many levels (h1 becomes h2 with "+1"), and "-1"
+     *   to "-5" raises them.
+     * - "1" to "6" makes the highest heading found that level and moves the others by the same
+     *   amount, so their structure is kept. With "3", h1 becomes h3 and h2 becomes h4.
+     *
+     * Levels are kept between h1 and h6. Any other value is ignored.
+     *
+     * @param \DOMXPath $xpath XPath for the document containing the node.
+     * @param \DOMElement $node The retrieved element.
+     * @param string $headinglevel Relative or absolute heading level.
+     * @return \DOMElement The retrieved element, which is a new element if it was itself a heading.
+     */
+    private function changeheadinglevels(\DOMXPath $xpath, \DOMElement $node, $headinglevel) {
+        $headinglevel = trim((string) $headinglevel);
+        if (!preg_match('/^(?:[+-][1-5]|[1-6])$/', $headinglevel)) {
+            return $node;
+        }
+
+        $headings = [];
+        $query = 'descendant-or-self::*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]';
+        foreach ($xpath->query($query, $node) as $heading) {
+            $headings[] = $heading;
+        }
+        if (empty($headings)) {
+            return $node;
+        }
+
+        if ($headinglevel[0] === '+' || $headinglevel[0] === '-') {
+            $shift = (int) $headinglevel;
+        } else {
+            $highest = 6;
+            foreach ($headings as $heading) {
+                $highest = min($highest, (int) substr(strtolower($heading->nodeName), 1));
+            }
+            $shift = (int) $headinglevel - $highest;
+        }
+        if ($shift === 0) {
+            return $node;
+        }
+
+        // Elements cannot be renamed, so each heading is replaced by a new one with the same
+        // attributes and content.
+        foreach ($headings as $heading) {
+            $level = (int) substr(strtolower($heading->nodeName), 1);
+            $newlevel = max(1, min(6, $level + $shift));
+            if ($newlevel === $level) {
+                continue;
+            }
+            $replacement = $heading->ownerDocument->createElement('h' . $newlevel);
+            foreach ($heading->attributes as $attribute) {
+                $replacement->setAttribute($attribute->nodeName, $attribute->nodeValue);
+            }
+            while ($heading->firstChild) {
+                $replacement->appendChild($heading->firstChild);
+            }
+            $heading->parentNode->replaceChild($replacement, $heading);
+            if ($heading === $node) {
+                $node = $replacement;
+            }
+        }
+
+        return $node;
     }
 
     /**
