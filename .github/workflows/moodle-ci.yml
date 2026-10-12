@@ -18,11 +18,10 @@ jobs:
     # Virtual environment to use.
     runs-on: ubuntu-22.04
 
-    # DB services you need for testing.
+    # DB services you need for testing. Only the one used by the job is started (empty image = skipped).
     services:
       postgres:
-        # Moodle 5.3 requires PostgreSQL 17 and Moodle 5.1-5.2 require PostgreSQL 16.
-        image: ${{ contains(fromJSON('["main", "MOODLE_503_STABLE"]'), matrix.moodle-branch) && 'postgres:17' || contains(fromJSON('["MOODLE_501_STABLE", "MOODLE_502_STABLE"]'), matrix.moodle-branch) && 'postgres:16' || 'postgres:14' }}
+        image: ${{ matrix.database == 'pgsql' && (contains(fromJSON('["main", "MOODLE_503_STABLE"]'), matrix.moodle-branch) && 'postgres:17' || (contains(fromJSON('["MOODLE_501_STABLE", "MOODLE_502_STABLE"]'), matrix.moodle-branch) && 'postgres:16' || 'postgres:14')) || '' }}
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -31,17 +30,14 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
 
       mariadb:
-        # Moodle 5.3 requires MariaDB 11.4.
-        image: ${{ contains(fromJSON('["main", "MOODLE_503_STABLE"]'), matrix.moodle-branch) && 'mariadb:11.4' || 'mariadb:10.11' }}
+        image: ${{ matrix.database == 'mariadb' && (contains(fromJSON('["main", "MOODLE_503_STABLE"]'), matrix.moodle-branch) && 'mariadb:11.4' || 'mariadb:10.11') || '' }}
         env:
-          MYSQL_USER: 'root'
-          MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: '1'
           MYSQL_CHARACTER_SET_SERVER: "utf8mb4"
           MYSQL_COLLATION_SERVER: "utf8mb4_unicode_ci"
         ports:
           - 3306:3306
-        # MariaDB 11 images no longer include mysqladmin; mariadb-admin exists in 10.11 and later.
-        options: --health-cmd="mariadb-admin ping" --health-interval 10s --health-timeout 5s --health-retries 3
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval 10s --health-timeout 5s --health-retries 3
 
     # Determines build matrix. This is a list of PHP versions, databases and
     # branches to test our project against. For each combination a separate
@@ -51,7 +47,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Moodle 5.3.x (MOODLE_503_STABLE).
+          # Moodle 5.3.x LTS (MOODLE_503_STABLE).
           - php: '8.4'
             moodle-branch: 'MOODLE_503_STABLE'
             database: 'mariadb'
@@ -107,7 +103,7 @@ jobs:
           - php: '8.0'
             moodle-branch: 'MOODLE_402_STABLE'
             database: 'pgsql'
-          # Moodle 4.1.x (MOODLE_401_STABLE).
+          # Moodle 4.1.x LTS (MOODLE_401_STABLE).
           - php: '8.1'
             moodle-branch: 'MOODLE_401_STABLE'
             database: 'pgsql'
@@ -132,7 +128,7 @@ jobs:
     steps:
       # Check out this repository code in ./plugin directory
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: plugin
 
@@ -188,7 +184,6 @@ jobs:
       # can be re-ordered or removed to your liking.  And of course, you can
       # add any of your own custom steps.
       - name: PHP Lint
-        continue-on-error: true # This step will show errors but will not fail
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci phplint
 
@@ -219,14 +214,21 @@ jobs:
       #   run: moodle-plugin-ci mustache
 
       - name: Grunt
-        continue-on-error: true # This step will show errors but will not fail
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci grunt --max-lint-warnings 0
 
+      # PHPUnit 11.5+ (Moodle 5.x) can also report and fail on its own deprecations, such as test
+      # metadata in doc comments. moodle-plugin-ci cannot pass those options, and older PHPUnit
+      # versions do not have them, so PHPUnit is run directly when it supports them.
       - name: PHPUnit tests
-        continue-on-error: true # This step will show errors but will not fail
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpunit
+        run: |
+          if moodle/vendor/bin/phpunit --help | grep -q -- '--fail-on-phpunit-deprecation'; then
+            cd moodle
+            vendor/bin/phpunit --testsuite filter_filtercodes_testsuite --fail-on-warning --display-phpunit-deprecations --fail-on-phpunit-deprecation
+          else
+            moodle-plugin-ci phpunit --fail-on-warning
+          fi
 
       # - name: Behat features
       #   id: behat
