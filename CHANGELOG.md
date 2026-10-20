@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - {teamcards}: Fixed only the first of the selected course contact roles being listed.
 - {teamcards}: Fixed users being listed because of a role assigned somewhere other than in a course.
 - {teamcards}: README now describes which users are listed.
+- Tests: Fixed three new tests failing on Moodle 4.4 and later.
 
 ## [3.1.0] 2026-10-12
 

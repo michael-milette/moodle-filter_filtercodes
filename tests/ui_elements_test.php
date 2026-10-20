@@ -64,6 +64,7 @@ final class ui_elements_test extends \advanced_testcase {
             'lastname' => 'Smith',
             'description' => 'Bio text<img src=x onerror=alert(1)><script>alert(2)</script>',
         ]);
+        $this->redirectMessages(); // Enrolment welcome messages set up the page theme.
         $this->getDataGenerator()->enrol_user($teacher->id, $course->id, 'editingteacher');
 
         $PAGE->set_course($course);
@@ -157,6 +158,7 @@ final class ui_elements_test extends \advanced_testcase {
             'lastname' => 'Smith',
             'phone1' => '1" onclick="a()',
         ]);
+        $this->redirectMessages(); // Enrolment welcome messages set up the page theme.
         $this->getDataGenerator()->enrol_user($teacher->id, $course->id, 'editingteacher');
 
         $PAGE->set_course($course);
@@ -237,6 +239,7 @@ final class ui_elements_test extends \advanced_testcase {
             'email' => 'bob@example.com',
             'maildisplay' => 0,
         ]);
+        $this->redirectMessages(); // Enrolment welcome messages set up the page theme.
         $this->getDataGenerator()->enrol_user($visible->id, $course->id, 'editingteacher');
         $this->getDataGenerator()->enrol_user($hidden->id, $course->id, 'editingteacher');
 
