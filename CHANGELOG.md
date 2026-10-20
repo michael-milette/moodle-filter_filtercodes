@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Updated
 
 - {coursecontacts} user descriptions now processed through Moodle filters.
+- Added test for {coursecontacts} user descriptions.
 
 ## [3.1.0] 2026-10-12
 

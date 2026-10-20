@@ -47,6 +47,35 @@ final class ui_elements_test extends \advanced_testcase {
     }
 
     /**
+     * Test that the coursecontacts tag does not output unsafe markup from a contact's description.
+     */
+    public function test_coursecontacts_description_is_cleaned(): void {
+        global $CFG, $DB, $PAGE;
+
+        $course = $this->getDataGenerator()->create_course();
+        $context = \context_course::instance($course->id);
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher'], '*', MUST_EXIST);
+        $CFG->coursecontact = $teacherrole->id;
+        set_config('coursecontactshowdesc', 1, 'filter_filtercodes');
+        set_config('coursecontactlinktype', '', 'filter_filtercodes');
+
+        $teacher = $this->getDataGenerator()->create_user([
+            'firstname' => 'Alice',
+            'lastname' => 'Smith',
+            'description' => 'Bio text<img src=x onerror=alert(1)><script>alert(2)</script>',
+        ]);
+        $this->getDataGenerator()->enrol_user($teacher->id, $course->id, 'editingteacher');
+
+        $PAGE->set_course($course);
+        $PAGE->set_context($context);
+        $result = format_text('{coursecontacts}', FORMAT_HTML, ['context' => $context, 'filter' => true]);
+
+        $this->assertStringContainsString('Bio text', $result, sprintf("Should contain description\nActual: '%s'", $result));
+        $this->assertStringNotContainsString('<img', $result, sprintf("Should not contain markup\nActual: '%s'", $result));
+        $this->assertStringNotContainsString('<script', $result, sprintf("Should not contain markup\nActual: '%s'", $result));
+    }
+
+    /**
      * Test teamcards tag.
      */
     public function test_teamcards(): void {
