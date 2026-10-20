@@ -742,7 +742,7 @@ class text_filter extends \filtercodes_base_text_filter {
 
         switch (true) {
             case $clinktype == 'email':
-                $link = '<a href="mailto:' . $user->email . '">'  . $name . '</a>';
+                $link = '<a href="mailto:' . s($user->email) . '">'  . $name . '</a>';
                 break;
             case $clinktype == 'message':
                 $link = '<a href="' . (new \moodle_url('/message/index.php', ['id' => $user->id]))->out() . '">' . $name . '</a>';
@@ -751,10 +751,10 @@ class text_filter extends \filtercodes_base_text_filter {
                 $link = '<a href="' . (new \moodle_url('/user/profile.php', ['id' => $user->id]))->out() . '">' . $name . '</a>';
                 break;
             case $clinktype == 'phone' && !empty($user->phone1):
-                $link = '<a href="tel:' . $user->phone1 . '">' . $name . '</a>';
+                $link = '<a href="tel:' . s($user->phone1) . '">' . $name . '</a>';
                 break;
             case $clinktype == 'mobile' && !empty($user->phone2):
-                $link = '<a href="tel:' . $user->phone2 . '">' . $name . '</a>';
+                $link = '<a href="tel:' . s($user->phone2) . '">' . $name . '</a>';
                 break;
             default:
                 $link = $name;
@@ -3324,7 +3324,7 @@ class text_filter extends \filtercodes_base_text_filter {
 
                             switch (true) {
                                 case $clinktype == 'email':
-                                    $contacts .= $icon . '<a href="mailto:' . $user->email . '">';
+                                    $contacts .= $icon . '<a href="mailto:' . s($user->email) . '">';
                                     $contacts .= $contactsclose;
                                     break;
                                 case $clinktype == 'message':
@@ -3342,11 +3342,11 @@ class text_filter extends \filtercodes_base_text_filter {
                                     $contacts .= $contactsclose;
                                     break;
                                 case $clinktype == 'phone' && !empty($user->phone1):
-                                    $contacts .= $icon . '<a href="tel:' . $user->phone1 . '">';
+                                    $contacts .= $icon . '<a href="tel:' . s($user->phone1) . '">';
                                     $contacts .= $contactsclose;
                                     break;
                                 case $clinktype == 'mobile' && !empty($user->phone2):
-                                    $contacts .= $icon . '<a href="tel:' . $user->phone2 . '">';
+                                    $contacts .= $icon . '<a href="tel:' . s($user->phone2) . '">';
                                     $contacts .= $contactsclose;
                                     break;
                                 default: // Default is no-link.

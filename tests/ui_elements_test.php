@@ -140,6 +140,43 @@ final class ui_elements_test extends \advanced_testcase {
     }
 
     /**
+     * Test that a quote in a phone number cannot break out of the link in teamcards and coursecontacts.
+     */
+    public function test_contact_phone_link_is_escaped(): void {
+        global $CFG, $DB, $PAGE;
+
+        $course = $this->getDataGenerator()->create_course();
+        $context = \context_course::instance($course->id);
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher'], '*', MUST_EXIST);
+        $CFG->coursecontact = $teacherrole->id;
+        set_config('teamcardslinktype', 'phone', 'filter_filtercodes');
+        set_config('coursecontactlinktype', 'phone', 'filter_filtercodes');
+
+        $teacher = $this->getDataGenerator()->create_user([
+            'firstname' => 'Alice',
+            'lastname' => 'Smith',
+            'phone1' => '1" onclick="a()',
+        ]);
+        $this->getDataGenerator()->enrol_user($teacher->id, $course->id, 'editingteacher');
+
+        $PAGE->set_course($course);
+        $PAGE->set_context($context);
+        foreach (['{teamcards}', '{coursecontacts}'] as $tag) {
+            $result = format_text($tag, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+            $this->assertStringContainsString(
+                'tel:1&quot; onclick=',
+                $result,
+                sprintf("%s should escape the phone number\nActual: '%s'", $tag, $result)
+            );
+            $this->assertStringNotContainsString(
+                '1" onclick=',
+                $result,
+                sprintf("%s should not output a raw quote\nActual: '%s'", $tag, $result)
+            );
+        }
+    }
+
+    /**
      * Test coursecards tag.
      */
     public function test_coursecards(): void {

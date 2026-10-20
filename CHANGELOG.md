@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - {coursecontacts} user descriptions now processed through Moodle filters.
 - Added test for {coursecontacts} user descriptions.
 - {teamcards}: Fixed user descriptions not being escaped in the info icon format.
+- {teamcards} and {coursecontacts}: Email addresses and phone numbers are now escaped in contact links.
 
 ## [3.1.0] 2026-10-12
 
