@@ -115,6 +115,31 @@ final class ui_elements_test extends \advanced_testcase {
     }
 
     /**
+     * Test that a quote in a description cannot break out of the teamcards info icon attribute.
+     */
+    public function test_teamcards_infoicon_description_is_escaped(): void {
+        global $CFG, $DB;
+
+        $course = $this->getDataGenerator()->create_course();
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher'], '*', MUST_EXIST);
+        $CFG->coursecontact = $teacherrole->id;
+        set_config('teamcardsformat', 'infoicon', 'filter_filtercodes');
+        set_config('teamcardslinktype', '', 'filter_filtercodes');
+
+        $teacher = $this->getDataGenerator()->create_user([
+            'firstname' => 'Alice',
+            'lastname' => 'Smith',
+            'description' => 'Bio" onfocus="alert(1)//',
+        ]);
+        role_assign($teacherrole->id, $teacher->id, \context_course::instance($course->id)->id);
+
+        $result = format_text('{teamcards}', FORMAT_HTML, ['filter' => true]);
+
+        $this->assertStringContainsString('Bio&quot; onfocus=', $result, sprintf("Actual: '%s'", $result));
+        $this->assertStringNotContainsString('Bio" onfocus=', $result, sprintf("Actual: '%s'", $result));
+    }
+
+    /**
      * Test coursecards tag.
      */
     public function test_coursecards(): void {

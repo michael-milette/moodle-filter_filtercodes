@@ -1614,7 +1614,11 @@ class text_filter extends \filtercodes_base_text_filter {
                                 '</h3>';
                         $cards .= $this->userlink($clinktype, $user, $name);
                         if (!empty($user->description) && !empty($cardformat)) {
-                            $cards .= $prewrap . format_string($user->description) . $postwrap;
+                            $desc = format_string($user->description);
+                            if ($cardformat == 'infoicon') {
+                                $desc = s($desc); // The description is inside an HTML attribute.
+                            }
+                            $cards .= $prewrap . $desc . $postwrap;
                         }
                         $cards .= '</div>';
                     }
