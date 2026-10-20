@@ -251,6 +251,40 @@ final class ui_elements_test extends \advanced_testcase {
     }
 
     /**
+     * Test that teamcards lists users from every role selected as a course contact role.
+     */
+    public function test_teamcards_multiple_roles(): void {
+        global $CFG, $DB;
+
+        $course = $this->getDataGenerator()->create_course();
+        $context = \context_course::instance($course->id);
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher'], '*', MUST_EXIST);
+        $managerrole = $DB->get_record('role', ['shortname' => 'manager'], '*', MUST_EXIST);
+        $studentrole = $DB->get_record('role', ['shortname' => 'student'], '*', MUST_EXIST);
+        // Put the lowest role ID first, to catch only the first role in the list being used.
+        $roleids = [$teacherrole->id, $managerrole->id];
+        sort($roleids);
+        $CFG->coursecontact = implode(',', $roleids);
+        set_config('teamcardslinktype', '', 'filter_filtercodes');
+
+        $teacher = $this->getDataGenerator()->create_user(['firstname' => 'Alice', 'lastname' => 'Smith']);
+        $manager = $this->getDataGenerator()->create_user(['firstname' => 'Bob', 'lastname' => 'Jones']);
+        $student = $this->getDataGenerator()->create_user(['firstname' => 'Carol', 'lastname' => 'White']);
+        role_assign($teacherrole->id, $teacher->id, $context->id);
+        role_assign($managerrole->id, $manager->id, $context->id);
+        role_assign($studentrole->id, $student->id, $context->id);
+
+        $result = format_text('{teamcards}', FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('Alice Smith', $result, sprintf("Actual: '%s'", $result));
+        $this->assertStringContainsString('Bob Jones', $result, sprintf("Actual: '%s'", $result));
+        $this->assertStringNotContainsString('Carol White', $result, sprintf("Actual: '%s'", $result));
+
+        $CFG->coursecontact = '';
+        $result = format_text('{teamcards}', FORMAT_HTML, ['filter' => true]);
+        $this->assertStringNotContainsString('Alice Smith', $result, sprintf("Actual: '%s'", $result));
+    }
+
+    /**
      * Test coursecards tag.
      */
     public function test_coursecards(): void {

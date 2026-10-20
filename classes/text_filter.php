@@ -1537,13 +1537,18 @@ class text_filter extends \filtercodes_base_text_filter {
             // Only get the fields that are needed for the links.
             $clinktype = get_config('filter_filtercodes', 'teamcardslinktype');
             $linkfields = ['email' => ', u.maildisplay', 'phone' => ', u.phone1', 'mobile' => ', u.phone2'];
+            $roleids = array_filter(explode(',', (string) $CFG->coursecontact));
+            if (empty($roleids)) {
+                $roleids = [0]; // No course contact roles selected.
+            }
+            [$insql, $params] = $DB->get_in_or_equal($roleids);
             $sql = 'SELECT DISTINCT u.id, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
                     u.lastnamephonetic, u.middlename, u.alternatename, u.description' . ($linkfields[$clinktype] ?? '') . '
                     FROM {course} c, {role_assignments} ra, {user} u, {context} ct
-                    WHERE c.id = ct.instanceid AND ra.roleid in (?) AND ra.userid = u.id AND ct.id = ra.contextid
+                    WHERE c.id = ct.instanceid AND ra.roleid ' . $insql . ' AND ra.userid = u.id AND ct.id = ra.contextid
                         AND u.suspended = 0 AND u.deleted = 0
                     ORDER BY u.lastname desc, u.firstname';
-            $users = $DB->get_records_sql($sql, [$CFG->coursecontact]);
+            $users = $DB->get_records_sql($sql, $params);
 
             $cards = '';
             if (count($users)) {

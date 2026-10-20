@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - {teamcards} and {coursecontacts}: Email addresses and phone numbers are now escaped in contact links.
 - {teamcards}: No longer reads the username, or phone numbers that are not used, from the database.
 - {teamcards} and {coursecontacts}: Email links are no longer shown for users who have chosen to hide their email address.
+- {teamcards}: Fixed only the first of the selected course contact roles being listed.
 
 ## [3.1.0] 2026-10-12
 
