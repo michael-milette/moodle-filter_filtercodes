@@ -285,6 +285,32 @@ final class ui_elements_test extends \advanced_testcase {
     }
 
     /**
+     * Test that teamcards only lists users who have the role in a course, not in another type of context.
+     */
+    public function test_teamcards_ignores_roles_outside_courses(): void {
+        global $CFG, $DB;
+
+        $course = $this->getDataGenerator()->create_course();
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher'], '*', MUST_EXIST);
+        $CFG->coursecontact = $teacherrole->id;
+        set_config('teamcardslinktype', '', 'filter_filtercodes');
+
+        $incourse = $this->getDataGenerator()->create_user(['firstname' => 'Alice', 'lastname' => 'Smith']);
+        $incategory = $this->getDataGenerator()->create_user(['firstname' => 'Bob', 'lastname' => 'Jones']);
+        role_assign($teacherrole->id, $incourse->id, \context_course::instance($course->id)->id);
+
+        // Give a category context the same instance ID as the course, as can happen by chance on a real site.
+        $category = $this->getDataGenerator()->create_category();
+        $categorycontext = \context_coursecat::instance($category->id);
+        $DB->set_field('context', 'instanceid', $course->id, ['id' => $categorycontext->id]);
+        role_assign($teacherrole->id, $incategory->id, $categorycontext->id);
+
+        $result = format_text('{teamcards}', FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('Alice Smith', $result, sprintf("Actual: '%s'", $result));
+        $this->assertStringNotContainsString('Bob Jones', $result, sprintf("Actual: '%s'", $result));
+    }
+
+    /**
      * Test coursecards tag.
      */
     public function test_coursecards(): void {
