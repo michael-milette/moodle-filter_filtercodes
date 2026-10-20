@@ -213,6 +213,44 @@ final class ui_elements_test extends \advanced_testcase {
     }
 
     /**
+     * Test that teamcards and coursecontacts do not link to an email address the user has chosen to hide.
+     */
+    public function test_contact_email_link_respects_maildisplay(): void {
+        global $CFG, $DB, $PAGE;
+
+        $course = $this->getDataGenerator()->create_course();
+        $context = \context_course::instance($course->id);
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher'], '*', MUST_EXIST);
+        $CFG->coursecontact = $teacherrole->id;
+        set_config('teamcardslinktype', 'email', 'filter_filtercodes');
+        set_config('coursecontactlinktype', 'email', 'filter_filtercodes');
+
+        $visible = $this->getDataGenerator()->create_user([
+            'firstname' => 'Alice',
+            'lastname' => 'Smith',
+            'email' => 'alice@example.com',
+            'maildisplay' => 1,
+        ]);
+        $hidden = $this->getDataGenerator()->create_user([
+            'firstname' => 'Bob',
+            'lastname' => 'Jones',
+            'email' => 'bob@example.com',
+            'maildisplay' => 0,
+        ]);
+        $this->getDataGenerator()->enrol_user($visible->id, $course->id, 'editingteacher');
+        $this->getDataGenerator()->enrol_user($hidden->id, $course->id, 'editingteacher');
+
+        $PAGE->set_course($course);
+        $PAGE->set_context($context);
+        foreach (['{teamcards}', '{coursecontacts}'] as $tag) {
+            $result = format_text($tag, FORMAT_HTML, ['context' => $context, 'filter' => true]);
+            $this->assertStringContainsString('mailto:alice@example.com', $result, sprintf("%s\nActual: '%s'", $tag, $result));
+            $this->assertStringContainsString('Bob Jones', $result, sprintf("%s\nActual: '%s'", $tag, $result));
+            $this->assertStringNotContainsString('bob@example.com', $result, sprintf("%s\nActual: '%s'", $tag, $result));
+        }
+    }
+
+    /**
      * Test coursecards tag.
      */
     public function test_coursecards(): void {

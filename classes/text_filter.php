@@ -739,6 +739,9 @@ class text_filter extends \filtercodes_base_text_filter {
         if (!isloggedin() || isguestuser()) {
             $clinktype = ''; // No link, only name.
         }
+        if ($clinktype == 'email' && empty($user->maildisplay)) {
+            $clinktype = ''; // The user has chosen to hide their email address.
+        }
 
         switch (true) {
             case $clinktype == 'email':
@@ -1531,11 +1534,11 @@ class text_filter extends \filtercodes_base_text_filter {
         if (stripos($text, '{teamcards}') !== false) {
             global $OUTPUT, $DB;
 
-            // Only get the phone numbers if they are needed for the links.
+            // Only get the fields that are needed for the links.
             $clinktype = get_config('filter_filtercodes', 'teamcardslinktype');
-            $phonefields = ['phone' => ', u.phone1', 'mobile' => ', u.phone2'];
+            $linkfields = ['email' => ', u.maildisplay', 'phone' => ', u.phone1', 'mobile' => ', u.phone2'];
             $sql = 'SELECT DISTINCT u.id, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
-                    u.lastnamephonetic, u.middlename, u.alternatename, u.description' . ($phonefields[$clinktype] ?? '') . '
+                    u.lastnamephonetic, u.middlename, u.alternatename, u.description' . ($linkfields[$clinktype] ?? '') . '
                     FROM {course} c, {role_assignments} ra, {user} u, {context} ct
                     WHERE c.id = ct.instanceid AND ra.roleid in (?) AND ra.userid = u.id AND ct.id = ra.contextid
                         AND u.suspended = 0 AND u.deleted = 0
@@ -3294,8 +3297,6 @@ class text_filter extends \filtercodes_base_text_filter {
 
                         $cnt = 0;
                         foreach ($course->get_course_contacts() as $coursecontact) {
-                            $icon = '<i class="' . $iconclass[$clinktype] . '" aria-hidden="true"></i> ';
-
                             $contacts .= '<li>';
 
                             // Get list of course contacts based on settings in Site Administration > Appearances > Courses.
@@ -3312,6 +3313,11 @@ class text_filter extends \filtercodes_base_text_filter {
                                 $strictness = IGNORE_MULTIPLE
                             );
                             $fullname = get_string('fullnamedisplay', null, $user);
+                            $linktype = $clinktype;
+                            if ($linktype == 'email' && empty($user->maildisplay)) {
+                                $linktype = ''; // The user has chosen to hide their email address.
+                            }
+                            $icon = '<i class="' . $iconclass[$linktype] . '" aria-hidden="true"></i> ';
                             if ($cshowpic) {
                                 $imgurl = $this->getprofilepictureurl($user, 3);
                                 $contacts .= '<img src="' . $imgurl . '" alt="' . $fullname
@@ -3319,35 +3325,35 @@ class text_filter extends \filtercodes_base_text_filter {
                                 $cnt++;
                             }
 
-                            $contactsclose = '<span class="sr-only">' . $linksr[$clinktype] . ': </span>';
+                            $contactsclose = '<span class="sr-only">' . $linksr[$linktype] . ': </span>';
                             $contactsclose .= $fullname . '</a>';
 
                             $contacts .= '<span class="fc-coursecontactroles">' . implode(", ", $rolenames) . ': </span>';
 
                             switch (true) {
-                                case $clinktype == 'email':
+                                case $linktype == 'email':
                                     $contacts .= $icon . '<a href="mailto:' . s($user->email) . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case $clinktype == 'message':
+                                case $linktype == 'message':
                                     $contacts .= $icon . '<a href="' . (new \moodle_url(
                                         '/message/index.php',
                                         ['id' => $coursecontact['user']->id]
                                     ))->out() . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case $clinktype == 'profile':
+                                case $linktype == 'profile':
                                     $contacts .= $icon . '<a href="' . (new \moodle_url(
                                         '/user/profile.php',
                                         ['id' => $coursecontact['user']->id, 'course' => $PAGE->course->id]
                                     ))->out() . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case $clinktype == 'phone' && !empty($user->phone1):
+                                case $linktype == 'phone' && !empty($user->phone1):
                                     $contacts .= $icon . '<a href="tel:' . s($user->phone1) . '">';
                                     $contacts .= $contactsclose;
                                     break;
-                                case $clinktype == 'mobile' && !empty($user->phone2):
+                                case $linktype == 'mobile' && !empty($user->phone2):
                                     $contacts .= $icon . '<a href="tel:' . s($user->phone2) . '">';
                                     $contacts .= $contactsclose;
                                     break;
@@ -3371,7 +3377,7 @@ class text_filter extends \filtercodes_base_text_filter {
                             $contacts . '</ul>';
                 }
                 unset($contacts, $contactsclose, $fullname, $url, $user, $rolenames, $icon, $iconclass);
-                unset($linksr, $clinktype, $cshowpic);
+                unset($linksr, $clinktype, $linktype, $cshowpic);
             }
 
             // Tag: {courseparticipantcount}.
