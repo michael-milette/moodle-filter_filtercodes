@@ -3350,8 +3350,8 @@ class text_filter extends \filtercodes_base_text_filter {
                                     break;
                             }
                             if ($cshowdesc && !empty($user->description)) {
-                                $contacts .= '<div' . (empty($cshowpic) ? ' class="mb-4"' : '') . '>' .
-                                        $user->description . '</div>';
+                                $desc = format_string($user->description);
+                                $contacts .= '<div' . (empty($cshowpic) ? ' class="mb-4"' : '') . '>' . $desc . '</div>';
                             }
                             $contacts .= '</li>';
                         }
