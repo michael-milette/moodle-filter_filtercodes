@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Added test for {coursecontacts} user descriptions.
 - {teamcards}: Fixed user descriptions not being escaped in the info icon format.
 - {teamcards} and {coursecontacts}: Email addresses and phone numbers are now escaped in contact links.
+- {teamcards}: No longer reads the username, or phone numbers that are not used, from the database.
 
 ## [3.1.0] 2026-10-12
 

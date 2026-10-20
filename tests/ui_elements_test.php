@@ -177,6 +177,42 @@ final class ui_elements_test extends \advanced_testcase {
     }
 
     /**
+     * Test that teamcards still links to the email address and phone numbers when they are selected.
+     */
+    public function test_teamcards_contact_links(): void {
+        global $CFG, $DB;
+
+        $course = $this->getDataGenerator()->create_course();
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher'], '*', MUST_EXIST);
+        $CFG->coursecontact = $teacherrole->id;
+        $teacher = $this->getDataGenerator()->create_user([
+            'firstname' => 'Alice',
+            'lastname' => 'Smith',
+            'email' => 'alice@example.com',
+            'phone1' => '555-0101',
+            'phone2' => '555-0202',
+        ]);
+        role_assign($teacherrole->id, $teacher->id, \context_course::instance($course->id)->id);
+
+        $expected = [
+            'email' => 'mailto:alice@example.com',
+            'phone' => 'tel:555-0101',
+            'mobile' => 'tel:555-0202',
+        ];
+        foreach ($expected as $linktype => $href) {
+            set_config('teamcardslinktype', $linktype, 'filter_filtercodes');
+            $result = format_text('{teamcards}', FORMAT_HTML, ['filter' => true]);
+            $this->assertStringContainsString($href, $result, sprintf("Link type %s\nActual: '%s'", $linktype, $result));
+        }
+
+        set_config('teamcardslinktype', '', 'filter_filtercodes');
+        $result = format_text('{teamcards}', FORMAT_HTML, ['filter' => true]);
+        $this->assertStringContainsString('Alice Smith', $result);
+        $this->assertStringNotContainsString('mailto:', $result);
+        $this->assertStringNotContainsString('tel:', $result);
+    }
+
+    /**
      * Test coursecards tag.
      */
     public function test_coursecards(): void {

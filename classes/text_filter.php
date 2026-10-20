@@ -1531,8 +1531,11 @@ class text_filter extends \filtercodes_base_text_filter {
         if (stripos($text, '{teamcards}') !== false) {
             global $OUTPUT, $DB;
 
-            $sql = 'SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
-                    u.lastnamephonetic, u.middlename, u.alternatename, u.description, u.phone1, u.phone2
+            // Only get the phone numbers if they are needed for the links.
+            $clinktype = get_config('filter_filtercodes', 'teamcardslinktype');
+            $phonefields = ['phone' => ', u.phone1', 'mobile' => ', u.phone2'];
+            $sql = 'SELECT DISTINCT u.id, u.firstname, u.lastname, u.email, u.picture, u.imagealt, u.firstnamephonetic,
+                    u.lastnamephonetic, u.middlename, u.alternatename, u.description' . ($phonefields[$clinktype] ?? '') . '
                     FROM {course} c, {role_assignments} ra, {user} u, {context} ct
                     WHERE c.id = ct.instanceid AND ra.roleid in (?) AND ra.userid = u.id AND ct.id = ra.contextid
                         AND u.suspended = 0 AND u.deleted = 0
@@ -1541,7 +1544,6 @@ class text_filter extends \filtercodes_base_text_filter {
 
             $cards = '';
             if (count($users)) {
-                $clinktype = get_config('filter_filtercodes', 'teamcardslinktype');
                 $cardformat = get_config('filter_filtercodes', 'teamcardsformat');
                 $narrowpage = get_config('filter_filtercodes', 'narrowpage');
 
