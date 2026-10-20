@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - {teamcards} and {coursecontacts}: Email links are no longer shown for users who have chosen to hide their email address.
 - {teamcards}: Fixed only the first of the selected course contact roles being listed.
 - {teamcards}: Fixed users being listed because of a role assigned somewhere other than in a course.
+- {teamcards}: README now describes which users are listed.
 
 ## [3.1.0] 2026-10-12
 
